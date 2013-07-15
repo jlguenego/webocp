@@ -10,16 +10,16 @@
 		<!-- END JQUERY CDN -->
 
 		<!-- CRYPTO JS -->
-		<script src="_ext/sha1.js"></script>
+		<script src="../_ext/sha1.js"></script>
 		<!-- END CRYPTO JS -->
 
-		<script src="js/ocp-client.js"></script>
+		<script src="../js/ocp-client.js"></script>
 	</head>
 	<body>
 
 		<input type="file" id="file" name="file" /> <button>read</button>
 		<div id="byte_range"></div>
-		<div id="byte_content"></div>
+		<table id="byte_content" border="1px" width="100%"></table>
 
 		<script>
 			$(function() {
@@ -82,13 +82,11 @@
 								var content = evt.target.result;
 								log('content=|'+content+'|');
 								$('#byte_content').append('\
-<table border="1px" width="100%">\
-	<tr>\
-		<td width="150">' + my_start + '-' + my_stop + ': ' + my_step +'</td>\
-		<td><pre>' + content + '</pre></td>\
-		<td width="350">' + ocp.hash(content) + '</td>\
-	</tr>\
-</table>\
+<tr>\
+	<td width="100">' + my_start + '-' + my_stop + ': ' + my_step +'</td>\
+	<td><pre>' + content + '</pre></td>\
+	<td width="350">' + ocp.hash(content) + '</td>\
+</tr>\
 								');
 							}
 						};
