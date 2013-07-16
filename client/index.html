@@ -14,6 +14,12 @@
 		<script src="_ext/sha1.js"></script>
 		<!-- END CRYPTO JS -->
 
+		<!-- JQWIDGET -->
+		<script src="_ext/jqwidgets/jqxcore.js"></script>
+		<script src="_ext/jqwidgets/jqxtree.js"></script>
+	    <link rel="stylesheet" href="_ext/jqwidgets/styles/jqx.base.css" type="text/css" />
+		<!-- END JQWIDGET -->
+
 		<script src="js/ocp-client.js"></script>
 
 		<!-- CSS -->
@@ -31,16 +37,29 @@
 						Manager header
 					</div>
 					<div class="body">
-						Manager content
+						<div id="tree">
+						</div>
 					</div>
 				</div>
 
 				<div id="explorer">
 					<div class="head">
-						Explorer header
+						<ul>
+							<li class="button">New folder</li>
+							<li>File upload</li>
+							<li>Folder upload</li>
+						</ul>
 					</div>
 					<div class="body">
-						Explorer content
+						<table>
+							<tr>
+								<th>Name</th>
+								<th>Size</th>
+								<th>Type</th>
+								<th>Last modified</th>
+								<th>Address</th>
+							</tr>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -60,6 +79,41 @@
 		</div>
 
 		<script>
+			var source = [
+                {
+                	label: "Item 1",
+                	expanded: true,
+                	items: [{
+                		label: "Item 1.1",
+                		items: [{
+                			label: "Item 1.1",
+                			items: [
+                				{label: "Item 1.1"},
+	                    		{label: "Item 1.2", selected: true}
+                			]},
+	                    	{label: "Item 1.2"}
+                		]},
+	                    {label: "Item 1.2"}
+                	]
+                },
+                {label: "Item 2"},
+                {label: "Item 3"},
+                {
+                	label: "Item 4",
+                	items: [
+	                    {label: "Item 4.1"},
+	                    {label: "Item 4.2"}
+                	]
+                },
+                {label: "Item 5"},
+                {label: "Item 6"},
+                {label: "Item 7"}
+            ];
+            // Create jqxTree.
+            $('#tree').jqxTree({
+            	source: source
+            });
+
 			$(document).ready(sync_height);
 			$(window).resize(sync_height);
 
