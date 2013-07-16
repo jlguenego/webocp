@@ -1,0 +1,86 @@
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+
+#page {
+	width: 100%;
+}
+
+#header {
+	background-color: #EEEEEE;
+	height: 50px;
+	width: 100%;
+}
+
+#main {
+	display: table;
+	width: 100%;
+}
+
+#sidebar {
+	display: table-cell;
+	background-color: #EEFFFF;
+	width: 150px;
+}
+
+#content {
+	display: table-cell;
+	background-color: #FFEEFF;
+}
+
+#footer {
+	width: 100%;
+	background-color: #FFFFEE;
+	height: 50px;
+}
+
+.ui-resizable-helper { border-right: 2px solid #DDDDDD; }
+		</style>
+	</head>
+	<body>
+		<div id="page">
+			<div id="header">
+			</div>
+			<div id="main">
+				<div id="sidebar">sidebar
+				</div>
+				<div id="content">content
+				</div>
+			</div>
+			<div id="footer">footer
+			</div>
+
+		</div>
+	</body>
+	<script>
+		$(function() {
+
+
+			$('#sidebar').resizable({
+				helper: "ui-resizable-helper",
+				handles: 'e',
+    		});
+
+
+
+    		ocp_refresh();
+		})
+
+		function ocp_refresh() {
+			var window_h = $(window).height();
+			var header_h = $('#header').height();
+			var footer_h = $('#footer').height();
+			$('#sidebar').height(window_h - header_h - footer_h);
+		}
+
+		$(window).resize(ocp_refresh);
+	</script>
+</html>
