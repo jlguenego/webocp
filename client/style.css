@@ -18,8 +18,8 @@ html, body {
 #container {
 	display: table;
 	width: 100%;
-	position: absolute;
-	top: 50px;
+
+	padding-top: 50px;
 }
 
 #manager, #explorer {
@@ -36,8 +36,6 @@ html, body {
 
 #footer {
 	width: 100%;
-	position: absolute;
-	bottom: 0px;
 }
 
 #footer .head {
