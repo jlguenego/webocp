@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+
+		<!-- JQUERY CDN -->
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+		<!-- END JQUERY CDN -->
+
+		<!-- BLOB BUILDER -->
+		<script src="../_ext/BlobBuilder.min.js"></script>
+		<!-- END BLOB BUILDER -->
+
+		<!-- FILE SAVER -->
+		<script src="../_ext/FileSaver.min.js"></script>
+		<!-- END FILE SAVER -->
+	</head>
+	<body>
+		<textarea id="txt_content"></textarea><br/>
+		Filename: <input type="text" id="txt_filename" /><button id="save_txt">Save</button>
+		<script>
+			$('#save_txt').click(function() {
+				var bb = new BlobBuilder();
+				bb.append($('#txt_content').val());
+				var blob = bb.getBlob("application/xhtml+xml;charset=" + document.characterSet);
+				var filename = $('#txt_filename').val();
+				saveAs(blob, filename);
+			});
+		</script>
+	</body>
+</html>

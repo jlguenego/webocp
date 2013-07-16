@@ -7,6 +7,7 @@
 		<!-- JQUERY CDN -->
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 		<!-- END JQUERY CDN -->
 
 		<!-- CRYPTO JS -->
@@ -14,94 +15,72 @@
 		<!-- END CRYPTO JS -->
 
 		<script src="js/ocp-client.js"></script>
+
+		<!-- CSS -->
+		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
+		<div id="page">
+			<div id="header">
+					Header menu
+			</div>
 
-		<input type="file" id="file" name="file" /> <button>read</button>
-		<div id="byte_range"></div>
-		<div id="byte_content"></div>
+			<div id="container">
+				<div id="manager">
+					<div class="head">
+						Manager header
+					</div>
+					<div class="body">
+						Manager content
+					</div>
+				</div>
+
+				<div id="explorer">
+					<div class="head">
+						Explorer header
+					</div>
+					<div class="body">
+						Explorer content
+					</div>
+				</div>
+			</div>
+			<div id="footer">
+				<div class="head">
+					<div class="left">
+						File transfers
+					</div>
+					<div class="right">
+						<button id="footer_hide">Hide</button>
+					</div>
+				</div>
+				<div class="body">
+					file tranfer content
+				</div>
+			</div>
+		</div>
 
 		<script>
-			$(function() {
-				// Check for the various File API support.
-				if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
-				  alert('The File APIs are not fully supported in this browser.');
-				  return;
-				}
+			$(document).ready(sync_height);
+			$(window).resize(sync_height);
+
+			$('#manager').resizable({
+				containment: "parent",
+				helper: "resizable-helper",
+				handles: 'e',
+				minWidth: 50
 			});
 
-			function readBlob2() {
-				var file = $('#file').get(0).files[0];
-				log(file);
+			$('#footer_hide').click(function() {
+				$('#footer .body').toggle();
+				sync_height();
+			})
 
-				var reader = new FileReader();
-				reader.onload = function(evt) {
-					log('onload');
-					var content = evt.target.result;
-					log('content='+content);
-				};
-
-				reader.onabort = function(evt) {
-					log('onabort');
-					var content = evt.target.result;
-					log('content='+content);
-				};
-
-				var blob = file.slice(0, 10);
-    			reader.readAsBinaryString(blob);
-
-    			var reader = new FileReader();
-				reader.onload = function(evt) {
-					log('onload');
-					var content = evt.target.result;
-					log('content='+content);
-				};
-    			blob = file.slice(11, 20);
-    			reader.readAsBinaryString(blob);
+			function sync_height() {
+				var window_h = $(window).height();
+				var header_h = $('#header').height();
+				var files_h = $('#footer').height();
+				$('#container').height(window_h - header_h - files_h);
 			}
-
-			function readBlob() {
-				$('#byte_content').html('');
-				var file = $('#file').get(0).files[0];
-				if (!file) {
-					alert('no file');
-					return;
-				}
-				var start = 0;
-				var step = 500;
-
-				var ocp = new OCP();
-				while (start < file.size) {
-					var stop = start + step;
-					var reader = new FileReader();
-
-					// If we use onloadend, we need to check the readyState.
-					reader.onload = (function(my_start, my_stop, my_step) {
-						return function(evt) {
-							if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-								var content = evt.target.result;
-								log('content=|'+content+'|');
-								$('#byte_content').append('\
-<table border="1px" width="100%">\
-	<tr>\
-		<td width="150">' + my_start + '-' + my_stop + ': ' + my_step +'</td>\
-		<td><pre>' + content + '</pre></td>\
-		<td width="350">' + ocp.hash(content) + '</td>\
-	</tr>\
-</table>\
-								');
-							}
-						};
-					})(start, stop, step);
-
-					//log(stop+'/'+file.size);
-					var blob = file.slice(start, stop);
-					reader.readAsBinaryString(blob);
-					start += step;
-				}
-			}
-
-			$('button').click(readBlob);
 		</script>
 	</body>
 </html>
