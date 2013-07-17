@@ -82,7 +82,30 @@
 					item: {
 						label: 'Item 3',
 					},
-					children: []
+					children: [
+						{
+							item: {
+								label: 'Item 3.1',
+							}
+						},
+						{
+							item: {
+								label: 'Item 3.2',
+							},
+							children: [
+								{
+									item: {
+										label: 'Item 3.2.1',
+									}
+								},
+								{
+									item: {
+										label: 'Item 3.2.2',
+									}
+								}
+							]
+						}
+					]
 				}
 			];
 			$('#tree').ocp_tree({
