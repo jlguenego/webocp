@@ -28,113 +28,41 @@
 	<body>
 		<div id="page">
 			<div id="header">
-					Header menu
+			</div>
+			<div id="main">
+				<div id="sidebar">the sidebar
+				</div>
+				<div id="content">content
+				</div>
+			</div>
+			<div id="footer">footer
 			</div>
 
-			<div id="container">
-				<div id="manager">
-					<div class="head">
-						Manager header
-					</div>
-					<div class="body">
-						<div id="tree">
-						</div>
-					</div>
-				</div>
-
-				<div id="explorer">
-					<div class="head">
-						<ul>
-							<li class="button">New folder</li>
-							<li>File upload</li>
-							<li>Folder upload</li>
-						</ul>
-					</div>
-					<div class="body">
-						<table>
-							<tr>
-								<th>Name</th>
-								<th>Size</th>
-								<th>Type</th>
-								<th>Last modified</th>
-								<th>Address</th>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-			<div id="footer">
-				<div class="head">
-					<div class="left">
-						File transfers
-					</div>
-					<div class="right">
-						<button id="footer_hide">Hide</button>
-					</div>
-				</div>
-				<div class="body">
-					file tranfer content
-				</div>
-			</div>
 		</div>
-
 		<script>
-			var source = [
-                {
-                	label: "Item 1",
-                	expanded: true,
-                	items: [{
-                		label: "Item 1.1",
-                		items: [{
-                			label: "Item 1.1",
-                			items: [
-                				{label: "Item 1.1"},
-	                    		{label: "Item 1.2", selected: true}
-                			]},
-	                    	{label: "Item 1.2"}
-                		]},
-	                    {label: "Item 1.2"}
-                	]
-                },
-                {label: "Item 2"},
-                {label: "Item 3"},
-                {
-                	label: "Item 4",
-                	items: [
-	                    {label: "Item 4.1"},
-	                    {label: "Item 4.2"}
-                	]
-                },
-                {label: "Item 5"},
-                {label: "Item 6"},
-                {label: "Item 7"}
-            ];
-            // Create jqxTree.
-            $('#tree').jqxTree({
-            	source: source
-            });
+			$(function() {
 
-			$(document).ready(sync_height);
-			$(window).resize(sync_height);
 
-			$('#manager').resizable({
-				containment: "parent",
-				helper: "resizable-helper",
-				handles: 'e',
-				minWidth: 50
-			});
+				$('#sidebar').resizable({
+					helper: "ui-resizable-helper",
+					handles: 'e'
+	    		});
+	    		$('#sidebar').resize(ocp_refresh);
 
-			$('#footer_hide').click(function() {
-				$('#footer .body').toggle();
-				sync_height();
+
+
+	    		ocp_refresh();
 			})
 
-			function sync_height() {
+			function ocp_refresh() {
+				log('ocp_refresh');
 				var window_h = $(window).height();
 				var header_h = $('#header').height();
-				var files_h = $('#footer').height();
-				$('#container').height(window_h - header_h - files_h);
+				var footer_h = $('#footer').height();
+				$('#sidebar').height(window_h - header_h - footer_h);
 			}
+
+			$(window).resize(ocp_refresh);
 		</script>
 	</body>
 </html>
