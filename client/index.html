@@ -45,7 +45,12 @@
 
 				$('#sidebar').resizable({
 					helper: "ui-resizable-helper",
-					handles: 'e'
+					handles: 'e',
+					stop: function( event, ui ) {
+						var height = ui.element.height();
+						log('height before='+height);
+						log('height after='+(height+1));
+					}
 	    		});
 	    		$('#sidebar').resize(ocp_refresh);
 
