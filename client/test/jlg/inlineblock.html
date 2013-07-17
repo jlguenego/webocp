@@ -1,0 +1,146 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans" />
+
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<style>
+
+html, body {
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+
+#page {
+	width: 100%;
+}
+
+#header {
+	background-color: #EEEEEE;
+	height: 50px;
+	width: 100%;
+}
+
+#main {
+	width: 100%;
+	font-size: 0;
+	white-space: nowrap;
+}
+
+#sidebar {
+	display: inline-block;
+	width: 150px;
+	background-color: #EEFFFF;
+	overflow: hidden;
+	padding: 0px;
+	vertical-align: top;
+}
+
+#sidebar_block {
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	display: inline-block;
+	overflow: hidden;
+}
+
+#content {
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	display: inline-block;
+	background-color: #FFEEFF;
+	vertical-align: top;
+	overflow: hidden;
+}
+
+#footer {
+	width: 100%;
+	background-color: #FFFFEE;
+	height: 50px;
+}
+
+.ui-resizable-helper { border-right: 2px solid #DDDDDD; }
+
+.ui-resizable-e {
+	width: 10px;
+	background-color: #DDDDDD;
+}
+
+		</style>
+	</head>
+	<body>
+		<div id="page">
+			<div id="header">
+			</div>
+			<div id="main">
+				<div id="sidebar">
+					<div id="sidebar_block">
+						Ceci est un tres tres long texte !
+						<br/>
+						<br/><br/><br/><br/><br/><br/><br/><br/>
+Coucou
+					</div>
+				</div>
+				<div id="content">content
+				</div>
+			</div>
+			<div id="footer">footer
+			</div>
+
+		</div>
+	</body>
+	<script>
+		$(function() {
+
+			sidebar_resizable();
+
+    		ocp_refresh();
+		})
+
+		function sidebar_resizable() {
+			$('#sidebar').resizable({
+				helper: "ui-resizable-helper",
+				handles: 'e',
+				start: function( event, ui ) {
+					var helper = ui.helper;
+					helper.height(helper.height() + 1);
+				},
+				stop: function( event, ui ) {
+					var window_w = window.innerWidth;
+					sidebar_w = $('#sidebar').width();
+					$('#content').width(window_w - sidebar_w);
+				}
+    		});
+
+			$('#sidebar_block').css({overflow:'auto',
+					width:'100%',
+					height:'100%'});
+		}
+
+		function ocp_refresh() {
+			var window_h = $(window).height();
+			var header_h = $('#header').height();
+			var footer_h = $('#footer').height();
+			$('#sidebar').height(window_h - header_h - footer_h);
+			$('#content').height(window_h - header_h - footer_h);
+
+			var window_w = window.innerWidth;
+			sidebar_w = $('#sidebar').width();
+			content_w = window_w - sidebar_w;
+			if (content_w < 100) {
+				content_w = 100;
+				sidebar_w = window_w - content_w;
+			}
+			$('#sidebar').width(sidebar_w);
+			$('#content').width(content_w);
+
+		}
+
+		$(window).resize(ocp_refresh);
+	</script>
+</html>
