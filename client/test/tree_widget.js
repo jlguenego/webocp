@@ -29,8 +29,21 @@ $.widget( "ui.ocp_tree", {
 			var item = src[i];
 			var li = $('<div/>').appendTo(ul);
 			var row = $('<div class="tree_row"/>').appendTo(li);
-			for(var j = 0; j < level + 1; j++) {
-				row.append('<img src="image/elbow.png"/>');
+			for (var j = 0; j < level; j++) {
+				row.append('<img src="image/elbow-line.png"/>');
+			}
+			if (item.children && item.children.length > 0) {
+				if (i == src.length - 1) {
+					row.append('<img src="image/elbow-end-minus.png"/>');
+				} else {
+					row.append('<img src="image/elbow-minus.png"/>');
+				}
+			} else {
+				if (i == src.length - 1) {
+					row.append('<img src="image/elbow-end.png"/>');
+				} else {
+					row.append('<img src="image/elbow.png"/>');
+				}
 			}
 
 			row.append('<div class="tree_text">' + level + ' ' + item.item.label + '</div>');
