@@ -73,7 +73,11 @@ html, body {
 
 			$('#sidebar').resizable({
 				helper: "ui-resizable-helper",
-				handles: 'e'
+				handles: 'e',
+				start: function( event, ui ) {
+					var helper = ui.helper;
+					helper.height(helper.height() + 1);
+				}
     		});
 
 

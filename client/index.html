@@ -46,13 +46,12 @@
 				$('#sidebar').resizable({
 					helper: "ui-resizable-helper",
 					handles: 'e',
-					stop: function( event, ui ) {
-						var height = ui.element.height();
-						log('height before='+height);
-						log('height after='+(height+1));
+					start: function( event, ui ) {
+						log('start xxx');
+						var helper = ui.helper;
+						helper.height(helper.height() + 1);
 					}
 	    		});
-	    		$('#sidebar').resize(ocp_refresh);
 
 
 
@@ -60,7 +59,6 @@
 			})
 
 			function ocp_refresh() {
-				log('ocp_refresh');
 				var window_h = $(window).height();
 				var header_h = $('#header').height();
 				var footer_h = $('#footer').height();
