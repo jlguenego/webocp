@@ -95,6 +95,20 @@ Coucou
 		</div>
 	</body>
 	<script>
+		function get_scrollbar_width() {
+			// Find the Width of the Scrollbar
+			var div = $('<div id="get_scrollbar_width_1" style="width:50px;height:50px;overflow-y:scroll;position:absolute;top:-200px;left:-200px;"><div id="get_scrollbar_width_2" style="height:100px;width:100%"></div></div>');
+			div.appendTo($('body'));
+			var w1 = $("#get_scrollbar_width_1").width();
+			var w2 = $("#get_scrollbar_width_2").innerWidth();
+			div.remove(); // remove the html from your document
+			return w1 - w2;
+		}
+
+		var g_scrollbar_width = get_scrollbar_width();
+		var g_scrollbar_offset = g_scrollbar_width - 12;
+		console.log('g_scrollbar_width=' + g_scrollbar_width);
+
 		$(function() {
 
 			sidebar_resizable();
@@ -113,6 +127,7 @@ Coucou
 				stop: function( event, ui ) {
 					var window_w = window.innerWidth;
 					sidebar_w = $('#sidebar').width();
+					$('#sidebar_block').width(sidebar_w - g_scrollbar_offset);
 					$('#content').width(window_w - sidebar_w);
 				}
     		});
@@ -137,6 +152,7 @@ Coucou
 				sidebar_w = window_w - content_w;
 			}
 			$('#sidebar').width(sidebar_w);
+			$('#sidebar_block').width(sidebar_w - g_scrollbar_offset);
 			$('#content').width(content_w);
 
 		}
