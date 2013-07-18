@@ -15,7 +15,7 @@ $.widget( "ui.ocp_tree", {
 	},
 
 	_create: function() {
-		this._fill(this.element, this.options.source, 0, false);
+		this._fill(this.element, this.options.source, 0, [ false ]);
 
         this._on( $('.tree_toggle'), {
           click: "toggle"
@@ -31,15 +31,18 @@ $.widget( "ui.ocp_tree", {
 	_destroy: function() {
 	},
 
-	_fill: function(el, src, level, last) {
+	_fill: function(el, src, level, last_array) {
+		console.log('start level ' + level);
 		var ul = $('<div class="tree_struct"/>').appendTo(el);
 		for (var i = 0; i < src.length; i++) {
-			console.log('coucou ' + level);
+			if (i == src.length - 1) {
+				last_array[level]	= true;
+			}
 			var item = src[i];
 			var li = $('<div/>').appendTo(ul);
 			var row = $('<div class="tree_row"/>').appendTo(li);
 			for (var j = 0; j < level; j++) {
-				if (last) {
+				if (last_array[j]) {
 					row.append('<img src="image/elbow-blank.png"/>');
 				} else {
 					row.append('<img src="image/elbow-line.png"/>');
@@ -61,13 +64,12 @@ $.widget( "ui.ocp_tree", {
 
 			row.append('<div class="tree_text">' + level + ' ' + item.item.label + '</div>');
 			if (item.children && item.children.length > 0) {
-				if (i == src.length - 1) {
-					this._fill(li, item.children, level + 1, true);
-				} else {
-					this._fill(li, item.children, level + 1, false);
-				}
+				var array = last_array.slice(0);
+				array.push(false);
+				this._fill(li, item.children, level + 1, array);
 			}
 		}
+		console.log('back to level ' + (level - 1));
 	},
 
 	toggle: function(event) {
