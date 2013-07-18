@@ -1,0 +1,41 @@
+.tree img {
+	width: 29px;
+	height: 27px;
+	margin-left: 3px;
+}
+
+.tree {
+	white-space: nowrap;
+	font-size: 13px;
+}
+
+.tree_row {
+	margin: 0px;
+	padding: 0px;
+	height: 27px;
+	line-height: 24px;
+}
+
+.tree_item {
+	display: inline-block;
+	padding: 1px 16px 1px 4px;
+	margin-left: -2px;
+	text-overflow: clip;
+	box-sizing: border-box;
+	vertical-align: top;
+
+	height: 26px;
+}
+
+.tree_item:hover {
+	background-color: #EEEEEE;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	padding: 0px 16px 1px 3px;
+}
+
+.item_image {
+	position: relative;
+	top: -3px;
+	margin-left: 0px !important;
+}
