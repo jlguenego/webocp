@@ -6,6 +6,8 @@
  *   jquery.ui.core.js
  *   jquery.ui.widget.js
  */
+require_once_css(ocp.dir + '/theme/' + ocp.css.theme + '/widget_tree.css');
+
 (function( $, undefined ) {
 
 $.widget( "ui.ocp_tree", {
