@@ -10,6 +10,8 @@
 		<!-- END JQUERY CDN -->
 
 		<script src="../js/ocp/core.js"></script>
+		<script src="../js/ocp/widget_tree.js"></script>
+		<link rel="stylesheet" href="../js/ocp/theme/default/widget_tree.css" />
 		<style>
 
 		</style>
@@ -109,8 +111,6 @@
 					]
 				}
 			];
-			ocp.dir = '../js/ocp/';
-			require_once_js(ocp.dir + 'widget_tree.js');
 			$('#tree').ocp_tree({
 				source: src,
 				//click: function() { console.log('item clicked') },

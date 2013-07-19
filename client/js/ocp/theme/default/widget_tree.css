@@ -38,4 +38,45 @@
 	position: relative;
 	top: -3px;
 	margin-left: 0px !important;
+	background-image: url('image/folder_new.gif');
+}
+
+.icon {
+	display: inline-block;
+	width: 29px;
+	height: 27px;
+	margin-left: 3px;
+	background-size: 29px 27px;
+}
+
+.elbow-blank {
+	background-image: url('image/elbow-blank.png');
+}
+
+.elbow-line {
+	background-image: url('image/elbow-line.png');
+}
+
+.elbow-end-minus {
+	background-image: url('image/elbow-end-minus.png');
+}
+
+.elbow-minus {
+	background-image: url('image/elbow-minus.png');
+}
+
+.elbow-end-plus {
+	background-image: url('image/elbow-end-plus.png');
+}
+
+.elbow-plus {
+	background-image: url('image/elbow-plus.png');
+}
+
+.elbow-end {
+	background-image: url('image/elbow-end.png');
+}
+
+.elbow {
+	background-image: url('image/elbow.png');
 }

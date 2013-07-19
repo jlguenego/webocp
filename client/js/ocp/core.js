@@ -4,6 +4,9 @@ ocp.base = '';
 ocp.css = {};
 ocp.css.theme = 'default';
 
+$.ocp = {};
+
+// TO BE USED FROM A SERVER ONLY {
 function require_once_js(path) {
 	var id = 'require_once_js_' + path.replace(/[/.#]/g, '_');
 	if (!$('#' + id).length) {
@@ -17,5 +20,5 @@ function require_once_css(path) {
 		$('head').append('<link id="' + id + '" rel="stylesheet" href="' + path + '" />');
 	}
 }
+// }
 
-$.ocp = {};

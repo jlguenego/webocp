@@ -6,15 +6,14 @@
  *   jquery.ui.core.js
  *   jquery.ui.widget.js
  */
-require_once_css(ocp.dir + '/theme/' + ocp.css.theme + '/widget_tree.css');
-
 (function( $, undefined ) {
 
 $.widget( "ui.ocp_tree", {
 	version: "0.0.1",
 	options: {
 		source: [],
-		image: 'image/folder_new.gif',
+		image: null,
+		theme: '',
 
 		// Callback
 		click: null
@@ -54,29 +53,30 @@ $.widget( "ui.ocp_tree", {
 			var row = $('<div class="tree_row"/>').appendTo(li);
 			for (var j = 0; j < level; j++) {
 				if (last_array[j]) {
-					row.append('<img src="image/elbow-blank.png"/>');
+					row.append('<div class="icon elbow-blank"/>');
 				} else {
-					row.append('<img src="image/elbow-line.png"/>');
+					row.append('<div class="icon elbow-line"/>');
 				}
 			}
 			if (item.children && item.children.length > 0) {
 				if (i == src.length - 1) {
-					row.append('<img class="tree_toggle" src="image/elbow-end-minus.png"/>');
+					row.append('<div class="icon tree_toggle elbow-end-minus"/>');
 				} else {
-					row.append('<img class="tree_toggle" src="image/elbow-minus.png"/>');
+					row.append('<div class="icon tree_toggle elbow-minus"/>');
 				}
 			} else {
 				if (i == src.length - 1) {
-					row.append('<img src="image/elbow-end.png"/>');
+					row.append('<div class="icon elbow-end"/>');
 				} else {
-					row.append('<img src="image/elbow.png"/>');
+					row.append('<div class="icon elbow"/>');
 				}
 			}
 			var item_info = item.item.name;
 			var div = $('<div class="tree_item" data-name="' + item_info + '"/>').appendTo(row);
 			var image = item.item.image || this.options.image;
+			var img_div = $('<div class="item_image icon"/>').appendTo(div);
 			if (image) {
-				div.append('<img class="item_image" src="' + image + '"/>');
+				img_div.css('background-image', 'url("'+image+'")');
 			}
 			var label = item.item.label || item.item.name;
 			div.append(label);
@@ -92,15 +92,15 @@ $.widget( "ui.ocp_tree", {
 	toggle: function(event) {
 		var tree_struct = $(event.currentTarget).parent().parent().find('.tree_struct');
 		tree_struct.toggle();
-		var image_src = $(event.currentTarget).attr("src");
-		if (image_src == "image/elbow-end-minus.png") {
-			image_src = "image/elbow-end-plus.png";
-		} else if (image_src == "image/elbow-minus.png") {
-			image_src = "image/elbow-plus.png";
-		} else if (image_src == "image/elbow-end-plus.png") {
-			image_src = "image/elbow-end-minus.png";
-		} else if (image_src == "image/elbow-plus.png") {
-			image_src = "image/elbow-minus.png";
+		var image_src = $(event.currentTarget);
+		if (image_src.hasClass('elbow-end-minus')) {
+			image_src.removeClass('elbow-end-minus').addClass('elbow-end-plus');
+		} else if (image_src.hasClass('elbow-minus')) {
+			image_src.removeClass('elbow-minus').addClass('elbow-plus');
+		} else if (image_src.hasClass('elbow-end-plus')) {
+			image_src.removeClass('elbow-end-plus').addClass('elbow-end-minus');
+		} else if (image_src.hasClass('elbow-plus')) {
+			image_src.removeClass('elbow-plus').addClass('elbow-minus');
 		}
 		$(event.currentTarget).attr("src", image_src);
 	}
