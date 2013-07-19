@@ -12,7 +12,25 @@
 	</head>
 
 	<body>
+		<div id="page">
+			<div id="header">
+			</div>
+			<div id="main">
+				<div id="sidebar">
+				</div>
+				<div id="content">
+				</div>
+			</div>
+			<div id="footer">
+			</div>
+
+		</div>
 		<script>
+			$("#main").ocp_splitpane({
+				source: [
+					{ width: 150, }
+				]
+			});
 		</script>
 	</body>
 </html>
