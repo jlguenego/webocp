@@ -105,10 +105,12 @@ $.widget( "ui.ocp_grid", {
 
 		var row = this.element.find('.widget_grid_row');
 		var body = this.element.find('.widget_grid_body').get(0);
-		if (body.scrollHeight > ($(body).height() + g_scrollbar_offset)) {
+		if (body.scrollHeight > ($(body).outerHeight())) {
+			console.log('has scroll');
 			$(body).outerWidth(container_w - g_scrollbar_offset);
 			row.outerWidth(row_w);
 		} else {
+			console.log('has not scroll');
 			$(body).outerWidth(container_w);
 			row.outerWidth(row_w + g_scrollbar_offset);
 		}

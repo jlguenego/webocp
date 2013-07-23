@@ -66,13 +66,19 @@ html, body {
 				$('.widget_grid_sortable').sortable({
 					containment: "parent",
 					helper: "clone",
+					placeholder: 'widget_grid_placeholder',
+					forcePlaceholderSize: true,
 					start: function(ev, ui) {
-						console.log('start');
-						start_colname = $('.widget_grid_sortable:not(.ui-sortable-helper)').sortable("toArray").slice(-1)[0];
-						console.log(start_colname);
+						ui.placeholder.height(ui.item.height());
+						console.log($('.widget_grid_sortable').height());
+						start_colname = $('.widget_grid_sortable').sortable("toArray").slice(-1)[0];
+					},
+					sort: function(ev, ui) {
+						$('.ui-sortable-helper').css('top', '0px');
+						$('.widget_grid_body_row').css('top', '0px');
 					},
 					stop: function(ev, ui) {
-						console.log('stop');
+						console.log($('.widget_grid_sortable').height());
 						var a = $('.widget_grid_sortable').sortable("toArray");
 						end_colname = null;
 						var index = a.indexOf(start_colname);
@@ -80,7 +86,6 @@ html, body {
 							end_colname = a[index - 1];
 						}
 
-						console.log(end_colname);
 						$('.widget_grid_body_row').each(function() {
 							var col_to_move = $(this).find('.'+start_colname).detach();
 							if (end_colname) {

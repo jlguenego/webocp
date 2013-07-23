@@ -21,6 +21,7 @@
 	position: absolute;
 	padding: 0px;
 	margin: 0px;
+	overflow: hidden;
 
 	background-color: #E1E1E1;
 }
@@ -58,6 +59,8 @@
 	display: inline-block;
 	overflow: hidden;
 
+	padding: 3px 5px;
+
 	border-left: 1px solid black;
 }
 
@@ -65,17 +68,21 @@
 	border-left: none;
 }
 
-.widget_grid_cell_filler {
-
+.ui-resizable-helper {
+	border-right: 2px solid #000000;
 }
-
-.ui-resizable-helper { border-right: 2px solid #000000; }
 
 .ui-resizable-e {
 	width: 10px;
 }
 
-.ui-sortable-placeholder {
-	display: inline-block !important;
-	height: 0px !important;
+.widget_grid_placeholder {
+	display: inline-block;
+	padding: 3px 5px;
+	margin: 0px;
+	background-color: #3E3E3E;
+}
+
+.ui-sortable-helper {
+	background-color: #B7B7B7;
 }
