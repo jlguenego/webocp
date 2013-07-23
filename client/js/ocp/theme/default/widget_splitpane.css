@@ -5,6 +5,7 @@
 
 .widget_splitpane_left {
 	display: inline-block;
+	height: 100%;
 	overflow: hidden;
 	padding: 0px;
 	vertical-align: top;
@@ -12,11 +13,13 @@
 
 .widget_leftpane_block {
 	display: inline-block;
+	height: 100%;
 	overflow: hidden;
 }
 
 .widget_splitpane_right {
 	display: inline-block;
+	height: 100%;
 	vertical-align: top;
 	overflow: hidden;
 }

@@ -21,8 +21,8 @@ $.widget( "ui.ocp_splitpane", {
 	_create: function() {
 		this._clean_div();
 
-		var leftpane = $(this.element.find('div').get(0));
-		var rightpane = $(this.element.find('div').get(1));
+		var leftpane = $(this.element.find('>div').get(0));
+		var rightpane = $(this.element.find('>div').get(1));
 		var leftpane_block = $('<div class="widget_leftpane_block"/>').html(leftpane.html());
 		leftpane.html(leftpane_block);
 
@@ -93,6 +93,9 @@ $.widget( "ui.ocp_splitpane", {
 		$('.widget_splitpane_left').width(sidebar_w);
 		$('.widget_leftpane_block').width(sidebar_w - g_scrollbar_offset);
 		$('.widget_splitpane_right').width(content_w);
+
+		var container_h = $('.widget_splitpane_container').innerHeight();
+		$('.widget_splitpane_left').height(container_h);
 
 	},
 
