@@ -31,18 +31,11 @@ html, body {
 }
 
 #main {
-	width: 900px;
-	font-size: 0;
+	width: 100%;
 }
 
 #sidebar {
-	width: 150px;
 	background-color: #EEFFFF;
-}
-
-.leftpane_block {
-	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
-	font-size: 15px;
 }
 
 #content {
@@ -80,7 +73,7 @@ html, body {
 		<script>
 			$("#main").ocp_splitpane({
 				source: [
-					{ width: 150, }
+					{ width: 200, }
 				]
 			});
 

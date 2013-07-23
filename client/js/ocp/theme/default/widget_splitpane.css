@@ -1,21 +1,21 @@
-.splitpane_container {
+.widget_splitpane_container {
 	white-space: nowrap;
 	overflow: hidden;
 }
 
-.splitpane_left {
+.widget_splitpane_left {
 	display: inline-block;
 	overflow: hidden;
 	padding: 0px;
 	vertical-align: top;
 }
 
-.leftpane_block {
+.widget_leftpane_block {
 	display: inline-block;
 	overflow: hidden;
 }
 
-.splitpane_right {
+.widget_splitpane_right {
 	display: inline-block;
 	vertical-align: top;
 	overflow: hidden;

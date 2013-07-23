@@ -1,5 +1,5 @@
 /*!
- * jQuery UI Tree
+ * jQuery UI Splitpane
  *
  *
  * Depends:
@@ -19,14 +19,16 @@ $.widget( "ui.ocp_splitpane", {
 	},
 
 	_create: function() {
+		this._clean_div();
+
 		var leftpane = $(this.element.find('div').get(0));
 		var rightpane = $(this.element.find('div').get(1));
-		var leftpane_block = $('<div class="leftpane_block"/>').html(leftpane.html());
+		var leftpane_block = $('<div class="widget_leftpane_block"/>').html(leftpane.html());
 		leftpane.html(leftpane_block);
 
-		this.element.addClass('splitpane_container');
-		leftpane.addClass('splitpane_left');
-		rightpane.addClass('splitpane_right');
+		this.element.addClass('widget_splitpane_container');
+		leftpane.addClass('widget_splitpane_left');
+		rightpane.addClass('widget_splitpane_right');
 
 		this.resizable(leftpane);
 
@@ -57,23 +59,28 @@ $.widget( "ui.ocp_splitpane", {
 				helper.height(helper.height() + 1);
 			},
 			stop: function( event, ui ) {
-				var container_w = $('.splitpane_container').innerWidth();
+				var container_w = $('.widget_splitpane_container').innerWidth();
 				sidebar_w = $(this).width();
-				$('.leftpane_block').width(sidebar_w - g_scrollbar_offset);
-				$('.splitpane_right').width(container_w - sidebar_w);
+				$('.widget_leftpane_block').width(sidebar_w - g_scrollbar_offset);
+				$('.widget_splitpane_right').width(container_w - sidebar_w);
 			}
 		});
 
-		$('.leftpane_block').css({
+		$('.widget_leftpane_block').css({
 			overflow:'auto',
 			width:'100%',
 			height:'100%'
 		});
 	},
 
+	_clean_div: function() {
+		var clean_html = this.element.html().replace(/>\s+</g, '><');
+		this.element.html(clean_html);
+	},
+
 	_refresh: function() {
-		var container_w = $('.splitpane_container').innerWidth();
-		sidebar_w = $('.splitpane_left').width();
+		var container_w = $('.widget_splitpane_container').innerWidth();
+		sidebar_w = $('.widget_splitpane_left').width();
 		content_w = container_w - sidebar_w;
 		if (content_w < 100) {
 			content_w = 100;
@@ -81,11 +88,11 @@ $.widget( "ui.ocp_splitpane", {
 		}
 
 		console.log('content_w=' + content_w);
-		$('.splitpane_left').resizable("option", "maxWidth", container_w - 100);
+		$('.widget_splitpane_left').resizable("option", "maxWidth", container_w - 100);
 
-		$('.splitpane_left').width(sidebar_w);
-		$('.leftpane_block').width(sidebar_w - g_scrollbar_offset);
-		$('.splitpane_right').width(content_w);
+		$('.widget_splitpane_left').width(sidebar_w);
+		$('.widget_leftpane_block').width(sidebar_w - g_scrollbar_offset);
+		$('.widget_splitpane_right').width(content_w);
 
 	},
 
