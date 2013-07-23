@@ -1,0 +1,64 @@
+.widget_grid_container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	white-space: nowrap;
+	overflow: auto;
+
+	border: 1px solid black;
+}
+
+.widget_grid_header_row {
+	position: absolute;
+
+	background-color: #E1E1E1;
+}
+
+.widget_grid_body{
+	width: 100%;
+	height: 100%;
+}
+
+
+.widget_grid_row {
+	border-bottom: 1px solid black;
+}
+
+.widget_grid_row:last-child {
+	border-bottom: none;
+}
+
+.widget_grid_row:first-child {
+	border-left: none;
+}
+
+.widget_grid_cell:last-child {
+	border-right: 1px solid black;
+}
+
+.widget_grid_cell_last {
+	border-right: none !important;
+}
+
+.widget_grid_cell {
+	display: inline-block;
+	overflow: hidden;
+
+	border-left: 1px solid black;
+}
+
+.widget_grid_cell:first-child {
+	border-left: none;
+}
+
+.widget_grid_cell_filler {
+
+}
+
+
+
+.ui-resizable-helper { border-right: 2px solid #000000; }
+
+.ui-resizable-e {
+	width: 10px;
+}
