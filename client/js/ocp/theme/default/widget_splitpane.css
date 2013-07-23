@@ -1,0 +1,29 @@
+.splitpane_container {
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.splitpane_left {
+	display: inline-block;
+	overflow: hidden;
+	padding: 0px;
+	vertical-align: top;
+}
+
+.leftpane_block {
+	display: inline-block;
+	overflow: hidden;
+}
+
+.splitpane_right {
+	display: inline-block;
+	vertical-align: top;
+	overflow: hidden;
+}
+
+.ui-resizable-helper { border-right: 2px solid #DDDDDD; }
+
+.ui-resizable-e {
+	width: 10px;
+	background-color: #DDDDDD;
+}
