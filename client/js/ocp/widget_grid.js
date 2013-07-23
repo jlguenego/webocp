@@ -101,20 +101,24 @@ $.widget( "ui.ocp_grid", {
 		var container_w = this.element.find('.widget_grid_container').innerWidth();
 		if (row_w < container_w - g_scrollbar_offset) {
 			row_w = container_w - g_scrollbar_offset;
-			this.element.find('.widget_grid_cell:last-child').removeClass('widget_grid_cell_last');
-		} else {
-			this.element.find('.widget_grid_cell:last-child').addClass('widget_grid_cell_last');
 		}
 
-		this.element.find('.widget_grid_row').outerWidth(row_w);
-		this.element.find('.widget_grid_body').outerWidth(container_w - g_scrollbar_offset);
+		var row = this.element.find('.widget_grid_row');
+		var body = this.element.find('.widget_grid_body').get(0);
+		if (body.scrollHeight > ($(body).height() + g_scrollbar_offset)) {
+			$(body).outerWidth(container_w - g_scrollbar_offset);
+			row.outerWidth(row_w);
+		} else {
+			$(body).outerWidth(container_w);
+			row.outerWidth(row_w + g_scrollbar_offset);
+		}
 	},
 
 	_total_row_width: function() {
 		var total_width = 0;
 		for (var colname in this.options.column) {
-			var width = $('#widget_grid_col_' + colname).width();
-			total_width += width + 1; // border width
+			var width = $('#widget_grid_col_' + colname).outerWidth();
+			total_width += width;
 		}
 		return total_width;
 	},

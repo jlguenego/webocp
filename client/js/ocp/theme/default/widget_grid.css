@@ -8,10 +8,25 @@
 	border: 1px solid black;
 }
 
+.widget_grid_sortable {
+
+}
+
+.widget_grid_col_drag {
+	display: inline-block;
+	cursor: default;
+}
+
 .widget_grid_header_row {
 	position: absolute;
+	padding: 0px;
+	margin: 0px;
 
 	background-color: #E1E1E1;
+}
+
+.widget_grid_header_cell {
+
 }
 
 .widget_grid_body{
@@ -36,10 +51,6 @@
 	border-right: 1px solid black;
 }
 
-.widget_grid_cell_last {
-	border-right: none !important;
-}
-
 .widget_grid_cell {
 	display: inline-block;
 	overflow: hidden;
@@ -54,8 +65,6 @@
 .widget_grid_cell_filler {
 
 }
-
-
 
 .ui-resizable-helper { border-right: 2px solid #000000; }
 
