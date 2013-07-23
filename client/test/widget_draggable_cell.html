@@ -83,7 +83,11 @@ html, body {
 						console.log(end_colname);
 						$('.widget_grid_body_row').each(function() {
 							var col_to_move = $(this).find('.'+start_colname).detach();
-							col_to_move.insertAfter($(this).find('.'+end_colname));
+							if (end_colname) {
+								col_to_move.insertAfter($(this).find('.'+end_colname));
+							} else {
+								col_to_move.prependTo($(this));
+							}
 						})
 					}
 				});
