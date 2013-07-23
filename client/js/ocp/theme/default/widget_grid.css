@@ -9,7 +9,7 @@
 }
 
 .widget_grid_sortable {
-
+	cursor: default;
 }
 
 .widget_grid_col_drag {
@@ -34,7 +34,6 @@
 	height: 100%;
 }
 
-
 .widget_grid_row {
 	border-bottom: 1px solid black;
 }
@@ -45,6 +44,10 @@
 
 .widget_grid_row:first-child {
 	border-left: none;
+}
+
+.widget_grid_body_row {
+
 }
 
 .widget_grid_cell:last-child {
@@ -70,4 +73,9 @@
 
 .ui-resizable-e {
 	width: 10px;
+}
+
+.ui-sortable-placeholder {
+	display: inline-block !important;
+	height: 0px !important;
 }

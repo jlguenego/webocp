@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+		<script src="../js/ocp/core.js"></script>
+		<script src="../js/ocp/widget_grid.js"></script>
+		<link rel="stylesheet" href="../js/ocp/theme/default/widget_grid.css" />
+
+		<style>
+html, body {
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+
+#grid {
+	width: 1000px;
+	padding: 20px;
+}
+
+		</style>
+	</head>
+
+	<body>
+		<div id="grid"></div>
+		<script>
+			$("#grid").ocp_grid({
+				column: {
+					filename: {
+						label: 'File name',
+						width: 200
+					},
+					size: {
+						label: 'Size',
+						width: 70
+					},
+					last_modified: {
+						label: 'Last modified',
+						width: 100
+					}
+				},
+				data: [
+					{
+						filename: 'kiki.txt1',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt2',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					}
+				]
+			});
+
+			var start_colname = null;
+			var end_colname = null;
+			$(document).ready(function() {
+				$('.widget_grid_sortable').sortable({
+					containment: "parent",
+					helper: "clone",
+					start: function(ev, ui) {
+						console.log('start');
+						start_colname = $('.widget_grid_sortable:not(.ui-sortable-helper)').sortable("toArray").slice(-1)[0];
+						console.log(start_colname);
+					},
+					stop: function(ev, ui) {
+						console.log('stop');
+						var a = $('.widget_grid_sortable').sortable("toArray");
+						end_colname = null;
+						var index = a.indexOf(start_colname);
+						if (index > 0) {
+							end_colname = a[index - 1];
+						}
+
+						console.log(end_colname);
+						$('.widget_grid_body_row').each(function() {
+							var col_to_move = $(this).find('.'+start_colname).detach();
+							col_to_move.insertAfter($(this).find('.'+end_colname));
+						})
+					}
+				});
+				$('.widget_grid_sortable').disableSelection();
+			});
+		</script>
+	</body>
+</html>

@@ -19,6 +19,7 @@ $.widget( "ui.ocp_grid", {
 		data: [],
 		column_width: 50
 	},
+	counter: 0,
 
 	_create: function() {
 		g_scrollbar_offset = this.get_scrollbar_width();
@@ -37,11 +38,11 @@ $.widget( "ui.ocp_grid", {
 
 	_header: function() {
 		var container = this.element.find('.widget_grid_container');
-		var header = $('<div class="widget_grid_row widget_grid_header_row"/>').appendTo(container);
+		var header = $('<ul class="widget_grid_row widget_grid_header_row widget_grid_sortable"/>').appendTo(container);
 		for (var name in this.options.column) {
 			var cell = this.options.column[name]
 			var label = cell.label || name;
-			var cell_div = $('<div id="widget_grid_col_' + name + '" class="widget_grid_cell widget_grid_header_cell">' + label + '</div>')
+			var cell_div = $('<li id="widget_grid_col_' + name + '" class="widget_grid_cell widget_grid_header_cell">' + label + '</li>')
 							.appendTo(header);
 			var width = cell.width || this.options.column_width;
 			cell_div.width(width);
@@ -75,24 +76,23 @@ $.widget( "ui.ocp_grid", {
 	},
 
 	add_row: function(data) {
-		var id = "widget_grid_row_" + Math.round(new Date().getTime() / 1000);
-		var row = $('<div id="' + id + '" class="widget_grid_row"/>').appendTo(this.element.find('.widget_grid_body'));
+		var id = "widget_grid_row_" + this.counter;
+		var row = $('<div id="' + id + '" class="widget_grid_row widget_grid_body_row"/>').appendTo(this.element.find('.widget_grid_body'));
 
 		for (var colname in this.options.column) {
 			var content = data[colname];
-			var cell_div = $('<div class="widget_grid_cell widget_grid_cell_' + colname + '">' + content + '</div>')
+			var cell_div = $('<div class="widget_grid_cell widget_grid_col_' + colname + '">' + content + '</div>')
 						.appendTo(row);
 			var width = $('#widget_grid_col_' + colname).width();
 			cell_div.width(width);
 		}
+		this.counter++;
 	},
 
 	resize_col: function(col) {
-		var id = $(col).attr('id');
-		var colname = $(col).attr('id').replace('widget_grid_col_', '');
-		console.log('resizing ' + colname);
+		var colname = $(col).attr('id');
 		var width = $(col).width();
-		$('.widget_grid_cell_' + colname).width(width);
+		$('.' + colname).width(width);
 		this._resize_rows();
 	},
 
