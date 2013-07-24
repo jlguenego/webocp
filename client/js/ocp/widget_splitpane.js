@@ -18,35 +18,37 @@ $.widget( "ui.ocp_splitpane", {
 	},
 	g_scrollbar_offset: null,
 
+	leftpane: null,
+	rightpane: null,
+	resizebar: null,
+	resizebar_helper: null,
+
+	start_x: null,
+	old_x: null,
+
 	_create: function() {
 		this._clean_div();
 
-		var leftpane = $(this.element.children().get(0));
-		var rightpane = $(this.element.children().get(1));
-		var leftpane_block = $('<div class="widget_leftpane_block"/>').html(leftpane.html());
-		leftpane.html(leftpane_block);
-		var rightpane_block = $('<div class="widget_rightpane_block"/>').html(rightpane.html());
-		rightpane.html(rightpane_block);
+		this.leftpane = $(this.element.children().get(0));
+		this.rightpane = $(this.element.children().get(1));
+		this.resizebar = $('<div class="widget_splitpane_resizebar"/>').insertBefore(this.rightpane);
 
-		this.element.addClass('widget_splitpane_container');
-		leftpane.addClass('widget_splitpane_left');
-		rightpane.addClass('widget_splitpane_right');
-
-		this.resizable(leftpane);
+		this.element.addClass('widget_splitpane');
+		this.leftpane.addClass('widget_splitpane_left');
+		this.rightpane.addClass('widget_splitpane_right');
 
 		if (this.options.source[0]) {
-			leftpane.css(this.options.source[0]);
+			this.leftpane.css(this.options.source[0]);
 		}
 		if (this.options.source[1]) {
-			rightpane.css(this.options.source[1]);
+			this.rightpane.css(this.options.source[1]);
 		}
 
-		this.g_scrollbar_offset = this.get_scrollbar_width() - 12;
+		this._refresh();
 
 		var self = this;
-		this._refresh();
-		$(window).resize(function() {
-			self._refresh();
+		this.resizebar.mousedown(function(e) {
+			self._start_resize(e);
 		});
 
 		return this;
@@ -55,39 +57,49 @@ $.widget( "ui.ocp_splitpane", {
 	_destroy: function() {
 	},
 
-	resizable: function(leftpane) {
-		var self = this;
-		leftpane.resizable({
-			helper: "ui-resizable-helper",
-			handles: 'e',
-			minWidth: 100,
-			start: function( event, ui ) {
-				var helper = ui.helper;
-				helper.height(helper.height() + 1);
-			},
-			stop: function( event, ui ) {
-				var container_w = $(this).parent().innerWidth();
-				var sidebar_w = $(this).width();
+	_start_resize: function(e) {
+		if (e.button == 0) { // left click
+	        this.resizebar_helper = this.resizebar.clone().appendTo(this.element);
+	        this.resizebar_helper.addClass('widget_resizebar_helper');
 
-				$(this).find('.widget_leftpane_block').outerWidth(sidebar_w - self.g_scrollbar_offset);
+	        var resizebar_offset = this.resizebar.offset();
+	        this.resizebar_helper.offset(resizebar_offset);
 
-				var rightpane = $(this).parent().find('.widget_splitpane_right');
-				rightpane.width(container_w - sidebar_w);
-				rightpane.find('.widget_rightpane_block').outerWidth(rightpane.innerWidth());
+	        var self = this;
+	        this.start_x = e.pageX;
+	        $(window).bind('mousemove', function(event){
+				var offset = self.resizebar_helper.offset();
+				offset.left = event.pageX;
+
+				// Check that the helper stay inside the container
+				var container_left = self.element.offset().left;
+				var container_right = container_left + self.element.width() - self.resizebar_helper.width();
+				offset.left = Math.max(offset.left, container_left);
+				offset.left = Math.min(offset.left, container_right);
+
+				self.resizebar_helper.offset(offset);
+			});
+
+	    	$(window).bind('mouseup', function(e) {
+				self._stop_resize(e);
+			});
+	    }
+	},
+
+	_stop_resize: function(e) {
+		if (e.button == 0) { // left click
+			$(window).unbind('mousemove');
+			$(window).unbind('mouseup');
+
+			var leftpane_width = this.leftpane.width() + this.resizebar_helper.offset().left - this.resizebar.offset().left;
+			if (this.resizebar_helper) {
+				this.resizebar_helper.remove();
+				this.resizebar_helper = null;
 			}
-		});
 
-		leftpane.find('.widget_leftpane_block').css({
-			overflow: this.options.overflow,
-			width: '100%',
-			height: '100%'
-		});
-
-		leftpane.parent().find('.widget_rightpane_block').css({
-			overflow: this.options.overflow,
-			width: '100%',
-			height: '100%'
-		});
+	        this.leftpane.width(leftpane_width);
+	        this._refresh();
+	    }
 	},
 
 	_clean_div: function() {
@@ -96,24 +108,10 @@ $.widget( "ui.ocp_splitpane", {
 	},
 
 	_refresh: function() {
-		var container_w = this.element.innerWidth();
-		var left_pane = this.element.find('.widget_splitpane_left');
-		var right_pane = this.element.find('.widget_splitpane_right');
-		sidebar_w = left_pane.width();
-		content_w = container_w - sidebar_w;
-		if (content_w < 100) {
-			content_w = 100;
-			sidebar_w = container_w - content_w;
-		}
-
-		left_pane.resizable("option", "maxWidth", container_w - 100);
-		left_pane.width(sidebar_w);
-		left_pane.find('.widget_leftpane_block').width(sidebar_w - this.g_scrollbar_offset);
-
-		right_pane.width(content_w);
-
-		var container_h = this.element.innerHeight();
-		left_pane.height(container_h);
+		var container_w = this.element.width();
+		var left_w = this.leftpane.width();
+		var resizebar_w = this.resizebar.width();
+		this.rightpane.width(container_w - left_w - resizebar_w);
 	},
 
 	get_scrollbar_width: function() {

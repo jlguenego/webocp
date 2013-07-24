@@ -1,4 +1,4 @@
-.widget_splitpane {
+.widget_splitpane_container {
 	white-space: nowrap;
 	overflow: hidden;
 }
@@ -20,22 +20,13 @@
 .widget_splitpane_right {
 	display: inline-block;
 	height: 100%;
-	overflow: hidden;
-	padding: 0px;
 	vertical-align: top;
-}
-
-.widget_rightpane_block {
-	display: inline-block;
-	height: 100%;
 	overflow: hidden;
 }
 
-.widget_splitpane_resizebar {
-	display: inline-block;
-	width: 5px;
-	height: 100%;
+.ui-resizable-helper { border-right: 2px solid #DDDDDD; }
 
-	cursor: e-resize;
-	background-color: #E1E1E1;
+.ui-resizable-e {
+	width: 10px;
+	background-color: #DDDDDD;
 }
