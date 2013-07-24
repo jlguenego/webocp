@@ -59,6 +59,7 @@ $.widget( "ui.ocp_splitpane", {
 
 	_start_resize: function(e) {
 		if (e.button == 0) { // left click
+			e.preventDefault();
 	        this.resizebar_helper = this.resizebar.clone().appendTo(this.element);
 	        this.resizebar_helper.addClass('widget_resizebar_helper');
 
