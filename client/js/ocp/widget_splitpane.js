@@ -48,7 +48,10 @@ $.widget( "ui.ocp_splitpane", {
 
 		var self = this;
 		this.resizebar.mousedown(function(e) {
-			self._start_resize(e);
+			if (e.button == 0) { // left click
+				e.preventDefault();
+				self._start_resize(e);
+			}
 		});
 
 		return this;
@@ -58,49 +61,47 @@ $.widget( "ui.ocp_splitpane", {
 	},
 
 	_start_resize: function(e) {
-		if (e.button == 0) { // left click
-			e.preventDefault();
-	        this.resizebar_helper = this.resizebar.clone().appendTo(this.element);
-	        this.resizebar_helper.addClass('widget_resizebar_helper');
+        this.resizebar_helper = this.resizebar.clone().appendTo(this.element);
+        this.resizebar_helper.addClass('widget_resizebar_helper');
 
-	        var resizebar_offset = this.resizebar.offset();
-	        this.resizebar_helper.offset(resizebar_offset);
+        var resizebar_offset = this.resizebar.offset();
+        this.resizebar_helper.offset(resizebar_offset);
 
-	        var self = this;
-	        this.start_x = e.pageX;
-	        $(window).bind('mousemove', function(event){
-				var offset = self.resizebar_helper.offset();
-				offset.left = event.pageX;
+        var self = this;
+        $(window).bind('mousemove', function(e){
+        	e.preventDefault();
+			var offset = self.resizebar_helper.offset();
+			offset.left = e.pageX;
 
-				// Check that the helper stay inside the container
-				var container_left = self.element.offset().left;
-				var container_right = container_left + self.element.width() - self.resizebar_helper.width();
-				offset.left = Math.max(offset.left, container_left);
-				offset.left = Math.min(offset.left, container_right);
+			// Check that the helper stay inside the container
+			var container_left = self.element.offset().left;
+			var container_right = container_left + self.element.width() - self.resizebar_helper.width();
+			offset.left = Math.max(offset.left, container_left);
+			offset.left = Math.min(offset.left, container_right);
 
-				self.resizebar_helper.offset(offset);
-			});
+			self.resizebar_helper.offset(offset);
+		});
 
-	    	$(window).bind('mouseup', function(e) {
+    	$(window).bind('mouseup', function(e) {
+    		if (e.button == 0) { // left click
+    			e.preventDefault();
 				self._stop_resize(e);
-			});
-	    }
+			}
+		});
 	},
 
 	_stop_resize: function(e) {
-		if (e.button == 0) { // left click
-			$(window).unbind('mousemove');
-			$(window).unbind('mouseup');
+		$(window).unbind('mousemove');
+		$(window).unbind('mouseup');
 
-			var leftpane_width = this.leftpane.width() + this.resizebar_helper.offset().left - this.resizebar.offset().left;
-			if (this.resizebar_helper) {
-				this.resizebar_helper.remove();
-				this.resizebar_helper = null;
-			}
+		var leftpane_width = this.leftpane.width() + this.resizebar_helper.offset().left - this.resizebar.offset().left;
+		if (this.resizebar_helper) {
+			this.resizebar_helper.remove();
+			this.resizebar_helper = null;
+		}
 
-	        this.leftpane.width(leftpane_width);
-	        this._refresh();
-	    }
+        this.leftpane.width(leftpane_width);
+        this._refresh();
 	},
 
 	_clean_div: function() {
