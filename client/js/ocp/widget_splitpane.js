@@ -44,7 +44,6 @@ $.widget( "ui.ocp_splitpane", {
 		var self = this;
 		this._refresh();
 		$(window).resize(function() {
-			console.log('window resize');
 			self._refresh();
 		});
 
@@ -99,7 +98,6 @@ $.widget( "ui.ocp_splitpane", {
 		left_pane.width(sidebar_w);
 		left_pane.find('.widget_leftpane_block').width(sidebar_w - this.g_scrollbar_offset);
 
-		console.log('block_width='+left_pane.find('.widget_leftpane_block').width());
 		right_pane.width(content_w);
 
 		var container_h = this.element.innerHeight();

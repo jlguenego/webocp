@@ -36,6 +36,10 @@ $.widget( "ui.ocp_grid", {
 
 		// Set rows width.
 		this._resize_rows();
+		var self = this;
+		$(window).resize(function() {
+			self._resize_rows();
+		});
 		return this;
 	},
 
