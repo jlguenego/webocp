@@ -8,8 +8,6 @@
  */
 
 
-var g_scrollbar_offset = null;
-
 (function( $, undefined ) {
 
 $.widget( "ui.ocp_splitpane", {
@@ -17,12 +15,13 @@ $.widget( "ui.ocp_splitpane", {
 	options: {
 		source: []
 	},
+	g_scrollbar_offset: null,
 
 	_create: function() {
 		this._clean_div();
 
-		var leftpane = $(this.element.find('>div').get(0));
-		var rightpane = $(this.element.find('>div').get(1));
+		var leftpane = $(this.element.children().get(0));
+		var rightpane = $(this.element.children().get(1));
 		var leftpane_block = $('<div class="widget_leftpane_block"/>').html(leftpane.html());
 		leftpane.html(leftpane_block);
 
@@ -39,12 +38,12 @@ $.widget( "ui.ocp_splitpane", {
 			rightpane.css(this.options.source[1]);
 		}
 
-		g_scrollbar_offset = this.get_scrollbar_width() - 12;
+		this.g_scrollbar_offset = this.get_scrollbar_width() - 12;
 
 		var self = this;
-		this._refresh(self);
+		this._refresh();
 		$(window).resize(function() {
-			self._refresh(self);
+			self._refresh();
 		});
 
 		return this;
@@ -54,6 +53,7 @@ $.widget( "ui.ocp_splitpane", {
 	},
 
 	resizable: function(leftpane) {
+		var self = this;
 		leftpane.resizable({
 			helper: "ui-resizable-helper",
 			handles: 'e',
@@ -65,7 +65,7 @@ $.widget( "ui.ocp_splitpane", {
 			stop: function( event, ui ) {
 				var container_w = $(this).parent().innerWidth();
 				sidebar_w = $(this).width();
-				$(this).find('.widget_leftpane_block').width(sidebar_w - g_scrollbar_offset);
+				$(this).find('.widget_leftpane_block').width(sidebar_w - self.g_scrollbar_offset);
 				$(this).parent().find('.widget_splitpane_right').width(container_w - sidebar_w);
 			}
 		});
@@ -82,10 +82,10 @@ $.widget( "ui.ocp_splitpane", {
 		this.element.html(clean_html);
 	},
 
-	_refresh: function(self) {
-		var container_w = self.element.innerWidth();
-		var left_pane = self.element.find('.widget_splitpane_left');
-		var right_pane = self.element.find('.widget_splitpane_right');
+	_refresh: function() {
+		var container_w = this.element.innerWidth();
+		var left_pane = this.element.find('.widget_splitpane_left');
+		var right_pane = this.element.find('.widget_splitpane_right');
 		sidebar_w = left_pane.width();
 		content_w = container_w - sidebar_w;
 		if (content_w < 100) {
@@ -95,10 +95,12 @@ $.widget( "ui.ocp_splitpane", {
 
 		left_pane.resizable("option", "maxWidth", container_w - 100);
 		left_pane.width(sidebar_w);
-		left_pane.find('.widget_leftpane_block').width(sidebar_w - g_scrollbar_offset);
+		left_pane.find('.widget_leftpane_block').width(sidebar_w - this.g_scrollbar_offset);
+
+		console.log(left_pane.find('.widget_leftpane_block').width());
 		right_pane.width(content_w);
 
-		var container_h = self.element.innerHeight();
+		var container_h = this.element.innerHeight();
 		left_pane.height(container_h);
 	},
 
