@@ -40,8 +40,12 @@ $.widget( "ui.ocp_splitpane", {
 		}
 
 		g_scrollbar_offset = this.get_scrollbar_width() - 12;
-		this._refresh();
-		$(window).resize(this._refresh);
+
+		var self = this;
+		this._refresh(self);
+		$(window).resize(function() {
+			self._refresh(self);
+		});
 
 		return this;
 	},
@@ -59,14 +63,14 @@ $.widget( "ui.ocp_splitpane", {
 				helper.height(helper.height() + 1);
 			},
 			stop: function( event, ui ) {
-				var container_w = $('.widget_splitpane_container').innerWidth();
+				var container_w = $(this).parent().innerWidth();
 				sidebar_w = $(this).width();
-				$('.widget_leftpane_block').width(sidebar_w - g_scrollbar_offset);
-				$('.widget_splitpane_right').width(container_w - sidebar_w);
+				$(this).find('.widget_leftpane_block').width(sidebar_w - g_scrollbar_offset);
+				$(this).parent().find('.widget_splitpane_right').width(container_w - sidebar_w);
 			}
 		});
 
-		$('.widget_leftpane_block').css({
+		leftpane.find('.widget_leftpane_block').css({
 			overflow:'auto',
 			width:'100%',
 			height:'100%'
@@ -78,25 +82,24 @@ $.widget( "ui.ocp_splitpane", {
 		this.element.html(clean_html);
 	},
 
-	_refresh: function() {
-		var container_w = $('.widget_splitpane_container').innerWidth();
-		sidebar_w = $('.widget_splitpane_left').width();
+	_refresh: function(self) {
+		var container_w = self.element.innerWidth();
+		var left_pane = self.element.find('.widget_splitpane_left');
+		var right_pane = self.element.find('.widget_splitpane_right');
+		sidebar_w = left_pane.width();
 		content_w = container_w - sidebar_w;
 		if (content_w < 100) {
 			content_w = 100;
 			sidebar_w = container_w - content_w;
 		}
 
-		console.log('content_w=' + content_w);
-		$('.widget_splitpane_left').resizable("option", "maxWidth", container_w - 100);
+		left_pane.resizable("option", "maxWidth", container_w - 100);
+		left_pane.width(sidebar_w);
+		left_pane.find('.widget_leftpane_block').width(sidebar_w - g_scrollbar_offset);
+		right_pane.width(content_w);
 
-		$('.widget_splitpane_left').width(sidebar_w);
-		$('.widget_leftpane_block').width(sidebar_w - g_scrollbar_offset);
-		$('.widget_splitpane_right').width(content_w);
-
-		var container_h = $('.widget_splitpane_container').innerHeight();
-		$('.widget_splitpane_left').height(container_h);
-
+		var container_h = self.element.innerHeight();
+		left_pane.height(container_h);
 	},
 
 	get_scrollbar_width: function() {

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+
+		 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
+
+		<!-- JQUERY / JQUERY UI -->
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<!-- END JQUERY / JQUERY UI -->
+
+		<!-- OCP -->
+		<script src="../js/ocp/core.js"></script>
+			<!-- LAYOUT 3R -->
+			<script src="../js/ocp/widget_layout_3r.js"></script>
+			<link rel="stylesheet" href="../js/ocp/theme/default/widget_layout_3r.css" />
+			<!-- END LAYOUT 3R -->
+
+			<!-- SPLITPANE -->
+			<script src="../js/ocp/widget_splitpane.js"></script>
+			<link rel="stylesheet" href="../js/ocp/theme/default/widget_splitpane.css" />
+			<!-- END SPLITPANE -->
+
+			<!-- TREE -->
+			<script src="../js/ocp/widget_tree.js"></script>
+			<link rel="stylesheet" href="../js/ocp/theme/default/widget_tree.css" />
+			<!-- END TREE -->
+
+			<!-- GRID -->
+			<script src="../js/ocp/widget_grid.js"></script>
+			<link rel="stylesheet" href="../js/ocp/theme/default/widget_grid.css" />
+			<!-- END GRID -->
+		<!-- END OCP -->
+
+		<style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	font-family: 'Open sans', serif;
+}
+
+#page {
+	width: 100%;
+}
+
+#header {
+	background-color: #EEEEEE;
+}
+
+#sidebar {
+	background-color: #EEFFFF;
+}
+
+#sidebar_header {
+	vertical-align: top;
+
+	padding-top: 10px;
+	background-color: #DF0000;
+	width: 100%;
+	height: 27px;
+}
+
+#sidebar_header img {
+	position: relative;
+	top: -5px;
+	margin-left: 3px;
+	margin-right: 10px;
+	width: 29px;
+	height: 27px;
+}
+
+#tree {
+}
+
+#content {
+	background-color: #FFEEFF;
+}
+
+#content_header {
+	vertical-align: top;
+
+	padding-top: 10px;
+	padding-left: 10px;
+	background-color: #FFFFFF;
+
+	height: 27px;
+}
+
+#grid {
+	height: 100%;
+}
+
+#footer {
+	background-color: #FFFFEE;
+}
+		</style>
+	</head>
+
+	<body>
+		<div id="page">
+			<div id="header">
+			</div>
+			<div id="main">
+				<div id="sidebar">
+					<div id="sidebar_header">
+						<img src="image/cloud2.png" />File manager
+					</div>
+					<div class="tree" id="tree"></div>
+				</div>
+				<div id="content">
+					<div id="content_header">
+						Put menu here
+					</div>
+					<div id="grid"></div>
+				</div>
+			</div>
+			<div id="footer">
+			</div>
+
+		</div>
+		<script>
+			// Apply the 3R layout
+			$('#page').ocp_layout_3r({
+				header_h: 90,
+				footer_h: 150
+			});
+
+			// Set splitpane to the middle row
+			$("#main").ocp_splitpane({
+				source: [
+					{ width: 200, }
+				]
+			});
+
+			// Put a tree on the left pane
+			var src = [
+				{
+					item: {
+						name: 'item_1',
+						image: 'image/clouddrive.png'
+					},
+					children: [
+						{
+							item: {
+								label: 'Item 1.1',
+							},
+							children: [
+								{
+									item: {
+										label: 'Item 1.1.1',
+									},
+									children: [
+										{
+											item: {
+												label: 'Item 1.1.1.1',
+											}
+										},
+										{
+											item: {
+												label: 'Item 1.1.1.2',
+											}
+										}
+									]
+								},
+								{
+									item: {
+										label: 'Item 1.1.2',
+									},
+									children: [
+										{
+											item: {
+												label: 'Item 1.1.2.1',
+											}
+										},
+										{
+											item: {
+												label: 'Item 1.1.2.2',
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							item: {
+								label: 'Item 1.2',
+							}
+						}
+					]
+				},
+				{
+					item: {
+						label: 'Item 2',
+					},
+					children: []
+				},
+				{
+					item: {
+						label: 'Item 3',
+					},
+					children: [
+						{
+							item: {
+								label: 'Item 3.1',
+							}
+						},
+						{
+							item: {
+								label: 'Item 3.2',
+							},
+							children: [
+								{
+									item: {
+										label: 'Item 3.2.1',
+									}
+								},
+								{
+									item: {
+										label: 'Item 3.2.2',
+									}
+								}
+							]
+						}
+					]
+				}
+			];
+			$('#tree').ocp_tree({
+				source: src
+			});
+
+			// Put a grid on right pane
+
+			$("#grid").ocp_grid({
+				column: {
+					filename: {
+						label: 'File name',
+						width: 200
+					},
+					size: {
+						label: 'Size',
+						width: 70
+					},
+					last_modified: {
+						label: 'Last modified',
+						width: 100
+					}
+				},
+				data: [
+					{
+						filename: 'kiki.txt1',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt2',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03'
+					}
+				]
+			});
+		</script>
+	</body>
+</html>

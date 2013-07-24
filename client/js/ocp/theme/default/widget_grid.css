@@ -61,8 +61,8 @@
 	border-left: 1px solid black;
 }
 
-.widget_grid_cell:first-child {
-
+.widget_grid_cell .ui-resizable-e {
+	background-color: transparent;
 }
 
 .ui-resizable-helper {
