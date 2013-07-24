@@ -152,21 +152,20 @@ $.widget( "ui.ocp_grid", {
 	_resize_rows: function() {
 		var row_w = this._total_row_width();
 		var container_w = this.element.find('.widget_grid_container').innerWidth();
-		if (row_w < container_w - g_scrollbar_offset) {
-			row_w = container_w - g_scrollbar_offset;
+		if (row_w < container_w) {
+			row_w = container_w;
 		}
 
 		var row = this.element.find('.widget_grid_row');
 		var body = this.element.find('.widget_grid_body').get(0);
 		if (body.scrollHeight > ($(body).outerHeight())) {
 			console.log('has scroll');
-			$(body).outerWidth(container_w - g_scrollbar_offset);
-			row.outerWidth(row_w);
+			$(body).outerWidth(container_w);
 		} else {
 			console.log('has not scroll');
 			$(body).outerWidth(container_w);
-			row.outerWidth(row_w + g_scrollbar_offset);
 		}
+		row.outerWidth(row_w);
 	},
 
 	_total_row_width: function() {

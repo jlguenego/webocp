@@ -25,6 +25,8 @@ $.widget( "ui.ocp_splitpane", {
 		var rightpane = $(this.element.children().get(1));
 		var leftpane_block = $('<div class="widget_leftpane_block"/>').html(leftpane.html());
 		leftpane.html(leftpane_block);
+		var rightpane_block = $('<div class="widget_rightpane_block"/>').html(rightpane.html());
+		rightpane.html(rightpane_block);
 
 		this.element.addClass('widget_splitpane_container');
 		leftpane.addClass('widget_splitpane_left');
@@ -65,13 +67,23 @@ $.widget( "ui.ocp_splitpane", {
 			},
 			stop: function( event, ui ) {
 				var container_w = $(this).parent().innerWidth();
-				sidebar_w = $(this).width();
-				$(this).find('.widget_leftpane_block').width(sidebar_w - self.g_scrollbar_offset);
-				$(this).parent().find('.widget_splitpane_right').width(container_w - sidebar_w);
+				var sidebar_w = $(this).width();
+
+				$(this).find('.widget_leftpane_block').outerWidth(sidebar_w - self.g_scrollbar_offset);
+
+				var rightpane = $(this).parent().find('.widget_splitpane_right');
+				rightpane.width(container_w - sidebar_w);
+				rightpane.find('.widget_rightpane_block').outerWidth(rightpane.innerWidth());
 			}
 		});
 
 		leftpane.find('.widget_leftpane_block').css({
+			overflow: this.options.overflow,
+			width: '100%',
+			height: '100%'
+		});
+
+		leftpane.parent().find('.widget_rightpane_block').css({
 			overflow: this.options.overflow,
 			width: '100%',
 			height: '100%'
