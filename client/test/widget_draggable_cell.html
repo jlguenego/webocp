@@ -69,8 +69,8 @@ html, body {
 					placeholder: 'widget_grid_placeholder',
 					forcePlaceholderSize: true,
 					start: function(ev, ui) {
-						ui.placeholder.height(ui.item.height());
-						console.log($('.widget_grid_sortable').height());
+						ui.placeholder.outerHeight(ui.item.outerHeight());
+						$('.widget_grid_sortable').height(ui.placeholder.outerHeight());
 						start_colname = $('.widget_grid_sortable').sortable("toArray").slice(-1)[0];
 					},
 					sort: function(ev, ui) {

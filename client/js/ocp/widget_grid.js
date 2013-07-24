@@ -20,6 +20,8 @@ $.widget( "ui.ocp_grid", {
 		column_width: 50
 	},
 	counter: 0,
+	start_colname: null,
+	end_colname: null,
 
 	_create: function() {
 		g_scrollbar_offset = this.get_scrollbar_width();
@@ -27,8 +29,12 @@ $.widget( "ui.ocp_grid", {
 		var container = $('<div class="widget_grid_container"/>').appendTo(this.element);
 		this._header();
 		var body = $('<div class="widget_grid_body"/>').appendTo(container);
+
+		// Header is absolute => show the first line of the grid.
 		body.css('padding-top', container.find('.widget_grid_header_row').height()+'px')
 		this._rows();
+
+		// Set rows width.
 		this._resize_rows();
 		return this;
 	},
@@ -46,26 +52,69 @@ $.widget( "ui.ocp_grid", {
 							.appendTo(header);
 			var width = cell.width || this.options.column_width;
 			cell_div.width(width);
-
-			var self = this;
-			cell_div.resizable({
-				helper: "ui-resizable-helper",
-				handles: 'e',
-				minWidth: 20,
-				start: function( event, ui ) {
-					var helper = ui.helper;
-					helper.height(helper.height() + 1);
-				},
-				stop: function( event, ui ) {
-					self.resize_col(this);
-				}
-			});
+			this._set_resizable_row(cell_div);
 		}
+
+		this._set_sortable_header(header);
+
+		// Make header snap to top.
 		container.scroll(function(){
 		    header.css({
 		        'top': $(this).scrollTop()
 		    });
 		});
+	},
+
+	_set_resizable_row: function(cell) {
+		var self = this;
+		cell.resizable({
+			helper: "ui-resizable-helper",
+			handles: 'e',
+			minWidth: 20,
+			start: function( event, ui ) {
+				var helper = ui.helper;
+				helper.height(helper.height() + 1);
+			},
+			stop: function( event, ui ) {
+				self.resize_col(this);
+			}
+		});
+	},
+
+	_set_sortable_header: function(header) {
+		var self = this;
+		header.sortable({
+			containment: "parent",
+			helper: "clone",
+			placeholder: 'widget_grid_placeholder',
+			forcePlaceholderSize: true,
+			start: function(ev, ui) {
+				ui.placeholder.outerHeight(ui.item.outerHeight());
+				$(this).height(ui.placeholder.outerHeight());
+				self.start_colname = $(this).sortable("toArray").slice(-1)[0];
+			},
+			sort: function(ev, ui) {
+				$(this).find('.ui-sortable-helper').css('top', '0px');
+			},
+			stop: function(ev, ui) {
+				var a = $(this).sortable("toArray");
+				self.end_colname = null;
+				var index = a.indexOf(self.start_colname);
+				if (index > 0) {
+					self.end_colname = a[index - 1];
+				}
+
+				$(this).parent().find('.widget_grid_body_row').each(function() {
+					var col_to_move = $(this).find('.' + self.start_colname).detach();
+					if (self.end_colname) {
+						col_to_move.insertAfter($(this).find('.' + self.end_colname));
+					} else {
+						col_to_move.prependTo($(this));
+					}
+				})
+			}
+		});
+		header.disableSelection();
 	},
 
 	_rows: function() {

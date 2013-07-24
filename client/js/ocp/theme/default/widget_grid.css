@@ -6,6 +6,7 @@
 	overflow: auto;
 
 	border: 1px solid black;
+	border-left: none;
 }
 
 .widget_grid_sortable {
@@ -27,7 +28,7 @@
 }
 
 .widget_grid_header_cell {
-
+	vertical-align: top;
 }
 
 .widget_grid_body{
@@ -41,10 +42,6 @@
 
 .widget_grid_row:last-child {
 	border-bottom: none;
-}
-
-.widget_grid_row:first-child {
-	border-left: none;
 }
 
 .widget_grid_body_row {
@@ -65,7 +62,7 @@
 }
 
 .widget_grid_cell:first-child {
-	border-left: none;
+
 }
 
 .ui-resizable-helper {
@@ -81,6 +78,7 @@
 	padding: 3px 5px;
 	margin: 0px;
 	background-color: #3E3E3E;
+	border-left: 1px solid black;
 }
 
 .ui-sortable-helper {
