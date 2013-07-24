@@ -13,7 +13,8 @@
 $.widget( "ui.ocp_splitpane", {
 	version: "0.0.1",
 	options: {
-		source: []
+		source: [],
+		overflow: 'auto'
 	},
 	g_scrollbar_offset: null,
 
@@ -43,6 +44,7 @@ $.widget( "ui.ocp_splitpane", {
 		var self = this;
 		this._refresh();
 		$(window).resize(function() {
+			console.log('window resize');
 			self._refresh();
 		});
 
@@ -71,9 +73,9 @@ $.widget( "ui.ocp_splitpane", {
 		});
 
 		leftpane.find('.widget_leftpane_block').css({
-			overflow:'auto',
-			width:'100%',
-			height:'100%'
+			overflow: this.options.overflow,
+			width: '100%',
+			height: '100%'
 		});
 	},
 
@@ -97,7 +99,7 @@ $.widget( "ui.ocp_splitpane", {
 		left_pane.width(sidebar_w);
 		left_pane.find('.widget_leftpane_block').width(sidebar_w - this.g_scrollbar_offset);
 
-		console.log(left_pane.find('.widget_leftpane_block').width());
+		console.log('block_width='+left_pane.find('.widget_leftpane_block').width());
 		right_pane.width(content_w);
 
 		var container_h = this.element.innerHeight();
