@@ -34,16 +34,14 @@ $.widget( "ui.ocp_grid", {
 
 		this.container = $('<div class="widget_grid_container"/>').appendTo(this.element);
 		this._header();
-
-
 		this._body();
 
 		// Set rows width.
-		this._refresh();
 		var self = this;
 		$(window).resize(function() {
 			self._refresh();
 		});
+		this._refresh();
 		return this;
 	},
 
@@ -125,6 +123,7 @@ $.widget( "ui.ocp_grid", {
 	},
 
 	_refresh: function() {
+		console.log('grid refresh');
 		var row_w = this._total_cell_width();
 		console.log('row_w=' + row_w);
 

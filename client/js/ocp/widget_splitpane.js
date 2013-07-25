@@ -53,6 +53,10 @@ $.widget( "ui.ocp_splitpane", {
 			}
 		});
 
+		this.element.parent().resize(function() {
+			self._refresh();
+		});
+
 		return this;
 	},
 
@@ -101,6 +105,7 @@ $.widget( "ui.ocp_splitpane", {
 
         this.leftpane.width(leftpane_width);
         this._refresh();
+        $(window).trigger('resize');
 	},
 
 	_clean_div: function() {
