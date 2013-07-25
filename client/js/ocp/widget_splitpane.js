@@ -7,7 +7,6 @@
  *   jquery.ui.widget.js
  */
 
-
 (function( $, undefined ) {
 
 $.widget( "ui.ocp_splitpane", {

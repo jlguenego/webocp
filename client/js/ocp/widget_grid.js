@@ -3,42 +3,46 @@
  *
  *
  * Depends:
- *   jquery.ui.core.js
+ *   ocp.core.js
  *   jquery.ui.widget.js
  */
 
-
-var g_scrollbar_offset = null;
+"use strict";
 
 (function( $, undefined ) {
 
 $.widget( "ui.ocp_grid", {
 	version: "0.0.1",
 	options: {
-		column: [],
+		id: 'my_grid',
+		column: {},
 		data: [],
 		column_width: 50
 	},
 	counter: 0,
-	start_colname: null,
-	end_colname: null,
+	swap_column_start_colname: null,
+	swap_column_end_colname: null,
+
+	scrollbar_width: null,
+
+	container: null,
+	header: null,
+	body: null,
 
 	_create: function() {
-		g_scrollbar_offset = this.get_scrollbar_width();
+		this.scrollbar_width = $().getScrollbarWidth();
 
-		var container = $('<div class="widget_grid_container"/>').appendTo(this.element);
+		this.container = $('<div class="widget_grid_container"/>').appendTo(this.element);
 		this._header();
-		var body = $('<div class="widget_grid_body"/>').appendTo(container);
 
-		// Header is absolute => show the first line of the grid.
-		body.css('padding-top', container.find('.widget_grid_header_row').height()+'px')
-		this._rows();
+
+		this._body();
 
 		// Set rows width.
-		this._resize_rows();
+		this._refresh();
 		var self = this;
 		$(window).resize(function() {
-			self._resize_rows();
+			self._refresh();
 		});
 		return this;
 	},
@@ -47,26 +51,105 @@ $.widget( "ui.ocp_grid", {
 	},
 
 	_header: function() {
-		var container = this.element.find('.widget_grid_container');
-		var header = $('<ul class="widget_grid_row widget_grid_header_row widget_grid_sortable"/>').appendTo(container);
+		this.header = $('<ul/>').appendTo(this.container);
+		this.header.addClass('widget_grid_header_row');
+		this.header.addClass('widget_grid_sortable');
+
 		for (var name in this.options.column) {
-			var cell = this.options.column[name]
-			var label = cell.label || name;
-			var cell_div = $('<li id="widget_grid_col_' + name + '" class="widget_grid_cell widget_grid_header_cell">' + label + '</li>')
-							.appendTo(header);
-			var width = cell.width || this.options.column_width;
-			cell_div.width(width);
-			this._set_resizable_row(cell_div);
+			var column = this.options.column[name]
+			var label = column.label || name;
+
+			var cell = $('<li/>').appendTo(this.header);
+			cell.addClass('widget_grid_cell');
+			cell.addClass('widget_grid_header_cell');
+			cell.attr('id', this.options.id + '_' + name); // For column swapping
+			cell.attr('data-colname', this.options.id + '_' + name);
+			cell.html(label);
+
+			var width = column.width || this.options.column_width;
+			cell.width(width);
+
+			this._set_resizable_row(cell);
 		}
 
-		this._set_sortable_header(header);
+		this._swap_column(this.header);
 
 		// Make header snap to top.
-		container.scroll(function(){
-		    header.css({
+		var self = this;
+		this.container.scroll(function(){
+		    self.header.css({
 		        'top': $(this).scrollTop()
 		    });
 		});
+	},
+
+
+	_body: function() {
+		this.body = $('<div class="widget_grid_body"/>').appendTo(this.container);
+
+		// Header is absolute => show the first line of the grid.
+		this.body.css('padding-top', this.header.height()+'px');
+		this.body.css('box-sizing', 'border-box');
+
+		for(var i = 0; i < this.options.data.length; i++) {
+			var data = this.options.data[i];
+			this.add_row(data);
+		}
+	},
+
+	add_row: function(data) {
+		var id = "widget_grid_row_" + this.counter;
+		this.counter++;
+
+		var row = $('<div/>').appendTo(this.body);
+		row.addClass('widget_grid_body_row');
+		row.attr('id', id);
+
+		for (var colname in this.options.column) {
+			var content = data[colname];
+			var cell = $('<div/>').appendTo(row);
+			cell.addClass('widget_grid_cell');
+			cell.attr('data-colname', this.options.id + '_' + colname);
+			cell.html(content);
+
+			var width = this.header.find('[data-colname=' + this.options.id + '_' + colname + ']').width();
+			cell.width(width);
+		}
+	},
+
+	resize_col: function(col) {
+		var colname = $(col).attr('data-colname');
+		var width = $(col).width();
+		this.body.find('[data-colname=' + colname + ']').width(width);
+		this._refresh();
+	},
+
+	_refresh: function() {
+		var row_w = this._total_cell_width();
+		console.log('row_w=' + row_w);
+
+		var container_w = this.container.width();
+		if (this.container.hasVerticalScrollBar()) {
+			container_w -= this.scrollbar_width;
+		}
+
+		console.log('container_w=' + container_w);
+		if (row_w < container_w) {
+			row_w = container_w;
+		}
+
+		this.header.outerWidth(row_w);
+		this.body.outerWidth(row_w);
+		this.body.find('.widget_grid_body_row').outerWidth(row_w);
+	},
+
+	_total_cell_width: function() {
+		var result = 0;
+		for (var colname in this.options.column) {
+			var width = this.header.find('[data-colname=' + this.options.id + '_' + colname + ']').outerWidth();
+			result += width;
+		}
+		return result;
 	},
 
 	_set_resizable_row: function(cell) {
@@ -85,7 +168,7 @@ $.widget( "ui.ocp_grid", {
 		});
 	},
 
-	_set_sortable_header: function(header) {
+	_swap_column: function(header) {
 		var self = this;
 		header.sortable({
 			containment: "parent",
@@ -95,23 +178,23 @@ $.widget( "ui.ocp_grid", {
 			start: function(ev, ui) {
 				ui.placeholder.outerHeight(ui.item.outerHeight());
 				$(this).height(ui.placeholder.outerHeight());
-				self.start_colname = $(this).sortable("toArray").slice(-1)[0];
+				self.swap_column_start_colname = $(this).sortable("toArray").slice(-1)[0];
 			},
 			sort: function(ev, ui) {
 				$(this).find('.ui-sortable-helper').css('top', '0px');
 			},
 			stop: function(ev, ui) {
 				var a = $(this).sortable("toArray");
-				self.end_colname = null;
-				var index = a.indexOf(self.start_colname);
+				self.swap_column_end_colname = null;
+				var index = a.indexOf(self.swap_column_start_colname);
 				if (index > 0) {
-					self.end_colname = a[index - 1];
+					self.swap_column_end_colname = a[index - 1];
 				}
 
-				$(this).parent().find('.widget_grid_body_row').each(function() {
-					var col_to_move = $(this).find('.' + self.start_colname).detach();
-					if (self.end_colname) {
-						col_to_move.insertAfter($(this).find('.' + self.end_colname));
+				self.body.find('.widget_grid_body_row').each(function() {
+					var col_to_move = $(this).find('[data-colname=' + self.swap_column_start_colname + ']').detach();
+					if (self.swap_column_end_colname) {
+						col_to_move.insertAfter($(this).find('[data-colname=' + self.swap_column_end_colname + ']'));
 					} else {
 						col_to_move.prependTo($(this));
 					}
@@ -119,72 +202,6 @@ $.widget( "ui.ocp_grid", {
 			}
 		});
 		header.disableSelection();
-	},
-
-	_rows: function() {
-		for(var i = 0; i < this.options.data.length; i++) {
-			var data = this.options.data[i];
-			this.add_row(data);
-		}
-	},
-
-	add_row: function(data) {
-		var id = "widget_grid_row_" + this.counter;
-		var row = $('<div id="' + id + '" class="widget_grid_row widget_grid_body_row"/>').appendTo(this.element.find('.widget_grid_body'));
-
-		for (var colname in this.options.column) {
-			var content = data[colname];
-			var cell_div = $('<div class="widget_grid_cell widget_grid_col_' + colname + '">' + content + '</div>')
-						.appendTo(row);
-			var width = $('#widget_grid_col_' + colname).width();
-			cell_div.width(width);
-		}
-		this.counter++;
-	},
-
-	resize_col: function(col) {
-		var colname = $(col).attr('id');
-		var width = $(col).width();
-		$('.' + colname).width(width);
-		this._resize_rows();
-	},
-
-	_resize_rows: function() {
-		var row_w = this._total_row_width();
-		var container_w = this.element.find('.widget_grid_container').innerWidth();
-		if (row_w < container_w) {
-			row_w = container_w;
-		}
-
-		var row = this.element.find('.widget_grid_row');
-		var body = this.element.find('.widget_grid_body').get(0);
-		if (body.scrollHeight > ($(body).outerHeight())) {
-			console.log('has scroll');
-			$(body).outerWidth(container_w);
-		} else {
-			console.log('has not scroll');
-			$(body).outerWidth(container_w);
-		}
-		row.outerWidth(row_w);
-	},
-
-	_total_row_width: function() {
-		var total_width = 0;
-		for (var colname in this.options.column) {
-			var width = $('#widget_grid_col_' + colname).outerWidth();
-			total_width += width;
-		}
-		return total_width;
-	},
-
-	get_scrollbar_width: function() {
-		// Find the Width of the Scrollbar
-		var div = $('<div id="get_scrollbar_width_1" style="width:50px;height:50px;overflow-y:scroll;position:absolute;top:-200px;left:-200px;"><div id="get_scrollbar_width_2" style="height:100px;width:100%"></div></div>');
-		div.appendTo($('body'));
-		var w1 = $("#get_scrollbar_width_1").width();
-		var w2 = $("#get_scrollbar_width_2").innerWidth();
-		div.remove(); // remove the html from your document
-		return w1 - w2;
 	}
 });
 

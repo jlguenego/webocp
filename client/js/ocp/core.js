@@ -20,5 +20,37 @@ function require_once_css(path) {
 		$('head').append('<link id="' + id + '" rel="stylesheet" href="' + path + '" />');
 	}
 }
+
+(function($) {
+    $.fn.hasVerticalScrollBar = function() {
+        return this.get(0).scrollHeight > this.height();
+    }
+
+    $.fn.hasHorizontalScrollBar = function() {
+        return this.get(0).scrollWidth > this.width();
+    }
+
+    $.fn.hasScrollBar = function() {
+        return this.hasVerticalScrollBar() || this.hasHorizontalScrollBar();
+    }
+
+    $.fn.getScrollbarWidth = function() {
+       // Find the Width of the Scrollbar
+		var div = $('<div id="get_scrollbar_width_1" style="width:50px;height:50px;overflow-y:scroll;position:absolute;top:-200px;left:-200px;"><div id="get_scrollbar_width_2" style="height:100px;width:100%"></div></div>');
+		div.appendTo($('body'));
+		var w1 = $("#get_scrollbar_width_1").width();
+		var w2 = $("#get_scrollbar_width_2").innerWidth();
+		div.remove(); // remove the html from your document
+		return w1 - w2;
+    }
+
+    $.fn.scrollWidth = function() {
+        return this.get(0).scrollWidth;
+    }
+
+    $.fn.scrollHeight = function() {
+        return this.get(0).scrollHeight;
+    }
+})(jQuery);
 // }
 

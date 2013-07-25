@@ -36,16 +36,12 @@
 	height: 100%;
 }
 
-.widget_grid_row {
+.widget_grid_body_row, .widget_grid_header_row {
 	border-bottom: 1px solid black;
 }
 
-.widget_grid_row:last-child {
+.widget_grid_body_row:last-child {
 	border-bottom: none;
-}
-
-.widget_grid_body_row {
-
 }
 
 .widget_grid_cell:last-child {
