@@ -1,5 +1,5 @@
 /*!
- * jQuery UI Splitpane
+ * jQuery UI Splitpane Vertical
  *
  *
  * Depends:
@@ -9,34 +9,34 @@
 
 (function( $, undefined ) {
 
-$.widget( "ui.ocp_splitpane_h", {
+$.widget( "ui.ocp_splitpane_v", {
 	version: "0.0.1",
 	options: {
 		source: [],
 		overflow: 'auto'
 	},
 
-	leftpane: null,
-	rightpane: null,
+	toppane: null,
+	bottompane: null,
 	resizebar: null,
 	resizebar_helper: null,
 
 	_create: function() {
 		this.element.cleanBlank();
 
-		this.leftpane = $(this.element.children().get(0));
-		this.rightpane = $(this.element.children().get(1));
-		this.resizebar = $('<div class="widget_splitpane_resizebar"/>').insertBefore(this.rightpane);
+		this.toppane = $(this.element.children().get(0));
+		this.bottompane = $(this.element.children().get(1));
+		this.resizebar = $('<div class="widget_splitpane_resizebar"/>').insertBefore(this.bottompane);
 
 		this.element.addClass('widget_splitpane');
-		this.leftpane.addClass('widget_splitpane_left');
-		this.rightpane.addClass('widget_splitpane_right');
+		this.toppane.addClass('widget_splitpane_top');
+		this.bottompane.addClass('widget_splitpane_bottom');
 
 		if (this.options.source[0]) {
-			this.leftpane.css(this.options.source[0]);
+			this.toppane.css(this.options.source[0]);
 		}
 		if (this.options.source[1]) {
-			this.rightpane.css(this.options.source[1]);
+			this.bottompane.css(this.options.source[1]);
 		}
 
 		this._refresh();
@@ -70,13 +70,13 @@ $.widget( "ui.ocp_splitpane_h", {
         $(window).bind('mousemove', function(e){
         	e.preventDefault();
 			var offset = self.resizebar_helper.offset();
-			offset.left = e.pageX;
+			offset.top = e.pageY;
 
 			// Check that the helper stay inside the container
-			var container_left = self.element.offset().left;
-			var container_right = container_left + self.element.width() - self.resizebar_helper.width();
-			offset.left = Math.max(offset.left, container_left);
-			offset.left = Math.min(offset.left, container_right);
+			var container_top = self.element.offset().top;
+			var container_bottom = container_top + self.element.height() - self.resizebar_helper.height();
+			offset.top = Math.max(offset.top, container_top);
+			offset.top = Math.min(offset.top, container_bottom);
 
 			self.resizebar_helper.offset(offset);
 		});
@@ -93,22 +93,22 @@ $.widget( "ui.ocp_splitpane_h", {
 		$(window).unbind('mousemove');
 		$(window).unbind('mouseup');
 
-		var leftpane_width = this.leftpane.width() + this.resizebar_helper.offset().left - this.resizebar.offset().left;
+		var toppane_height = this.toppane.height() + this.resizebar_helper.offset().top - this.resizebar.offset().top;
 		if (this.resizebar_helper) {
 			this.resizebar_helper.remove();
 			this.resizebar_helper = null;
 		}
 
-        this.leftpane.width(leftpane_width);
+        this.toppane.height(toppane_height);
         this._refresh();
         $(window).trigger('resize');
 	},
 
 	_refresh: function() {
-		var container_w = this.element.width();
-		var left_w = this.leftpane.width();
-		var resizebar_w = this.resizebar.width();
-		this.rightpane.width(container_w - left_w - resizebar_w);
+		var container_w = this.element.height();
+		var top_h = this.toppane.height();
+		var resizebar_h = this.resizebar.height();
+		this.bottompane.height(container_w - top_h - resizebar_h);
 	}
 });
 

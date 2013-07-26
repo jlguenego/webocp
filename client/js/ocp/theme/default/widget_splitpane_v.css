@@ -3,17 +3,15 @@
 	overflow: hidden;
 }
 
-.widget_splitpane_left {
-	display: inline-block;
-	height: 100%;
+.widget_splitpane_top {
+	width: 100%;
 	overflow: hidden;
 	padding: 0px;
 	vertical-align: top;
 }
 
-.widget_splitpane_right {
-	display: inline-block;
-	height: 100%;
+.widget_splitpane_bottom {
+	width: 100%;
 	overflow: hidden;
 	padding: 0px;
 	vertical-align: top;
@@ -21,9 +19,9 @@
 
 .widget_splitpane_resizebar {
 	display: inline-block;
-	width: 5px;
-	height: 100%;
+	height: 5px;
+	width: 100%;
 
-	cursor: e-resize;
+	cursor: n-resize;
 	background-color: #E1E1E1;
 }

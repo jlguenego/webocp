@@ -51,6 +51,12 @@ function require_once_css(path) {
     $.fn.scrollHeight = function() {
         return this.get(0).scrollHeight;
     }
+
+    $.fn.cleanBlank = function() {
+    	var clean_html = this.html().replace(/>\s+</g, '><');
+		this.html(clean_html);
+        return this;
+    }
 })(jQuery);
 // }
 
