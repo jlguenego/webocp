@@ -47,7 +47,7 @@ $.widget( "ui.ocp_tree", {
 	_destroy: function() {
 	},
 
-	_fill: function(el, src, level, last_array) {
+	_fill: function(el, src, level, last_array, parent) {
 		var ul = $('<div class="tree_struct"/>').appendTo(el);
 		for (var i = 0; i < src.length; i++) {
 			if (i == src.length - 1) {
@@ -84,14 +84,16 @@ $.widget( "ui.ocp_tree", {
 				img_div.css('background-image', 'url("'+image+'")');
 			}
 
-			var item_info = item.item.name;
 			var label = item.item.label || item.item.name;
 			div.append(label);
-			if (item.children && item.children.length > 0) {
+			div.attr('data-name', item.item.name);
+			div.attr('data-parent', parent);
+			console.log('parent='+parent);
 
+			if (item.children && item.children.length > 0) {
 				var array = last_array.slice(0);
 				array.push(false);
-				this._fill(li, item.children, level + 1, array);
+				this._fill(li, item.children, level + 1, array, item.item.name);
 			}
 		}
 	},
