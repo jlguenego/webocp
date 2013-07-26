@@ -137,6 +137,7 @@ $.widget( "ui.ocp_splitpane_v", {
 			this.toppane.height(container_w - resizebar_h - obj.bottom);
 			this._refresh();
 		}
+		$(window).trigger('resize');
 	}
 });
 

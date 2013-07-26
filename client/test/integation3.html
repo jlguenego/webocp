@@ -140,18 +140,47 @@ html, body {
 }
 
 #footer {
-	background-color: #FFFFEE;
+	background-color: red;
 }
 
 #footer_header {
 	background-color: #FFFFFF;
-	height: 20px;
-	padding: 5px 5px;
+	height: 17px;
+	padding: 3px 5px 3px 0;
+
+	border: 0;
+	background-image: url(image/transfers2.png);
+	background-size: 40px 100px;
+	background-position: 11px 6px;
+	background-repeat: no-repeat;
 }
 
-#minimize_footer {
+#file_transfer {
+	background-color: #FFFFFF;
+}
+
+#toggle_footer {
 	float: right;
-	margin-right: 20px;
+	margin-right: 10px;
+	width: 15px;
+	height: 15px;
+	cursor: pointer;
+
+	background-image: url('https://eu.static.mega.co.nz/images/mega/transfer-arrows.png');
+	background-size: 30px 30px;
+	background-position: 0% 0%;
+}
+
+#toggle_footer:hover {
+	background-position: 100% 0%;
+}
+
+#toggle_footer.footer_maximize {
+	background-position: 0% 100%;
+}
+
+#toggle_footer.footer_maximize:hover {
+	background-position: 100% 100%;
 }
 		</style>
 	</head>
@@ -181,7 +210,7 @@ html, body {
 				</div>
 				<div id="footer">
 					<div id="footer_header">
-						<div id="minimize_footer">Mini</div>
+						<div id="toggle_footer"></div>
 					</div>
 					<div id="file_transfer"></div>
 				</div>
@@ -208,6 +237,21 @@ html, body {
 			$('#sidebar').ocp_header_content();
 			$('#content').ocp_header_content();
 			$('#footer').ocp_header_content();
+
+			var footer_restore_height = 150;
+			$('#toggle_footer').click(function() {
+				var new_height = 0;
+				if ($(this).hasClass('footer_maximize')) { //Maximize
+					new_height = footer_restore_height;
+					$(this).removeClass('footer_maximize');
+				} else { // Minimize
+					footer_restore_height = $('#footer').outerHeight()
+					new_height = $('#footer_header').outerHeight();
+					$(this).addClass('footer_maximize');
+				}
+				var size = { bottom: new_height };
+				$('#page_content').ocp_splitpane_v('resize', size);
+			});
 
 			// Put a tree on the left pane
 			var src = [
