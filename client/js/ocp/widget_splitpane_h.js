@@ -9,7 +9,7 @@
 
 (function( $, undefined ) {
 
-$.widget( "ui.ocp_splitpane", {
+$.widget( "ui.ocp_splitpane_h", {
 	version: "0.0.1",
 	options: {
 		source: [],
