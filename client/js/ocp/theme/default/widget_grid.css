@@ -5,8 +5,61 @@
 	white-space: nowrap;
 	overflow: auto;
 
-	border: 1px solid black;
-	border-left: none;
+	border: 1px solid #E5E5E5;
+
+	font-size: 13px;
+}
+
+.widget_grid_cell, .widget_grid_placeholder {
+	display: inline-block;
+	overflow: hidden;
+
+	padding: 3px 7px 4px 9px;
+	margin: 0px;
+
+	border-right: 1px solid #E5E5E5;
+}
+
+.widget_grid_header_row {
+	position: absolute;
+	overflow: hidden;
+
+	background-color: #B8BCBF;
+	color: #FFFFFF;
+	text-shadow: #a4a39f 0px 1px 0px;
+}
+
+.widget_grid_header_cell {
+	vertical-align: top;
+	line-height: 19px;
+}
+
+.widget_grid_body {
+	width: 100%;
+	height: 100%;
+}
+
+.widget_grid_body_row, .widget_grid_header_row {
+	border-bottom: 1px solid #E5E5E5;
+	cursor: default;
+	padding: 0px;
+	margin: 0px;
+}
+
+.widget_grid_body_row:nth-child(even) {
+	background-color: #F7F8FA;
+}
+
+.widget_grid_body_row:hover {
+	background-color: #E9E9E9;
+}
+
+.widget_grid_body_row .widget_grid_cell {
+	border-color: transparent;
+}
+
+.widget_grid_placeholder {
+	background-color: #3E3E3E;
 }
 
 .widget_grid_sortable {
@@ -18,65 +71,19 @@
 	cursor: default;
 }
 
-.widget_grid_header_row {
-	position: absolute;
-	padding: 0px;
-	margin: 0px;
-	overflow: hidden;
-
-	background-color: #E1E1E1;
-}
-
-.widget_grid_header_cell {
-	vertical-align: top;
-}
-
-.widget_grid_body{
-	width: 100%;
-	height: 100%;
-}
-
-.widget_grid_body_row, .widget_grid_header_row {
-	border-bottom: 1px solid black;
-}
-
-.widget_grid_body_row:last-child {
-	border-bottom: none;
-}
-
-.widget_grid_cell:last-child {
-	border-right: 1px solid black;
-}
-
-.widget_grid_cell {
-	display: inline-block;
-	overflow: hidden;
-
-	padding: 3px 5px;
-
-	border-left: 1px solid black;
-}
-
-.widget_grid_cell .ui-resizable-e {
-	background-color: transparent;
-}
-
 .ui-resizable-helper {
 	border-right: 2px solid #000000;
-}
-
-.ui-resizable-e {
-	width: 10px;
-}
-
-.widget_grid_placeholder {
-	display: inline-block;
-	padding: 3px 5px;
-	margin: 0px;
-	background-color: #3E3E3E;
-	border-left: 1px solid black;
 }
 
 .ui-sortable-helper {
 	background-color: #B7B7B7;
 }
+
+.widget_grid_cell .ui-resizable-e {
+	width: 10px;
+	background-color: transparent;
+}
+
+
+
+

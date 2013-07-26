@@ -42,6 +42,7 @@ html, body {
 	padding: 0px;
 	height: 100%;
 	font-family: 'Open sans', serif;
+	font-size: 13px;
 }
 
 #page {
@@ -49,24 +50,29 @@ html, body {
 }
 
 #header {
-	background-color: #EEEEEE;
+	background-color: #151412;
 }
 
 #sidebar {
-	background-color: #EEFFFF;
+	background-color: #F2F2F3;
 }
 
 #sidebar_header {
-	vertical-align: middle;
-
-	background-color: #DF0000;
-	height: 40px;
-	width: 100%;
+	background-color: #D11E00;
+	border: 0px;
+	color: #FFFFFF;
+	background-image: url(image/cloud2.png);
+	background-size: 30px 30px;
+	background-position: 14px center;
+	padding: 15px 15px 16px 57px;
+	background-repeat: no-repeat;
+	box-sizing: border-box;
+	height: 50px;
 }
 
 #sidebar_header img {
 	position: relative;
-	top: 7px;
+	top: 10px;
 	margin-left: 3px;
 	margin-right: 10px;
 	width: 29px;
@@ -74,21 +80,55 @@ html, body {
 }
 
 #tree {
+	margin-top: 5px;
+	margin-left: 5px;
 	overflow: auto;
 }
 
 #content {
 	position: relative;
-	background-color: #FFEEFF;
+	background-color: #FFFFFF;
 }
 
 #content_header {
-	vertical-align: middle;
-
-	padding-left: 10px;
 	background-color: #FFFFFF;
+	border: 0;
+	padding: 10px;
+	box-sizing: border-box;
+	height: 50px;
+}
 
-	height: 40px;
+#content_menu {
+	padding: 0px;
+	margin: 0px;
+	height: 100%
+}
+
+#content_menu li {
+	position: relative;
+	display: inline-block;
+	padding: 3px 5px 3px 40px;
+	margin: 0px 1px;
+	box-sizing: border-box;
+	height: 100%;
+	background-color: #DADEE1;
+	cursor: pointer;
+}
+
+#content_menu li:first-child {
+	border-radius: 5px 0px 0px 5px;
+}
+
+#content_menu li:last-child {
+	border-radius: 0px 5px 5px 0px;
+}
+
+#content_menu li img {
+	position: absolute;
+	top: 3px;
+	left: 5px;
+	width: 33px;
+	height: 23px;
 }
 
 #grid {
@@ -108,13 +148,17 @@ html, body {
 			<div id="main">
 				<div id="sidebar">
 					<div id="sidebar_header">
-						<img src="image/cloud2.png" />File manager
+						File manager
 					</div>
 					<div class="tree" id="tree"></div>
 				</div>
 				<div id="content">
 					<div id="content_header">
-						Put menu here
+						<ul id="content_menu">
+							<li><img src="image/newfolder.png"/>Bouton 1</li>
+							<li><img src="image/up.png"/>Bouton 2</li>
+							<li><img src="image/folder-up.png"/>Bouton 3</li>
+						</ul>
 					</div>
 					<div id="grid"></div>
 				</div>
@@ -126,7 +170,7 @@ html, body {
 		<script>
 			// Apply the 3R layout
 			$('#page').ocp_layout_3r({
-				header_h: 90,
+				header_h: 50,
 				footer_h: 150
 			});
 
