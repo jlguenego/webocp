@@ -26,11 +26,13 @@ $.widget( "ui.ocp_splitpane_v", {
 
 		this.toppane = $(this.element.children().get(0));
 		this.bottompane = $(this.element.children().get(1));
-		this.resizebar = $('<div class="widget_splitpane_resizebar"/>').insertBefore(this.bottompane);
+		this.resizebar = $('<div/>').insertBefore(this.bottompane);
+
 
 		this.element.addClass('widget_splitpane');
 		this.toppane.addClass('widget_splitpane_top');
 		this.bottompane.addClass('widget_splitpane_bottom');
+		this.resizebar.addClass('widget_splitpane_resizebar');
 
 		if (this.options.source[0]) {
 			this.toppane.css(this.options.source[0]);
@@ -38,8 +40,6 @@ $.widget( "ui.ocp_splitpane_v", {
 		if (this.options.source[1]) {
 			this.bottompane.css(this.options.source[1]);
 		}
-
-		this._refresh();
 
 		var self = this;
 		this.resizebar.mousedown(function(e) {
@@ -52,6 +52,8 @@ $.widget( "ui.ocp_splitpane_v", {
 		$(window).resize(function() {
 			self._refresh();
 		});
+
+		this._refresh();
 
 		return this;
 	},
@@ -109,6 +111,18 @@ $.widget( "ui.ocp_splitpane_v", {
 		var top_h = this.toppane.height();
 		var resizebar_h = this.resizebar.height();
 		this.bottompane.height(container_w - top_h - resizebar_h);
+	},
+
+	resize: function(obj) {
+		if (obj.top) {
+			this.toppane.height(obj.top);
+			this._refresh();
+		} else if (obj.bottom) {
+			var container_w = this.element.height();
+			var resizebar_h = this.resizebar.height();
+			this.toppane.height(container_w - resizebar_h - obj.bottom);
+			this._refresh();
+		}
 	}
 });
 

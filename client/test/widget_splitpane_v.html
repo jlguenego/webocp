@@ -45,11 +45,18 @@ html, body {
 			<div id="bottom">
 			</div>
 		</div>
+		<input type="text" />
+		<button>Click Me</button>
 		<script>
 			$("#main").ocp_splitpane_v({
 				source: [
 					{ height: 200, }
 				]
+			});
+
+			$('button').click(function() {
+				var height = $('input').val();
+				$("#main").ocp_splitpane_v('resize', {top: height});
 			});
 		</script>
 	</body>

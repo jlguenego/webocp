@@ -1,5 +1,4 @@
 .widget_splitpane {
-	white-space: nowrap;
 	overflow: hidden;
 }
 
@@ -7,18 +6,17 @@
 	width: 100%;
 	overflow: hidden;
 	padding: 0px;
-	vertical-align: top;
+	margin: 0px;
 }
 
 .widget_splitpane_bottom {
 	width: 100%;
 	overflow: hidden;
 	padding: 0px;
-	vertical-align: top;
+	margin: 0px;
 }
 
 .widget_splitpane_resizebar {
-	display: inline-block;
 	height: 5px;
 	width: 100%;
 
