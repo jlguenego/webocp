@@ -57,6 +57,35 @@ function require_once_css(path) {
 		this.html(clean_html);
         return this;
     }
+
+    $.fn.dblclickPreventDefault = function() {
+    	var f = this.__dblclickPreventDefault();
+		f();
+    }
+
+    $.fn.__dblclickPreventDefault = function() {
+		var mouse_down_last_t = 0;
+		var self = this;
+		return function() {
+			self.mousedown(function(e) {
+				console.log('mousedown');
+				var now_t = new Date().getTime();
+				if (now_t - mouse_down_last_t < 500) {
+					e.preventDefault();
+					console.log('mousedown preventDefault');
+				}
+				mouse_down_last_t = new Date().getTime();
+			});
+		};
+    }
+
+    $.fn.yannisCount = function() {
+    	var yannis = 0;
+    	return function() {
+    		yannis++;
+    		return yannis;
+    	};
+    }
 })(jQuery);
 // }
 

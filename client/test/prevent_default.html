@@ -25,25 +25,7 @@ blabla {
 			kshksdhfkhsdfkhsdlkh llkjshdvlhldkjlkj kjhsdv
 		</div>
 		<script>
-			var mouse_down = false;
-			var counter = 0;
-			$('div').mousedown(function(e) {
-				mouse_down = true;
-				counter++;
-				setTimeout(function() {
-					if (!mouse_down) {
-						counter = 0;
-					}
-				}, 400);
-				if (counter > 1) {
-					e.preventDefault();
-					console.log('no select');
-				}
-				console.log('coucou');
-			});
-			$('div').mouseup(function(e) {
-				mouse_down = false;
-			});
+			$('div').dblclickPreventDefault();
 		</script>
 	</body>
 </html>

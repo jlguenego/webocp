@@ -40,7 +40,7 @@ $.widget( "ui.ocp_tree", {
 			self.toggle(e);
 		});
 
-		this._nodblclick_selection(this.element);
+		this.element.dblclickPreventDefault();
 		return this;
 	},
 
@@ -88,7 +88,6 @@ $.widget( "ui.ocp_tree", {
 			div.append(label);
 			div.attr('data-name', item.item.name);
 			div.attr('data-parent', parent);
-			console.log('parent='+parent);
 
 			if (item.children && item.children.length > 0) {
 				var array = last_array.slice(0);
@@ -113,29 +112,6 @@ $.widget( "ui.ocp_tree", {
 			image_src.removeClass('elbow-plus').addClass('elbow-minus');
 		}
 		$(event.currentTarget).attr("src", image_src);
-	},
-
-	mouse_down: false,
-	click_counter: 0,
-
-	_nodblclick_selection: function(item) {
-		var self = this;
-		item.mousedown(function(e) {
-			self.mouse_down = true;
-			self.click_counter++;
-			setTimeout(function() {
-				if (!self.mouse_down) {
-					self.click_counter = 0;
-				}
-			}, 500);
-			if (self.click_counter > 1) {
-				e.preventDefault();
-			}
-		});
-
-		item.mouseup(function(e) {
-			self.mouse_down = false;
-		});
 	}
 });
 
