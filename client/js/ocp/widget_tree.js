@@ -16,26 +16,31 @@ $.widget( "ui.ocp_tree", {
 		theme: '',
 
 		// Callback
-		click: null
+		click: function() {}
 	},
 
 	_create: function() {
 		this.element.css('cursor', 'pointer');
 		this._fill(this.element, this.options.source, 0, [ false ]);
 
-		this._on( $('.tree_toggle'), {
+		this._on( $('.tree_toggle', this.element), {
 			click: "toggle"
 		});
 
-        this._on( $('.tree_item'), {
-			click: this.options.click || '',
+        this._on( $('.tree_item', this.element), {
+			click: this.options.click,
 			dblclick : "toggle"
         });
 
+
 		var self = this;
-		$('.tree_toggle').each(function() {
-			self.toggle({ currentTarget: this});
+		$('.tree_toggle', this.element).each(function() {
+			var e = $.Event('click');
+			e.currentTarget = this;
+			self.toggle(e);
 		});
+
+		this._nodblclick_selection(this.element);
 		return this;
 	},
 
@@ -71,13 +76,15 @@ $.widget( "ui.ocp_tree", {
 					row.append('<div class="icon elbow"/>');
 				}
 			}
-			var item_info = item.item.name;
-			var div = $('<div class="tree_item" data-name="' + item_info + '"/>').appendTo(row);
+
 			var image = item.item.image || this.options.image;
+			var div = $('<div class="tree_item"/>').appendTo(row);
 			var img_div = $('<div class="item_image icon"/>').appendTo(div);
 			if (image) {
 				img_div.css('background-image', 'url("'+image+'")');
 			}
+
+			var item_info = item.item.name;
 			var label = item.item.label || item.item.name;
 			div.append(label);
 			if (item.children && item.children.length > 0) {
@@ -90,6 +97,7 @@ $.widget( "ui.ocp_tree", {
 	},
 
 	toggle: function(event) {
+		event.preventDefault();
 		var tree_struct = $(event.currentTarget).parent().parent().find('.tree_struct');
 		tree_struct.toggle();
 		var image_src = $(event.currentTarget);
@@ -103,6 +111,29 @@ $.widget( "ui.ocp_tree", {
 			image_src.removeClass('elbow-plus').addClass('elbow-minus');
 		}
 		$(event.currentTarget).attr("src", image_src);
+	},
+
+	mouse_down: false,
+	click_counter: 0,
+
+	_nodblclick_selection: function(item) {
+		var self = this;
+		item.mousedown(function(e) {
+			self.mouse_down = true;
+			self.click_counter++;
+			setTimeout(function() {
+				if (!self.mouse_down) {
+					self.click_counter = 0;
+				}
+			}, 500);
+			if (self.click_counter > 1) {
+				e.preventDefault();
+			}
+		});
+
+		item.mouseup(function(e) {
+			self.mouse_down = false;
+		});
 	}
 });
 

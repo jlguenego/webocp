@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+		<script src="../js/ocp/core.js"></script>
+
+		<style>
+blabla {
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+}
+		</style>
+	</head>
+
+	<body>
+		<div>
+			coucoucl
+			kshksdhfkhsdfkhsdlkh llkjshdvlhldkjlkj kjhsdv
+		</div>
+		<script>
+			var mouse_down = false;
+			var counter = 0;
+			$('div').mousedown(function(e) {
+				mouse_down = true;
+				counter++;
+				setTimeout(function() {
+					if (!mouse_down) {
+						counter = 0;
+					}
+				}, 400);
+				if (counter > 1) {
+					e.preventDefault();
+					console.log('no select');
+				}
+				console.log('coucou');
+			});
+			$('div').mouseup(function(e) {
+				mouse_down = false;
+			});
+		</script>
+	</body>
+</html>
