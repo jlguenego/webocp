@@ -1,9 +1,9 @@
-.widget_splitpane {
+.widget_splitpane_h {
 	white-space: nowrap;
 	overflow: hidden;
 }
 
-.widget_splitpane_left {
+.widget_splitpane_h_left {
 	display: inline-block;
 	height: 100%;
 	overflow: hidden;
@@ -11,7 +11,7 @@
 	vertical-align: top;
 }
 
-.widget_splitpane_right {
+.widget_splitpane_h_right {
 	display: inline-block;
 	height: 100%;
 	overflow: hidden;
@@ -19,7 +19,7 @@
 	vertical-align: top;
 }
 
-.widget_splitpane_resizebar {
+.widget_splitpane_h_resizebar {
 	display: inline-block;
 	width: 5px;
 	height: 100%;

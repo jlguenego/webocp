@@ -1,22 +1,22 @@
-.widget_splitpane {
+.widget_splitpane_v {
 	overflow: hidden;
 }
 
-.widget_splitpane_top {
+.widget_splitpane_v_top {
 	width: 100%;
 	overflow: hidden;
 	padding: 0px;
 	margin: 0px;
 }
 
-.widget_splitpane_bottom {
+.widget_splitpane_v_bottom {
 	width: 100%;
 	overflow: hidden;
 	padding: 0px;
 	margin: 0px;
 }
 
-.widget_splitpane_resizebar {
+.widget_splitpane_v_resizebar {
 	height: 5px;
 	width: 100%;
 

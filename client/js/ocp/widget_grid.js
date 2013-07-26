@@ -123,16 +123,13 @@ $.widget( "ui.ocp_grid", {
 	},
 
 	_refresh: function() {
-		console.log('grid refresh');
 		var row_w = this._total_cell_width();
-		console.log('row_w=' + row_w);
 
 		var container_w = this.container.width();
 		if (this.container.hasVerticalScrollBar()) {
 			container_w -= this.scrollbar_width;
 		}
 
-		console.log('container_w=' + container_w);
 		if (row_w < container_w) {
 			row_w = container_w;
 		}
