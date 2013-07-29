@@ -259,106 +259,91 @@ html, body {
 			// Put a tree on the left pane
 			var src = [
 				{
-					item: {
-						name: 'item_1',
-						label: 'Item 1',
-						image: 'image/clouddrive.png'
-					},
+					name: 'item_1',
+					label: 'Item 1',
+					image: 'image/clouddrive.png',
+					type: 'dir',
 					expanded: true,
 					children: [
 						{
-							item: {
-								name: 'item_1_1',
-								label: 'Item 1.1',
-							},
+							name: 'item_1_1',
+							label: 'Item 1.1',
+							type: 'dir',
 							children: [
 								{
-									item: {
-										name: 'item_1_1_1',
-										label: 'Item 1.1.1',
-									},
+									name: 'item_1_1_1',
+									label: 'Item 1.1.1',
+									type: 'dir',
 									expanded: true,
 									children: [
 										{
-											item: {
-												name: 'item_1_1_1_1',
-												label: 'Item 1.1.1.1',
-											}
+											name: 'item_1_1_1_1',
+											label: 'Item 1.1.1.1',
+											type: 'dir'
 										},
 										{
-											item: {
-												name: 'item_1_1_1_2',
-												label: 'Item 1.1.1.2',
-											}
+											name: 'item_1_1_1_2',
+											label: 'Item 1.1.1.2',
+											type: 'dir'
 										}
 									]
 								},
 								{
-									item: {
-										name: 'item_1_1_2',
-										label: 'Item 1.1.2',
-									},
+									name: 'item_1_1_2',
+									label: 'Item 1.1.2',
+									type: 'dir',
 									children: [
 										{
-											item: {
-												name: 'item_1_1_2_1',
-												label: 'Item 1.1.2.1',
-											}
+											name: 'item_1_1_2_1',
+											label: 'Item 1.1.2.1',
+											type: 'dir'
 										},
 										{
-											item: {
-												name: 'item_1_1_2_2',
-												label: 'Item 1.1.2.2',
-											}
+											name: 'item_1_1_2_2',
+											label: 'Item 1.1.2.2',
+											type: 'dir'
 										}
 									]
 								}
 							]
 						},
 						{
-							item: {
-								name: 'item_1_2',
-								label: 'Item 1.2',
-							}
+							name: 'item_1_2',
+							label: 'Item 1.2',
+							type: 'dir'
 						}
 					]
 				},
 				{
-					item: {
-						name: 'item_2',
-						label: 'Item 2',
-					},
+					name: 'item_2',
+					label: 'Item 2',
+					type: 'dir',
 					children: []
 				},
 				{
-					item: {
-						name: 'item_3',
-						label: 'Item 3',
-					},
+					name: 'item_3',
+					label: 'Item 3',
+					type: 'dir',
 					children: [
 						{
-							item: {
-								name: 'item_3_3',
-								label: 'Item 3.1',
-							}
+							name: 'item_3_3',
+							label: 'Item 3.1',
+							type: 'dir'
 						},
 						{
-							item: {
-								name: 'item_3_2',
-								label: 'Item 3.2',
-							},
+							name: 'item_3_2',
+							label: 'Item 3.2',
+							type: 'dir',
 							children: [
 								{
-									item: {
-										name: 'item_3_2_1',
-										label: 'Item 3.2.1',
-									}
+									name: 'item_3_2_1',
+									label: 'Item 3.2.1',
+									type: 'dir'
 								},
 								{
-									item: {
-										name: 'item_3_2_2',
-										label: 'Item 3.2.2',
-									}
+									name: 'item_3_2_2',
+									label: 'Item 3.2.2',
+									type: 'dir'
 								}
 							]
 						}
@@ -366,7 +351,14 @@ html, body {
 				}
 			];
 			$('#tree').ocp_tree({
-				source: src
+				source: src,
+				ls: function(path) {
+					var result = null;
+					$.get('http://localhost/webocp/server/endpoint/', function(data) {
+						result = jQuery.parseJSON(data);
+					})
+					return result;
+				}
 			});
 
 			// Put a grid on right pane

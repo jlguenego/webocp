@@ -20,16 +20,14 @@ $.widget( "ui.ocp_tree", {
 			console.log('ls ' + path);
 			return [
 				{
-					item: {
-						name: 'hello',
-						label: 'Hello',
-					}
+					name: 'hello',
+					label: 'Hello',
+					type: 'dir'
 				},
 				{
-					item: {
-						name: 'world',
-						label: 'World',
-					}
+					name: 'world',
+					label: 'World',
+					type: 'dir'
 				}
 			];
 		},
@@ -93,17 +91,17 @@ $.widget( "ui.ocp_tree", {
 				}
 			}
 
-			var image = item.item.image || this.options.image;
+			var image = item.image || this.options.image;
 			var div = $('<div class="tree_item"/>').appendTo(row);
 			var img_div = $('<div class="item_image icon"/>').appendTo(div);
 			if (image) {
 				img_div.css('background-image', 'url("'+image+'")');
 			}
 
-			var label = item.item.label || item.item.name;
+			var label = item.label || item.name;
 			div.append(label);
-			div.attr('data-name', item.item.name);
-			var child_path = path + '/' + item.item.name;
+			div.attr('data-name', item.name);
+			var child_path = path + '/' + item.name;
 			div.attr('data-path', child_path);
 			div.attr('data-level', level);
 
@@ -182,7 +180,7 @@ $.widget( "ui.ocp_tree", {
 		console.log(src);
 		console.log('dirname=' + dirname);
 		for (var i = 0; i < src.length; i++) {
-			if (src[i].item.name == dirname) {
+			if (src[i].name == dirname) {
 				return src[i];
 			}
 		}
