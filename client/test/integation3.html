@@ -7,9 +7,9 @@
 		 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
 
 		<!-- JQUERY / JQUERY UI -->
-		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<script src="../_ext/jquery-1.10.2.min.js"></script>
+		<script src="../_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="../_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
 		<!-- END JQUERY / JQUERY UI -->
 
 		<!-- OCP -->
@@ -208,6 +208,7 @@ html, body {
 						<div id="grid"></div>
 					</div>
 				</div>
+				<!--
 				<div id="footer">
 					<div id="footer_header">
 						<div id="toggle_footer"></div>
@@ -215,6 +216,7 @@ html, body {
 					</div>
 					<div id="file_transfer"></div>
 				</div>
+				-->
 			</div>
 
 		</div>
@@ -262,6 +264,7 @@ html, body {
 						label: 'Item 1',
 						image: 'image/clouddrive.png'
 					},
+					expanded: true,
 					children: [
 						{
 							item: {
@@ -274,6 +277,7 @@ html, body {
 										name: 'item_1_1_1',
 										label: 'Item 1.1.1',
 									},
+									expanded: true,
 									children: [
 										{
 											item: {

@@ -7,19 +7,6 @@ ocp.css.theme = 'default';
 $.ocp = {};
 
 // TO BE USED FROM A SERVER ONLY {
-function require_once_js(path) {
-	var id = 'require_once_js_' + path.replace(/[/.#]/g, '_');
-	if (!$('#' + id).length) {
-		$('head').append('<script id="' + id + '" type="text/javascript" src="' + path + '"></script>');
-	}
-}
-
-function require_once_css(path) {
-	var id = 'require_once_css_' + path.replace(/[/.#]/g, '_');
-	if (!$('#' + id).length) {
-		$('head').append('<link id="' + id + '" rel="stylesheet" href="' + path + '" />');
-	}
-}
 
 (function($) {
     $.fn.hasVerticalScrollBar = function() {
@@ -68,11 +55,9 @@ function require_once_css(path) {
 		var self = this;
 		return function() {
 			self.mousedown(function(e) {
-				console.log('mousedown');
 				var now_t = new Date().getTime();
 				if (now_t - mouse_down_last_t < 500) {
 					e.preventDefault();
-					console.log('mousedown preventDefault');
 				}
 				mouse_down_last_t = new Date().getTime();
 			});

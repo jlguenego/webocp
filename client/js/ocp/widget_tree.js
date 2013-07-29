@@ -15,31 +15,35 @@ $.widget( "ui.ocp_tree", {
 		image: null,
 		theme: '',
 
+		// Action
+		ls: function(path) {
+			console.log('ls ' + path);
+			return [
+				{
+					item: {
+						name: 'hello',
+						label: 'Hello',
+					}
+				},
+				{
+					item: {
+						name: 'world',
+						label: 'World',
+					}
+				}
+			];
+		},
+
 		// Callback
 		click: function() {}
 	},
 
 	_create: function() {
 		this.element.css('cursor', 'pointer');
-		this._fill(this.element, this.options.source, 0, [ false ]);
-
-		this._on( $('.tree_toggle', this.element), {
-			click: "toggle"
-		});
-
-        this._on( $('.tree_item', this.element), {
-			click: this.options.click,
-			dblclick : "toggle"
-        });
+		this.paint();
 
 
 		var self = this;
-		$('.tree_toggle', this.element).each(function() {
-			var e = $.Event('click');
-			e.currentTarget = this;
-			self.toggle(e);
-		});
-
 		this.element.dblclickPreventDefault();
 		return this;
 	},
@@ -47,7 +51,19 @@ $.widget( "ui.ocp_tree", {
 	_destroy: function() {
 	},
 
-	_fill: function(el, src, level, last_array, parent) {
+	paint: function() {
+		this._fill(this.element, this.options.source, 0, [ false ], '');
+
+		this._on( $('.tree_toggle', this.element), {
+			click: "toggle"
+		});
+
+        this._on( $('.tree_item', this.element), {
+			click: 'tree_item_click'
+        });
+	},
+
+	_fill: function(el, src, level, last_array, path) {
 		var ul = $('<div class="tree_struct"/>').appendTo(el);
 		for (var i = 0; i < src.length; i++) {
 			if (i == src.length - 1) {
@@ -65,9 +81,9 @@ $.widget( "ui.ocp_tree", {
 			}
 			if (item.children && item.children.length > 0) {
 				if (i == src.length - 1) {
-					row.append('<div class="icon tree_toggle elbow-end-minus"/>');
+					row.append('<div class="icon tree_toggle tree_minus tree_end"/>');
 				} else {
-					row.append('<div class="icon tree_toggle elbow-minus"/>');
+					row.append('<div class="icon tree_toggle tree_minus"/>');
 				}
 			} else {
 				if (i == src.length - 1) {
@@ -87,31 +103,84 @@ $.widget( "ui.ocp_tree", {
 			var label = item.item.label || item.item.name;
 			div.append(label);
 			div.attr('data-name', item.item.name);
-			div.attr('data-parent', parent);
+			var child_path = path + '/' + item.item.name;
+			div.attr('data-path', child_path);
+			div.attr('data-level', level);
 
 			if (item.children && item.children.length > 0) {
 				var array = last_array.slice(0);
 				array.push(false);
-				this._fill(li, item.children, level + 1, array, item.item.name);
+				this._fill(li, item.children, level + 1, array, child_path);
+				if (!item.expanded) {
+					var e = $.Event('click');
+					e.currentTarget = row.children('.tree_toggle');
+					this.toggle(e);
+				}
 			}
 		}
 	},
 
 	toggle: function(event) {
 		event.preventDefault();
-		var tree_struct = $(event.currentTarget).parent().parent().find('.tree_struct');
+		var currentTarget = $(event.currentTarget);
+		var tree_struct = currentTarget.parent().parent().find('.tree_struct');
 		tree_struct.toggle();
-		var image_src = $(event.currentTarget);
-		if (image_src.hasClass('elbow-end-minus')) {
-			image_src.removeClass('elbow-end-minus').addClass('elbow-end-plus');
-		} else if (image_src.hasClass('elbow-minus')) {
-			image_src.removeClass('elbow-minus').addClass('elbow-plus');
-		} else if (image_src.hasClass('elbow-end-plus')) {
-			image_src.removeClass('elbow-end-plus').addClass('elbow-end-minus');
-		} else if (image_src.hasClass('elbow-plus')) {
-			image_src.removeClass('elbow-plus').addClass('elbow-minus');
+
+		var image_src = currentTarget.parent().children('.tree_toggle');
+		if (image_src.hasClass('tree_minus')) {
+			image_src.removeClass('tree_minus').addClass('tree_plus');
+		} else if (image_src.hasClass('tree_plus')) {
+			image_src.removeClass('tree_plus').addClass('tree_minus');
 		}
 		$(event.currentTarget).attr("src", image_src);
+	},
+
+	ls: function(path) {
+		if (this.options.ls) {
+			return this.options.ls(path);
+		} else {
+			console.log('ls does not exist');
+		}
+	},
+
+	tree_item_click: function(event) {
+		var tree_item = $(event.currentTarget);
+		var path = tree_item.attr('data-path');
+		var level = tree_item.attr('data-level');
+		var subdir_src = this.ls(path);
+
+		var path_a = path.split('/');
+		path_a.shift();
+		this.options.source = this.src_merge(path_a, subdir_src, this.options.source);
+
+		this.element.find('.tree_struct').remove();
+		this.paint();
+	},
+
+	src_merge: function(path_a, subdir_src, src) {
+		path_a = path_a.slice();
+		console.log('path_a=' + path_a);
+		if (path_a.length == 0) {
+			return subdir_src;
+		}
+
+		var dirname = path_a.shift();
+		var subsrc = this.get_subsrc(dirname, src);
+		subsrc.children = this.src_merge(path_a, subdir_src, subsrc.children);
+		subsrc.expanded = true;
+		return src;
+	},
+
+	get_subsrc: function(dirname, src) {
+		console.log('src=' + src);
+		console.log(src);
+		console.log('dirname=' + dirname);
+		for (var i = 0; i < src.length; i++) {
+			if (src[i].item.name == dirname) {
+				return src[i];
+			}
+		}
+		return null;
 	}
 });
 

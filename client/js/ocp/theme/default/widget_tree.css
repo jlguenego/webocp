@@ -57,19 +57,19 @@
 	background-image: url('image/elbow-line.png');
 }
 
-.elbow-end-minus {
+.tree_end.tree_minus {
 	background-image: url('image/elbow-end-minus.png');
 }
 
-.elbow-minus {
+.tree_minus {
 	background-image: url('image/elbow-minus.png');
 }
 
-.elbow-end-plus {
+.tree_end.tree_plus {
 	background-image: url('image/elbow-end-plus.png');
 }
 
-.elbow-plus {
+.tree_plus {
 	background-image: url('image/elbow-plus.png');
 }
 
