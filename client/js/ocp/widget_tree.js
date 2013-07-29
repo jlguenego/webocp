@@ -124,13 +124,19 @@ $.widget( "ui.ocp_tree", {
 		event.preventDefault();
 		var currentTarget = $(event.currentTarget);
 		var tree_struct = currentTarget.parent().parent().find('.tree_struct');
+		var tree_item = currentTarget.parent().children('.tree_item');
+		var path_a = tree_item.attr('data-path').split('/');
+		path_a.shift();
+		var src = this.get_subsrc_from_path(path_a, this.options.source);
 		tree_struct.toggle();
 
 		var image_src = currentTarget.parent().children('.tree_toggle');
 		if (image_src.hasClass('tree_minus')) {
 			image_src.removeClass('tree_minus').addClass('tree_plus');
+			src.expanded = false;
 		} else if (image_src.hasClass('tree_plus')) {
 			image_src.removeClass('tree_plus').addClass('tree_minus');
+			src.expanded = true;
 		}
 		$(event.currentTarget).attr("src", image_src);
 	},
@@ -181,6 +187,16 @@ $.widget( "ui.ocp_tree", {
 			}
 		}
 		return null;
+	},
+
+	get_subsrc_from_path: function(path_a, children) {
+		if (path_a.length == 1) {
+			return this.get_subsrc(path_a[0], children);
+		}
+		var dirname = path_a.shift();
+
+		return this.get_subsrc_from_path(path_a, this.get_subsrc(dirname, children).children);
+
 	}
 });
 
