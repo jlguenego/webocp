@@ -101,7 +101,11 @@ $.widget( "ui.ocp_tree", {
 			var label = item.label || item.name;
 			div.append(label);
 			div.attr('data-name', item.name);
-			var child_path = path + '/' + item.name;
+			var child_path = path;
+			if (!child_path.endsWith('/')) {
+				 child_path += '/';
+			};
+			child_path += item.name;
 			div.attr('data-path', child_path);
 			div.attr('data-level', level);
 

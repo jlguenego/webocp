@@ -6,7 +6,9 @@ ocp.css.theme = 'default';
 
 $.ocp = {};
 
-// TO BE USED FROM A SERVER ONLY {
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
 
 (function($) {
     $.fn.hasVerticalScrollBar = function() {
@@ -72,5 +74,5 @@ $.ocp = {};
     	};
     }
 })(jQuery);
-// }
+
 
