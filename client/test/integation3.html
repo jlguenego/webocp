@@ -270,6 +270,7 @@ html, body {
 			var tree = $('#tree').ocp_tree({
 				source: src,
 				ls: function(path) {
+					console.log('path=' + path);
 					var result = null;
 					var dir_result = null;
 					$.ajaxSetup({scriptCharset: "utf-8"});

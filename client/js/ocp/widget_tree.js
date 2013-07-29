@@ -127,9 +127,12 @@ $.widget( "ui.ocp_tree", {
 		var currentTarget = $(event.currentTarget);
 		var tree_struct = currentTarget.parent().parent().find('.tree_struct');
 		var tree_item = currentTarget.parent().children('.tree_item');
-		var path_a = tree_item.attr('data-path').split('/');
-		path_a.shift();
-		var src = this.get_subsrc_from_path(path_a, this.options.source);
+		var path = tree_item.attr('data-path');
+		if (path == '/') {
+			path = '';
+		}
+		path_a = path.split('/');
+		var src = this.get_subobj_from_path(path_a, this.options.source);
 		tree_struct.toggle();
 
 		var image_src = currentTarget.parent().children('.tree_toggle');
@@ -155,49 +158,56 @@ $.widget( "ui.ocp_tree", {
 		var tree_item = $(event.currentTarget);
 		var path = tree_item.attr('data-path');
 		var level = tree_item.attr('data-level');
-		var subdir_src = this.ls(path);
+		var subdir_list = this.ls(path);
 
+		console.log('path=' + path);
+		if (path == '/') {
+			path = '';
+		}
 		var path_a = path.split('/');
-		path_a.shift();
-		this.options.source = this.src_merge(path_a, subdir_src, this.options.source);
+		console.log('path_a=' + path_a);
+		var subobj = this.get_subobj_from_path(path_a, this.options.source);
+
+		subobj.children = subdir_list;
 
 		this.element.find('.tree_struct').remove();
 		this.paint();
 	},
 
-	src_merge: function(path_a, subdir_src, src) {
+	src_merge: function(path_a, subdir_list, dir_list) {
 		path_a = path_a.slice();
 		console.log('path_a=' + path_a);
 		if (path_a.length == 0) {
-			return subdir_src;
+			return subdir_list;
 		}
 
 		var dirname = path_a.shift();
-		var subsrc = this.get_subsrc(dirname, src);
-		subsrc.children = this.src_merge(path_a, subdir_src, subsrc.children);
-		subsrc.expanded = true;
-		return src;
+		var subobj = this.get_subobj(dirname, dir_list);
+		subobj.children = this.src_merge(path_a, subdir_list, subobj.children);
+		subobj.expanded = true;
+		return dir_list;
 	},
 
-	get_subsrc: function(dirname, src) {
-		console.log('src=' + src);
-		console.log(src);
+	get_subobj: function(dirname, dir_list) {
+		console.log('dir_list=' + dir_list);
+		console.log(dir_list);
 		console.log('dirname=' + dirname);
-		for (var i = 0; i < src.length; i++) {
-			if (src[i].name == dirname) {
-				return src[i];
+		for (var i = 0; i < dir_list.length; i++) {
+			if (dir_list[i].name == dirname) {
+				return dir_list[i];
 			}
 		}
+		console.log('dir not found:' + dirname);
 		return null;
 	},
 
-	get_subsrc_from_path: function(path_a, children) {
+	get_subobj_from_path: function(path_a, children) {
 		if (path_a.length == 1) {
-			return this.get_subsrc(path_a[0], children);
+			return this.get_subobj(path_a[0], children);
 		}
 		var dirname = path_a.shift();
 
-		return this.get_subsrc_from_path(path_a, this.get_subsrc(dirname, children).children);
+		return this.get_subobj_from_path(path_a, this.get_subobj(dirname, children).children);
 
 	}
 });
