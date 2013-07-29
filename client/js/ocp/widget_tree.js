@@ -169,7 +169,7 @@ $.widget( "ui.ocp_tree", {
 		var subobj = this.get_subobj_from_path(path_a, this.options.source);
 
 		subobj.children = subdir_list;
-
+		subobj.expanded = true;
 		this.element.find('.tree_struct').remove();
 		this.paint();
 	},

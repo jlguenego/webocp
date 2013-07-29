@@ -6,6 +6,7 @@
 
 	//sleep(2);
 	$path = ROOT.$_GET['path'];
+	$path = iconv('UTF-8', 'CP1252', $path);
 	$list = ls($path);
 	$files = array();
 

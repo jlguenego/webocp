@@ -282,6 +282,7 @@ html, body {
 							path: path
 						},
 						success: function(data) {
+							console.log('data=' + data);
 							result = $.parseJSON(data);
 							dir_result = filter_dir(result);
 							console.log('result=' + result);
