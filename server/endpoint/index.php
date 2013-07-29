@@ -1,26 +1,39 @@
 <?php
+	//é
 	header('Access-Control-Allow-Origin: *');
-	header("Content-Type:text/plain");
-	define('ROOT', '../clt_root');
+	header("Content-Type:text/plain; charset=UTF-8;");
+	define('ROOT', '../data');
+
 	//sleep(2);
-	$dir = dir(ROOT.$_GET['path']);
+	$path = ROOT.$_GET['path'];
+	$list = ls($path);
+	$files = array();
 
-	//List files in images directory
-	while (($file = $dir->read()) !== false) {
-		echo "filename: " . $file . "<br />";
+	foreach ($list as $filename) {
+		//echo $filename.'	';
+		$file = array(
+			'name' => $filename,
+			'label' => $filename,
+		);
+		$win_filename = iconv('UTF-8', 'CP1252', $filename);
+		if (is_dir($path.'/'.$win_filename)) {
+			$file['type'] = 'dir';
+		} else {
+			$file['type'] = 'file';
+		}
+		$files[] = $file;
 	}
+	echo json_encode($files);
 
-	$dir->close();
+	function ls($dirname) {
+		$result = array();
+		 foreach(scandir($dirname) as $file) {
+			if ('.' === $file || '..' === $file) {
+				continue;
+			}
+			$file = utf8_encode($file);
+			$result[] = $file;
+	    }
+		return $result;
+	}
 ?>
-[
-	{
-		"name": "hello",
-		"label": "Hello",
-		"type": "dir"
-	},
-	{
-		"name": "world",
-		"label": "World",
-		"type": "dir"
-	}
-]

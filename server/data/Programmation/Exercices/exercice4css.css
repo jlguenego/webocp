@@ -1,0 +1,37 @@
+#nom {
+font-size: 20;
+}
+
+#email {
+font-size: 30;
+height: 50;
+}
+
+#langue{
+font-size: 10;
+background-color: black;
+}
+
+#drole {
+padding: 30;
+background: url(image2.jpg) no-repeat;
+}
+
+#valider {
+background-image: url(image2.jpg)
+height: 40;
+width: 350;
+}
+.formulaire {
+display: block;
+padding 50;
+height: 40;
+width: 350;
+color: red;
+}
+
+.fiel {
+height: 150;
+width: 150;
+border-color: red;
+}

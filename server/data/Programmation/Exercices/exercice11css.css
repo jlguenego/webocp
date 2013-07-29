@@ -1,0 +1,13 @@
+@media screen {
+a {
+color: red;
+font-size: 30px ;
+display: inline;
+}}
+
+@media print {
+a {
+color: green;
+font-size: 10px ;
+display: block;
+}}

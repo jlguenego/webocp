@@ -264,96 +264,15 @@ html, body {
 					image: 'image/clouddrive.png',
 					type: 'dir',
 					expanded: true,
-					children: [
-						{
-							name: 'item_1_1',
-							label: 'Item 1.1',
-							type: 'dir',
-							children: [
-								{
-									name: 'item_1_1_1',
-									label: 'Item 1.1.1',
-									type: 'dir',
-									expanded: true,
-									children: [
-										{
-											name: 'item_1_1_1_1',
-											label: 'Item 1.1.1.1',
-											type: 'dir'
-										},
-										{
-											name: 'item_1_1_1_2',
-											label: 'Item 1.1.1.2',
-											type: 'dir'
-										}
-									]
-								},
-								{
-									name: 'item_1_1_2',
-									label: 'Item 1.1.2',
-									type: 'dir',
-									children: [
-										{
-											name: 'item_1_1_2_1',
-											label: 'Item 1.1.2.1',
-											type: 'dir'
-										},
-										{
-											name: 'item_1_1_2_2',
-											label: 'Item 1.1.2.2',
-											type: 'dir'
-										}
-									]
-								}
-							]
-						},
-						{
-							name: 'item_1_2',
-							label: 'Item 1.2',
-							type: 'dir'
-						}
-					]
-				},
-				{
-					name: 'item_2',
-					label: 'Item 2',
-					type: 'dir',
 					children: []
-				},
-				{
-					name: 'item_3',
-					label: 'Item 3',
-					type: 'dir',
-					children: [
-						{
-							name: 'item_3_3',
-							label: 'Item 3.1',
-							type: 'dir'
-						},
-						{
-							name: 'item_3_2',
-							label: 'Item 3.2',
-							type: 'dir',
-							children: [
-								{
-									name: 'item_3_2_1',
-									label: 'Item 3.2.1',
-									type: 'dir'
-								},
-								{
-									name: 'item_3_2_2',
-									label: 'Item 3.2.2',
-									type: 'dir'
-								}
-							]
-						}
-					]
 				}
 			];
 			var tree = $('#tree').ocp_tree({
 				source: src,
 				ls: function(path) {
 					var result = null;
+					var dir_result = null;
+					$.ajaxSetup({scriptCharset: "utf-8"});
 					$.ajax({
   						type: "GET",
 						url: 'http://localhost/webocp/server/endpoint/',
@@ -362,14 +281,28 @@ html, body {
 							path: path
 						},
 						success: function(data) {
-							console.log(data);
 							result = $.parseJSON(data);
-							console.log(result);
+							dir_result = filter_dir(result);
+							console.log('result=' + result);
+							console.log('dir_result=' + dir_result);
 						}
 					});
-					return result;
+					return dir_result;
 				}
 			});
+
+			function filter_dir(array) {
+				array = array.slice();
+				for (var i = 0; i < array.length; i++) {
+					if (array[i].type != 'dir')	{
+						console.log('type=' + array[i].type);
+						array.splice(i, 1);
+						i--;
+					}
+				}
+				console.log(array);
+				return array;
+			}
 
 			function get_tree_source() {
 				return tree.widget('options', 'source');

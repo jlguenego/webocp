@@ -1,0 +1,21 @@
+#tableau {
+height: 150px ;
+width: 150px  ;
+}
+
+[align=left] {
+background-color: blue ;
+}
+
+[align=center] {
+background-color: yellow ;
+}
+
+[align=right] {
+background-color: black ;
+color: white ;
+}
+
+#ligne2 {
+color: red;
+}
