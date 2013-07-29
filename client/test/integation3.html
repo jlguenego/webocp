@@ -354,9 +354,16 @@ html, body {
 				source: src,
 				ls: function(path) {
 					var result = null;
-					$.get('http://localhost/webocp/server/endpoint/', function(data) {
-						result = jQuery.parseJSON(data);
-					})
+					$.ajax({
+  						type: "GET",
+						url: 'http://localhost/webocp/server/endpoint/',
+						async: false,
+						success: function(data) {
+							console.log(data);
+							result = $.parseJSON(data);
+							console.log(result);
+						}
+					});
 					return result;
 				}
 			});
