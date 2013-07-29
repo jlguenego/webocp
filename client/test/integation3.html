@@ -259,8 +259,8 @@ html, body {
 			// Put a tree on the left pane
 			var src = [
 				{
-					name: 'item_1',
-					label: 'Item 1',
+					name: '',
+					label: 'Root',
 					image: 'image/clouddrive.png',
 					type: 'dir',
 					expanded: true,
@@ -350,7 +350,7 @@ html, body {
 					]
 				}
 			];
-			$('#tree').ocp_tree({
+			var tree = $('#tree').ocp_tree({
 				source: src,
 				ls: function(path) {
 					var result = null;
@@ -358,6 +358,9 @@ html, body {
   						type: "GET",
 						url: 'http://localhost/webocp/server/endpoint/',
 						async: false,
+						data: {
+							path: path
+						},
 						success: function(data) {
 							console.log(data);
 							result = $.parseJSON(data);
@@ -367,6 +370,10 @@ html, body {
 					return result;
 				}
 			});
+
+			function get_tree_source() {
+				return tree.widget('options', 'source');
+			}
 
 			// Put a grid on right pane
 
