@@ -15,14 +15,18 @@ $.widget( "ui.ocp_header_content", {
 	options: {
 	},
 
+	header: null,
+	content: null,
+
 	_create: function() {
-		var header = $(this.element.children().get(0));
-		var content = $(this.element.children().get(1));
-		content.outerHeight(this.element.innerHeight() - header.outerHeight());
+		this.header = $(this.element.children().get(0));
+		this.content = $(this.element.children().get(1));
+		this.content.outerHeight(this.element.innerHeight() - this.header.outerHeight());
 
 		var self = this;
 		$(window).resize(function() {
-			content.outerHeight(self.element.innerHeight() - header.outerHeight());
+			console.log('ocp_header_content refresh');
+			self.content.outerHeight(self.element.innerHeight() - self.header.outerHeight());
 		});
 
 		return this;

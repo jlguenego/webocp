@@ -37,7 +37,10 @@ $.widget( "ui.ocp_layout_3r", {
 		this.footer.outerHeight(this.options.footer_h).width('100%');
 
 		this.refresh();
-		$(window).resize(this.refresh);
+		var self = this;
+		$(window).resize(function() {
+			self.refresh();
+		});
 		return this;
 	},
 
