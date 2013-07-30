@@ -257,11 +257,10 @@ html, body {
 					<div id="file_transfer"></div>
 				</div>
 			</div>
-
 		</div>
 
 		<div id="header_menu_body">
-			<a href="" class="header_menu_settings">Settings</a>
+			<a href="#general_settings" class="header_menu_settings">Settings</a>
 		</div>
 		<script>
 			$('#page').ocp_header_content();
@@ -272,6 +271,9 @@ html, body {
 			});
 
 			$('#header_menu').ocp_menu();
+			$('[href=#general_settings]').click(function() {
+				alert('settings');
+			});
 
 			// Set splitpane to the middle row
 			$("#main").ocp_splitpane_h({
@@ -372,68 +374,7 @@ html, body {
 						width: 100
 					}
 				},
-				data: [
-					{
-						filename: 'kiki.txt1',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt2',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					}
-				]
+				data: []
 			});
 
 			$("#file_transfer").ocp_grid({
@@ -451,68 +392,7 @@ html, body {
 						width: 100
 					}
 				},
-				data: [
-					{
-						filename: 'kiki.txt1',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt2',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					},
-					{
-						filename: 'keke.txt',
-						size: '3Kb',
-						last_modified: '2012/02/03'
-					}
-				]
+				data: []
 			});
 		</script>
 	</body>
