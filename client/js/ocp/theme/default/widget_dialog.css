@@ -46,7 +46,7 @@
 	cursor: move;
 	font-size: 20px;
 
-	padding: 5px 10px;
+	padding: 1px 10px;
 	box-sizing: border-box;
 }
 
@@ -54,6 +54,7 @@
 	float: right;
 	width: 20px;
 	height: 20px;
+	margin-top: 5px;
 	background-image: url(image/close-usual.png);
 	cursor: pointer;
 }
@@ -61,4 +62,32 @@
 .widget_dialog_content {
 	padding: 10px;
 	box-sizing: border-box;
+}
+
+.widget_dialog_footer {
+}
+
+.widget_dialog_button {
+	float: right;
+	height: 30px;
+	margin: 5px 10px;
+	padding: 1px 10px 3px 10px;
+	box-sizing: border-box;
+
+	color: black;
+	text-align: center;
+	line-height: 28px;
+
+	background-color: #DADEE1;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.widget_dialog_button:hover {
+	color: #FFFFFF;
+	background-color: #D8290A;
 }

@@ -19,14 +19,22 @@ $.widget( "ui.ocp_layout_3r", {
 		footer_h: 90
 	},
 
-	_create: function() {
-		var header = $(this.element.find('>div').get(0));
-		var content = $(this.element.find('>div').get(1));
-		var footer = $(this.element.find('>div').get(2));
+	header: null,
+	content: null,
+	footer: null,
 
-		header.addClass('widget_layout_3r_header').height(this.options.header_h);
-		content.addClass('widget_layout_3r_content');
-		footer.addClass('widget_layout_3r_footer').height(this.options.footer_h);
+	_create: function() {
+		this.header = $(this.element.find('>div').get(0));
+		this.content = $(this.element.find('>div').get(1));
+		this.footer = $(this.element.find('>div').get(2));
+
+		console.log(this.header);
+		console.log(this.content);
+		console.log(this.footer);
+
+		this.header.outerHeight(this.options.header_h).width('100%');
+		this.content.width('100%');
+		this.footer.outerHeight(this.options.footer_h).width('100%');
 
 		this.refresh();
 		$(window).resize(this.refresh);
@@ -37,10 +45,10 @@ $.widget( "ui.ocp_layout_3r", {
 	},
 
 	refresh: function() {
-		var window_h = $(window).height();
-		var header_h = $('.widget_layout_3r_header').height();
-		var footer_h = $('.widget_layout_3r_footer').height();
-		$('.widget_layout_3r_content').height(window_h - header_h - footer_h);
+		var window_h = this.element.height();
+		var header_h = this.header.outerHeight();
+		var footer_h = this.footer.outerHeight();
+		this.content.height(window_h - header_h - footer_h);
 	}
 });
 

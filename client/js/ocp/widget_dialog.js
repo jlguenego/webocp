@@ -18,11 +18,14 @@ $.widget( "ui.ocp_dialog", {
 		width: null,
 		height: null,
 
+		buttons: {},
+
 		// Callback
 		close: function() {},
 	},
 
 	back_screen: null,
+	content: null,
 
 	_create: function() {
 		if ($('.widget_dialog_back_screen').length < 1) {
@@ -40,8 +43,12 @@ $.widget( "ui.ocp_dialog", {
 		});
 
 		this._set_dialog_content();
+
 		this._center_dialog();
-		this.element.ocp_header_content();
+		this.element.ocp_layout_3r({
+			header_h: 30,
+			footer_h: 40
+		});
 
 		var self = this;
 		$(window).resize(function() {
@@ -71,9 +78,10 @@ $.widget( "ui.ocp_dialog", {
 	},
 
 	_set_dialog_content: function() {
-		var content = $('<div/>').html(this.element.html());
-		content.addClass('widget_dialog_content');
-		this.element.html(content);
+		this.content = $('<div/>').html(this.element.html());
+		this.content.addClass('widget_dialog_content');
+		this.element.html(this.content);
+		this._add_buttons();
 
 		var header = $('<div/>').prependTo(this.element);
 		header.addClass('widget_dialog_header');
@@ -91,6 +99,19 @@ $.widget( "ui.ocp_dialog", {
 			handle: '.widget_dialog_header',
 			containment: 'parent'
 		});
+	},
+
+	_add_buttons: function() {
+		var footer = $('<div/>').appendTo(this.element);
+		footer.addClass('widget_dialog_footer');
+		for (var name in this.options.buttons) {
+			console.log(name);
+			var button = $('<div/>').appendTo(footer);
+			button.addClass('widget_dialog_button');
+			button.html(name);
+
+			button.click(this.options.buttons[name]);
+		}
 	},
 
 	open: function() {

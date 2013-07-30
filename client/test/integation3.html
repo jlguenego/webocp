@@ -36,6 +36,13 @@
 			<script src="../js/ocp/widget_menu.js"></script>
 			<link rel="stylesheet" href="../js/ocp/theme/default/widget_menu.css" />
 			<!-- END MENU -->
+
+			<!-- DIALOG -->
+			<script src="../js/ocp/widget_dialog.js"></script>
+			<link rel="stylesheet" href="../js/ocp/theme/default/widget_dialog.css" />
+			<!-- END DIALOG -->
+
+		<script src="../js/ocp/widget_layout_3r.js"></script>
 		<script src="../js/ocp/widget_header_content.js"></script>
 		<!-- END OCP -->
 
@@ -222,6 +229,10 @@ html, body {
 #toggle_footer.footer_maximize:hover {
 	background-position: 100% 100%;
 }
+
+input {
+	width: 250px;
+}
 		</style>
 	</head>
 
@@ -262,7 +273,12 @@ html, body {
 		<div id="header_menu_body">
 			<a href="#general_settings" class="header_menu_settings">Settings</a>
 		</div>
+		<div id="general_settings_dialog" title="General settings">
+			Host address <input type="text" id="server_base_url" value="http://localhost"/>
+		</div>
 		<script>
+			var g_server_base_url = 'http://localhost';
+
 			$('#page').ocp_header_content();
 			$('#page_content').ocp_splitpane_v({
 				overflow: 'hidden',
@@ -270,9 +286,22 @@ html, body {
 				fixed: 'bottom'
 			});
 
+			var general_settings_dialog = $('#general_settings_dialog').ocp_dialog({
+				buttons: {
+					Save: function() {
+						g_server_base_url = $('#general_settings_dialog #server_base_url').val();
+						general_settings_dialog.ocp_dialog('close');
+					},
+					Cancel: function() {
+						general_settings_dialog.ocp_dialog('close');
+					}
+				}
+			});
+
 			$('#header_menu').ocp_menu();
 			$('[href=#general_settings]').click(function() {
-				alert('settings');
+				general_settings_dialog.ocp_dialog('open');
+				general_settings_dialog.find('#server_base_url').val(g_server_base_url);
 			});
 
 			// Set splitpane to the middle row
@@ -323,7 +352,7 @@ html, body {
 					$.ajaxSetup({scriptCharset: "utf-8"});
 					$.ajax({
   						type: "GET",
-						url: 'http://localhost/webocp/server/endpoint/',
+						url: g_server_base_url + '/webocp/server/endpoint/',
 						async: false,
 						data: {
 							path: path

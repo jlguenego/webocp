@@ -8,7 +8,7 @@
 		<link rel="stylesheet" href="../_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
 
 		<script src="../js/ocp/core.js"></script>
-		<script src="../js/ocp/widget_header_content.js"></script>
+		<script src="../js/ocp/widget_layout_3r.js"></script>
 		<script src="../js/ocp/widget_dialog.js"></script>
 		<link rel="stylesheet" href="../js/ocp/theme/default/widget_dialog.css" />
 
@@ -30,7 +30,16 @@ html, body {
 		<script>
 			var dialog = $('#dialog').ocp_dialog({
 				width: 700,
-				height: 300
+				height: 300,
+				buttons: {
+					Save: function() {
+						alert('save');
+						$('#dialog').ocp_dialog('close');
+					},
+					Cancel: function() {
+						$('#dialog').ocp_dialog('close');
+					}
+				}
 			});
 			$('#open').click(function() {
 				dialog.ocp_dialog('open');
