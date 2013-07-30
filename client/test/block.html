@@ -19,7 +19,17 @@ html, body {
 	</head>
 
 	<body>
+		<button>Click</button>
 		<script>
+			$('button').click(function() {
+				var div = $('<div/>');
+				div.css({
+					height: 10,
+					width: 10,
+					'background-color': 'red'
+				});
+				//div.insertAfter($('button'));
+			});
 		</script>
 	</body>
 </html>

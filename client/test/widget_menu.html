@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+		<script src="../_ext/jquery-1.10.2.min.js"></script>
+		<script src="../_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="../_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="../js/ocp/core.js"></script>
+		<script src="../js/ocp/widget_menu.js"></script>
+		<link rel="stylesheet" href="../js/ocp/theme/default/widget_menu.css" />
+
+		<style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	background-color: #CCCCCC;
+}
+
+#menu {
+	position: absolute;
+	left: 500px;
+}
+
+#menu2 {
+	position: absolute;
+	left: 360px;
+}
+		</style>
+	</head>
+
+	<body>
+		<div id="menu2">Mon menu</div>
+		<div id="menu2_data" class="ocp_data">
+			<ul>
+				<li onClick="javascript:hello1()">Item 1Item 1Item 1Item 1Item 1Item 1Item 1</li>
+				<li onClick="javascript:hello2()">Item 2</li>
+				<li onClick="javascript:hello3()">Item 3</li>
+			</ul>
+		</div>
+		<div id="menu">Mon menu kiki</div>
+		<div id="menu_data">
+			<ul>
+				<li onClick="javascript:hello1()">Item 1Item 1Item 1Item 1Item 1Item 1Item 1</li>
+				<li onClick="javascript:hello2()">Item 2</li>
+				<li onClick="javascript:hello3()">Item 3</li>
+			</ul>
+		</div>
+		<script>
+			$('#menu').ocp_menu();
+
+			$('#menu2').ocp_menu();
+
+			function hello1() {
+				console.log('hello1');
+			}
+
+			function hello2() {
+				console.log('hello2');
+			}
+
+			function hello3() {
+				console.log('hello3');
+			}
+		</script>
+	</body>
+</html>

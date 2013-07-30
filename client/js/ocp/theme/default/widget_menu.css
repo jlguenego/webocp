@@ -1,0 +1,52 @@
+.widget_menu_root {
+	height: 26px;
+	padding: 3px 27px 0px 8px;
+	box-sizing: border-box;
+
+	background-color: #2d2c2a;
+	color: #C0C0BE;
+	cursor: pointer;
+	background-image: url(image/gray_arrow.png);
+	background-position: right center;
+	background-repeat: no-repeat;
+
+	border-radius: 5px;
+}
+
+.widget_menu_root:hover {
+	background-color: #D9290B;
+	color: #FFFFFF;
+	background-image: url(image/white_arrow.png);
+}
+
+.widget_menu_transition {
+	position: absolute;
+	height: 15px;
+	background-color: transparent;
+	border: none;
+}
+
+.widget_menu_arrow {
+	position: absolute;
+	right: 0px;
+	height: 13px;
+	width: 30px;
+
+	background-image: url(image/dropdown_arrow2.png);
+	background-position: center -25px;
+	background-repeat: no-repeat;
+
+	z-index: 2;
+}
+
+.widget_menu_body {
+	white-space: nowrap;
+	margin: 0px;
+	padding: 0px;
+	background-color: #FFFFFF;
+	-webkit-box-shadow: 0px 0 4px rgba(50, 50, 50, 0.25);
+	-moz-box-shadow: 0px 0 4px rgba(50, 50, 50, 0.25);
+	box-shadow: 0px 0 4px rgba(50, 50, 50, 0.25);
+
+	z-index: 1;
+}
