@@ -1,5 +1,6 @@
 <?php
 	//é
+	error_reporting(E_ERROR|E_WARNING|E_PARSE);
 	header('Access-Control-Allow-Origin: *');
 	header("Content-Type:text/plain; charset=UTF-8;");
 	define('ROOT', '../data');
@@ -11,7 +12,6 @@
 	$files = array();
 
 	foreach ($list as $filename) {
-		//echo $filename.'	';
 		$file = array(
 			'name' => $filename,
 			'label' => $filename,

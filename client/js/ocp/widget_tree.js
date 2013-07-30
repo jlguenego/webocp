@@ -157,8 +157,6 @@ $.widget( "ui.ocp_tree", {
 	tree_item_click: function(event) {
 		var tree_item = $(event.currentTarget);
 		var path = tree_item.attr('data-path');
-		var level = tree_item.attr('data-level');
-		var subdir_list = this.ls(path);
 
 		console.log('path=' + path);
 		if (path == '/') {
@@ -168,24 +166,10 @@ $.widget( "ui.ocp_tree", {
 		console.log('path_a=' + path_a);
 		var subobj = this.get_subobj_from_path(path_a, this.options.source);
 
-		subobj.children = subdir_list;
+		subobj.children = this.ls(path);
 		subobj.expanded = true;
 		this.element.find('.tree_struct').remove();
 		this.paint();
-	},
-
-	src_merge: function(path_a, subdir_list, dir_list) {
-		path_a = path_a.slice();
-		console.log('path_a=' + path_a);
-		if (path_a.length == 0) {
-			return subdir_list;
-		}
-
-		var dirname = path_a.shift();
-		var subobj = this.get_subobj(dirname, dir_list);
-		subobj.children = this.src_merge(path_a, subdir_list, subobj.children);
-		subobj.expanded = true;
-		return dir_list;
 	},
 
 	get_subobj: function(dirname, dir_list) {
@@ -202,13 +186,12 @@ $.widget( "ui.ocp_tree", {
 	},
 
 	get_subobj_from_path: function(path_a, children) {
+		var subobj = this.get_subobj(path_a[0], children);
 		if (path_a.length == 1) {
-			return this.get_subobj(path_a[0], children);
+			return subobj;
 		}
-		var dirname = path_a.shift();
-
-		return this.get_subobj_from_path(path_a, this.get_subobj(dirname, children).children);
-
+		path_a.shift();
+		return this.get_subobj_from_path(path_a, subobj.children);
 	}
 });
 
