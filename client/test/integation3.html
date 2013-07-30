@@ -31,6 +31,11 @@
 			<script src="../js/ocp/widget_grid.js"></script>
 			<link rel="stylesheet" href="../js/ocp/theme/default/widget_grid.css" />
 			<!-- END GRID -->
+
+			<!-- MENU -->
+			<script src="../js/ocp/widget_menu.js"></script>
+			<link rel="stylesheet" href="../js/ocp/theme/default/widget_menu.css" />
+			<!-- END MENU -->
 		<script src="../js/ocp/widget_header_content.js"></script>
 		<!-- END OCP -->
 
@@ -53,6 +58,41 @@ html, body {
 	height: 50px;
 
 	background-color: #151412;
+}
+
+#header_menu {
+	margin: 12px 10px 0 0;
+	float: right;
+}
+
+#header_menu_body a {
+	height: 40px;
+	display: block;
+	padding: 8px 40px 0 55px;
+
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	color: #615F5D;
+	font-size: 14px;
+	line-height: 21px;
+
+	background-repeat: no-repeat;
+}
+
+#header_menu_body a:hover {
+	background-color: #D11E00;
+	color: #FFFFFF;
+}
+
+.header_menu_settings {
+	background-image: url(https://eu.static.mega.co.nz/images/mega/menu_sprite3.png);
+	background-size: 32px 2102px;
+	background-position: 13px -1008px;
+}
+
+.header_menu_settings:hover {
+	background-position: 13px -918px;
 }
 
 #sidebar {
@@ -188,6 +228,7 @@ html, body {
 	<body>
 		<div id="page">
 			<div id="page_header">
+				<div id="header_menu">Menu</div>
 			</div>
 			<div id="page_content">
 				<div id="main">
@@ -218,6 +259,10 @@ html, body {
 			</div>
 
 		</div>
+
+		<div id="header_menu_body">
+			<a href="" class="header_menu_settings">Settings</a>
+		</div>
 		<script>
 			$('#page').ocp_header_content();
 			$('#page_content').ocp_splitpane_v({
@@ -225,6 +270,8 @@ html, body {
 				size: { top: null, bottom: 150 },
 				fixed: 'bottom'
 			});
+
+			$('#header_menu').ocp_menu();
 
 			// Set splitpane to the middle row
 			$("#main").ocp_splitpane_h({

@@ -113,7 +113,6 @@ $.widget( "ui.ocp_splitpane_v", {
 	},
 
 	_refresh: function() {
-		console.log('refresh splitapane vert');
 		var container_w = this.element.height();
 		var resizebar_h = this.resizebar.height();
 		if (this.options.fixed == 'top') {
@@ -126,7 +125,6 @@ $.widget( "ui.ocp_splitpane_v", {
 	},
 
 	resize: function(obj) {
-		console.log(obj);
 		if (obj.top) {
 			this.toppane.height(obj.top);
 			this._refresh();

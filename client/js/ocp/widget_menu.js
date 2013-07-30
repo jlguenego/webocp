@@ -21,12 +21,13 @@ $.widget( "ui.ocp_menu", {
 	menu_transition: null,
 
 	_create: function() {
-		var body_id = this.options.body_id || this.element.attr('id') + '_body';
-		this.menu_body = $('#' + body_id);
-		this.menu_body.hide();
-
 		this.element.addClass('widget_menu_root');
+		var body_id = this.options.body_id || this.element.attr('id') + '_body';
+
+		this.menu_body = $('#' + body_id);
 		this.menu_body.addClass('widget_menu_body');
+		this.menu_body.css('min-width', this.element.outerWidth());
+		this.menu_body.hide();
 
 		this.menu_transition = $('<div/>').outerWidth(this.element.outerWidth());
 		this.menu_transition.addClass('widget_menu_transition');
