@@ -359,6 +359,8 @@ input {
 						success: function(data) {
 							console.log('data=' + data);
 							result = $.parseJSON(data);
+							var grid_result = convert2grid(result);
+							$("#grid").ocp_grid('reload', grid_result);
 							dir_result = filter_dir(result);
 							console.log('result=' + result);
 							console.log('dir_result=' + dir_result);
@@ -367,6 +369,18 @@ input {
 					return dir_result;
 				}
 			});
+
+			function convert2grid(ls_data) {
+				var result = [];
+				for (var i = 0; i < ls_data.length; i++) {
+					var row = {};
+					row.filename = ls_data[i].label;
+					row.size = 'N/A';
+					row.last_modified = 'N/A';
+					result.push(row);
+				}
+				return result;
+			}
 
 			function filter_dir(array) {
 				array = array.slice();

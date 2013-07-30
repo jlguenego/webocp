@@ -198,6 +198,15 @@ $.widget( "ui.ocp_grid", {
 			}
 		});
 		header.disableSelection();
+	},
+
+	reload: function(data) {
+		console.log('grid reload');
+		console.log(data);
+
+		this.body.remove();
+		this.options.data = data;
+		this._body();
 	}
 });
 
