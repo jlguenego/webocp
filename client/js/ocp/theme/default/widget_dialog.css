@@ -44,7 +44,7 @@
 	background-color: #D8290A;
 	color: #FFFFFF;
 	cursor: move;
-	font-size: 20px;
+	line-height: 28px;
 
 	padding: 1px 10px;
 	box-sizing: border-box;
@@ -71,7 +71,7 @@
 	float: right;
 	height: 30px;
 	margin: 5px 10px;
-	padding: 1px 10px 3px 10px;
+	padding: 1px 30px 3px 30px;
 	box-sizing: border-box;
 
 	color: black;
