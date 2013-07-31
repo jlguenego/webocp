@@ -195,6 +195,9 @@ $.widget( "ui.ocp_tree", {
 
 			var e = $.Event('click');
 			e.currentTarget = this.element.find('[data-path="' + p + '"]');
+			if (e.currentTarget.length == 0) {
+				e.currentTarget = this.element.find('.widget_tree_selected');
+			}
 			this.tree_item_click(e);
 		}
 
