@@ -95,7 +95,7 @@ $.widget( "ui.ocp_tree", {
 			var div = $('<div class="tree_item"/>').appendTo(row);
 			var img_div = $('<div class="item_image icon"/>').appendTo(div);
 			if (image) {
-				img_div.css('background-image', 'url("'+image+'")');
+				img_div.css('background-image', 'url("' + image + '")');
 			}
 
 			var label = item.label || item.name;
