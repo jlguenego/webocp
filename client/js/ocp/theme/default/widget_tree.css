@@ -12,40 +12,43 @@
 .tree_row {
 	margin: 0px;
 	padding: 0px;
-	height: 27px;
-	line-height: 24px;
+	height: 24px;
+	line-height: 23px;
 }
 
 .tree_item {
 	display: inline-block;
-	padding: 1px 16px 1px 4px;
+	padding: 4px 16px 0px 5px;
 	margin-left: -5px;
 	text-overflow: clip;
 	box-sizing: border-box;
 	vertical-align: top;
 
-	height: 26px;
+	height: 24px;
+	line-height: 16px;
 }
 
 .tree_item:hover {
 	background-color: #EEEEEE;
 	border: 1px solid #CCCCCC;
 	border-radius: 5px;
-	padding: 0px 16px 1px 3px;
+	padding: 3px 16px 0px 4px;
 }
 
 .widget_tree_selected {
 	background-color: #FFFFFF;
 	border: 1px solid #CCCCCC;
 	border-radius: 5px;
-	padding: 0px 16px 1px 3px;
+	padding: 3px 16px 0px 4px;
 }
 
 .item_image {
 	position: relative;
-	top: -3px;
+	top: -5px;
 	margin-left: 0px !important;
+	margin-right: 2px;
 	background-image: url('image/folder_new.gif');
+	background-size: 27px 24px;
 }
 
 .widget_tree_selected .item_image {
@@ -54,10 +57,11 @@
 
 .icon {
 	display: inline-block;
-	width: 29px;
-	height: 27px;
+	width: 27px;
+	height: 24px;
 	margin-left: 3px;
-	background-size: 29px 27px;
+	background-size: 27px 24px;
+	background-repeat: no-repeat;
 }
 
 .elbow-blank {
