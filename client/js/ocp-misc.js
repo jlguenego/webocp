@@ -11,7 +11,8 @@ function ocp_build_grid_data_from_ls_enpoint(ls_data) {
 			mime_type: ls_data[i].mime_type,
 		};
 		row.info = [
-			ls_data[i].type
+			ls_data[i].type,
+			'name:' + ls_data[i].label
 		]
 		result.push(row);
 	}

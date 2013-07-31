@@ -158,8 +158,6 @@ $.widget( "ui.ocp_tree", {
 	},
 
 	tree_item_click: function(event) {
-
-
 		var tree_item = $(event.currentTarget);
 		var path = tree_item.attr('data-path');
 
