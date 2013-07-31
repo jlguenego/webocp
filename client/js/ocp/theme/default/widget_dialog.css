@@ -48,6 +48,7 @@
 
 	padding: 1px 10px;
 	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 
 .widget_dialog_close {
@@ -62,6 +63,7 @@
 .widget_dialog_content {
 	padding: 10px;
 	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 
 .widget_dialog_footer {
@@ -73,6 +75,7 @@
 	margin: 5px 10px;
 	padding: 1px 30px 3px 30px;
 	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 
 	color: black;
 	text-align: center;

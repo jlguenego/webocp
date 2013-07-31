@@ -22,6 +22,7 @@
 	margin-left: -5px;
 	text-overflow: clip;
 	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 	vertical-align: top;
 
 	height: 24px;
@@ -45,10 +46,15 @@
 .item_image {
 	position: relative;
 	top: -5px;
+	float: left;
 	margin-left: 0px !important;
 	margin-right: 2px;
 	background-image: url('image/folder_new.gif');
 	background-size: 27px 24px;
+}
+
+.widget_tree_item_label {
+	display: inline-block;
 }
 
 .widget_tree_selected .item_image {

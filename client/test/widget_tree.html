@@ -22,89 +22,97 @@
 		<script>
 			var src = [
 				{
-					item: {
-						name: 'item_1',
-						image: 'image/clouddrive.png'
-					},
+					name: '',
+					label: 'Root',
+					image: 'image/clouddrive.png',
+					type: 'dir',
+					expanded: true,
 					children: [
 						{
-							item: {
-								label: 'Item 1.1',
-							},
+							name: 'item_1',
+							image: 'image/clouddrive.png',
+							type: 'dir',
 							children: [
 								{
-									item: {
-										label: 'Item 1.1.1',
-									},
+									name: 'item_1_1',
+									label: 'Item 1.1',
+									type: 'dir',
 									children: [
 										{
-											item: {
-												label: 'Item 1.1.1.1',
-											}
+											name: 'item_1_1_1',
+											label: 'Item 1.1.1',
+											type: 'dir',
+											children: [
+												{
+												name: 'item_1_1_1_1',
+													label: 'Item 1.1.1.1',
+													type: 'dir',
+												},
+												{
+													name: 'item_1_1_1_2',
+													label: 'Item 1.1.1.2',
+													type: 'file',
+												}
+											]
 										},
 										{
-											item: {
-												label: 'Item 1.1.1.2',
-											}
+											name: 'item_1_1_2',
+											label: 'Item 1.1.2',
+											type: 'dir',
+											children: [
+												{
+													name: 'item_1_1_2_1',
+													label: 'Item 1.1.2.1',
+													type: 'file',
+												},
+												{
+													name: 'item_1_1_2_2',
+													label: 'Item 1.1.2.2',
+													type: 'file',
+												}
+											]
 										}
 									]
 								},
 								{
-									item: {
-										label: 'Item 1.1.2',
-									},
-									children: [
-										{
-											item: {
-												label: 'Item 1.1.2.1',
-											}
-										},
-										{
-											item: {
-												label: 'Item 1.1.2.2',
-											}
-										}
-									]
+									name: 'item_1_2',
+									label: 'Item 1.2',
+									type: 'file',
 								}
 							]
 						},
 						{
-							item: {
-								label: 'Item 1.2',
-							}
-						}
-					]
-				},
-				{
-					item: {
-						label: 'Item 2',
-					},
-					children: []
-				},
-				{
-					item: {
-						label: 'Item 3',
-					},
-					children: [
-						{
-							item: {
-								label: 'Item 3.1',
-							}
+							name: 'item_2',
+							label: 'Item 2',
+							type: 'dir',
+							children: []
 						},
 						{
-							item: {
-								label: 'Item 3.2',
-							},
+							name: 'item_3',
+							label: 'Item 3',
+							type: 'dir',
 							children: [
 								{
-									item: {
-										label: 'Item 3.2.1',
-									}
+									name: 'item_3_1',
+									label: 'Item 3.1',
+									type: 'dir',
 								},
 								{
-									item: {
-										label: 'Item 3.2.2',
-									}
+									name: 'item_3_2',
+									label: 'Item 3.2',
+									type: 'dir',
+									children: [
+										{
+											name: 'item_3_2_1',
+											label: 'Item 3.2.1',
+											type: 'dir',
+										},
+										{
+											name: 'item_3_2_2',
+											label: 'Item 3.2.2',
+											type: 'dir',
+										}
+									]
 								}
 							]
 						}

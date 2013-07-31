@@ -99,7 +99,9 @@ $.widget( "ui.ocp_tree", {
 			}
 
 			var label = item.label || item.name;
-			div.append(label);
+			var div_label = $('<div/>').addClass('widget_tree_item_label');
+			div_label.html(label);
+			div.append(div_label);
 			div.attr('data-name', item.name);
 			var child_path = path;
 			if (!child_path.endsWith('/')) {
@@ -132,6 +134,7 @@ $.widget( "ui.ocp_tree", {
 			path = '';
 		}
 		path_a = path.split('/');
+		console.log('path_a=' + path_a);
 		var src = this.get_subobj_from_path(path_a, this.options.source);
 		tree_struct.toggle();
 

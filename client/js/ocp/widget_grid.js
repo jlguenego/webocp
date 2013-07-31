@@ -95,6 +95,7 @@ $.widget( "ui.ocp_grid", {
 		// Header is absolute => show the first line of the grid.
 		this.body.css('padding-top', this.header.height()+'px');
 		this.body.css('box-sizing', 'border-box');
+		this.body.css('-moz-box-sizing', 'border-box');
 
 		for(var i = 0; i < this.options.data.length; i++) {
 			var data = this.options.data[i];
@@ -124,16 +125,18 @@ $.widget( "ui.ocp_grid", {
 				img.addClass('widget_grid_thumbnail');
 
 				// This code may be deported in a anonymous function
-				img.addClass('widget_grid_type_' + data.meta_data.type);
-				var type = '';
-				var ext = data[colname].getFileExtention();
-				if (data.meta_data.mime_type) {
-					type = 'mime_' + data.meta_data.mime_type;
-					type = type.replace('/', '_');
-				} else if (ext) {
-					type = 'ext_' + ext;
+				if (data.meta_data) {
+					img.addClass('widget_grid_type_' + data.meta_data.type);
+					var type = '';
+					var ext = data[colname].getFileExtention();
+					if (data.meta_data.mime_type) {
+						type = 'mime_' + data.meta_data.mime_type;
+						type = type.replace('/', '_');
+					} else if (ext) {
+						type = 'ext_' + ext;
+					}
+					img.addClass('widget_grid_' + type);
 				}
-				img.addClass('widget_grid_' + type);
 
 				cell.prepend(img);
 			}
