@@ -28,10 +28,6 @@ $.widget( "ui.ocp_layout_3r", {
 		this.content = $(this.element.find('>div').get(1));
 		this.footer = $(this.element.find('>div').get(2));
 
-		console.log(this.header);
-		console.log(this.content);
-		console.log(this.footer);
-
 		this.header.outerHeight(this.options.header_h).width('100%');
 		this.content.width('100%');
 		this.footer.outerHeight(this.options.footer_h).width('100%');

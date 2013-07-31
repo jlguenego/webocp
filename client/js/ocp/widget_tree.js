@@ -155,14 +155,17 @@ $.widget( "ui.ocp_tree", {
 	},
 
 	tree_item_click: function(event) {
+
+
 		var tree_item = $(event.currentTarget);
 		var path = tree_item.attr('data-path');
 
 		console.log('path=' + path);
-		if (path == '/') {
-			path = '';
+		var path_temp = path;
+		if (path_temp == '/') {
+			path_temp = '';
 		}
-		var path_a = path.split('/');
+		var path_a = path_temp.split('/');
 		console.log('path_a=' + path_a);
 		var subobj = this.get_subobj_from_path(path_a, this.options.source);
 
@@ -170,6 +173,7 @@ $.widget( "ui.ocp_tree", {
 		subobj.expanded = true;
 		this.element.find('.tree_struct').remove();
 		this.paint();
+		$('.tree_item[data-path="' + path + '"]').addClass('widget_tree_selected');
 	},
 
 	get_subobj: function(dirname, dir_list) {

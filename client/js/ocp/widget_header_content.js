@@ -25,7 +25,6 @@ $.widget( "ui.ocp_header_content", {
 
 		var self = this;
 		$(window).resize(function() {
-			console.log('ocp_header_content refresh');
 			self.content.outerHeight(self.element.innerHeight() - self.header.outerHeight());
 		});
 

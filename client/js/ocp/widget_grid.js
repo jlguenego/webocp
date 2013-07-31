@@ -117,11 +117,9 @@ $.widget( "ui.ocp_grid", {
 				var type = '';
 				var ext = data.filename.getFileExtention();
 				if (data.meta_data.mime_type) {
-					console.log('mime_type=' + data.meta_data.mime_type);
 					type = 'mime_' + data.meta_data.mime_type;
 					type = type.replace('/', '_');
 				} else if (ext) {
-					console.log('ext=' + ext);
 					type = 'ext_' + ext;
 				}
 				img.addClass('widget_grid_' + type);
@@ -219,9 +217,6 @@ $.widget( "ui.ocp_grid", {
 	},
 
 	reload: function(data) {
-		console.log('grid reload');
-		console.log(data);
-
 		this.body.remove();
 		this.options.data = data;
 		this._body();

@@ -373,12 +373,10 @@ input {
 				array = array.slice();
 				for (var i = 0; i < array.length; i++) {
 					if (array[i].type != 'dir')	{
-						console.log('type=' + array[i].type);
 						array.splice(i, 1);
 						i--;
 					}
 				}
-				console.log(array);
 				return array;
 			}
 

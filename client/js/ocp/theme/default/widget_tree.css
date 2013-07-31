@@ -34,11 +34,22 @@
 	padding: 0px 16px 1px 3px;
 }
 
+.widget_tree_selected {
+	background-color: #FFFFFF;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	padding: 0px 16px 1px 3px;
+}
+
 .item_image {
 	position: relative;
 	top: -3px;
 	margin-left: 0px !important;
 	background-image: url('image/folder_new.gif');
+}
+
+.widget_tree_selected .item_image {
+	background-image: url('image/folder-opened.gif');
 }
 
 .icon {
