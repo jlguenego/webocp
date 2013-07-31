@@ -201,6 +201,18 @@ html, body {
 	-moz-box-sizing: border-box;
 }
 
+#parent {
+	display: inline-block;
+	float: left;
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+
+	background-image: url(image/folder_up.png);
+	background-size: 20px 20px;
+	cursor: pointer;
+}
+
 #breadcrumbs input {
 	display: inline-block;
 	width: 100%;
@@ -288,7 +300,10 @@ input {
 								</ul>
 							</div>
 							<div id="breadcrumbs">
-								<label for="path">Path: </label>
+								<div>
+									<div id="parent"></div>
+									<label for="path">Path: </label>
+								</div>
 								<input type="text" id="path" />
 							</div>
 						</div>
@@ -457,6 +472,14 @@ input {
 						$('#tree').ocp_tree('open_item', path + name);
 					}
 				}
+			});
+
+			$('#parent').click(function() {
+				var path = $('#breadcrumbs input').val();
+				var path_a = path.split('/');
+				path_a.pop();
+				path = path_a.join('/');
+				$('#tree').ocp_tree('open_item', path);
 			});
 
 			$("#file_transfer").ocp_grid({

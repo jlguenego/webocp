@@ -19,8 +19,8 @@ $.widget( "ui.ocp_text_value", {
 	content: null,
 
 	_create: function() {
-		this.header = $(this.element.children().get(0));
-		this.content = $(this.element.children().get(1));
+		this.header = $(this.element.children().get(0)).css('display', 'inline-block');
+		this.content = $(this.element.children().get(1)).css('display', 'inline-block');
 		this.content.outerWidth(this.element.width() - this.header.outerWidth());
 
 		var self = this;
