@@ -26,7 +26,11 @@ function basename(path) {
 }
 
 function dirname(path) {
-    return path.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');;
+    var result = path.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
+    if (result == '') {
+    	result = '/';
+    }
+    return result;
 }
 
 (function($) {

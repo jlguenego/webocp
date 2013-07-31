@@ -453,14 +453,6 @@ input {
 				}
 			});
 
-			$('#parent').click(function() {
-				var path = $('#breadcrumbs input').val();
-				var path_a = path.split('/');
-				path_a.pop();
-				path = path_a.join('/');
-				$('#tree').ocp_tree('open_item', path);
-			});
-
 			$("#file_transfer").ocp_grid({
 				column: {
 					filename: {

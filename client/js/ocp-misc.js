@@ -50,4 +50,12 @@ $(document).ready(function() {
 	        $('#tree').ocp_tree('open_item', path);
 	    }
 	});
+
+	$('#parent').click(function() {
+		var path = $('#breadcrumbs input').val();
+		console.log('path=' + path);
+		path = dirname(path);
+		console.log('path=' + path);
+		$('#tree').ocp_tree('open_item', path);
+	});
 });
