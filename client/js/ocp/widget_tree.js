@@ -93,6 +93,7 @@ $.widget( "ui.ocp_tree", {
 
 			var image = item.image || this.options.image;
 			var div = $('<div class="tree_item"/>').appendTo(row);
+			item.selector = div;
 			var img_div = $('<div class="item_image icon"/>').appendTo(div);
 			if (image) {
 				img_div.css('background-image', 'url("' + image + '")');
@@ -161,13 +162,11 @@ $.widget( "ui.ocp_tree", {
 		var tree_item = $(event.currentTarget);
 		var path = tree_item.attr('data-path');
 
-		console.log('path=' + path);
 		var path_temp = path;
 		if (path_temp == '/') {
 			path_temp = '';
 		}
 		var path_a = path_temp.split('/');
-		console.log('path_a=' + path_a);
 		var subobj = this.get_subobj_from_path(path_a, this.options.source);
 
 		subobj.children = this.ls(path);
@@ -175,6 +174,19 @@ $.widget( "ui.ocp_tree", {
 		this.element.find('.tree_struct').remove();
 		this.paint();
 		$('.tree_item[data-path="' + path + '"]').addClass('widget_tree_selected');
+	},
+
+	open_item: function(path) {
+		var path_temp = path;
+		if (path_temp == '/') {
+			path_temp = '';
+		}
+		var path_a = path_temp.split('/');
+		var subobj = this.get_subobj_from_path(path_a, this.options.source);
+		console.log(subobj);
+		var e = $.Event('click');
+		e.currentTarget = subobj.selector;
+		this.tree_item_click(e);
 	},
 
 	get_subobj: function(dirname, dir_list) {
