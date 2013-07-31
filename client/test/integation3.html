@@ -391,8 +391,8 @@ input {
 							result = $.parseJSON(data);
 							var grid_result = ocp_build_grid_data_from_ls_enpoint(result);
 							$("#grid").ocp_grid('reload', grid_result);
-							dir_result = filter_dir(result);
 							$('#breadcrumbs input').val(path);
+							dir_result = filter_dir(result);
 						}
 					});
 					return dir_result;
@@ -434,7 +434,13 @@ input {
 						width: 100
 					}
 				},
-				data: []
+				data: [],
+				prevent_dblclick: true,
+
+				row_dblclick: function(e) {
+					console.log('our row_dblclick');
+					console.log(e);
+				}
 			});
 
 			$("#file_transfer").ocp_grid({

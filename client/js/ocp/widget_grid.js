@@ -17,7 +17,11 @@ $.widget( "ui.ocp_grid", {
 		id: 'my_grid',
 		column: {},
 		data: [],
-		column_width: 50
+		column_width: 50,
+		prevent_dblclick: false,
+
+		// Callback
+		row_dblclick: function(e) { console.log('row_dblclick'); }
 	},
 	counter: 0,
 	swap_column_start_colname: null,
@@ -42,6 +46,9 @@ $.widget( "ui.ocp_grid", {
 			self._refresh();
 		});
 		this._refresh();
+		if (this.options.prevent_dblclick) {
+			this.element.dblclickPreventDefault();
+		}
 		return this;
 	},
 
@@ -102,6 +109,8 @@ $.widget( "ui.ocp_grid", {
 		var row = $('<div/>').appendTo(this.body);
 		row.addClass('widget_grid_body_row');
 		row.attr('id', id);
+		console.log(data);
+		row.attr('data-info', data.info.join('/'));
 
 		for (var colname in this.options.column) {
 			var cell = $('<div/>').appendTo(row);
@@ -113,9 +122,11 @@ $.widget( "ui.ocp_grid", {
 			if (this.options.column[colname].use_thumbnail) {
 				var img = $('<div/>');
 				img.addClass('widget_grid_thumbnail');
+
+				// This code may be deported in a anonymous function
 				img.addClass('widget_grid_type_' + data.meta_data.type);
 				var type = '';
-				var ext = data.filename.getFileExtention();
+				var ext = data[colname].getFileExtention();
 				if (data.meta_data.mime_type) {
 					type = 'mime_' + data.meta_data.mime_type;
 					type = type.replace('/', '_');
@@ -123,12 +134,18 @@ $.widget( "ui.ocp_grid", {
 					type = 'ext_' + ext;
 				}
 				img.addClass('widget_grid_' + type);
+
 				cell.prepend(img);
 			}
 
 			var width = this.header.find('[data-colname=' + this.options.id + '_' + colname + ']').width();
 			cell.width(width);
 		}
+
+		var self = this;
+		row.dblclick(function(e) {
+			self.options.row_dblclick(e);
+		});
 	},
 
 	resize_col: function(col) {

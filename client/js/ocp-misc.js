@@ -8,8 +8,11 @@ function ocp_build_grid_data_from_ls_enpoint(ls_data) {
 
 		row.meta_data = {
 			type: ls_data[i].type,
-			mime_type: ls_data[i].mime_type
+			mime_type: ls_data[i].mime_type,
 		};
+		row.info = [
+			ls_data[i].type
+		]
 		result.push(row);
 	}
 	return result;
