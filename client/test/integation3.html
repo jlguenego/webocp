@@ -46,6 +46,7 @@
 
 		<script src="../js/ocp/widget_layout_3r.js"></script>
 		<script src="../js/ocp/widget_header_content.js"></script>
+		<script src="../js/ocp/widget_text_value.js"></script>
 		<!-- END OCP -->
 
 		<style>
@@ -145,15 +146,20 @@ html, body {
 #content_header {
 	background-color: #FFFFFF;
 	border: 0;
+	height: 85px;
+}
+
+#header_top {
+	height: 50px;
 	padding: 10px;
 	box-sizing: border-box;
-	height: 50px;
+	border-bottom: 1px solid #E1E1E1;
 }
 
 #content_menu {
 	padding: 0px;
 	margin: 0px;
-	height: 100%
+	height: 100%;
 }
 
 #content_menu li {
@@ -181,6 +187,20 @@ html, body {
 	left: 5px;
 	width: 33px;
 	height: 23px;
+}
+
+#breadcrumbs {
+	position: relative;
+	height: 25px;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+#breadcrumbs input {
+	display: inline-block;
+	width: 100%;
+	padding-left: 3px;
+	box-sizing: border-box;
 }
 
 #grid {
@@ -233,6 +253,8 @@ html, body {
 
 input {
 	width: 250px;
+	border-radius: 5px;
+	border: 2px solid #CCCCCC;
 }
 		</style>
 	</head>
@@ -252,11 +274,17 @@ input {
 					</div>
 					<div id="content">
 						<div id="content_header">
-							<ul id="content_menu">
-								<li><img src="image/newfolder.png"/>Create folder</li>
-								<li><img src="image/up.png"/>Upload file</li>
-								<li><img src="image/folder-up.png"/>Upload folder</li>
-							</ul>
+							<div id="header_top">
+								<ul id="content_menu">
+									<li><img src="image/newfolder.png"/>Create folder</li>
+									<li><img src="image/up.png"/>Upload file</li>
+									<li><img src="image/folder-up.png"/>Upload folder</li>
+								</ul>
+							</div>
+							<div id="breadcrumbs">
+								<label for="path">Path: </label>
+								<input type="text" id="path" />
+							</div>
 						</div>
 						<div id="grid"></div>
 					</div>
@@ -277,6 +305,7 @@ input {
 		<div id="general_settings_dialog" title="General settings">
 			Host address <input type="text" id="server_base_url" value="http://localhost"/>
 		</div>
+
 		<script>
 			var g_server_base_url = 'http://localhost';
 
@@ -383,6 +412,8 @@ input {
 			function get_tree_source() {
 				return tree.widget('options', 'source');
 			}
+
+			$('#breadcrumbs').ocp_text_value();
 
 			// Put a grid on right pane
 
