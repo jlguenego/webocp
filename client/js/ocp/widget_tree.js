@@ -33,7 +33,11 @@ $.widget( "ui.ocp_tree", {
 		},
 
 		// Callback
-		click: function() {}
+		click: function() {},
+
+		open_item_error: function(path) {
+			alert('Cannot go to directory ' + path);
+		}
 	},
 
 	_create: function() {
@@ -196,7 +200,8 @@ $.widget( "ui.ocp_tree", {
 			var e = $.Event('click');
 			e.currentTarget = this.element.find('[data-path="' + p + '"]');
 			if (e.currentTarget.length == 0) {
-				e.currentTarget = this.element.find('.widget_tree_selected');
+				this.options.open_item_error(path);
+				return;
 			}
 			this.tree_item_click(e);
 		}

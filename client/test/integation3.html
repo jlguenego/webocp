@@ -396,7 +396,11 @@ input {
 			];
 			var tree = $('#tree').ocp_tree({
 				source: src,
-				ls: ajax_ls
+				ls: ajax_ls,
+				open_item_error: function(path) {
+					alert('Cannot go to directory ' + path);
+					$('#breadcrumbs input').val(path).select();
+				}
 			});
 
 			function filter_dir(array) {
