@@ -18,3 +18,36 @@ function ocp_build_grid_data_from_ls_enpoint(ls_data) {
 	}
 	return result;
 }
+
+function ajax_ls(path) {
+	var result = null;
+	var dir_result = null;
+	$.ajaxSetup({scriptCharset: "utf-8"});
+	$.ajax({
+		type: "GET",
+		url: g_server_base_url + '/webocp/server/endpoint/',
+		async: false,
+		data: {
+			path: path
+		},
+		success: function(data) {
+			result = $.parseJSON(data);
+			var grid_result = ocp_build_grid_data_from_ls_enpoint(result);
+			$("#grid").ocp_grid('reload', grid_result);
+			$('#breadcrumbs input').val(path);
+			dir_result = filter_dir(result);
+		}
+	});
+	return dir_result;
+}
+
+$(document).ready(function() {
+	// Sync path
+	$('#breadcrumbs input').keypress(function(e) {
+	    if(e.which == 13) {
+	        var path = normalize_path($(this).val());
+	        console.log('path=' + path);
+	        $('#tree').ocp_tree('open_item', path);
+	    }
+	});
+});

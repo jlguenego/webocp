@@ -396,27 +396,7 @@ input {
 			];
 			var tree = $('#tree').ocp_tree({
 				source: src,
-				ls: function(path) {
-					var result = null;
-					var dir_result = null;
-					$.ajaxSetup({scriptCharset: "utf-8"});
-					$.ajax({
-  						type: "GET",
-						url: g_server_base_url + '/webocp/server/endpoint/',
-						async: false,
-						data: {
-							path: path
-						},
-						success: function(data) {
-							result = $.parseJSON(data);
-							var grid_result = ocp_build_grid_data_from_ls_enpoint(result);
-							$("#grid").ocp_grid('reload', grid_result);
-							$('#breadcrumbs input').val(path);
-							dir_result = filter_dir(result);
-						}
-					});
-					return dir_result;
-				}
+				ls: ajax_ls
 			});
 
 			function filter_dir(array) {
