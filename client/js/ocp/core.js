@@ -10,7 +10,7 @@ String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
-String.prototype.getExention = function() {
+String.prototype.getFileExtention = function() {
     return (/[.]/.exec(this)) ? /[^.]+$/.exec(this) : undefined;
 };
 

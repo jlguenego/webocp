@@ -17,6 +17,11 @@
 			'name' => $filename,
 			'label' => $filename,
 		);
+
+		if (preg_match('#\.pdf$#', $filename)) {
+			$file['mime_type'] = 'application/pdf';
+		}
+
 		if (is_dir($path.'/'.$win_filename)) {
 			$file['type'] = 'dir';
 		} else {
