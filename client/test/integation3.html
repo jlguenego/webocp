@@ -392,6 +392,7 @@ input {
 							var grid_result = ocp_build_grid_data_from_ls_enpoint(result);
 							$("#grid").ocp_grid('reload', grid_result);
 							dir_result = filter_dir(result);
+							$('#breadcrumbs input').val(path);
 						}
 					});
 					return dir_result;
