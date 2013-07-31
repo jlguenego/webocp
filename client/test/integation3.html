@@ -159,13 +159,16 @@ html, body {
 	border-bottom: 1px solid #E1E1E1;
 }
 
-#content_menu {
+.button_group {
+	display: inline-block;
+	float: left;
 	padding: 0px;
 	margin: 0px;
+	margin-right: 20px;
 	height: 100%;
 }
 
-#content_menu li {
+.button_group li {
 	position: relative;
 	display: inline-block;
 	padding: 5px 8px 5px 40px;
@@ -177,15 +180,17 @@ html, body {
 	cursor: pointer;
 }
 
-#content_menu li:first-child {
-	border-radius: 5px 0px 0px 5px;
+.button_group li:first-child {
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
 }
 
-#content_menu li:last-child {
-	border-radius: 0px 5px 5px 0px;
+.button_group li:last-child {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 
-#content_menu li img {
+.button_group li img {
 	position: absolute;
 	top: 3px;
 	left: 5px;
@@ -201,16 +206,8 @@ html, body {
 	-moz-box-sizing: border-box;
 }
 
-#parent {
-	display: inline-block;
-	float: left;
-	width: 20px;
-	height: 20px;
-	margin-right: 5px;
-
-	background-image: url(image/folder_up.png);
-	background-size: 20px 20px;
-	cursor: pointer;
+#breadcrumbs label {
+	padding-right: 5px;
 }
 
 #breadcrumbs input {
@@ -293,17 +290,19 @@ input {
 					<div id="content">
 						<div id="content_header">
 							<div id="header_top">
-								<ul id="content_menu">
-									<li><img src="image/newfolder.png"/>Create folder</li>
+								<ul class="button_group">
+									<li id="parent"><img src="image/folder_up.png" />Go to parent</li>
+								</ul>
+								<ul class="button_group">
 									<li><img src="image/up.png"/>Upload file</li>
 									<li><img src="image/folder-up.png"/>Upload folder</li>
 								</ul>
+								<ul class="button_group">
+									<li><img src="image/newfolder.png"/>Create folder</li>
+								</ul>
 							</div>
 							<div id="breadcrumbs">
-								<div>
-									<div id="parent"></div>
-									<label for="path">Path: </label>
-								</div>
+								<label for="path">Path:</label>
 								<input type="text" id="path" />
 							</div>
 						</div>
