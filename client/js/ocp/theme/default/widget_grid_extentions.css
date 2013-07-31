@@ -10,6 +10,30 @@
 	background-image: url(image/file_icon/pdf.png);
 }
 
-.widget_grid_ext_xls, .widget_grid_mime_application_pdf {
+.widget_grid_ext_xls, .widget_grid_mime_application_ {
 	background-image: url(image/file_icon/xls.png);
+}
+
+.widget_grid_ext_rar, .widget_grid_mime_application_ {
+	background-image: url(image/file_icon/rar.png);
+}
+
+.widget_grid_ext_txt, .widget_grid_mime_application_ {
+	background-image: url(image/file_icon/txt.png);
+}
+
+.widget_grid_ext_jpg, .widget_grid_mime_application_ {
+	background-image: url(image/file_icon/png.png);
+}
+
+.widget_grid_ext_docx, .widget_grid_mime_application_ {
+	background-image: url(image/file_icon/docx.png);
+}
+
+.widget_grid_ext_html, .widget_grid_mime_application_ {
+	background-image: url(image/file_icon/html.png);
+}
+
+.widget_grid_ext_png, .widget_grid_mime_application_ {
+	background-image: url(image/file_icon/png.png);
 }
