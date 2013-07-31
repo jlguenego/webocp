@@ -12,11 +12,11 @@
 	$files = array();
 
 	foreach ($list as $filename) {
+		$win_filename = iconv('UTF-8', 'CP1252', $filename);
 		$file = array(
 			'name' => $filename,
 			'label' => $filename,
 		);
-		$win_filename = iconv('UTF-8', 'CP1252', $filename);
 		if (is_dir($path.'/'.$win_filename)) {
 			$file['type'] = 'dir';
 		} else {

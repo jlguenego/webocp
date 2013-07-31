@@ -58,6 +58,13 @@
 	border-color: transparent;
 }
 
+.widget_grid_thumbnail {
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	background-size: 30px 30px;
+}
+
 .widget_grid_placeholder {
 	background-color: #3E3E3E;
 }

@@ -104,11 +104,26 @@ $.widget( "ui.ocp_grid", {
 		row.attr('id', id);
 
 		for (var colname in this.options.column) {
-			var content = data[colname];
 			var cell = $('<div/>').appendTo(row);
 			cell.addClass('widget_grid_cell');
 			cell.attr('data-colname', this.options.id + '_' + colname);
+			var content = data[colname];
 			cell.html(content);
+
+			if (this.options.column[colname].use_thumbnail) {
+				var img = $('<div/>');
+				img.addClass('widget_grid_thumbnail');
+				img.addClass('widget_grid_type_' + data.grid_info.type);
+				var type = '';
+				if (data.grid_info.mime_type) {
+					type = data.grid_info.mime_type;
+					type.replace('/', '_');
+				} else if (data.grid_info.ext) {
+					type = 'ext_' + data.grid_info.ext;
+				}
+				img.addClass('widget_grid_' + type);
+				cell.prepend(img);
+			}
 
 			var width = this.header.find('[data-colname=' + this.options.id + '_' + colname + ']').width();
 			cell.width(width);

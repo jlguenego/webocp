@@ -10,6 +10,10 @@ String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
+String.prototype.getExention = function() {
+    return (/[.]/.exec(this)) ? /[^.]+$/.exec(this) : undefined;
+};
+
 (function($) {
     $.fn.hasVerticalScrollBar = function() {
         return this.get(0).scrollHeight > this.height();

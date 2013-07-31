@@ -1,0 +1,15 @@
+.widget_grid_type_dir {
+	background-image: url(image/file_icon/dir.png);
+}
+
+.widget_grid_type_file {
+	background-image: url(image/file_icon/file.png);
+}
+
+.widget_grid_ext_pdf, .widget_grid_mime_application_pdf {
+	background-image: url(image/file_icon/pdf.png);
+}
+
+.widget_grid_ext_xls, .widget_grid_mime_application_pdf {
+	background-image: url(image/file_icon/xls.png);
+}

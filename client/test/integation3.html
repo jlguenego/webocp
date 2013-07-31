@@ -30,6 +30,7 @@
 			<!-- GRID -->
 			<script src="../js/ocp/widget_grid.js"></script>
 			<link rel="stylesheet" href="../js/ocp/theme/default/widget_grid.css" />
+			<link rel="stylesheet" href="../js/ocp/theme/default/widget_grid_extentions.css" />
 			<!-- END GRID -->
 
 			<!-- MENU -->
@@ -298,7 +299,8 @@ input {
 			});
 
 			$('#header_menu').ocp_menu();
-			$('[href=#general_settings]').click(function() {
+			$('[href=#general_settings]').click(function(e) {
+				e.preventDefault();
 				general_settings_dialog.ocp_dialog('open');
 				general_settings_dialog.find('#server_base_url').val(g_server_base_url);
 			});
@@ -345,7 +347,6 @@ input {
 			var tree = $('#tree').ocp_tree({
 				source: src,
 				ls: function(path) {
-					console.log('path=' + path);
 					var result = null;
 					var dir_result = null;
 					$.ajaxSetup({scriptCharset: "utf-8"});
@@ -357,13 +358,10 @@ input {
 							path: path
 						},
 						success: function(data) {
-							console.log('data=' + data);
 							result = $.parseJSON(data);
 							var grid_result = convert2grid(result);
 							$("#grid").ocp_grid('reload', grid_result);
 							dir_result = filter_dir(result);
-							console.log('result=' + result);
-							console.log('dir_result=' + dir_result);
 						}
 					});
 					return dir_result;
@@ -377,6 +375,12 @@ input {
 					row.filename = ls_data[i].label;
 					row.size = 'N/A';
 					row.last_modified = 'N/A';
+
+					row.grid_info = {
+						type: ls_data[i].type,
+						ext: ls_data[i].name.getExention(),
+						mime_type: ls_data[i].mime_type
+					};
 					result.push(row);
 				}
 				return result;
@@ -405,7 +409,8 @@ input {
 				column: {
 					filename: {
 						label: 'File name',
-						width: 200
+						width: 200,
+						use_thumbnail: true
 					},
 					size: {
 						label: 'Size',
