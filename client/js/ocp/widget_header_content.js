@@ -13,6 +13,7 @@
 $.widget( "ui.ocp_header_content", {
 	version: "0.0.1",
 	options: {
+		content: null
 	},
 
 	header: null,
@@ -20,7 +21,7 @@ $.widget( "ui.ocp_header_content", {
 
 	_create: function() {
 		this.header = $(this.element.children().get(0));
-		this.content = $(this.element.children().get(1));
+		this.content = this.options.content || $(this.element.children().get(1));
 		this.content.outerHeight(this.element.innerHeight() - this.header.outerHeight());
 
 		var self = this;
@@ -32,6 +33,14 @@ $.widget( "ui.ocp_header_content", {
 	},
 
 	_destroy: function() {
+	},
+
+	set_content: function(content) {
+		this.content = content;
+		console.log(this.content);
+		console.log(this.element.innerHeight());
+		console.log(this.header.outerHeight());
+		$(window).trigger('resize');
 	}
 });
 

@@ -39,8 +39,8 @@ function ajax_ls(path) {
 			console.log('start ajax success');
 			result = $.parseJSON(data);
 			var grid_result = ocp_build_grid_data_from_ls_enpoint(result);
-			$("#grid").ocp_grid('reload', grid_result);
-			$('#breadcrumbs input').val(path);
+			$("#ocp_fm_grid").ocp_grid('reload', grid_result);
+			$('#ocp_fm_breadcrumbs input').val(path);
 			dir_result = filter_dir(result);
 			console.log('ajax ok');
 		},
@@ -61,35 +61,35 @@ function ajax_ls(path) {
 
 $(document).ready(function() {
 	var footer_restore_height = 150;
-	$('#toggle_footer').click(function() {
+	$('#ocp_fm_toggle_footer').click(function() {
 		var new_height = 0;
-		if ($(this).hasClass('footer_maximize')) { //Maximize
+		if ($(this).hasClass('ocp_fm_footer_maximize')) { //Maximize
 			new_height = footer_restore_height;
-			$(this).removeClass('footer_maximize');
+			$(this).removeClass('ocp_fm_footer_maximize');
 		} else { // Minimize
-			footer_restore_height = $('#footer').outerHeight()
-			new_height = $('#footer_header').outerHeight();
-			$(this).addClass('footer_maximize');
+			footer_restore_height = $('#ocp_fm_footer').outerHeight()
+			new_height = $('#ocp_fm_footer_header').outerHeight();
+			$(this).addClass('ocp_fm_footer_maximize');
 		}
 		var size = { bottom: new_height };
 		$('#file_manager').ocp_splitpane_v('resize', size);
 	});
 
 	// Sync path
-	$('#breadcrumbs input').keypress(function(e) {
+	$('#ocp_fm_breadcrumbs input').keypress(function(e) {
 	    if(e.which == 13) {
 	        var path = normalize_path($(this).val());
 	        console.log('path=' + path);
-	        $('#tree').ocp_tree('open_item', path);
+	        $('#ocp_fm_tree').ocp_tree('open_item', path);
 	    }
 	});
 
-	$('#parent').click(function() {
-		var path = $('#breadcrumbs input').val();
+	$('#ocp_fm_parent').click(function() {
+		var path = $('#ocp_fm_breadcrumbs input').val();
 		console.log('path=' + path);
 		path = dirname(path);
 		console.log('path=' + path);
-		$('#tree').ocp_tree('open_item', path);
+		$('#ocp_fm_tree').ocp_tree('open_item', path);
 	});
 
 	// Hide all page but file_manager
@@ -102,5 +102,10 @@ $(document).ready(function() {
 		$('#' + id).css('display', 'block');
 	});
 
-	$('#tree').ocp_tree('open_item', '/');
+	$('.page_selector_header_content').click(function() {
+		var id = $(this).attr('id').replace(/_button$/, '');
+		$('#page').ocp_header_content('set_content', $('#' + id));
+	});
+
+	$('#ocp_fm_tree').ocp_tree('open_item', '/');
 });
