@@ -30,9 +30,9 @@ $.widget( "ui.ocp_dialog", {
 	_create: function() {
 		if ($('.widget_dialog_back_screen').length < 1) {
 			var back_screen = $('<div/>').appendTo('body');
-			back_screen.addClass('widget_dialog_back_screen');
+			back_screen.addClass('widget_dialog_overlay');
 		}
-		this.back_screen = $('.widget_dialog_back_screen');
+		this.back_screen = $('.widget_dialog_overlay');
 		this.back_screen.hide();
 
 		this.element.hide();
