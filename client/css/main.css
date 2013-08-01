@@ -19,7 +19,7 @@ html, body {
 }
 
 #ocp_header_title {
-	position: relative;
+	position: absolute;
 	top: -5px;
 	font-family: 'Archivo Black';
 	font-style: italic;
@@ -46,8 +46,9 @@ html, body {
 }
 
 #beta {
-	position: relative;
+	position: absolute;
 	top: 25px;
+	left: 110px;
 	float: left;
 	color: red;
 	text-transform: uppercase;
