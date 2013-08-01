@@ -1,22 +1,22 @@
-.tree img {
+.ocp_wd_tree img {
 	width: 29px;
 	height: 27px;
 	margin-left: 3px;
 }
 
-.tree {
+.ocp_wd_tree {
 	white-space: nowrap;
 	font-size: 13px;
 }
 
-.tree_row {
+.ocp_wd_tree_row {
 	margin: 0px;
 	padding: 0px;
 	height: 24px;
 	line-height: 23px;
 }
 
-.tree_item {
+.ocp_wd_tree_item {
 	display: inline-block;
 	padding: 4px 16px 0px 5px;
 	margin-left: -5px;
@@ -24,26 +24,27 @@
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	vertical-align: top;
+	cursor: pointer;
 
 	height: 24px;
 	line-height: 16px;
 }
 
-.tree_item:hover {
+.ocp_wd_tree_item:hover {
 	background-color: #EEEEEE;
 	border: 1px solid #CCCCCC;
 	border-radius: 5px;
 	padding: 3px 16px 0px 4px;
 }
 
-.widget_tree_selected {
+.ocp_wd_tree_selected {
 	background-color: #FFFFFF;
 	border: 1px solid #CCCCCC;
 	border-radius: 5px;
 	padding: 3px 16px 0px 4px;
 }
 
-.item_image {
+.ocp_wd_tree_item_image {
 	position: relative;
 	top: -5px;
 	float: left;
@@ -53,15 +54,15 @@
 	background-size: 27px 24px;
 }
 
-.widget_tree_item_label {
+.ocp_wd_tree_item_label {
 	display: inline-block;
 }
 
-.widget_tree_selected .item_image {
+.ocp_wd_tree_selected .item_image {
 	background-image: url('image/folder-opened.gif');
 }
 
-.icon {
+.ocp_wd_tree_icon {
 	display: inline-block;
 	width: 27px;
 	height: 24px;
@@ -70,34 +71,36 @@
 	background-repeat: no-repeat;
 }
 
-.elbow-blank {
+.ocp_wd_tree_elbow-blank {
 	background-image: url('image/elbow-blank.png');
 }
 
-.elbow-line {
+.ocp_wd_tree_elbow-line {
 	background-image: url('image/elbow-line.png');
 }
 
-.tree_end.tree_minus {
+.ocp_wd_tree_end.ocp_wd_tree_minus {
 	background-image: url('image/elbow-end-minus.png');
 }
 
-.tree_minus {
+.ocp_wd_tree_minus {
 	background-image: url('image/elbow-minus.png');
+	cursor: pointer;
 }
 
-.tree_end.tree_plus {
+.ocp_wd_tree_end.ocp_wd_tree_plus {
 	background-image: url('image/elbow-end-plus.png');
 }
 
-.tree_plus {
+.ocp_wd_tree_plus {
 	background-image: url('image/elbow-plus.png');
+	cursor: pointer;
 }
 
-.elbow-end {
+.ocp_wd_tree_elbow-end {
 	background-image: url('image/elbow-end.png');
 }
 
-.elbow {
+.ocp_wd_tree_elbow {
 	background-image: url('image/elbow.png');
 }

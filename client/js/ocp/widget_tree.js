@@ -41,7 +41,6 @@ $.widget( "ui.ocp_tree", {
 	},
 
 	_create: function() {
-		this.element.css('cursor', 'pointer');
 		this.paint();
 
 
@@ -56,54 +55,54 @@ $.widget( "ui.ocp_tree", {
 	paint: function() {
 		this._fill(this.element, this.options.source, 0, [ false ], '');
 
-		this._on( $('.tree_toggle', this.element), {
+		this._on( $('.ocp_wd_tree_toggle', this.element), {
 			click: "toggle"
 		});
 
-        this._on( $('.tree_item', this.element), {
+        this._on( $('.ocp_wd_tree_item', this.element), {
 			click: 'tree_item_click'
         });
 	},
 
 	_fill: function(el, src, level, last_array, path) {
-		var ul = $('<div class="tree_struct"/>').appendTo(el);
+		var ul = $('<div class="ocp_wd_tree_struct"/>').appendTo(el);
 		for (var i = 0; i < src.length; i++) {
 			if (i == src.length - 1) {
 				last_array[level]	= true;
 			}
 			var item = src[i];
 			var li = $('<div/>').appendTo(ul);
-			var row = $('<div class="tree_row"/>').appendTo(li);
+			var row = $('<div class="ocp_wd_tree_row"/>').appendTo(li);
 			for (var j = 0; j < level; j++) {
 				if (last_array[j]) {
-					row.append('<div class="icon elbow-blank"/>');
+					row.append('<div class="ocp_wd_tree_icon ocp_wd_tree_elbow-blank"/>');
 				} else {
-					row.append('<div class="icon elbow-line"/>');
+					row.append('<div class="ocp_wd_tree_icon ocp_wd_tree_elbow-line"/>');
 				}
 			}
 			if (item.children && item.children.length > 0) {
 				if (i == src.length - 1) {
-					row.append('<div class="icon tree_toggle tree_minus tree_end"/>');
+					row.append('<div class="ocp_wd_tree_icon ocp_wd_tree_toggle ocp_wd_tree_minus ocp_wd_tree_end"/>');
 				} else {
-					row.append('<div class="icon tree_toggle tree_minus"/>');
+					row.append('<div class="ocp_wd_tree_icon ocp_wd_tree_toggle ocp_wd_tree_minus"/>');
 				}
 			} else {
 				if (i == src.length - 1) {
-					row.append('<div class="icon elbow-end"/>');
+					row.append('<div class="ocp_wd_tree_icon ocp_wd_tree_elbow-end"/>');
 				} else {
-					row.append('<div class="icon elbow"/>');
+					row.append('<div class="ocp_wd_tree_icon ocp_wd_tree_elbow"/>');
 				}
 			}
 
 			var image = item.image || this.options.image;
-			var div = $('<div class="tree_item"/>').appendTo(row);
-			var img_div = $('<div class="item_image icon"/>').appendTo(div);
+			var div = $('<div class="ocp_wd_tree_item"/>').appendTo(row);
+			var img_div = $('<div class="ocp_wd_tree_item_image ocp_wd_tree_icon"/>').appendTo(div);
 			if (image) {
 				img_div.css('background-image', 'url("' + image + '")');
 			}
 
 			var label = item.label || item.name;
-			var div_label = $('<div/>').addClass('widget_tree_item_label');
+			var div_label = $('<div/>').addClass('ocp_wd_tree_item_label');
 			div_label.html(label);
 			div.append(div_label);
 			div.attr('data-name', item.name);
@@ -121,7 +120,7 @@ $.widget( "ui.ocp_tree", {
 				this._fill(li, item.children, level + 1, array, child_path);
 				if (!item.expanded) {
 					var e = $.Event('click');
-					e.currentTarget = row.children('.tree_toggle');
+					e.currentTarget = row.children('.ocp_wd_tree_toggle');
 					this.toggle(e);
 				}
 			}
@@ -131,8 +130,8 @@ $.widget( "ui.ocp_tree", {
 	toggle: function(event) {
 		event.preventDefault();
 		var currentTarget = $(event.currentTarget);
-		var tree_struct = currentTarget.parent().parent().find('.tree_struct');
-		var tree_item = currentTarget.parent().children('.tree_item');
+		var tree_struct = currentTarget.parent().parent().find('.ocp_wd_tree_struct');
+		var tree_item = currentTarget.parent().children('.ocp_wd_tree_item');
 		var path = tree_item.attr('data-path');
 		if (path == '/') {
 			path = '';
@@ -142,12 +141,12 @@ $.widget( "ui.ocp_tree", {
 		var src = this.get_subobj_from_path(path_a, this.options.source);
 		tree_struct.toggle();
 
-		var image_src = currentTarget.parent().children('.tree_toggle');
-		if (image_src.hasClass('tree_minus')) {
-			image_src.removeClass('tree_minus').addClass('tree_plus');
+		var image_src = currentTarget.parent().children('.ocp_wd_tree_toggle');
+		if (image_src.hasClass('ocp_wd_tree_minus')) {
+			image_src.removeClass('ocp_wd_tree_minus').addClass('ocp_wd_tree_plus');
 			src.expanded = false;
-		} else if (image_src.hasClass('tree_plus')) {
-			image_src.removeClass('tree_plus').addClass('tree_minus');
+		} else if (image_src.hasClass('ocp_wd_tree_plus')) {
+			image_src.removeClass('ocp_wd_tree_plus').addClass('ocp_wd_tree_minus');
 			src.expanded = true;
 		}
 		$(event.currentTarget).attr("src", image_src);
@@ -174,9 +173,9 @@ $.widget( "ui.ocp_tree", {
 
 		subobj.children = this.ls(path);
 		subobj.expanded = true;
-		this.element.find('.tree_struct').remove();
+		this.element.find('.ocp_wd_tree_struct').remove();
 		this.paint();
-		$('.tree_item[data-path="' + path + '"]').addClass('widget_tree_selected');
+		$('.ocp_wd_tree_item[data-path="' + path + '"]').addClass('ocp_wd_tree_selected');
 	},
 
 	open_item: function(path) {
