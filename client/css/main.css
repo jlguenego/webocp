@@ -18,15 +18,6 @@ html, body {
 	background-color: #151412;
 }
 
-#ocp_header_logo {
-	position: relative;
-	float: left;
-	top: 3px;
-	width: 40px;
-	height: 40px;
-	margin-left: 15px;
-}
-
 #ocp_header_title {
 	position: relative;
 	top: -5px;
@@ -49,6 +40,8 @@ html, body {
 	background-clip: text;
 	-webkit-background-clip: text;
 	-moz-background-clip: text;
+	text-fill-color: transparent;
+	-moz-text-fill-color: transparent;
 	-webkit-text-fill-color: transparent;
 }
 

@@ -66,11 +66,11 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 .ocp_cv_button {
 	position: absolute;
 	z-index: 1;
-	width: 710px;
+	width: 600px;
 	height: 150px;
 	top: 0;
 	overflow: hidden;
-	margin: -75px 0 0 -355px;
+	margin: -75px 0 0 -300px;
 	left: 50%;
 	background-color: #ED2C1F;
 	border-radius: 3px;
@@ -84,16 +84,22 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 
 .ocp_cv_ocp {
 	position: absolute;
-	z-index: 1;
-	width: 710px;
-	height: 150px;
 	top: 0;
-	overflow: hidden;
-	margin: -75px 0 0 -355px;
 	left: 50%;
-	background-image: url(https://eu.static.mega.co.nz/images/en/start_sprite.png);
-	background-position: center -226px;
-	background-repeat: no-repeat;
+	text-align: center;
+	z-index: 1;
+	width: 600px;
+	height: 150px;
+	line-height: 150px;
+	overflow: hidden;
+	margin: -75px 0 0 -300px;
+
+	font-family: 'Archivo Black';
+	font-style: italic;
+	font-size: 100px;
+	color: #FFE6E6;
+	text-shadow: 1px 1px 2px #FFFFFF;
+	letter-spacing: 15px;
 }
 
 .ocp_cv_txt {
@@ -120,7 +126,7 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	background-repeat: no-repeat;
 	position: absolute;
 	z-index: 1;
-	margin: 51px -492px 0 0;
+	margin: 51px -430px 0 0;
 }
 
 .ocp_cv_shadow {
