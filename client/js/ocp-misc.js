@@ -20,9 +20,14 @@ function ocp_build_grid_data_from_ls_enpoint(ls_data) {
 }
 
 function ajax_ls(path) {
+	console.log('start ajax_ls');
 	var result = null;
 	var dir_result = null;
-	$.ajaxSetup({scriptCharset: "utf-8"});
+	$.ajaxSetup({
+		cache: false,
+		scriptCharset: "utf-8"
+	});
+	console.log('g_server_base_url=' + g_server_base_url);
 	$.ajax({
 		type: "GET",
 		url: g_server_base_url + '/webocp/server/endpoint/',
@@ -31,13 +36,26 @@ function ajax_ls(path) {
 			path: path
 		},
 		success: function(data) {
+			console.log('start ajax success');
 			result = $.parseJSON(data);
 			var grid_result = ocp_build_grid_data_from_ls_enpoint(result);
 			$("#grid").ocp_grid('reload', grid_result);
 			$('#breadcrumbs input').val(path);
 			dir_result = filter_dir(result);
+			console.log('ajax ok');
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			console.log('ajax_ls error');
+			console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
+		},
+		statusCode: {
+			404: function() {
+				console.log("page not found");
+			}
 		}
 	});
+	console.log(dir_result);
+	console.log('end ajax_ls');
 	return dir_result;
 }
 
@@ -73,6 +91,10 @@ $(document).ready(function() {
 		console.log('path=' + path);
 		$('#tree').ocp_tree('open_item', path);
 	});
+
+	// Hide all page but file_manager
+	$('.page_content').css('display', 'none');
+	$('#file_manager').css('display', 'block');
 
 	$('.page_selector').click(function() {
 		$('.page_content').css('display', 'none');

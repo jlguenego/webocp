@@ -1,3 +1,5 @@
+jQuery.support.cors = true; // force cross-site scripting (IE specific)
+
 var ocp = {};
 
 ocp.base = '';
