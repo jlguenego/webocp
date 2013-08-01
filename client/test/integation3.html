@@ -70,7 +70,7 @@ html, body {
 	background-color: #151412;
 }
 
-#header_menu {
+.header_button {
 	margin: 12px 10px 0 0;
 	float: right;
 }
@@ -266,6 +266,14 @@ html, body {
 	background-position: 100% 100%;
 }
 
+.not_displayed {
+	display: none
+}
+
+.current_displayed {
+	display: block;
+}
+
 input {
 	width: 250px;
 	border-radius: 5px;
@@ -277,9 +285,13 @@ input {
 	<body>
 		<div id="page">
 			<div id="page_header">
-				<div id="header_menu">Menu</div>
+				<div id="header_menu" class="header_button">Menu</div>
+				<div id="file_manager_button" class="header_button">File Manager</div>
+				<div id="other_page_button" class="header_button">Other Page</div>
 			</div>
-			<div id="page_content">
+
+			<!-- FILE MANAGER -->
+			<div id="file_manager" class="current_displayed">
 				<div id="main">
 					<div id="sidebar">
 						<div id="sidebar_header">
@@ -317,20 +329,32 @@ input {
 					<div id="file_transfer"></div>
 				</div>
 			</div>
+			<!-- FILE MANAGER END -->
+
+			<!-- ANOTHER PAGE -->
+			<div id="other_page" class="not_displayed">
+				coucou<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+				<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+				<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+				<br/><br/><br/><br/><br/><br/>PLOUF
+			</div>
+			<!-- ANOTHER PAGE END -->
 		</div>
 
+		<!-- FILE MANAGER OTHERS -->
 		<div id="header_menu_body">
 			<a href="#general_settings" class="header_menu_settings">Settings</a>
 		</div>
 		<div id="general_settings_dialog" title="General settings">
 			Host address <input type="text" id="server_base_url" value="http://localhost"/>
 		</div>
+		<!-- FILE MANAGER OTHERS END -->
 
 		<script>
 			var g_server_base_url = 'http://localhost';
 
 			$('#page').ocp_header_content();
-			$('#page_content').ocp_splitpane_v({
+			$('#file_manager').ocp_splitpane_v({
 				overflow: 'hidden',
 				size: { top: null, bottom: 150 },
 				fixed: 'bottom'
@@ -349,6 +373,9 @@ input {
 			});
 
 			$('#header_menu').ocp_menu();
+			$('#file_manager_button').ocp_menu();
+			$('#other_page_button').ocp_menu();
+
 			$('[href=#general_settings]').click(function(e) {
 				e.preventDefault();
 				general_settings_dialog.ocp_dialog('open');
@@ -380,7 +407,7 @@ input {
 					$(this).addClass('footer_maximize');
 				}
 				var size = { bottom: new_height };
-				$('#page_content').ocp_splitpane_v('resize', size);
+				$('#file_manager').ocp_splitpane_v('resize', size);
 			});
 
 			// Put a tree on the left pane

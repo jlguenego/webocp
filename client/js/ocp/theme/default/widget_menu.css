@@ -1,6 +1,6 @@
-.widget_menu_root {
+.widget_menu_button {
 	height: 26px;
-	padding: 5px 26px 6px 10px;
+	padding: 5px 10px 6px 10px;
 	line-height: 14px;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -8,16 +8,23 @@
 	background-color: #2d2c2a;
 	color: #C0C0BE;
 	cursor: pointer;
-	background-image: url(image/gray_arrow.png);
-	background-position: right center;
-	background-repeat: no-repeat;
 
 	border-radius: 5px;
 }
 
-.widget_menu_root:hover {
+.widget_menu_root {
+	padding: 5px 26px 6px 10px;
+	background-image: url(image/gray_arrow.png);
+	background-position: right center;
+	background-repeat: no-repeat;
+}
+
+.widget_menu_button:hover {
 	background-color: #D9290B;
 	color: #FFFFFF;
+}
+
+.widget_menu_root:hover {
 	background-image: url(image/white_arrow.png);
 }
 

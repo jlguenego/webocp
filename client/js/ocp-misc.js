@@ -58,4 +58,15 @@ $(document).ready(function() {
 		console.log('path=' + path);
 		$('#tree').ocp_tree('open_item', path);
 	});
+
+	$('#file_manager_button').click(function() {
+		$('.current_displayed').removeClass('current_displayed').addClass('not_displayed');
+		$('#file_manager').removeClass('not_displayed').addClass('current_displayed');
+	});
+	$('#other_page_button').click(function() {
+		$('.current_displayed').removeClass('current_displayed').addClass('not_displayed');
+		$('#other_page').removeClass('not_displayed').addClass('current_displayed');
+	});
+
+	$('#tree').ocp_tree('open_item', '/');
 });
