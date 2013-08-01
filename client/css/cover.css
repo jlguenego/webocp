@@ -1,21 +1,22 @@
 #cover_page {
+	position: relative;
 	background-image: url(image/background_image.jpg);
+	background-repeat: no-repeat;
+	background-position: center 0px;
+	min-height: 700px;
 }
 
-.ocp_cv_top-block {
+.ocp_cv_top {
 	width: 100%;
-	height: 49%;
 	position: absolute;
-	top: 50px;
+	height: 44%;
+	text-align: center;
 }
 
-.ocp_cv_header {
-	width: 980px;
-	height: 298px;
+.ocp_cv_top_block {
+	width: 100%;
 	position: absolute;
-	margin: 0 0 0 -490px;
-	left: 50%;
-	bottom: 0;
+	bottom: 115px;
 	text-align: center;
 }
 
@@ -31,6 +32,7 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	font-weight: normal;
 	display: block;
 	text-align: center;
+	text-decoration: none;
 }
 
 .ocp_cv_subtitle {
@@ -44,17 +46,9 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	font-weight: normal;
 }
 
-.ocp_cv_inputs input {
-	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);
-	-moz-opacity: 0;
-	-khtml-opacity: 0;
-	opacity: 0;
+.ocp_cv_middle {
 	width: 100%;
-}
-
-.ocp_cv_bottom-block {
-	width: 100%;
-	height: 53%;
+	height: 56%;
 	border-top: 1px solid white;
 	position: absolute;
 	bottom: 0;
@@ -89,7 +83,7 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	background-image: -ms-linear-gradient(top, #FF3B2B 0, #EA3124 50%, #E4231A 50%, #B60A07 85%, #AF0605 100%);
 }
 
-.ocp_cv_mega {
+.ocp_cv_ocp {
 	position: absolute;
 	z-index: 1;
 	width: 710px;
@@ -101,17 +95,6 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	background-image: url(https://eu.static.mega.co.nz/images/en/start_sprite.png);
 	background-position: center -226px;
 	background-repeat: no-repeat;
-}
-
-.ocp_cv_inputs {
-	position: absolute;
-	z-index: 1;
-	width: 760px;
-	height: 160px;
-	top: 0;
-	overflow: hidden;
-	margin: -80px 0 0 -370px;
-	left: 50%;
 }
 
 .ocp_cv_txt {
@@ -167,17 +150,18 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	overflow: hidden;
 }
 
-.ocp_cv_bottom-block-pad {
+.ocp_cv_bottom_block {
 	width: 970px;
 	margin: 0 auto;
 	padding-top: 18px;
 	text-align: left;
 }
+
 .ocp_cv_copyrights {
-	background-image: url(https://eu.static.mega.co.nz/images/mega/register_sprite4.png);
-	background-size: 35px 650px;
-	background-position: left -632px;
-	padding: 3px 0 49px 24px;
+	background-image: url(image/ocp_logo.png);
+	background-size: 25px 25px;
+	background-position: left -2px;
+	padding: 3px 0 49px 28px;
 	background-repeat: no-repeat;
 	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 	color: #3F3E3E;
@@ -188,7 +172,7 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	box-sizing: border-box;
 }
 
-.ocp_cv_bottom-links-block {
+.ocp_cv_links_block {
 	float: right;
 	padding: 0 19px 0 10px;
 	min-width: 113px;
@@ -198,7 +182,7 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	max-width: 206px;
 }
 
-.ocp_cv_bottom-links-block.last {
+.ocp_cv_links_block.last {
 	float: right;
 	padding: 0 7px 0 10px;
 	-webkit-box-sizing: border-box;
@@ -207,23 +191,36 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	max-width: 210px;
 }
 
-.ocp_cv_bottom-links-block p {
+.ocp_cv_links_block p {
 	padding: 3px 0 0 0;
-	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 	color: #3F3E3E;
 	font-size: 13px;
 	line-height: 16px;
 	margin: 0;
 }
 
-.ocp_cv_bottom-links-block a, .ocp_cv_bottom-links-block a:link,
-.ocp_cv_bottom-links-block a:visited, .ocp_cv_bottom-links-block a:hover,
-.ocp_cv_bottom-links-block a:active {
-	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+.ocp_cv_links_block a, .ocp_cv_links_block a:link,
+.ocp_cv_links_block a:visited, .ocp_cv_links_block a:hover,
+.ocp_cv_links_block a:active {
 	color: #7F7E7F;
 	font-size: 13px;
 	line-height: 16px;
 	display: block;
-	display: block;
 	padding-top: 9px
+	text-decoration: none;
+}
+
+.ocp_cv_made_in {
+	color: #acabab;
+	font-size: 13px;
+	line-height: 16px;
+	background-image: url(image/france.png);
+	background-position: 0px 8px;
+	background-size: 50px 43px;
+	background-repeat: no-repeat;
+	margin-top: 50px;
+	padding: 0 0 0 55px;
+	display: table-cell;
+	vertical-align: middle;
+	height: 60px;
 }
