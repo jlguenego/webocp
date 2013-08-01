@@ -22,7 +22,6 @@
 
 .ocp_cv_title, a.ocp_cv_title:link, a.ocp_cv_title:link,
 a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
-	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 	color: #DA1A13;
 	font-size: 50px;
@@ -163,7 +162,6 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	background-position: left -2px;
 	padding: 3px 0 49px 28px;
 	background-repeat: no-repeat;
-	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 	color: #3F3E3E;
 	font-size: 13px;
 	line-height: 16px;
@@ -180,6 +178,7 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	max-width: 206px;
+	line-height: 16px;
 }
 
 .ocp_cv_links_block.last {
@@ -206,7 +205,7 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	font-size: 13px;
 	line-height: 16px;
 	display: block;
-	padding-top: 9px
+	padding-top: 9px;
 	text-decoration: none;
 }
 

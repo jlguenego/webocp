@@ -4,3 +4,10 @@
 	font-weight: 400;
 	src: local('Open Sans'), local('OpenSans'), url(OpenSans.woff) format('woff');
 }
+
+@font-face {
+	font-family: 'Archivo Black';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Archivo Black Regular'), local('ArchivoBlack-Regular'), url(http://themes.googleusercontent.com/static/fonts/archivoblack/v1/WoAoVT7K3k7hHfxKbvB6B0BTuPGxyeV-VBVV8KqqzrI.woff) format('woff');
+}
