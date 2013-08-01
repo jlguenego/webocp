@@ -94,7 +94,7 @@ $(document).ready(function() {
 
 	// Hide all page but file_manager
 	$('.page_content').css('display', 'none');
-	$('#file_manager').css('display', 'block');
+	$('#cover_page').css('display', 'block');
 
 	$('.page_selector').click(function() {
 		$('.page_content').css('display', 'none');
