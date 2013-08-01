@@ -63,7 +63,28 @@ function ajax_ls(path) {
 	return dir_result;
 }
 
+function filter_dir(array) {
+	array = array.slice();
+	for (var i = 0; i < array.length; i++) {
+		if (array[i].type != 'dir')	{
+			array.splice(i, 1);
+			i--;
+		}
+	}
+	return array;
+}
+
+function get_tree_source() {
+	return tree.widget('options', 'source');
+}
+
 $(document).ready(function() {
+	$('#file_manager').ocp_splitpane_v({
+		overflow: 'hidden',
+		size: { top: null, bottom: 150 },
+		fixed: 'bottom'
+	});
+
 	var footer_restore_height = 150;
 	$('#ocp_fm_toggle_footer').click(function() {
 		var new_height = 0;
@@ -77,6 +98,97 @@ $(document).ready(function() {
 		}
 		var size = { bottom: new_height };
 		$('#file_manager').ocp_splitpane_v('resize', size);
+	});
+
+	// Set splitpane to the middle row
+	$("#ocp_fm_main").ocp_splitpane_h({
+		source: [
+			{ width: 400, }
+		],
+		overflow: 'hidden'
+	});
+
+
+	$('#ocp_fm_sidebar').ocp_header_content();
+	$('#ocp_fm_content').ocp_header_content();
+	$('#ocp_fm_footer').ocp_header_content();
+
+	// Put a tree on the left pane
+	var src = [
+		{
+			name: '',
+			label: 'Root',
+			image: 'image/clouddrive.png',
+			type: 'dir',
+			expanded: true,
+			children: []
+		}
+	];
+	var tree = $('#ocp_fm_tree').ocp_tree({
+		source: src,
+		ls: ajax_ls,
+		open_item_error: function(path) {
+			alert('Cannot go to directory ' + path);
+			$('#ocp_fm_breadcrumbs input').val(path).select();
+		}
+	});
+
+	$('#ocp_fm_breadcrumbs').ocp_text_value();
+
+	// Put a grid on right pane
+
+	$("#ocp_fm_grid").ocp_grid({
+		column: {
+			filename: {
+				label: 'File name',
+				width: 200,
+				use_thumbnail: true
+			},
+			size: {
+				label: 'Size',
+				width: 70
+			},
+			last_modified: {
+				label: 'Last modified',
+				width: 100
+			}
+		},
+		data: [],
+		prevent_dblclick: true,
+
+		row_dblclick: function(e) {
+			console.log('our row_dblclick');
+			var row = $(e.currentTarget);
+			if (row.attr('data-info').indexOf('dir') != -1) {
+				// TODO: BUG, take the path from a real value
+				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+				if (!path.endsWith('/')) {
+					path += '/';
+				}
+				var info = row.attr('data-info');
+				var pat = /name:[^\/]*/g;
+				var name = pat.exec(info)[0].replace('name:', '');
+				$('#ocp_fm_tree').ocp_tree('open_item', path + name);
+			}
+		}
+	});
+
+	$("#ocp_fm_file_transfer").ocp_grid({
+		column: {
+			filename: {
+				label: 'File name',
+				width: 200
+			},
+			size: {
+				label: 'Size',
+				width: 70
+			},
+			last_modified: {
+				label: 'Last modified',
+				width: 100
+			}
+		},
+		data: []
 	});
 
 	// Sync path
@@ -97,4 +209,6 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_tree').ocp_tree('open_item', '/');
+
+
 });

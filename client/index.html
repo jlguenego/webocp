@@ -177,143 +177,16 @@
 		<!-- FILE MANAGER OTHERS END -->
 
 		<script>
-			var g_server_base_url = 'http://localhost';
-
-			$('#page').ocp_header_content({ content: $('#cover_page') });
-
-			$('#file_manager').ocp_splitpane_v({
-				overflow: 'hidden',
-				size: { top: null, bottom: 150 },
-				fixed: 'bottom'
-			});
-
-			var general_settings_dialog = $('#ocp_fm_general_settings_dialog').ocp_dialog({
-				buttons: {
-					Save: function() {
-						g_server_base_url = $('#ocp_fm_general_settings_dialog #ocp_fm_server_base_url').val();
-						general_settings_dialog.ocp_dialog('close');
-					},
-					Cancel: function() {
-						general_settings_dialog.ocp_dialog('close');
-					}
-				}
-			});
-
-			$('#header_menu').ocp_menu();
-			$('#file_manager_button').ocp_menu();
-			$('#cover_page_button').ocp_menu();
-
-			$('[href=#general_settings]').click(function(e) {
-				e.preventDefault();
-				general_settings_dialog.ocp_dialog('open');
-				general_settings_dialog.find('#server_base_url').val(g_server_base_url);
-			});
-
-			// Set splitpane to the middle row
-			$("#ocp_fm_main").ocp_splitpane_h({
-				source: [
-					{ width: 400, }
-				],
-				overflow: 'hidden'
-			});
 
 
-			$('#ocp_fm_sidebar').ocp_header_content();
-			$('#ocp_fm_content').ocp_header_content();
-			$('#ocp_fm_footer').ocp_header_content();
 
-			// Put a tree on the left pane
-			var src = [
-				{
-					name: '',
-					label: 'Root',
-					image: 'image/clouddrive.png',
-					type: 'dir',
-					expanded: true,
-					children: []
-				}
-			];
-			var tree = $('#ocp_fm_tree').ocp_tree({
-				source: src,
-				ls: ajax_ls,
-				open_item_error: function(path) {
-					alert('Cannot go to directory ' + path);
-					$('#ocp_fm_breadcrumbs input').val(path).select();
-				}
-			});
 
-			function filter_dir(array) {
-				array = array.slice();
-				for (var i = 0; i < array.length; i++) {
-					if (array[i].type != 'dir')	{
-						array.splice(i, 1);
-						i--;
-					}
-				}
-				return array;
-			}
 
-			function get_tree_source() {
-				return tree.widget('options', 'source');
-			}
 
-			$('#ocp_fm_breadcrumbs').ocp_text_value();
 
-			// Put a grid on right pane
 
-			$("#ocp_fm_grid").ocp_grid({
-				column: {
-					filename: {
-						label: 'File name',
-						width: 200,
-						use_thumbnail: true
-					},
-					size: {
-						label: 'Size',
-						width: 70
-					},
-					last_modified: {
-						label: 'Last modified',
-						width: 100
-					}
-				},
-				data: [],
-				prevent_dblclick: true,
 
-				row_dblclick: function(e) {
-					console.log('our row_dblclick');
-					var row = $(e.currentTarget);
-					if (row.attr('data-info').indexOf('dir') != -1) {
-						// TODO: BUG, take the path from a real value
-						var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
-						if (!path.endsWith('/')) {
-							path += '/';
-						}
-						var info = row.attr('data-info');
-						var pat = /name:[^\/]*/g;
-						var name = pat.exec(info)[0].replace('name:', '');
-						$('#ocp_fm_tree').ocp_tree('open_item', path + name);
-					}
-				}
-			});
 
-			$("#ocp_fm_file_transfer").ocp_grid({
-				column: {
-					filename: {
-						label: 'File name',
-						width: 200
-					},
-					size: {
-						label: 'Size',
-						width: 70
-					},
-					last_modified: {
-						label: 'Last modified',
-						width: 100
-					}
-				},
-				data: []
-			});
 		</script>
 	</body>
 </html>
