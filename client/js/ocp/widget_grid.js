@@ -19,6 +19,7 @@ $.widget( "ui.ocp_grid", {
 		data: [],
 		column_width: 50,
 		prevent_dblclick: false,
+		state: {},
 
 		// Callback
 		row_dblclick: function(e) { console.log('row_dblclick'); }
@@ -238,8 +239,9 @@ $.widget( "ui.ocp_grid", {
 
 	reload: function(data) {
 		this.body.remove();
-		this.options.data = data;
+		this.options.data = data.rows;
 		this._body();
+		this.options.state = data.state;
 	}
 });
 

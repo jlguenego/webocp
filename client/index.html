@@ -284,7 +284,7 @@
 					var row = $(e.currentTarget);
 					if (row.attr('data-info').indexOf('dir') != -1) {
 						// TODO: BUG, take the path from a real value
-						var path = $('#ocp_fm_breadcrumbs input').val();
+						var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
 						if (!path.endsWith('/')) {
 							path += '/';
 						}

@@ -1,5 +1,6 @@
-function ocp_build_grid_data_from_ls_enpoint(ls_data) {
-	var result = [];
+function ocp_build_grid_data_from_ls_enpoint(ls_data, path) {
+	var result = {};
+	var rows = [];
 	for (var i = 0; i < ls_data.length; i++) {
 		var row = {};
 		row.filename = ls_data[i].label;
@@ -14,8 +15,10 @@ function ocp_build_grid_data_from_ls_enpoint(ls_data) {
 			ls_data[i].type,
 			'name:' + ls_data[i].label
 		]
-		result.push(row);
+		rows.push(row);
 	}
+	result.rows = rows;
+	result.state = { path: path };
 	return result;
 }
 
@@ -38,7 +41,8 @@ function ajax_ls(path) {
 		success: function(data) {
 			console.log('start ajax success');
 			result = $.parseJSON(data);
-			var grid_result = ocp_build_grid_data_from_ls_enpoint(result);
+			var grid_result = ocp_build_grid_data_from_ls_enpoint(result, path);
+
 			$("#ocp_fm_grid").ocp_grid('reload', grid_result);
 			$('#ocp_fm_breadcrumbs input').val(path);
 			dir_result = filter_dir(result);
