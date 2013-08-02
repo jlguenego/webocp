@@ -184,8 +184,6 @@ $(document).ready(function() {
 		$('#ocp_fm_tree').ocp_tree('open_item', path);
 	});
 
-	$('#ocp_fm_tree').ocp_tree('open_item', '/');
-
 	// CREATE NEW FOLDER
 	var new_folder_dialog = $('#ocp_fm_new_folder_dialog').ocp_dialog({
 		buttons: {
@@ -324,4 +322,8 @@ $(document).ready(function() {
 		$('#ocp_fm_file').val('');
 	});
 	// UPLOAD FILE END
+
+
+	// IN THE END
+	$('#ocp_fm_tree').ocp_tree('open_item', '/');
 });

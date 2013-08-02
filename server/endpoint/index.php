@@ -6,6 +6,7 @@
 
 	require_once('../include/misc.inc');
 
+	define('LOG_FILE_PATH', '../log.txt');
 	define('ROOT', '../../../webocp_data/data');
 
 	$_GET = array_merge($_GET, $_POST);
