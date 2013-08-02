@@ -100,7 +100,10 @@ $.widget( "ui.ocp_grid", {
 
 		for(var i = 0; i < this.options.data.length; i++) {
 			var data = this.options.data[i];
-			this.add_row(data);
+			var row = this.add_row(data);
+			if (is_even(i)) {
+				row.addClass('widget_grid_body_row_even');
+			}
 		}
 	},
 
@@ -147,9 +150,44 @@ $.widget( "ui.ocp_grid", {
 		}
 
 		var self = this;
+		row.click(function(e) {
+			self.row_toggle_select($(this));
+		});
+
 		row.dblclick(function(e) {
 			self.options.row_dblclick(e);
 		});
+
+		row.hover(function(e) {
+			if (!$(this).hasClass('ocp_gd_selected')) {
+				$(this).addClass('ocp_gd_row_hover');
+			}
+		}, function(e) {
+			$(this).removeClass('ocp_gd_row_hover');
+		});
+
+		return row;
+	},
+
+	row_toggle_select: function(row) {
+		if (!this.is_selected(row)) {
+			this.row_select(row);
+		} else {
+			this.row_deselect(row);
+		}
+	},
+
+	is_selected: function(row) {
+		return row.hasClass('ocp_gd_selected');
+	},
+
+	row_select: function(row) {
+		$('.ocp_gd_selected').removeClass('ocp_gd_selected');
+		row.addClass('ocp_gd_selected');
+	},
+
+	row_deselect: function(row) {
+		$('.ocp_gd_selected').removeClass('ocp_gd_selected');
 	},
 
 	resize_col: function(col) {

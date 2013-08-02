@@ -48,12 +48,16 @@
 	height: 30px;
 }
 
-.widget_grid_body_row:nth-child(even) {
+.widget_grid_body_row_even {
 	background-color: #F7F8FA;
 }
 
-.widget_grid_body_row:hover {
+.ocp_gd_row_hover {
 	background-color: #E9E9E9;
+}
+
+.ocp_gd_selected {
+	background-color: #FFFFCE;
 }
 
 .widget_grid_body_row .widget_grid_cell {

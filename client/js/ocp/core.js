@@ -35,6 +35,14 @@ function dirname(path) {
     return result;
 }
 
+function is_even(n) {
+	return (n % 2) == 0;
+}
+
+function is_odd(n) {
+	return (n % 2) == 1;
+}
+
 (function($) {
     $.fn.hasVerticalScrollBar = function() {
         return this.get(0).scrollHeight > this.height();
