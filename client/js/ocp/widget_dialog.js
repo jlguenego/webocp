@@ -115,6 +115,7 @@ $.widget( "ui.ocp_dialog", {
 	open: function() {
 		this.back_screen.show();
 		this.element.show();
+		this.element.find('input').focus();
 	},
 
 	close: function() {

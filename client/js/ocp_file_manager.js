@@ -37,6 +37,23 @@ function get_tree_source() {
 	return tree.widget('options', 'source');
 }
 
+function reorder_grid_result(array) {
+	var result = [];
+
+	for (var i = 0; i < array.length; i++) {
+		console.log(array[i].meta_data);
+		if (array[i].meta_data.type == 'dir') {
+			result.push(array[i]);
+		}
+	}
+	for (var i = 0; i < array.length; i++) {
+		if (array[i].meta_data.type != 'dir') {
+			result.push(array[i]);
+		}
+	}
+	return result;
+}
+
 $(document).ready(function() {
 	$('#file_manager').ocp_splitpane_v({
 		overflow: 'hidden',
@@ -175,7 +192,8 @@ $(document).ready(function() {
 				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
 				var folder_name = $('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val();
 				ajax_mkdir(path, folder_name);
-				ajax_ls(path);
+				tree.ocp_tree('open_item', path);
+
 				new_folder_dialog.ocp_dialog('close');
 				$('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val('');
 			},
