@@ -4,8 +4,13 @@ function ocp_build_grid_data_from_ls_enpoint(ls_data, path) {
 	for (var i = 0; i < ls_data.length; i++) {
 		var row = {};
 		row.filename = ls_data[i].label;
-		row.size = 'N/A';
 		row.last_modified = 'N/A';
+
+		if (ls_data[i].type != 'dir') {
+			row.size = ls_data[i].size;
+		} else {
+			row.size = "&nbsp;";
+		}
 
 		row.meta_data = {
 			type: ls_data[i].type,

@@ -96,6 +96,7 @@
 				$file = array(
 					'name' => $filename,
 					'label' => $filename,
+					'size' => filesize($path.'/'.$filename),
 				);
 
 				if (preg_match('#\.pdf$#', $filename)) {
