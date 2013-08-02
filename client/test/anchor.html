@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+		<script src="../_ext/jquery-1.10.2.min.js"></script>
+		<script src="../_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="../_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="../js/ocp/core.js"></script>
+
+		<style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+		</style>
+	</head>
+
+	<body>
+		<a href="#coucou">Coucou</a><br/>
+		<a href="#hello">Hello</a><br/>
+		<script>
+			console.log('first time loaded ?');
+			$(document).ready(function() {
+				$('a').click(function() {
+					console.log('previous url=' + window.location.href);
+					console.log('url fragment identifier=' + get_uri_fi(window.location.href));
+					console.log('next url=' + this.href);
+					console.log('url fragment identifier=' + get_uri_fi(this.href));
+				});
+			});
+		</script>
+	</body>
+</html>

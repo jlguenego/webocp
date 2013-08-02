@@ -44,6 +44,15 @@ function is_odd(n) {
 	return (n % 2) == 1;
 }
 
+function get_uri_fi(uri) {
+	var result = '' + uri;
+	if (result.indexOf('#') == -1) {
+		return '';
+	}
+	result = result.replace(/^.*#(.*)$/, '$1');
+	return result;
+}
+
 
 
 function progressHandlingFunction(e){
