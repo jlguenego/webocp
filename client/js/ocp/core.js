@@ -17,6 +17,7 @@ String.prototype.getFileExtention = function() {
 };
 
 function normalize_path(path) {
+    path = path.replace(/[\/]{2,}/g,'/');
 	if (path != '/' && path.endsWith('/')) {
 		return path.substring(0, path.length - 1);
     }

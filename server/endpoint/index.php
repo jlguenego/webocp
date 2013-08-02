@@ -19,7 +19,10 @@
 				action_mkdir();
 				break;
 			case 'mv':
-				action_rename();
+				action_mv();
+				break;
+			case 'rm':
+				action_rm();
 				break;
 			default:
 				throw new Exception('Unknown action');
@@ -47,7 +50,7 @@
 		echo $result;
 	}
 
-	function action_rename() {
+	function action_mv() {
 		$output = array();
 		try {
 			$old_path = $_GET['old_path'];
@@ -58,6 +61,21 @@
 			if (!rename (ROOT.$old_path, ROOT.$new_path)) {
 				throw new Exception('Cannot rename the file with path: ' . $path);
 			}
+		} catch (Exception $e) {
+			$output['error'] = $e->getMessage();
+		}
+		$result = json_encode($output);
+		echo $result;
+	}
+
+	function action_rm() {
+		$output = array();
+		try {
+			$path = $_GET['path'];
+			if (!file_exists(ROOT.$path)) {
+				throw new Exception("Cannot find the selected file:\n\n" . '"' . $new_path . '"');
+			}
+			rm_rf(ROOT.$path);
 		} catch (Exception $e) {
 			$output['error'] = $e->getMessage();
 		}

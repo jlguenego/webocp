@@ -215,15 +215,14 @@ $(document).ready(function() {
 				var meta_data = row.meta_data;
 
 				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
-				var path_tmp = path;
-				if (path_tmp = '/') {
-					path_tmp = '';
-				}
 
 				var old_name = meta_data.name;
 				var new_name = $('#ocp_fm_rename_dialog #ocp_fm_new_name').val();
 
-				if (!ajax_mv(path_tmp + '/' + old_name, path_tmp + '/' + new_name)) {
+				try {
+					ajax_mv(normalize_path(path + '/' + old_name), normalize_path(path + '/' + new_name));
+				} catch (e) {
+					alert('Error: ' + e);
 					$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
 					return;
 				}
@@ -245,7 +244,7 @@ $(document).ready(function() {
 		var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
 		var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
 		if (!row) {
-			alert('Please select a file.');
+			alert('Please select a file/folder.');
 			return;
 		}
 		$('#ocp_fm_rename_dialog #ocp_fm_new_name').val(row.meta_data.name);
@@ -253,4 +252,46 @@ $(document).ready(function() {
 		rename_dialog.ocp_dialog('open');
 	});
 	// RENAME END
+
+	// REMOVE
+	var remove_dialog = $('#ocp_fm_remove_dialog').ocp_dialog({
+		buttons: {
+			'Delete permanantly': function() {
+				var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
+				var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
+				var meta_data = row.meta_data;
+
+				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+
+				try {
+					var p = normalize_path(path + '/' + meta_data.name);
+					console.log('rm ' + p);
+					ajax_rm(p);
+				} catch (e) {
+					alert('Error: ' + e);
+					return;
+				}
+
+				tree.ocp_tree('open_item', path);
+
+				remove_dialog.ocp_dialog('close');
+			},
+			Cancel: function() {
+				remove_dialog.ocp_dialog('close');
+			}
+		}
+	});
+
+	$('#ocp_fm_remove').click(function(e) {
+		e.preventDefault();
+		var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
+		var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
+		if (!row) {
+			alert('Please select a file/folder.');
+			return;
+		}
+		$('#ocp_fm_remove_dialog span').html(row.meta_data.name);
+		remove_dialog.ocp_dialog('open');
+	});
+	// REMOVE END
 });
