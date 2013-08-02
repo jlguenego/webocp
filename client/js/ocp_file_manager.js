@@ -38,7 +38,6 @@ function reorder_grid_result(array) {
 	var result = [];
 
 	for (var i = 0; i < array.length; i++) {
-		console.log(array[i].meta_data);
 		if (array[i].meta_data.type == 'dir') {
 			result.push(array[i]);
 		}
@@ -201,10 +200,57 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#ocp_fm_create_folder').click(function(e) {
+	$('#ocp_fm_mkdir').click(function(e) {
 		e.preventDefault();
 		new_folder_dialog.ocp_dialog('open');
-		console.log('new folder dialog');
 	});
 	// CREATE NEW FOLDER END
+
+	// RENAME
+	var rename_dialog = $('#ocp_fm_rename_dialog').ocp_dialog({
+		buttons: {
+			Rename: function() {
+				var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
+				var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
+				var meta_data = row.meta_data;
+
+				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+				var path_tmp = path;
+				if (path_tmp = '/') {
+					path_tmp = '';
+				}
+
+				var old_name = meta_data.name;
+				var new_name = $('#ocp_fm_rename_dialog #ocp_fm_new_name').val();
+
+				if (!ajax_mv(path_tmp + '/' + old_name, path_tmp + '/' + new_name)) {
+					$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
+					return;
+				}
+
+				tree.ocp_tree('open_item', path);
+
+				rename_dialog.ocp_dialog('close');
+				$('#ocp_fm_rename_dialog #ocp_fm_new_name').val('');
+			},
+			Cancel: function() {
+				rename_dialog.ocp_dialog('close');
+				$('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val('');
+			}
+		}
+	});
+
+	$('#ocp_fm_rename').click(function(e) {
+		e.preventDefault();
+		var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
+		var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
+		if (!row) {
+			alert('Please select a file.');
+			return;
+		}
+		$('#ocp_fm_rename_dialog #ocp_fm_new_name').val(row.meta_data.name);
+		$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
+		rename_dialog.ocp_dialog('open');
+	});
+	// RENAME END
 });

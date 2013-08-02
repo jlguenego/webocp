@@ -37,9 +37,6 @@ $.widget( "ui.ocp_header_content", {
 
 	set_content: function(content) {
 		this.content = content;
-		console.log(this.content);
-		console.log(this.element.innerHeight());
-		console.log(this.header.outerHeight());
 		$(window).trigger('resize');
 	}
 });

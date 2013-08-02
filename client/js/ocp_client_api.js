@@ -65,3 +65,42 @@ function ajax_mkdir(path, name) {
 		}
 	});
 }
+
+function ajax_mv(old_path, new_path) {
+	$.ajaxSetup({
+		cache: false,
+		scriptCharset: "utf-8"
+	});
+
+	var ajax_succeed = false
+	$.ajax({
+		type: "GET",
+		url: g_server_base_url + '/webocp/server/endpoint/',
+		async: false,
+		data: {
+			action: 'mv',
+			old_path: old_path,
+			new_path: new_path,
+		},
+		success: function(data) {
+			var output = $.parseJSON(data);
+			if (output.error) {
+				alert(output.error);
+				ajax_succeed = false;
+				return;
+			}
+			ajax_succeed = true;
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			console.log('ajax_ls error');
+			console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
+		},
+		statusCode: {
+			404: function() {
+				console.log("page not found");
+			}
+		}
+	});
+
+	return ajax_succeed;
+}

@@ -18,6 +18,9 @@
 			case 'mkdir':
 				action_mkdir();
 				break;
+			case 'mv':
+				action_rename();
+				break;
 			default:
 				throw new Exception('Unknown action');
 		}
@@ -36,6 +39,24 @@
 			$name = $_GET['name'];
 			if (!mkdir($path . '/' . $name)) {
 				throw new Exception('Cannot create the folder with path: ' . $path);
+			}
+		} catch (Exception $e) {
+			$output['error'] = $e->getMessage();
+		}
+		$result = json_encode($output);
+		echo $result;
+	}
+
+	function action_rename() {
+		$output = array();
+		try {
+			$old_path = $_GET['old_path'];
+			$new_path = $_GET['new_path'];
+			if (file_exists(ROOT.$new_path)) {
+				throw new Exception("This file/folder already exists:\n\n" . '"' . $new_path . '"');
+			}
+			if (!rename (ROOT.$old_path, ROOT.$new_path)) {
+				throw new Exception('Cannot rename the file with path: ' . $path);
 			}
 		} catch (Exception $e) {
 			$output['error'] = $e->getMessage();

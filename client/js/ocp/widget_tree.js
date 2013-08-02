@@ -194,7 +194,6 @@ $.widget( "ui.ocp_tree", {
 			if (p == '') {
 				p = '/';
 			}
-			console.log('p=' + p);
 
 			var e = $.Event('click');
 			e.currentTarget = this.element.find('[data-path="' + p + '"]');
@@ -208,9 +207,6 @@ $.widget( "ui.ocp_tree", {
 	},
 
 	get_subobj: function(dirname, dir_list) {
-		console.log('dir_list=' + dir_list);
-		console.log(dir_list);
-		console.log('dirname=' + dirname);
 		for (var i = 0; i < dir_list.length; i++) {
 			if (dir_list[i].name == dirname) {
 				return dir_list[i];

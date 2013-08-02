@@ -151,7 +151,6 @@ $.widget( "ui.ocp_grid", {
 		var self = this;
 		row.click(function(e) {
 			self.row_toggle_select($(this));
-			console.log(self.options.data);
 		});
 
 		row.dblclick(function(e) {
