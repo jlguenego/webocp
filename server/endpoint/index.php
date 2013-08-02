@@ -3,11 +3,10 @@
 	error_reporting(E_ERROR|E_PARSE);
 	header('Access-Control-Allow-Origin: *');
 	header("Content-Type:text/plain; charset=UTF-8;");
+	define("BASE_DIR", dirname(dirname(__FILE__)));
 
-	require_once('../include/misc.inc');
-
-	define('LOG_FILE_PATH', '../log.txt');
-	define('ROOT', '../../../webocp_data/data');
+	require_once(BASE_DIR . '/include/misc.inc');
+	require_once(BASE_DIR . '/include/constant.inc');
 
 	$_GET = array_merge($_GET, $_POST);
 
@@ -29,6 +28,9 @@
 				break;
 			case 'upload_file':
 				action_upload_file();
+				break;
+			case 'download_file':
+				action_download_file();
 				break;
 			default:
 				throw new Exception('Unknown action: ' . $_GET['action']);
@@ -127,6 +129,18 @@
 	function action_upload_file() {
 		$path = $_GET['path'];
 		if (file_exists(ROOT.$path)) {
+			throw new Exception("This file already exists:\n\n" . '"' . $path . '"');
+		}
+		$input_name = $_GET['input_name'];
+		$filename = get_file($input_name);
+		rename($filename, ROOT.$path);
+
+		echo json_encode(array($_GET, $_FILES));
+	}
+
+	function action_download_file() {
+		$path = $_GET['path'];
+		if (!file_exists(ROOT.$path)) {
 			throw new Exception("This file already exists:\n\n" . '"' . $path . '"');
 		}
 		$input_name = $_GET['input_name'];

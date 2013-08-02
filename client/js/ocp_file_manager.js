@@ -137,14 +137,13 @@ $(document).ready(function() {
 			var row = $(e.currentTarget);
 			var rowid = row.attr('data-rowid');
 			var meta_data = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid].meta_data;
+			var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+			var name = meta_data.name;
 
 			if (meta_data.type == 'dir') {
-				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
-				if (!path.endsWith('/')) {
-					path += '/';
-				}
-				var name = meta_data.name;
-				$('#ocp_fm_tree').ocp_tree('open_item', path + name);
+				$('#ocp_fm_tree').ocp_tree('open_item', normalize_path(path + '/' + name));
+			} else {
+				ajax_download_file(normalize_path(path + '/' + name));
 			}
 		}
 	});

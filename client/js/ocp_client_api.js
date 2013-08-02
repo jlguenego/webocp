@@ -119,3 +119,8 @@ function ajax_upload_file(path, form, after_success) {
     });
 	return result;
 }
+
+function ajax_download_file(path) {
+	console.log('ajax_download_file, path=' + path);
+	window.location = g_server_base_url + '/webocp/server/endpoint/download.php?path=' + path;
+}
