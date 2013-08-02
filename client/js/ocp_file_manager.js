@@ -312,13 +312,13 @@ $(document).ready(function() {
 		}
 
 		try {
-			ajax_upload_file(normalize_path(path + '/' + file.name), form, file.name);
+			ajax_upload_file(normalize_path(path + '/' + file.name), form, function() {
+				tree.ocp_tree('open_item', path);
+			});
 		} catch (e) {
 			alert('Error: ' + e);
 			return;
 		}
-
-		tree.ocp_tree('open_item', path);
 		$('#ocp_fm_file').val('');
 	});
 	// UPLOAD FILE END

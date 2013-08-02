@@ -46,4 +46,8 @@
 		}
 		return $file;
 	}
+
+	function debug($msg) {
+		file_put_contents(LOG_FILE_PATH, $msg, FILE_APPEND);
+	}
 ?>

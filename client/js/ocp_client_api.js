@@ -70,7 +70,7 @@ function ajax_rm(path) {
 	});
 }
 
-function ajax_upload_file(path, form) {
+function ajax_upload_file(path, form, after_success) {
 	console.log('path=' + path);
 	console.log(form);
 
@@ -103,6 +103,9 @@ function ajax_upload_file(path, form) {
 			} catch (e) {
 				alert('Error: ' + e);
 				return;
+			}
+			if (after_success) {
+				after_success();
 			}
 		},
         error: function(jqXHR, textStatus, errorThrown) {
