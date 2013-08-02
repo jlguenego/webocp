@@ -4,7 +4,6 @@
  *
  * Depends:
  *   ocp.core.js
- *   ocp.header_content.js
  *   jquery.ui.widget.js
  */
 
@@ -45,10 +44,10 @@ $.widget( "ui.ocp_dialog", {
 		this._set_dialog_content();
 
 		this._center_dialog();
-		this.element.ocp_layout_3r({
-			header_h: 30,
-			footer_h: 40
-		});
+//		this.element.ocp_layout_3r({
+//			header_h: 30,
+//			footer_h: 40
+//		});
 
 		var self = this;
 		$(window).resize(function() {

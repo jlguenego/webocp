@@ -78,6 +78,12 @@ function get_tree_source() {
 	return tree.widget('options', 'source');
 }
 
+function create_folder(name) {
+	var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+	console.log('path=' + path);
+	console.log('folder_name=' + name);
+}
+
 $(document).ready(function() {
 	$('#file_manager').ocp_splitpane_v({
 		overflow: 'hidden',
@@ -201,7 +207,7 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_parent').click(function() {
-		var path = $('#ocp_fm_breadcrumbs input').val();
+		var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
 		console.log('path=' + path);
 		path = dirname(path);
 		console.log('path=' + path);
@@ -210,5 +216,24 @@ $(document).ready(function() {
 
 	$('#ocp_fm_tree').ocp_tree('open_item', '/');
 
+	var new_folder_dialog = $('#ocp_fm_new_folder_dialog').ocp_dialog({
+		buttons: {
+			Create: function() {
+				var folder_name = $('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val();
+				create_folder(folder_name);
+				new_folder_dialog.ocp_dialog('close');
+			},
+			Cancel: function() {
+				new_folder_dialog.ocp_dialog('close');
+				$('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val('');
+			}
+		}
+	});
+
+	$('#ocp_fm_create_folder').click(function(e) {
+		e.preventDefault();
+		new_folder_dialog.ocp_dialog('open');
+		console.log('new folder dialog');
+	});
 
 });

@@ -87,7 +87,7 @@
 									<li><img src="image/folder-up.png"/>Upload folder</li>
 								</ul>
 								<ul class="ocp_fm_button_group">
-									<li><img src="image/newfolder.png"/>Create folder</li>
+									<li id="ocp_fm_create_folder"><img src="image/newfolder.png"/>Create folder</li>
 								</ul>
 							</div>
 							<div id="ocp_fm_breadcrumbs">
@@ -173,7 +173,10 @@
 			<a href="#general_settings" class="header_menu_settings">Settings</a>
 		</div>
 		<div id="ocp_fm_general_settings_dialog" title="General settings">
-			Host address <input type="text" id="ocp_fm_server_base_url" value="http://localhost"/>
+			OCP Network address <input type="text" id="ocp_fm_server_base_url" value="http://localhost" />
+		</div>
+		<div id="ocp_fm_new_folder_dialog" title="General settings">
+			New folder name <input type="text" id="ocp_fm_new_folder_name" />
 		</div>
 		<!-- FILE MANAGER OTHERS END -->
 	</body>
