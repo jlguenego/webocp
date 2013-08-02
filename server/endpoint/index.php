@@ -8,6 +8,8 @@
 
 	define('ROOT', '../../../webocp_data/data');
 
+	$_GET = array_merge($_GET, $_POST);
+
 	//sleep(2);
 	try {
 		$action = $_GET['action'];
@@ -24,8 +26,11 @@
 			case 'rm':
 				action_rm();
 				break;
+			case 'upload_file':
+				action_upload_file();
+				break;
 			default:
-				throw new Exception('Unknown action');
+				throw new Exception('Unknown action: ' . $_GET['action']);
 		}
 	} catch (Exception $e) {
 		$output = array();
@@ -58,7 +63,7 @@
 			if (file_exists(ROOT.$new_path)) {
 				throw new Exception("This file/folder already exists:\n\n" . '"' . $new_path . '"');
 			}
-			if (!rename (ROOT.$old_path, ROOT.$new_path)) {
+			if (!rename(ROOT.$old_path, ROOT.$new_path)) {
 				throw new Exception('Cannot rename the file with path: ' . $path);
 			}
 		} catch (Exception $e) {
@@ -116,5 +121,17 @@
 		}
 		$result = json_encode($output);
 		echo $result;
+	}
+
+	function action_upload_file() {
+		$path = $_GET['path'];
+		if (file_exists(ROOT.$path)) {
+			throw new Exception("This file already exists:\n\n" . '"' . $path . '"');
+		}
+		$input_name = $_GET['input_name'];
+		$filename = get_file($input_name);
+		rename($filename, ROOT.$path);
+
+		echo json_encode(array($_GET, $_FILES));
 	}
 ?>

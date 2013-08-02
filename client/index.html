@@ -87,7 +87,7 @@
 									<li id="ocp_fm_mkdir" title="New folder"><img src="image/newfolder.png"/></li>
 								</ul>
 								<ul class="ocp_fm_button_group">
-									<li><img src="image/up.png"/>Upload file</li>
+									<li id="ocp_fm_file_button"><img src="image/up.png"/>Upload file</li>
 									<li><img src="image/folder-up.png"/>Upload folder</li>
 								</ul>
 							</div>
@@ -185,6 +185,9 @@
 		<div id="ocp_fm_remove_dialog" title="Remove">
 			Are you sure you want to remove <span></span>?
 		</div>
+		<form id="ocp_fm_file_form" style="display: none;" enctype="multipart/form-data">
+			<input type="file" id="ocp_fm_file" name="filexxx" />
+		</form>
 		<!-- FILE MANAGER OTHERS END -->
 	</body>
 </html>

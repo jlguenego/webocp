@@ -44,6 +44,15 @@ function is_odd(n) {
 	return (n % 2) == 1;
 }
 
+
+
+function progressHandlingFunction(e){
+	if(e.lengthComputable){
+		console.log({value:e.loaded,max:e.total});
+	    //$('progress').attr({value:e.loaded,max:e.total});
+	}
+}
+
 (function($) {
     $.fn.hasVerticalScrollBar = function() {
         return this.get(0).scrollHeight > this.height();

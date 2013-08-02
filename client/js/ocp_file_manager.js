@@ -267,10 +267,10 @@ $(document).ready(function() {
 				var meta_data = row.meta_data;
 
 				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+				var p = normalize_path(path + '/' + meta_data.name);
+				console.log('rm ' + p);
 
 				try {
-					var p = normalize_path(path + '/' + meta_data.name);
-					console.log('rm ' + p);
 					ajax_rm(p);
 				} catch (e) {
 					alert('Error: ' + e);
@@ -299,4 +299,29 @@ $(document).ready(function() {
 		remove_dialog.ocp_dialog('open');
 	});
 	// REMOVE END
+
+	// UPLOAD FILE
+	$('#ocp_fm_file_button').click(function() {
+		$('#ocp_fm_file').trigger('click');
+	});
+
+	$('#ocp_fm_file').change(function() {
+		var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+		var form = $('#ocp_fm_file_form')[0];
+		var file = $('#ocp_fm_file').get(0).files[0];
+		if (!file) {
+			return;
+		}
+
+		try {
+			ajax_upload_file(normalize_path(path + '/' + file.name), form, file.name);
+		} catch (e) {
+			alert('Error: ' + e);
+			return;
+		}
+
+		tree.ocp_tree('open_item', path);
+		$('#ocp_fm_file').val('');
+	});
+	// UPLOAD FILE END
 });
