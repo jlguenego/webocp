@@ -3,7 +3,10 @@
 	error_reporting(E_ERROR|E_PARSE);
 	header('Access-Control-Allow-Origin: *');
 	header("Content-Type:text/plain; charset=UTF-8;");
-	define('ROOT', '../data');
+
+	require_once('../include/misc.inc');
+
+	define('ROOT', '../../../webocp_data/data');
 
 	//sleep(2);
 	try {
@@ -19,8 +22,12 @@
 				throw new Exception('Unknown action');
 		}
 	} catch (Exception $e) {
-
+		$output = array();
+		$output['error'] = $e->getMessage();
+		$result = json_encode($output);
+		echo $result;
 	}
+
 
 	function action_mkdir() {
 		$output = array();
@@ -69,17 +76,5 @@
 		}
 		$result = json_encode($output);
 		echo $result;
-	}
-
-	function ls($dirname) {
-		$result = array();
-		 foreach(scandir($dirname) as $file) {
-			if ('.' === $file || '..' === $file) {
-				continue;
-			}
-			$file = utf8_encode($file);
-			$result[] = $file;
-	    }
-		return $result;
 	}
 ?>
