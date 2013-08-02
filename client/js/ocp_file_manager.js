@@ -22,47 +22,6 @@ function ocp_build_grid_data_from_ls_enpoint(ls_data, path) {
 	return result;
 }
 
-function ajax_ls(path) {
-	console.log('start ajax_ls');
-	var result = null;
-	var dir_result = null;
-	$.ajaxSetup({
-		cache: false,
-		scriptCharset: "utf-8"
-	});
-	console.log('g_server_base_url=' + g_server_base_url);
-	$.ajax({
-		type: "GET",
-		url: g_server_base_url + '/webocp/server/endpoint/',
-		async: false,
-		data: {
-			path: path
-		},
-		success: function(data) {
-			console.log('start ajax success');
-			result = $.parseJSON(data);
-			var grid_result = ocp_build_grid_data_from_ls_enpoint(result, path);
-
-			$("#ocp_fm_grid").ocp_grid('reload', grid_result);
-			$('#ocp_fm_breadcrumbs input').val(path);
-			dir_result = filter_dir(result);
-			console.log('ajax ok');
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-			console.log('ajax_ls error');
-			console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
-		},
-		statusCode: {
-			404: function() {
-				console.log("page not found");
-			}
-		}
-	});
-	console.log(dir_result);
-	console.log('end ajax_ls');
-	return dir_result;
-}
-
 function filter_dir(array) {
 	array = array.slice();
 	for (var i = 0; i < array.length; i++) {
@@ -76,12 +35,6 @@ function filter_dir(array) {
 
 function get_tree_source() {
 	return tree.widget('options', 'source');
-}
-
-function create_folder(name) {
-	var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
-	console.log('path=' + path);
-	console.log('folder_name=' + name);
 }
 
 $(document).ready(function() {
@@ -142,7 +95,6 @@ $(document).ready(function() {
 	$('#ocp_fm_breadcrumbs').ocp_text_value();
 
 	// Put a grid on right pane
-
 	$("#ocp_fm_grid").ocp_grid({
 		column: {
 			filename: {
@@ -216,12 +168,16 @@ $(document).ready(function() {
 
 	$('#ocp_fm_tree').ocp_tree('open_item', '/');
 
+	// CREATE NEW FOLDER
 	var new_folder_dialog = $('#ocp_fm_new_folder_dialog').ocp_dialog({
 		buttons: {
 			Create: function() {
+				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
 				var folder_name = $('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val();
-				create_folder(folder_name);
+				ajax_mkdir(path, folder_name);
+				ajax_ls(path);
 				new_folder_dialog.ocp_dialog('close');
+				$('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val('');
 			},
 			Cancel: function() {
 				new_folder_dialog.ocp_dialog('close');
@@ -235,5 +191,5 @@ $(document).ready(function() {
 		new_folder_dialog.ocp_dialog('open');
 		console.log('new folder dialog');
 	});
-
+	// CREATE NEW FOLDER END
 });
