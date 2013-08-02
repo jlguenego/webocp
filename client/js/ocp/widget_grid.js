@@ -100,22 +100,21 @@ $.widget( "ui.ocp_grid", {
 
 		for(var i = 0; i < this.options.data.length; i++) {
 			var data = this.options.data[i];
-			var row = this.add_row(data);
+			var row = this.add_row(data, i);
 			if (is_even(i)) {
 				row.addClass('widget_grid_body_row_even');
 			}
 		}
 	},
 
-	add_row: function(data) {
+	add_row: function(data, index) {
 		var id = "widget_grid_row_" + this.counter;
 		this.counter++;
 
 		var row = $('<div/>').appendTo(this.body);
 		row.addClass('widget_grid_body_row');
 		row.attr('id', id);
-		console.log(data);
-		row.attr('data-info', data.info.join('/'));
+		row.attr('data-rowid', index);
 
 		for (var colname in this.options.column) {
 			var cell = $('<div/>').appendTo(row);
@@ -152,6 +151,7 @@ $.widget( "ui.ocp_grid", {
 		var self = this;
 		row.click(function(e) {
 			self.row_toggle_select($(this));
+			console.log(self.options.data);
 		});
 
 		row.dblclick(function(e) {

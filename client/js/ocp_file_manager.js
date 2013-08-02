@@ -10,11 +10,8 @@ function ocp_build_grid_data_from_ls_enpoint(ls_data, path) {
 		row.meta_data = {
 			type: ls_data[i].type,
 			mime_type: ls_data[i].mime_type,
+			name: ls_data[i].label
 		};
-		row.info = [
-			ls_data[i].type,
-			'name:' + ls_data[i].label
-		]
 		rows.push(row);
 	}
 	result.rows = rows;
@@ -134,15 +131,15 @@ $(document).ready(function() {
 		row_dblclick: function(e) {
 			console.log('our row_dblclick');
 			var row = $(e.currentTarget);
-			if (row.attr('data-info').indexOf('dir') != -1) {
-				// TODO: BUG, take the path from a real value
+			var rowid = row.attr('data-rowid');
+			var meta_data = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid].meta_data;
+
+			if (meta_data.type == 'dir') {
 				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
 				if (!path.endsWith('/')) {
 					path += '/';
 				}
-				var info = row.attr('data-info');
-				var pat = /name:[^\/]*/g;
-				var name = pat.exec(info)[0].replace('name:', '');
+				var name = meta_data.name;
 				$('#ocp_fm_tree').ocp_tree('open_item', path + name);
 			}
 		}
