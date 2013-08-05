@@ -17,6 +17,7 @@
 
 		<!-- OCP -->
 		<script src="js/ocp/core.js"></script>
+		<script src="js/ocp_action.js"></script>
 		<script src="js/ocp_client_api.js"></script>
 		<script src="js/ocp_misc.js"></script>
 		<script src="js/ocp_cover.js"></script>
@@ -65,9 +66,10 @@
 				<div id="ocp_header_title">OCP</div>
 				<div id="beta">Beta</div>
 				<div id="header_menu" class="header_button">Menu</div>
+
 				<div id="file_manager_button" class="page_selector page_selector_header_content header_button">File Manager</div>
-				<div id="login_page_button" class="page_selector page_selector_header_content header_button">Login</div>
-				<div id="cover_page_button" class="page_selector page_selector_header_content header_button">Home</div>
+				<a id="login_page_button" href="#action=login" class="page_selector page_selector_header_content header_button">Login</a>
+				<a id="cover_page_button" href="#action=home" class="page_selector page_selector_header_content header_button">Home</a>
 			</div>
 
 			<!-- FILE MANAGER -->

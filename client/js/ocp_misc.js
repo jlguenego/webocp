@@ -28,7 +28,7 @@ $(document).ready(function() {
 
 
 
-	// Hide all page but file_manager
+	// Hide all pages but first page
 	$('.page_content').css('display', 'none');
 	$('#cover_page').css('display', 'block');
 

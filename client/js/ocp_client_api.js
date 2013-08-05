@@ -59,14 +59,14 @@ function ajax_mv(old_path, new_path) {
 	ajax_command({
 		action: 'mv',
 		old_path: old_path,
-		new_path: new_path,
+		new_path: new_path
 	});
 }
 
 function ajax_rm(path) {
 	ajax_command({
 		action: 'rm',
-		path: path,
+		path: path
 	});
 }
 

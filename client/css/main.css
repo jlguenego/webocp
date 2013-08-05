@@ -61,6 +61,7 @@ html, body {
 .header_button {
 	margin: 12px 10px 0 0;
 	float: right;
+	text-decoration: none;
 }
 
 #header_menu_body a {

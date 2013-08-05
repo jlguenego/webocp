@@ -8,6 +8,9 @@ ocp.css.theme = 'default';
 
 $.ocp = {};
 
+console = console || {};
+console.log = console.log || function() {};
+
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
