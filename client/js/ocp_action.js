@@ -38,10 +38,7 @@ function ocp_display(page_id) {
 	console.log('ocp_display: ' + page_id);
 	$('.page_content').css('display', 'none');
 	$('#' + page_id).css('display', 'block');
-	if ($('#' + page_id + '_button').hasClass('page_selector_header_content') || page_id == 'not_found_page') {
-		console.log('ocp_header_content');
-		$('#page').ocp_header_content('set_content', $('#' + page_id));
-	}
+	$('#page').ocp_header_content('set_content', $('#' + page_id));
 }
 
 $(document).ready(function() {

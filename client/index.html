@@ -68,8 +68,9 @@
 				<div id="beta">Beta</div>
 				<div id="header_menu" class="header_button">Menu</div>
 
-				<a id="file_manager_button" href="#action=file_manager"  class="page_selector_header_content header_button">File Manager</a>
+				<a id="file_manager_button" href="#action=file_manager"  class="header_button">File Manager</a>
 				<a id="login_page_button" href="#login" class="header_button">Login</a>
+				<a id="register_page_button" href="#register" class="header_button">Register</a>
 				<a id="cover_page_button" href="#" class="header_button">Home</a>
 			</div>
 
@@ -171,11 +172,61 @@
 			</div>
 			<!-- LOGIN PAGE END -->
 
+			<!-- REGISTER PAGE -->
+			<div id="register_page" class="page_content">
+				<div class="register-mid-pad">
+					<div class="register-left-block">
+						<div class="register-form-title"> Create a new account </div>
+						<div class="register-right-txt" id="register_orlogin"> or <a href="/#login">login</a> </div>
+						<div class="clear"></div>
+						<div class="register-input-block login first">
+							<input value="Your name" id="register_name">
+						</div>
+						<div class="register-input-block email">
+							<input value="Your Email" id="register_email">
+						</div>
+						<div class="register-input-block password">
+							<input value="Choose your password" type="text" id="register_password">
+						</div>
+						<div class="register-input-block password" id="register_password_confirm_div" style="display:none;">
+							<input value="Confirm your password" type="text" id="register_password_confirm">
+						</div>
+
+						<div class="register-pass-status-block" id="register_pwstatus">
+							<div class="register-pass-status-line1"></div>
+							<div class="register-pass-status-line2"></div>
+							<div class="register-pass-status-line3"></div>
+							<div class="register-pass-status-line4"></div>
+							<div class="clear"></div>
+							<div class="password-stutus-txt" id="register_pwstatus_text"> </div>
+						</div>
+						<div id="register_checkbox_div" class="checkboxOff">
+							<input type="checkbox" id="register_checkbox" class="checkboxOff">
+						</div>
+						<div class="register-terms-text" id="terms_agree">I agree with the MEGA <a href="/#terms">Terms of Service</a></div>
+						<div class="clear"></div>
+						<a href="#" class="register-button">Register</a>
+					</div>
+					<div class="register-right-block">
+						<div class="register-display-bg"></div>
+						<div class="register-right-bl-txt1">
+							Get ready for a new age
+						</div>
+						<div class="register-rigth-bl-txt2">
+							Cloud storage will never be the same
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+
+				<div class="ocp_footer"></div>
+			</div>
+			<!-- REGISTER PAGE END -->
+
 			<!-- NOT FOUND PAGE -->
 			<div id="not_found_page" class="page_content">
 				<div>Not Found</div>
 				<div class="ocp_footer"></div>
-
 			</div>
 			<!-- NOT FOUND PAGE END -->
 
