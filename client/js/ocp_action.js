@@ -29,6 +29,9 @@ function ocp_action() {
 		case 'file_manager':
 			ocp_display('file_manager');
 			break;
+		case 'register':
+			ocp_display('register_page');
+			break;
 		default:
 			ocp_display('not_found_page');
 	}

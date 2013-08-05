@@ -1,0 +1,283 @@
+#register_page {
+	position: relative;
+	background-image: url(image/background_image.jpg);
+	background-repeat: no-repeat;
+	background-position: center 0px;
+	min-height: 700px;
+	font-size: 13px;
+}
+
+.register-mid-pad {
+width: 979px;
+margin: 0 auto;
+min-height: 520px;
+}
+
+.register-left-block {
+width: 405px;
+margin-top: 96px;
+float: left;
+padding-bottom: 100px;
+}
+
+.register-form-title {
+font-family: 'Open Sans Semibold', Arial, Helvetica;
+color: #3F3E3E;
+font-size: 20px;
+padding-top: 12px;
+float: left;
+padding-left: 2px;
+}
+
+.register-right-txt {
+font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+color: #3F3E3E;
+font-size: 13px;
+float: right;
+line-height: 16px;
+padding: 15px 4px 0 16px;
+background-image: url(https://eu.static.mega.co.nz/images/mega/register_sprite4.png);
+background-size: 35px 650px;
+background-repeat: no-repeat;
+background-position: left -267px;
+}
+
+.register-right-txt a, .register-right-txt a:link, .register-right-txt a:visited, .register-right-txt a:hover, .register-right-txt a:active {
+font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+color: #E5391F;
+font-size: 13px;
+line-height: 16px;
+}
+
+.clear {
+clear: both;
+margin: 0px;
+padding: 0px;
+display: block;
+}
+
+.register-input-block.first {
+margin-top: 25px;
+}
+
+.register-input-block.login {
+background-image: url(https://eu.static.mega.co.nz/images/mega/register_sprite4.png);
+background-size: 35px 650px;
+background-repeat: no-repeat;
+background-position: 10px 10px;
+}
+
+.register-input-block {
+background-color: white;
+border-radius: 6px;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+height: 50px;
+margin-top: 30px;
+padding: 7px 7px 0 43px;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+border: 5px solid rgba(21,20,19,0.5);
+-moz-background-clip: border;
+-webkit-background-clip: border;
+background-clip: border-box;
+-moz-background-clip: padding;
+-webkit-background-clip: padding;
+background-clip: padding-box;
+}
+
+.register-input-block input {
+border: 0;
+background-color: white;
+width: 100%;
+outline: none;
+font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+font-size: 16px;
+line-height: 25px;
+color: #717171;
+margin: 0;
+}
+
+.register-input-block.email {
+background-image: url(https://eu.static.mega.co.nz/images/mega/register_sprite4.png);
+background-size: 35px 650px;
+background-repeat: no-repeat;
+background-position: 10px -50px;
+}
+
+.register-input-block.password {
+background-image: url(https://eu.static.mega.co.nz/images/mega/register_sprite4.png);
+background-size: 35px 650px;
+background-repeat: no-repeat;
+background-position: 7px -102px;
+}
+
+.register-pass-status-block {
+margin-top: 10px;
+height: 35px;
+}
+
+.register-pass-status-line1, .register-pass-status-line2, .register-pass-status-line3, .register-pass-status-line4 {
+width: 90px;
+height: 5px;
+background-color: #cbcacd;
+float: left;
+margin-right: 15px;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+}
+
+.good1 .register-pass-status-line1 {
+background-color: #ff2a0b;
+}
+
+.good2 .register-pass-status-line1, .good2 .register-pass-status-line2 {
+background-color: #ffc926;
+}
+
+.good3 .register-pass-status-line1, .good3 .register-pass-status-line2, .good3 .register-pass-status-line3 {
+background-color: #7ab148;
+}
+
+.good4 .register-pass-status-line1, .good4 .register-pass-status-line2, .good4 .register-pass-status-line3, .good4 .register-pass-status-line4 {
+background-color: #7dd016;
+}
+
+.password-stutus-txt {
+-moz-text-shadow: 0px 1px 1px #FFF;
+-webkit-text-shadow: 0px 1px 1px #FFF;
+text-shadow: 0px 1px 1px #FFF;
+float: right;
+font-size: 13px;
+color: #6C9D3F;
+font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+line-height: 25px;
+display: none;
+}
+
+.checkboxOff {
+width: 30px;
+height: 30px;
+background-image: url(https://eu.static.mega.co.nz/images/mega/register_sprite4.png);
+background-size: 35px 650px;
+background-repeat: no-repeat;
+background-position: left -167px;
+float: left;
+cursor: pointer;
+}
+
+.checkboxOn {
+width: 30px;
+height: 30px;
+background-image: url(https://eu.static.mega.co.nz/images/mega/register_sprite4.png);
+background-size: 35px 650px;
+background-repeat: no-repeat;
+background-position: left -215px;
+float: left;
+cursor: pointer;
+}
+
+input[type="checkbox"] {
+margin: 0;
+padding: 0;
+opacity: 0;
+filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+-moz-opacity: 0;
+-khtml-opacity: 0;
+-moz-appearance: none;
+}
+
+.register-terms-text {
+font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+color: #3F3E3E;
+font-size: 13px;
+line-height: 16px;
+height: 30px;
+display: table-cell;
+vertical-align: middle;
+padding: 0 0 0 10px;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+text-align: left;
+}
+
+.register-button, a.register-button, a.register-button:link, a.register-button:visited, a.register-button:active {
+display: block;
+height: 40px;
+color: white;
+font-size: 14px;
+line-height: 36px;
+font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+-moz-box-sizing: border-box;
+-ms-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+box-sizing: border-box;
+padding: 1px 0 0 0;
+text-align: center;
+background-color: #D9290B;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+margin-top: 30px;
+}
+
+.register-button, a.register-button, a.register-button:link, a.register-button:visited, a.register-button:active {
+display: block;
+height: 40px;
+color: white;
+font-size: 14px;
+line-height: 36px;
+font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+-moz-box-sizing: border-box;
+-ms-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+box-sizing: border-box;
+padding: 1px 0 0 0;
+text-align: center;
+background-color: #D9290B;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+margin-top: 30px;
+}
+
+a, a:link, a:visited, a:hover, a:active, a:focus img, a:focus img {
+outline: none;
+}
+
+.register-right-block {
+width: 400px;
+float: right;
+padding: 42px 38px 0 0;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+}
+
+.register-display-bg {
+height: 400px;
+background-image: url(https://eu.static.mega.co.nz/images/mega/register_bg.png);
+background-repeat: no-repeat;
+background-position: 23px 67px;
+}
+
+.register-right-bl-txt1 {
+font-family: 'Open Sans Semibold', Arial;
+font-size: 18px;
+line-height: 34px;
+color: #3b3b3b;
+padding: 16px 0 0 0;
+text-align: center;
+}
+
+.register-rigth-bl-txt2 {
+font-family: 'Open Sans Semibold', Arial, Helvetica;
+font-size: 18px;
+line-height: 24px;
+color: #D9290B;
+padding: 4px 0 0 0;
+text-align: center;
+}
