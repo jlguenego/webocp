@@ -26,6 +26,9 @@ function ocp_action() {
 		case 'login':
 			ocp_display('login_page');
 			break;
+		case 'logout':
+			ocp_display('cover_page');
+			break;
 		case 'file_manager':
 			ocp_display('file_manager');
 			break;
