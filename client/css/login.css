@@ -1,0 +1,176 @@
+#login_page {
+	position: relative;
+	background-image: url(image/background_image.jpg);
+	background-repeat: no-repeat;
+	background-position: center 0px;
+	min-height: 700px;
+	font-size: 13px;
+}
+
+.ocp_lg_block {
+	width: 979px;
+	margin: 0 auto;
+	min-height: 520px;
+}
+
+.ocp_lg_left_block {
+	width: 405px;
+	margin-top: 91px;
+	float: left;
+}
+
+.ocp_lg_title {
+	color: #3F3E3E;
+	font-size: 20px;
+	padding-top: 12px;
+	float: left;
+	padding-left: 2px;
+}
+
+.ocp_lg_txt {
+	color: #3F3E3E;
+	float: right;
+	padding: 15px 4px 0 16px;
+	background-image: url(image/register_sprite4.png);
+	background-size: 35px 650px;
+	background-repeat: no-repeat;
+	background-position: left -267px;
+}
+
+.ocp_lg_fogot {
+	float: left;
+	padding: 0 4px 0 16px;
+	background-position: left -282px;
+	margin-top: 37px;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	text-align: left;
+}
+
+.ocp_lg_txt a, .ocp_lg_txt a:link, .ocp_lg_txt a:visited, .ocp_lg_txt a:hover, .ocp_lg_txt a:active {
+	text-decoration: none;
+	color: #E5391F;
+}
+
+.ocp_lg_clear {
+	clear: both;
+	margin: 0px;
+	padding: 0px;
+	display: block;
+}
+
+.ocp_lg_input {
+	height: 50px;
+	margin-top: 30px;
+	padding: 7px 7px 0 43px;
+
+	background-color: white;
+
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	border: 5px solid rgba(21,20,19,0.5);
+}
+
+.ocp_lg_input input {
+	width: 100%;
+	margin: 0px;
+	border: 0px;
+	background-color: white;
+	outline: none;
+	font-size: 16px;
+	line-height: 25px;
+	color: #717171;
+}
+
+.ocp_lg_input.email {
+	background-image: url(image/register_sprite4.png);
+	background-size: 35px 650px;
+	background-repeat: no-repeat;
+	background-position: 10px -50px;
+}
+
+.ocp_lg_input.password {
+	background-image: url(image/register_sprite4.png);
+	background-size: 35px 650px;
+	background-repeat: no-repeat;
+	background-position: 7px -102px;
+}
+
+.ocp_lg_remember {
+	float: left;
+	margin: 40px 0 0 0;
+	cursor: pointer;
+}
+
+.checkboxOff {
+	width: 30px;
+	height: 30px;
+	background-image: url(https://eu.static.mega.co.nz/images/mega/register_sprite4.png);
+	background-size: 35px 650px;
+	background-repeat: no-repeat;
+	background-position: left -167px;
+	float: left;
+}
+
+#login_page input[type="checkbox"] {
+	margin: 0;
+	padding: 0;
+	opacity: 0;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+	-moz-opacity: 0;
+	-khtml-opacity: 0;
+	-moz-appearance: none;
+}
+
+.ocp_lg_button, a.ocp_lg_button, a.ocp_lg_button:link, a.ocp_lg_button:visited, a.ocp_lg_button:active {
+	display: block;
+	height: 40px;
+	color: white;
+	font-size: 14px;
+	line-height: 36px;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 1px 0 0 0;
+	text-align: center;
+	background-color: #D9290B;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	margin-top: 35px;
+	float: right;
+	width: 200px;
+}
+
+.register-terms-text {
+	color: #3F3E3E;
+	font-size: 13px;
+	line-height: 16px;
+	height: 30px;
+	display: table-cell;
+	vertical-align: middle;
+	padding: 0 0 0 10px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	text-align: left;
+}
+
+.ocp_lg_map {
+	width: 488px;
+	height: 429px;
+	background-image: url(image/login_bg3.png);
+	background-size: 681px 320px;
+	background-position: left bottom;
+	background-repeat: no-repeat;
+	float: right;
+}

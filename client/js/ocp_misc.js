@@ -5,6 +5,7 @@ $(document).ready(function() {
 
 	$('#header_menu').ocp_menu();
 	$('#file_manager_button').ocp_menu();
+	$('#login_page_button').ocp_menu();
 	$('#cover_page_button').ocp_menu();
 
 	var general_settings_dialog = $('#ocp_fm_general_settings_dialog').ocp_dialog({

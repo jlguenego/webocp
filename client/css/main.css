@@ -4,6 +4,7 @@ html, body {
 	height: 100%;
 	font-family: 'Open sans', serif;
 	font-size: 14px;
+	line-height: 16px;
 }
 
 #page {
@@ -24,6 +25,7 @@ html, body {
 	font-family: 'Archivo Black';
 	font-style: italic;
 	font-size: 40px;
+	line-height: 50px;
 	float: left;
 	padding: 0px 6px 0px;
 
@@ -40,6 +42,7 @@ html, body {
 	background-clip: text;
 	-webkit-background-clip: text;
 	-moz-background-clip: text;
+
 	text-fill-color: transparent;
 	-moz-text-fill-color: transparent;
 	-webkit-text-fill-color: transparent;
