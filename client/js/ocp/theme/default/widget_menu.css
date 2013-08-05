@@ -12,6 +12,10 @@
 	border-radius: 5px;
 }
 
+a.widget_menu_button, a.widget_menu_button:link, a.widget_menu_button:visited, a.widget_menu_button:active {
+	color: #C0C0BE;
+}
+
 .widget_menu_root {
 	padding: 5px 26px 6px 10px;
 	background-image: url(image/gray_arrow.png);
@@ -19,7 +23,7 @@
 	background-repeat: no-repeat;
 }
 
-.widget_menu_button:hover {
+.widget_menu_button:hover, a.widget_menu_button:hover {
 	background-color: #D9290B;
 	color: #FFFFFF;
 }

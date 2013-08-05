@@ -28,7 +28,6 @@
 }
 
 .ocp_lg_txt {
-	color: #3F3E3E;
 	float: right;
 	padding: 15px 4px 0 16px;
 	background-image: url(image/register_sprite4.png);
@@ -49,18 +48,6 @@
 	text-align: left;
 }
 
-.ocp_lg_txt a, .ocp_lg_txt a:link, .ocp_lg_txt a:visited, .ocp_lg_txt a:hover, .ocp_lg_txt a:active {
-	text-decoration: none;
-	color: #E5391F;
-}
-
-.ocp_lg_clear {
-	clear: both;
-	margin: 0px;
-	padding: 0px;
-	display: block;
-}
-
 .ocp_lg_input {
 	height: 50px;
 	margin-top: 30px;
@@ -77,6 +64,10 @@
 	box-sizing: border-box;
 
 	border: 5px solid rgba(21,20,19,0.5);
+
+	background-image: url(image/register_sprite4.png);
+	background-size: 35px 650px;
+	background-repeat: no-repeat;
 }
 
 .ocp_lg_input input {
@@ -91,16 +82,10 @@
 }
 
 .ocp_lg_input.email {
-	background-image: url(image/register_sprite4.png);
-	background-size: 35px 650px;
-	background-repeat: no-repeat;
 	background-position: 10px -50px;
 }
 
 .ocp_lg_input.password {
-	background-image: url(image/register_sprite4.png);
-	background-size: 35px 650px;
-	background-repeat: no-repeat;
 	background-position: 7px -102px;
 }
 
@@ -139,28 +124,6 @@
 	-khtml-opacity: 0;
 	-moz-appearance: none;
 	cursor: pointer;
-}
-
-.ocp_lg_button, .ocp_lg_button:link, .ocp_lg_button:visited, .ocp_lg_button:active {
-	display: block;
-	float: right;
-	height: 40px;
-	width: 200px;
-	padding: 0px;
-	margin-top: 35px;
-
-	color: white;
-	line-height: 36px;
-	text-align: center;
-	background-color: #D9290B;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	text-decoration: none;
-}
-
-.ocp_lg_button:hover {
-	background-color: #FF3B2B;
 }
 
 .ocp_lg_remember_text {
