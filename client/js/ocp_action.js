@@ -45,6 +45,9 @@ function ocp_action() {
 		case 'register':
 			ocp_display('register_page');
 			break;
+		case 'registration':
+			ocp_display('register_success_page');
+			break;
 		default:
 			ocp_display('not_found_page');
 	}

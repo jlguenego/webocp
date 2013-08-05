@@ -1,0 +1,48 @@
+#register_success_page {
+	position: relative;
+	background-image: url(image/background_image.jpg);
+	background-repeat: no-repeat;
+	background-position: center 0px;
+	min-height: 500px;
+	font-size: 13px;
+}
+
+.ocp_rs_main {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	height: 200px;
+	width: 978px;
+	margin: -150px 0 0 -489px;
+}
+
+.ocp_rs_logo {
+	float: left;
+	width: 200px;
+	height: 200px;
+	margin-left: 84px;
+	background-image: url(image/Soccer-Ball.png);
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+
+.ocp_rs_right_block {
+	float: left;
+	margin-top: 62px;
+	margin-left: 106px;
+}
+
+.ocp_rs_title {
+	padding: 0 0 8px 0;
+	color: #CF351B;
+	font-size: 30px;
+	line-height: 34px;
+	text-align: left;
+}
+
+.ocp_rs_txt {
+	text-align: left;
+	color: #404040;
+	font-size: 14px;
+	line-height: 30px;
+}
