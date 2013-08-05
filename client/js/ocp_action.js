@@ -4,6 +4,10 @@ function build_request_from_fi(href) {
 	var fi = get_uri_fi(href);
 	var array = fi.split('&');
 	g_request = {};
+	if (fi.indexOf('=') == -1) {
+		g_request.action = fi;
+		return;
+	}
 	for (var i = 0; i < array.length; i++) {
 		var pair = array[i].split('=');
 		g_request[pair[0]] = pair[1];
@@ -34,7 +38,8 @@ function ocp_display(page_id) {
 	console.log('ocp_display: ' + page_id);
 	$('.page_content').css('display', 'none');
 	$('#' + page_id).css('display', 'block');
-	if ($('#' + page_id + '_button').hasClass('page_selector_header_content')) {
+	if ($('#' + page_id + '_button').hasClass('page_selector_header_content') || page_id == 'not_found_page') {
+		console.log('ocp_header_content');
 		$('#page').ocp_header_content('set_content', $('#' + page_id));
 	}
 }
@@ -42,11 +47,16 @@ function ocp_display(page_id) {
 $(document).ready(function() {
 	$('a[href^=#]').click(function() {
 		console.log('inner link');
-		build_request_from_fi($(this).attr('href'));
 
 		ocp_action();
 	});
 
-	build_request_from_fi(window.location);
+	$(window).on('hashchange', function () {
+    	console.log('window.onhashchange');
+        build_request_from_fi(window.location.hash);
+        ocp_action();
+    });
+
+	build_request_from_fi(window.location.hash);
 	ocp_action();
 });
