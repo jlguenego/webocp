@@ -25,4 +25,6 @@ $(document).ready(function() {
 		general_settings_dialog.ocp_dialog('open');
 		general_settings_dialog.find('#server_base_url').val(g_server_base_url);
 	});
+
+	$('.ocp_footer').html($('#ocp_data_footer').html());
 });

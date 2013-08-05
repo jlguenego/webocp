@@ -15,9 +15,18 @@ function ocp_action() {
 	console.log(g_request);
 	if (!g_request.action) {
 		ocp_display('cover_page');
-	} else {
-		console.log('action=' + g_request.action);
-		ocp_display(g_request.action + '_page');
+		return;
+	}
+
+	switch (g_request.action) {
+		case 'login':
+			ocp_display('login_page');
+			break;
+		case 'file_manager':
+			ocp_display('file_manager');
+			break;
+		default:
+			ocp_display('not_found_page');
 	}
 }
 
@@ -25,7 +34,9 @@ function ocp_display(page_id) {
 	console.log('ocp_display: ' + page_id);
 	$('.page_content').css('display', 'none');
 	$('#' + page_id).css('display', 'block');
-	$('#page').ocp_header_content('set_content', $('#' + page_id));
+	if ($('#' + page_id + '_button').hasClass('page_selector_header_content')) {
+		$('#page').ocp_header_content('set_content', $('#' + page_id));
+	}
 }
 
 $(document).ready(function() {
