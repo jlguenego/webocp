@@ -32,6 +32,9 @@
 			case 'download_file':
 				action_download_file();
 				break;
+			case 'register':
+				action_register();
+				break;
 			default:
 				throw new Exception('Unknown action: ' . $_GET['action']);
 		}
@@ -148,5 +151,22 @@
 		rename($filename, ROOT.$path);
 
 		echo json_encode(array($_GET, $_FILES));
+	}
+
+	function action_register() {
+		$output = array();
+		try {
+			ob_start();
+			print_r($_GET);
+			$content = ob_get_contents();
+			ob_clean();
+			debug($content);
+			$output['result'] = 'OK';
+			throw new Exception('Ho zut!');
+		} catch (Exception $e) {
+			$output['error'] = $e->getMessage();
+		}
+		$result = json_encode($output);
+		echo $result;
 	}
 ?>

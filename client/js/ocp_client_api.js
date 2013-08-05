@@ -11,6 +11,7 @@ function ajax_command(data) {
 		async: false,
 		data: data,
 		success: function(data) {
+			console.log(data);
 			var output = $.parseJSON(data);
 			if (output.error) {
 				throw output.error;
@@ -123,4 +124,11 @@ function ajax_upload_file(path, form, after_success) {
 function ajax_download_file(path) {
 	console.log('ajax_download_file, path=' + path);
 	window.location = g_server_base_url + '/webocp/server/endpoint/download.php?path=' + path;
+}
+
+function ajax_register(account) {
+	ajax_command({
+		action: 'register',
+		account: account
+	});
 }

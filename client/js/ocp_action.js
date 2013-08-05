@@ -28,7 +28,7 @@ function ocp_action() {
 		case 'login':
 			ocp_display('login_page');
 			break;
-		case 'authenticate':
+		case 'perform_login':
 			if (ocp_action_authenticate()) {
 				ocp_display('file_manager');
 			} else {
@@ -45,8 +45,8 @@ function ocp_action() {
 		case 'register':
 			ocp_display('register_page');
 			break;
-		case 'registration':
-			ocp_display('register_success_page');
+		case 'perform_register':
+			ocp_action_register();
 			break;
 		default:
 			ocp_display('not_found_page');
@@ -81,15 +81,24 @@ function ocp_user_is_logged() {
 	return g_user_is_logged;
 }
 
+function ocp_action_register() {
+	try {
+		ajax_register({
+			login: $('#ocp_reg_name').val(),
+			email: $('#ocp_reg_email').val(),
+			password: $('#ocp_reg_password').val()
+		});
+		ocp_display('register_success_page');
+	} catch (e) {
+		window.location.hash = '#register';
+		return;
+	}
+}
+
 $(document).ready(function() {
-	$('a[href^=#]').click(function() {
-		console.log('inner link');
-
-		ocp_action();
-	});
-
 	$(window).on('hashchange', function () {
     	console.log('window.onhashchange');
+    	console.log('window.location.hash=' + window.location.hash);
         build_request_from_fi(window.location.hash);
         ocp_action();
     });
