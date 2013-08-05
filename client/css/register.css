@@ -3,7 +3,7 @@
 	background-image: url(image/background_image.jpg);
 	background-repeat: no-repeat;
 	background-position: center 0px;
-	min-height: 900px;
+	min-height: 700px;
 	font-size: 13px;
 }
 
@@ -77,12 +77,6 @@
 	background-position: 10px 10px;
 }
 
-.ocp_reg_input_block.provider {
-	background-position: 10px -600px;
-
-	margin-bottom: 25px;
-}
-
 .ocp_reg_input_block.email {
 	background-position: 10px -50px;
 }
@@ -103,7 +97,7 @@
 }
 
 .ocp_reg_pass_strength_block {
-	height: 20px;
+	height: 35px;
 	margin-top: 10px;
 }
 
