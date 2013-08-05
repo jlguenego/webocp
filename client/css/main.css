@@ -20,6 +20,12 @@ html, body {
 	background-color: #151412;
 }
 
+#ocp_logo {
+	position: absolute;
+	width: 150px;
+	height: 50px;
+}
+
 #ocp_header_title {
 	position: absolute;
 	top: -5px;
