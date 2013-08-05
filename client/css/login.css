@@ -110,10 +110,20 @@
 	cursor: pointer;
 }
 
+.checkboxOn {
+	width: 30px;
+	height: 30px;
+	background-image: url(/image/register_sprite4.png);
+	background-size: 35px 650px;
+	background-repeat: no-repeat;
+	background-position: left -215px;
+	float: left;
+}
+
 .checkboxOff {
 	width: 30px;
 	height: 30px;
-	background-image: url(https://eu.static.mega.co.nz/images/mega/register_sprite4.png);
+	background-image: url(image/register_sprite4.png);
 	background-size: 35px 650px;
 	background-repeat: no-repeat;
 	background-position: left -167px;
@@ -128,30 +138,32 @@
 	-moz-opacity: 0;
 	-khtml-opacity: 0;
 	-moz-appearance: none;
+	cursor: pointer;
 }
 
-.ocp_lg_button, a.ocp_lg_button, a.ocp_lg_button:link, a.ocp_lg_button:visited, a.ocp_lg_button:active {
+.ocp_lg_button, .ocp_lg_button:link, .ocp_lg_button:visited, .ocp_lg_button:active {
 	display: block;
+	float: right;
 	height: 40px;
+	width: 200px;
+	padding: 0px;
+	margin-top: 35px;
+
 	color: white;
-	font-size: 14px;
 	line-height: 36px;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-	padding: 1px 0 0 0;
 	text-align: center;
 	background-color: #D9290B;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
-	margin-top: 35px;
-	float: right;
-	width: 200px;
+	text-decoration: none;
 }
 
-.register-terms-text {
+.ocp_lg_button:hover {
+	background-color: #FF3B2B;
+}
+
+.ocp_lg_remember_text {
 	color: #3F3E3E;
 	font-size: 13px;
 	line-height: 16px;
@@ -166,10 +178,10 @@
 }
 
 .ocp_lg_map {
+	margin-top: 120px;
 	width: 488px;
-	height: 429px;
-	background-image: url(image/login_bg3.png);
-	background-size: 681px 320px;
+	height: 249px;
+	background-image: url(image/world_map.png);
 	background-position: left bottom;
 	background-repeat: no-repeat;
 	float: right;
