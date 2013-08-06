@@ -91,7 +91,7 @@ function ocp_action_register() {
 		ocp_display('register_success_page');
 	} catch (e) {
 		window.location.hash = '#register';
-		// error_manage(e);
+		ocp_error_manage(e);
 		return;
 	}
 }

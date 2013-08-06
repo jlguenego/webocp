@@ -56,13 +56,9 @@ function get_uri_fi(uri) {
 	return result;
 }
 
-
-
-function progressHandlingFunction(e){
-	if(e.lengthComputable){
-		console.log({value:e.loaded,max:e.total});
-	    //$('progress').attr({value:e.loaded,max:e.total});
-	}
+function ocp_error_manage(e) {
+	$('#ocp_misc_error_dialog').find('span').html(e);
+	$('#ocp_misc_error_dialog').ocp_dialog('open');
 }
 
 (function($) {

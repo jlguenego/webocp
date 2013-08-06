@@ -23,16 +23,16 @@ $.widget( "ui.ocp_dialog", {
 		close: function() {},
 	},
 
-	back_screen: null,
+	overlay: null,
 	content: null,
 
 	_create: function() {
-		if ($('.widget_dialog_back_screen').length < 1) {
-			var back_screen = $('<div/>').appendTo('body');
-			back_screen.addClass('widget_dialog_overlay');
+		if ($('.widget_dialog_overlay').length == 0) {
+			var overlay = $('<div/>').appendTo('body');
+			overlay.addClass('widget_dialog_overlay');
 		}
-		this.back_screen = $('.widget_dialog_overlay');
-		this.back_screen.hide();
+		this.overlay = $('.widget_dialog_overlay');
+		this.overlay.hide();
 
 		this.element.hide();
 		this.element.addClass('widget_dialog_frame');
@@ -65,6 +65,8 @@ $.widget( "ui.ocp_dialog", {
 
 		var frame_w = this.element.outerWidth();
 		var frame_h = this.element.outerHeight();
+
+		var scroll
 
 		var top = (window_h - frame_h) / 2;
 		var left = (window_w - frame_w) / 2;
@@ -113,13 +115,13 @@ $.widget( "ui.ocp_dialog", {
 
 	open: function() {
 		this._center_dialog();
-		this.back_screen.show();
+		this.overlay.show();
 		this.element.show();
 		this.element.find('input').focus();
 	},
 
 	close: function() {
-		this.back_screen.hide();
+		this.overlay.hide();
 		this.element.hide();
 		this.options.close();
 	}

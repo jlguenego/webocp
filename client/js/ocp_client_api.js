@@ -102,8 +102,7 @@ function ajax_upload_file(path, form, after_success) {
 					result = output.result;
 				}
 			} catch (e) {
-				$('#ocp_misc_error_dialog').find('span').html(e);
-				$('#ocp_misc_error_dialog').ocp_dialog('open');
+				ocp_error_manage(e);
 				return;
 			}
 			if (after_success) {

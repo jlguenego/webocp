@@ -1,3 +1,11 @@
+html {
+	overflow: hidden;
+}
+
+body {
+	overflow: auto;
+}
+
 .widget_dialog_overlay {
 	background-color: black !important;
 	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJod…BoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
