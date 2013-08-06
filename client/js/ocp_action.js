@@ -29,6 +29,7 @@ function ocp_action() {
 			break;
 		case 'perform_login':
 			if (ocp_action_authenticate()) {
+				$('#ocp_fm_tree').ocp_tree('open_item', '/');
 				ocp_display('file_manager');
 			} else {
 				ocp_display('login_page');
@@ -69,6 +70,7 @@ function ocp_action_authenticate() {
 }
 
 function ocp_action_logout() {
+	g_session = {};
 	g_user_is_logged = false;
 }
 
