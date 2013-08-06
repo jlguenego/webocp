@@ -96,67 +96,6 @@
 	color: #717171;
 }
 
-.ocp_reg_pass_strength_block {
-	height: 35px;
-	margin-top: 10px;
-}
-
-.ocp_reg_pass_strength_line1, .ocp_reg_pass_strength_line2, .ocp_reg_pass_strength_line3, .ocp_reg_pass_strength_line4 {
-	width: 90px;
-	height: 5px;
-	background-color: #cbcacd;
-	float: left;
-	margin-right: 15px;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	border-radius: 2px;
-}
-
-.ocp_reg_pass_strength_line4 {
-	margin: 0;
-}
-
-.good1 .ocp_reg_pass_strength_line1 {
-	background-color: #ff2a0b;
-}
-
-.good2 .ocp_reg_pass_strength_line1, .good2 .ocp_reg_pass_strength_line2 {
-	background-color: #ffc926;
-}
-
-.good3 .ocp_reg_pass_strength_line1, .good3 .ocp_reg_pass_strength_line2, .good3 .ocp_reg_pass_strength_line3 {
-	background-color: #7ab148;
-}
-
-.good4 .ocp_reg_pass_strength_line1, .good4 .ocp_reg_pass_strength_line2, .good4 .ocp_reg_pass_strength_line3, .good4 .ocp_reg_pass_strength_line4 {
-	background-color: #7dd016;
-}
-
-.ocp_reg_pass_txt {
-	float: right;
-	-moz-text-shadow: 0px 1px 1px #FFF;
-	-webkit-text-shadow: 0px 1px 1px #FFF;
-	text-shadow: 0px 1px 1px #FFF;
-	color: #6C9D3F;
-	line-height: 25px;
-}
-
-.good1 .ocp_reg_pass_txt {
-	color: #ff2a0b;
-}
-
-.good2 .ocp_reg_pass_txt {
-	color: #ffc926;
-}
-
-.good3 .ocp_reg_pass_txt {
-	color: #7ab148;
-}
-
-.good4 .ocp_reg_pass_txt {
-	color: #7dd016;
-}
-
 .checkboxOff {
 	width: 30px;
 	height: 30px;

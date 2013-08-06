@@ -11,3 +11,10 @@
 	font-weight: 400;
 	src: local('Archivo Black Regular'), local('ArchivoBlack-Regular'), url(http://themes.googleusercontent.com/static/fonts/archivoblack/v1/WoAoVT7K3k7hHfxKbvB6B0BTuPGxyeV-VBVV8KqqzrI.woff) format('woff');
 }
+
+.widget_clear {
+	clear: both;
+	margin: 0px;
+	padding: 0px;
+	display: block;
+}
