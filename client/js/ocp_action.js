@@ -83,10 +83,16 @@ function ocp_user_is_logged() {
 
 function ocp_action_register() {
 	try {
+		var name = $('#ocp_reg_name').val();
+		var email = $('#ocp_reg_email').val();
+		var pass = $('#ocp_reg_password').val();
+
+		ocp_val_form_validation('register');
+
 		ajax_register({
-			login: $('#ocp_reg_name').val(),
-			email: $('#ocp_reg_email').val(),
-			password: $('#ocp_reg_password').val()
+			name: name,
+			email: email,
+			password: pass
 		});
 		ocp_display('register_success_page');
 	} catch (e) {

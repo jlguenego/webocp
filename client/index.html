@@ -25,6 +25,7 @@
 		<script src="js/ocp_client_api.js"></script>
 		<script src="js/ocp_cover.js"></script>
 		<script src="js/ocp_file_manager.js"></script>
+		<script src="js/ocp_validation.js"></script>
 		<link rel="stylesheet" href="js/ocp/theme/default/core.css" />
 
 		<!-- SPLITPANE -->
@@ -185,13 +186,13 @@
 						<div class="ocp_reg_txt" id="ocp_reg_login"> or <a href="#login">login</a> </div>
 						<div class="ocp_clear"></div>
 						<div class="ocp_reg_input_block login first">
-							<input placeholder="Your name" id="ocp_reg_name">
+							<input placeholder="Your name" id="ocp_reg_name" name="Name">
 						</div>
 						<div class="ocp_reg_input_block email">
-							<input placeholder="Your Email" id="ocp_reg_email">
+							<input placeholder="Your Email" id="ocp_reg_email" name="Email">
 						</div>
 						<div class="ocp_reg_input_block password">
-							<input placeholder="Choose your password" type="password" id="ocp_reg_password">
+							<input placeholder="Choose your password" type="password" id="ocp_reg_password" name="Password">
 						</div>
 						<div class="ocp_reg_pass_strength_block" id="register_pwstatus">
 							<div class="ocp_reg_pass_strength_line1"></div>
@@ -203,9 +204,9 @@
 						</div>
 
 						<div id="ocp_checkbox_div" class="checkboxOff">
-							<input type="checkbox" id="register_checkbox" class="checkboxOff">
+							<input type="checkbox" id="register_checkbox" class="checkboxOff" name="Terms">
 						</div>
-						<div class="ocp_reg_terms_text" id="terms_agree">I agree with the MEGA <a href="/#terms">Terms of Service</a></div>
+						<div class="ocp_reg_terms_text" id="terms_agree">I agree with the OCP <a href="#terms">Terms of Service</a></div>
 
 						<div class="ocp_clear"></div>
 						<a href="#perform_register" class="ocp_button">Register</a>

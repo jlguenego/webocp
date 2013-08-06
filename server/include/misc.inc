@@ -50,4 +50,13 @@
 	function debug($msg) {
 		file_put_contents(LOG_FILE_PATH, $msg . PHP_EOL, FILE_APPEND);
 	}
+
+	function debug_r($msg, $array) {
+		debug($msg);
+		ob_start();
+		print_r($_GET);
+		$content = ob_get_contents();
+		ob_clean();
+		debug($content);
+	}
 ?>

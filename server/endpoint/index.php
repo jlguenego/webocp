@@ -156,13 +156,8 @@
 	function action_register() {
 		$output = array();
 		try {
-			ob_start();
-			print_r($_GET);
-			$content = ob_get_contents();
-			ob_clean();
-			debug($content);
+			debug_r('_GET', $content);
 			$output['result'] = 'OK';
-			throw new Exception('Ho zut!');
 		} catch (Exception $e) {
 			$output['error'] = $e->getMessage();
 		}

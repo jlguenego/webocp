@@ -37,4 +37,12 @@ $(document).ready(function() {
 	});
 
 	$('.ocp_footer').html($('#ocp_data_footer').html());
+
+	$('input[type=checkbox]').click(function() {
+		if ($(this).is(':checked'))	{
+			$(this).parent().removeClass('checkboxOff').addClass('checkboxOn');
+		} else {
+			$(this).parent().removeClass('checkboxOn').addClass('checkboxOff');
+		}
+	});
 });
