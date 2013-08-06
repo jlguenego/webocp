@@ -109,6 +109,8 @@ function ocp_action_login() {
 
 function ocp_action_logout() {
 	g_session = null;
+	g_ocp_client.session = g_session;
+	ocp_save_local();
 }
 
 function ocp_display(page_id) {
@@ -165,7 +167,7 @@ function ocp_action_register() {
 				content: private_content
 			}
 		});
-		g_session.session = {};
+		g_session = {};
 		g_session.public_address = public_address;
 		ocp_display('register_success_page');
 	} catch (e) {

@@ -55,9 +55,10 @@ function normalize_path(path) {
 }
 
 function strip_slash(str) {
-	if (uri.endsWith('/')) {
+	if (str.endsWith('/')) {
 		return str.substring(0, str.length - 1);
     }
+    return str;
 }
 
 function basename(path) {
