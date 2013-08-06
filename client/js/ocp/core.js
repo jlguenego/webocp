@@ -36,6 +36,7 @@ function ocp_restore_local() {
 		} else {
 			g_ocp_client = {
 				server_base_url: 'http://localhost',
+				session: {}
 			};
 		}
 	}

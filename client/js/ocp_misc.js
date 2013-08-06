@@ -1,3 +1,4 @@
+//localStorage.removeItem('ocp_client');
 ocp_restore_local();
 
 function ocp_error_manage(e) {

@@ -1,7 +1,5 @@
 var g_request = {};
-
-var g_user_is_logged = false;
-var g_session = {};
+var g_session = null;
 
 function build_request_from_fi(href) {
 	var fi = get_uri_fi(href);
@@ -28,10 +26,11 @@ function ocp_action() {
 			ocp_display('login_page');
 			break;
 		case 'perform_login':
-			if (ocp_action_authenticate()) {
-//				if (localStorage.server_base_url) {
-//					$('#ocp_fm_tree').ocp_tree('open_item', '/');
-//				}
+			if (ocp_action_login()) {
+				console.log('g_session.public_address=' + g_session.public_address);
+				if (g_ocp_client.server_base_url) {
+					$('#ocp_fm_tree').ocp_tree('open_item', '/');
+				}
 				window.location.hash = '#file_manager';
 			} else {
 				window.location.hash = '#login';
@@ -42,6 +41,9 @@ function ocp_action() {
 			window.location.hash = '#';
 			break;
 		case 'file_manager':
+			if (!ocp_require_authentication()) {
+				return;
+			}
 			ocp_display('file_manager');
 			break;
 		case 'register':
@@ -55,7 +57,7 @@ function ocp_action() {
 	}
 }
 
-function ocp_action_authenticate() {
+function ocp_action_login() {
 	try {
 		ocp_val_form_validation('login');
 
@@ -86,20 +88,18 @@ function ocp_action_authenticate() {
 
 		g_session = {};
 		var email = $('#ocp_lg_email').val();
-		g_session.public_address = ocp_client.hash(email);
-		g_user_is_logged = true;
+		g_session.public_address = public_address;
 	} catch (e) {
 		window.location.hash = '#login';
 		ocp_error_manage(e);
 		return false;
 	}
 
-	return g_user_is_logged;
+	return ocp_user_is_logged();
 }
 
 function ocp_action_logout() {
-	g_session = {};
-	g_user_is_logged = false;
+	g_session = null;
 }
 
 function ocp_display(page_id) {
@@ -117,7 +117,15 @@ function ocp_display(page_id) {
 }
 
 function ocp_user_is_logged() {
-	return g_user_is_logged;
+	return (g_session && g_session.public_address);
+}
+
+function ocp_require_authentication() {
+	if (!ocp_user_is_logged()) {
+		window.location.hash = '#login';
+		return false;
+	}
+	return true;
 }
 
 function ocp_action_register() {
@@ -148,7 +156,7 @@ function ocp_action_register() {
 				content: private_content
 			}
 		});
-		g_session = {};
+		g_session.session = {};
 		g_session.public_address = public_address;
 		ocp_display('register_success_page');
 	} catch (e) {
