@@ -105,8 +105,9 @@ $(document).ready(function() {
 		source: src,
 		ls: ajax_ls,
 		open_item_error: function(path) {
-			alert('Cannot go to directory ' + path);
-			$('#ocp_fm_breadcrumbs input').val(path).select();
+			$('#ocp_misc_error_dialog').find('span').html('Cannot go to directory ' + path);
+			$('#ocp_fm_breadcrumbs input').val(path);
+			$('#ocp_misc_error_dialog').ocp_dialog('open');
 		}
 	});
 
@@ -133,7 +134,6 @@ $(document).ready(function() {
 		prevent_dblclick: true,
 
 		row_dblclick: function(e) {
-			console.log('our row_dblclick');
 			var row = $(e.currentTarget);
 			var rowid = row.attr('data-rowid');
 			var meta_data = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid].meta_data;
@@ -170,16 +170,13 @@ $(document).ready(function() {
 	$('#ocp_fm_breadcrumbs input').keypress(function(e) {
 	    if(e.which == 13) {
 	        var path = normalize_path($(this).val());
-	        console.log('path=' + path);
 	        $('#ocp_fm_tree').ocp_tree('open_item', path);
 	    }
 	});
 
 	$('#ocp_fm_parent').click(function() {
 		var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
-		console.log('path=' + path);
 		path = dirname(path);
-		console.log('path=' + path);
 		$('#ocp_fm_tree').ocp_tree('open_item', path);
 	});
 
@@ -224,7 +221,8 @@ $(document).ready(function() {
 				try {
 					ajax_mv(normalize_path(path + '/' + old_name), normalize_path(path + '/' + new_name));
 				} catch (e) {
-					alert('Error: ' + e);
+					$('#ocp_misc_error_dialog').find('span').html(e);
+					$('#ocp_misc_error_dialog').ocp_dialog('open');
 					$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
 					return;
 				}
@@ -246,7 +244,8 @@ $(document).ready(function() {
 		var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
 		var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
 		if (!row) {
-			alert('Please select a file/folder.');
+			$('#ocp_misc_error_dialog').find('span').html('Please select a file/folder.');
+			$('#ocp_misc_error_dialog').ocp_dialog('open');
 			return;
 		}
 		$('#ocp_fm_rename_dialog #ocp_fm_new_name').val(row.meta_data.name);
@@ -270,7 +269,8 @@ $(document).ready(function() {
 				try {
 					ajax_rm(p);
 				} catch (e) {
-					alert('Error: ' + e);
+					$('#ocp_misc_error_dialog').find('span').html(e);
+					$('#ocp_misc_error_dialog').ocp_dialog('open');
 					return;
 				}
 
@@ -289,7 +289,8 @@ $(document).ready(function() {
 		var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
 		var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
 		if (!row) {
-			alert('Please select a file/folder.');
+			$('#ocp_misc_error_dialog').find('span').html('Please select a file/folder.');
+			$('#ocp_misc_error_dialog').ocp_dialog('open');
 			return;
 		}
 		$('#ocp_fm_remove_dialog span').html(row.meta_data.name);
@@ -315,7 +316,8 @@ $(document).ready(function() {
 				tree.ocp_tree('open_item', path);
 			});
 		} catch (e) {
-			alert('Error: ' + e);
+			$('#ocp_misc_error_dialog').find('span').html(e);
+			$('#ocp_misc_error_dialog').ocp_dialog('open');
 			return;
 		}
 		$('#ocp_fm_file').val('');

@@ -43,7 +43,6 @@ $.widget( "ui.ocp_dialog", {
 
 		this._set_dialog_content();
 
-		this._center_dialog();
 //		this.element.ocp_layout_3r({
 //			header_h: 30,
 //			footer_h: 40
@@ -113,6 +112,7 @@ $.widget( "ui.ocp_dialog", {
 	},
 
 	open: function() {
+		this._center_dialog();
 		this.back_screen.show();
 		this.element.show();
 		this.element.find('input').focus();

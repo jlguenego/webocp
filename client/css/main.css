@@ -227,3 +227,8 @@ a, a:link, a:visited, a:hover, a:active {
 	text-decoration: none;
 	color: #E5391F;
 }
+
+.ocp_error_msg {
+	display: block;
+	padding: 10px 40px;
+}

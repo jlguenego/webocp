@@ -28,5 +28,13 @@ $(document).ready(function() {
 		general_settings_dialog.find('#server_base_url').val(g_server_base_url);
 	});
 
+	$('#ocp_misc_error_dialog').ocp_dialog({
+		buttons: {
+			OK: function() {
+				$('#ocp_misc_error_dialog').ocp_dialog('close');
+			}
+		}
+	});
+
 	$('.ocp_footer').html($('#ocp_data_footer').html());
 });
