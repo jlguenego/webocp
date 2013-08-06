@@ -20,7 +20,8 @@ String.prototype.getFileExtention = function() {
     return (/[.]/.exec(this)) ? /[^.]+$/.exec(this) : undefined;
 };
 
-var g_ocp_client;
+var g_ocp_client = null;
+var g_session = null;
 
 function ocp_save_local() {
 	if (localStorage) {
@@ -33,10 +34,13 @@ function ocp_restore_local() {
 		var obj = localStorage.getItem('ocp_client');
 		if (obj) {
 			g_ocp_client = JSON.parse(obj);
+			if (g_ocp_client.session) {
+				g_session = g_ocp_client.session;
+			}
 		} else {
 			g_ocp_client = {
 				server_base_url: 'http://localhost',
-				session: {}
+				session: null
 			};
 		}
 	}

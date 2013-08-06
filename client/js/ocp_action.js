@@ -1,5 +1,4 @@
 var g_request = {};
-var g_session = null;
 
 function build_request_from_fi(href) {
 	var fi = get_uri_fi(href);
@@ -23,6 +22,10 @@ function ocp_action() {
 
 	switch (g_request.action) {
 		case 'login':
+			if (ocp_user_is_logged()) {
+				window.location.hash = '#file_manager';
+				return;
+			}
 			ocp_display('login_page');
 			break;
 		case 'perform_login':
@@ -63,6 +66,7 @@ function ocp_action_login() {
 
 		var email = $('#ocp_lg_email').val();
 		var password = $('#ocp_lg_password').val();
+		var remember_me = $('#ocp_lg_remember_me').is(':checked');
 
 		var public_address = ocp_client.hash(email);
 		var public_content = {
@@ -89,6 +93,11 @@ function ocp_action_login() {
 		g_session = {};
 		var email = $('#ocp_lg_email').val();
 		g_session.public_address = public_address;
+
+		if (remember_me) {
+			g_ocp_client.session = g_session;
+			ocp_save_local();
+		}
 	} catch (e) {
 		window.location.hash = '#login';
 		ocp_error_manage(e);
