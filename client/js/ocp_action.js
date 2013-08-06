@@ -98,6 +98,10 @@ function ocp_action_login() {
 			g_ocp_client.session = g_session;
 			ocp_save_local();
 		}
+
+		$('#ocp_lg_email').val('');
+		$('#ocp_lg_password').val('');
+		$('#ocp_lg_remember_me').prop('checked', false);
 	} catch (e) {
 		window.location.hash = '#login';
 		ocp_error_manage(e);
@@ -169,6 +173,11 @@ function ocp_action_register() {
 		});
 		g_session = {};
 		g_session.public_address = public_address;
+
+		$('#ocp_reg_name').val('');
+		$('#ocp_reg_email').val('');
+		$('#ocp_reg_password').val('');
+		$('#register_checkbox').prop('checked', false);
 		ocp_display('register_success_page');
 	} catch (e) {
 		window.location.hash = '#register';
