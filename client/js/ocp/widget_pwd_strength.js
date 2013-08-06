@@ -66,11 +66,8 @@ $.widget( "ui.ocp_pwd_strength", {
 
 	_sync_strength: function() {
 		var pwd = this.element.find('input[type=password]').val();
-		console.log('pwd=' + pwd);
 		var strength = this.options.pwd_strength(pwd);
-		console.log('strength=' + strength);
 		var txt = this.options.strength_msg_a[strength];
-		console.log('txt=' + txt);
 		this.text_block.html(txt);
 		var classname = 'good' + strength;
 		this.strength_block.removeClass('good0 good1 good2 good3 good4').addClass(classname);

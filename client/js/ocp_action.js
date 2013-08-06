@@ -17,8 +17,6 @@ function build_request_from_fi(href) {
 }
 
 function ocp_action() {
-	console.log('ocp_action');
-	console.log(g_request);
 	if (!g_request.action) {
 		ocp_display('cover_page');
 		return;
@@ -63,7 +61,6 @@ function ocp_action_logout() {
 }
 
 function ocp_display(page_id) {
-	console.log('ocp_display: ' + page_id);
 	$('.page_content').css('display', 'none');
 	$('#' + page_id).css('display', 'block');
 	$('#page').ocp_header_content('set_content', $('#' + page_id));
@@ -85,14 +82,32 @@ function ocp_action_register() {
 	try {
 		var name = $('#ocp_reg_name').val();
 		var email = $('#ocp_reg_email').val();
-		var pass = $('#ocp_reg_password').val();
+		var password = $('#ocp_reg_password').val();
 
 		ocp_val_form_validation('register');
-
-		ajax_register({
-			name: name,
+		console.log('public_address');
+		var public_address = ocp_client.hash(email);
+		var public_content = {
 			email: email,
-			password: pass
+			name: name
+		};
+		console.log('private_address');
+		var private_address = ocp_client.hash(email + password);
+		var obj = {
+			root_dir: public_address,
+		};
+		var private_content = ocp_client.pcrypt(password, ocp_client.serialize(obj));
+
+		console.log('ajax_register');
+		ajax_register({
+			public_object: {
+				address: public_address,
+				content: public_content
+			},
+			private_object: {
+				address: private_address,
+				content: private_content
+			}
 		});
 		ocp_display('register_success_page');
 	} catch (e) {

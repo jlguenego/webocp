@@ -14,7 +14,7 @@ function ajax_command(data) {
 			console.log(data);
 			var output = $.parseJSON(data);
 			if (output.error) {
-				throw output.error;
+				throw new OCPException(output.error);
 			}
 			if (output.result) {
 				result = output.result;
@@ -96,7 +96,7 @@ function ajax_upload_file(path, form, after_success) {
 			try {
 				var output = $.parseJSON(data);
 				if (output.error) {
-					throw output.error;
+					throw new OCPException(output.error);
 				}
 				if (output.result) {
 					result = output.result;
