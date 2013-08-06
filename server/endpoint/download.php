@@ -5,6 +5,7 @@
 	require_once(BASE_DIR . '/include/constant.inc');
 
 	$path = $_GET['path'];
+	debug('path=' . $path);
 	$name = basename($path);
 	$filename = ROOT . $path;
 	$fp = fopen($filename, 'rb');

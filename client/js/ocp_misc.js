@@ -1,5 +1,12 @@
 var g_server_base_url = 'http://localhost';
 
+function ocp_error_manage(e) {
+	console.log(e);
+	console.log(stacktrace());
+	$('#ocp_misc_error_dialog').find('span').html(e.msg);
+	$('#ocp_misc_error_dialog').ocp_dialog('open');
+}
+
 $(document).ready(function() {
 	$('#page').ocp_header_content({ content: $('#cover_page') });
 

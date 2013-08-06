@@ -1,6 +1,7 @@
 var g_request = {};
 
 var g_user_is_logged = false;
+var g_session = {};
 
 function build_request_from_fi(href) {
 	var fi = get_uri_fi(href);
@@ -52,7 +53,18 @@ function ocp_action() {
 }
 
 function ocp_action_authenticate() {
-	g_user_is_logged = true;
+	try {
+		g_user_is_logged = true;
+		ocp_val_form_validation('login');
+		g_session = {};
+		var email = $('#ocp_lg_email').val();
+		g_session.public_address = ocp_client.hash(email);
+	} catch (e) {
+		window.location.hash = '#register';
+		ocp_error_manage(e);
+		return false;
+	}
+
 	return g_user_is_logged;
 }
 
@@ -109,6 +121,8 @@ function ocp_action_register() {
 				content: private_content
 			}
 		});
+		g_session = {};
+		g_session.public_address = public_address;
 		ocp_display('register_success_page');
 	} catch (e) {
 		window.location.hash = '#register';

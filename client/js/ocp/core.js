@@ -56,13 +56,6 @@ function get_uri_fi(uri) {
 	return result;
 }
 
-function ocp_error_manage(e) {
-	console.log(e);
-	console.log(stacktrace());
-	$('#ocp_misc_error_dialog').find('span').html(e.msg);
-	$('#ocp_misc_error_dialog').ocp_dialog('open');
-}
-
 function stacktrace() {
 	function st2(f) {
 		if (!f) {

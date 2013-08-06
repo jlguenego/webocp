@@ -6,6 +6,10 @@ function ocp_val_form_validation(form_name) {
 			ocp_val_check_empty($('#ocp_reg_password'));
 			ocp_val_check_checked($('#register_checkbox'), 'You must agree with the OCP Terms of Service.');
 			break;
+		case 'login':
+			ocp_val_check_mail($('#ocp_lg_email'));
+			ocp_val_check_empty($('#ocp_lg_password'));
+			break;
 		default:
 	}
 }

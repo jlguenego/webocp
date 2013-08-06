@@ -318,8 +318,4 @@ $(document).ready(function() {
 		$('#ocp_fm_file').val('');
 	});
 	// UPLOAD FILE END
-
-
-	// IN THE END
-	$('#ocp_fm_tree').ocp_tree('open_item', '/');
 });

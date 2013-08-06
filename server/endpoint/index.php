@@ -1,6 +1,6 @@
 <?php
 	//é
-	error_reporting(E_ERROR|E_PARSE);
+	error_reporting(E_ERROR|E_WARNING|E_PARSE);
 	header('Access-Control-Allow-Origin: *');
 	header("Content-Type:text/plain; charset=UTF-8;");
 	define("BASE_DIR", dirname(dirname(__FILE__)));
@@ -51,7 +51,7 @@
 		try {
 			$path = ROOT.$_GET['path'];
 			$name = $_GET['name'];
-			if (!mkdir($path . '/' . $name)) {
+			if (!@mkdir($path . '/' . $name)) {
 				throw new Exception('Cannot create the folder with path: ' . $path);
 			}
 		} catch (Exception $e) {
@@ -97,7 +97,7 @@
 	function action_ls() {
 		$output = array();
 		try {
-			$path = ROOT.$_GET['path'];
+			$path = ROOT . $_GET['path'];
 			$path = iconv('UTF-8', 'CP1252', $path);
 			$list = ls($path);
 			$files = array();
@@ -141,22 +141,18 @@
 		echo json_encode(array($_GET, $_FILES));
 	}
 
-	function action_download_file() {
-		$path = $_GET['path'];
-		if (!file_exists(ROOT.$path)) {
-			throw new Exception("This file already exists:\n\n" . '"' . $path . '"');
-		}
-		$input_name = $_GET['input_name'];
-		$filename = get_file($input_name);
-		rename($filename, ROOT.$path);
-
-		echo json_encode(array($_GET, $_FILES));
-	}
-
 	function action_register() {
 		$output = array();
 		try {
-			debug_r('_GET', $content);
+			debug_r('_GET', $_GET);
+			$root_dir = ROOT . '/' . $_GET['account']['public_object']['address'];
+			debug('path='.$root_dir);
+			if (is_dir($root_dir)) {
+				throw new Exception('This account already exists.');
+			}
+			if (!@mkdir($root_dir)) {
+				throw new Exception('Cannot create your personal folder.');
+			}
 			$output['result'] = 'OK';
 		} catch (Exception $e) {
 			$output['error'] = $e->getMessage();

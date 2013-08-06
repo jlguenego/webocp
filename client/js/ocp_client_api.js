@@ -37,7 +37,7 @@ function ajax_command(data) {
 function ajax_ls(path) {
 	var result = ajax_command({
 		action: 'ls',
-		path: path
+		path: '/' + g_session.public_address + path
 	});
 
 	var grid_result = ocp_build_grid_data_from_ls_enpoint(result, path);
@@ -51,7 +51,7 @@ function ajax_ls(path) {
 function ajax_mkdir(path, name) {
 	ajax_command({
 		action: 'mkdir',
-		path: path,
+		path: '/' + g_session.public_address + path,
 		name: name
 	});
 }
@@ -59,15 +59,15 @@ function ajax_mkdir(path, name) {
 function ajax_mv(old_path, new_path) {
 	ajax_command({
 		action: 'mv',
-		old_path: old_path,
-		new_path: new_path
+		old_path: '/' + g_session.public_address + old_path,
+		new_path: '/' + g_session.public_address + new_path
 	});
 }
 
 function ajax_rm(path) {
 	ajax_command({
 		action: 'rm',
-		path: path
+		path: '/' + g_session.public_address + path
 	});
 }
 
@@ -78,7 +78,7 @@ function ajax_upload_file(path, form, after_success) {
 	var formData = new FormData(form);
 	formData.append('action', 'upload_file');
 	formData.append('input_name', $(form).find('input').attr('name'));
-	formData.append('path', path);
+	formData.append('path', '/' + g_session.public_address + path);
 	var result = null;
     $.ajax({
         url: g_server_base_url + '/webocp/server/endpoint/',  //server script to process data
@@ -123,7 +123,7 @@ function ajax_upload_file(path, form, after_success) {
 
 function ajax_download_file(path) {
 	console.log('ajax_download_file, path=' + path);
-	window.location = g_server_base_url + '/webocp/server/endpoint/download.php?path=' + path;
+	window.location = g_server_base_url + '/webocp/server/endpoint/download.php?path=' + '/' + g_session.public_address + path;
 }
 
 function ajax_register(account) {
