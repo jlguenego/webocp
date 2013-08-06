@@ -133,13 +133,28 @@
 }
 
 .ocp_reg_pass_txt {
-	display: none;
 	float: right;
 	-moz-text-shadow: 0px 1px 1px #FFF;
 	-webkit-text-shadow: 0px 1px 1px #FFF;
 	text-shadow: 0px 1px 1px #FFF;
 	color: #6C9D3F;
 	line-height: 25px;
+}
+
+.good1 .ocp_reg_pass_txt {
+	color: #ff2a0b;
+}
+
+.good2 .ocp_reg_pass_txt {
+	color: #ffc926;
+}
+
+.good3 .ocp_reg_pass_txt {
+	color: #7ab148;
+}
+
+.good4 .ocp_reg_pass_txt {
+	color: #7dd016;
 }
 
 .checkboxOff {
