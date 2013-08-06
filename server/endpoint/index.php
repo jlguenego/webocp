@@ -35,6 +35,9 @@
 			case 'register':
 				action_register();
 				break;
+			case 'login':
+				action_login();
+				break;
 			default:
 				throw new Exception('Unknown action: ' . $_GET['action']);
 		}
@@ -152,6 +155,23 @@
 			}
 			if (!@mkdir($root_dir)) {
 				throw new Exception('Cannot create your personal folder.');
+			}
+			$output['result'] = 'OK';
+		} catch (Exception $e) {
+			$output['error'] = $e->getMessage();
+		}
+		$result = json_encode($output);
+		echo $result;
+	}
+
+	function action_login() {
+		$output = array();
+		try {
+			debug_r('_GET', $_GET);
+			$root_dir = ROOT . '/' . $_GET['account']['public_object']['address'];
+			debug('path='.$root_dir);
+			if (!is_dir($root_dir)) {
+				throw new Exception('This account does not exist.');
 			}
 			$output['result'] = 'OK';
 		} catch (Exception $e) {

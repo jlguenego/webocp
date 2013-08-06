@@ -7,7 +7,7 @@ function ajax_command(data) {
 	var result = null;
 	$.ajax({
 		type: "GET",
-		url: g_server_base_url + '/webocp/server/endpoint/',
+		url: g_ocp_client.server_base_url + '/webocp/server/endpoint/',
 		async: false,
 		data: data,
 		success: function(data) {
@@ -81,7 +81,7 @@ function ajax_upload_file(path, form, after_success) {
 	formData.append('path', '/' + g_session.public_address + path);
 	var result = null;
     $.ajax({
-        url: g_server_base_url + '/webocp/server/endpoint/',  //server script to process data
+        url: g_ocp_client.server_base_url + '/webocp/server/endpoint/',  //server script to process data
         type: 'POST',
         data: formData,
         xhr: function() {  // custom xhr
@@ -123,12 +123,19 @@ function ajax_upload_file(path, form, after_success) {
 
 function ajax_download_file(path) {
 	console.log('ajax_download_file, path=' + path);
-	window.location = g_server_base_url + '/webocp/server/endpoint/download.php?path=' + '/' + g_session.public_address + path;
+	window.location = g_ocp_client.server_base_url + '/webocp/server/endpoint/download.php?path=' + '/' + g_session.public_address + path;
 }
 
 function ajax_register(account) {
 	ajax_command({
 		action: 'register',
+		account: account
+	});
+}
+
+function ajax_login(account) {
+	ajax_command({
+		action: 'login',
 		account: account
 	});
 }

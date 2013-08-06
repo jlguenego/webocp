@@ -1,5 +1,3 @@
-jQuery.support.cors = true; // force cross-site scripting (IE specific)
-
 var ocp = {};
 
 ocp.base = '';
@@ -7,6 +5,9 @@ ocp.css = {};
 ocp.css.theme = 'default';
 
 $.ocp = {};
+
+// BROWSER CHECKING
+jQuery.support.cors = true; // force cross-site scripting (IE specific)
 
 console = console || {};
 console.log = console.log || function() {};
@@ -19,12 +20,39 @@ String.prototype.getFileExtention = function() {
     return (/[.]/.exec(this)) ? /[^.]+$/.exec(this) : undefined;
 };
 
+var g_ocp_client;
+
+function ocp_save_local() {
+	if (localStorage) {
+		localStorage.setItem('ocp_client', JSON.stringify(g_ocp_client));
+	}
+}
+
+function ocp_restore_local() {
+	if (localStorage) {
+		var obj = localStorage.getItem('ocp_client');
+		if (obj) {
+			g_ocp_client = JSON.parse(obj);
+		} else {
+			g_ocp_client = {
+				server_base_url: 'http://localhost',
+			};
+		}
+	}
+}
+
 function normalize_path(path) {
     path = path.replace(/[\/]{2,}/g,'/');
 	if (path != '/' && path.endsWith('/')) {
 		return path.substring(0, path.length - 1);
     }
 	return path;
+}
+
+function strip_slash(str) {
+	if (uri.endsWith('/')) {
+		return str.substring(0, str.length - 1);
+    }
 }
 
 function basename(path) {

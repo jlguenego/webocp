@@ -64,8 +64,6 @@ $.widget( "ui.ocp_menu", {
 	},
 
 	_show_menu: function() {
-		console.log('show_menu');
-		console.log(this.menu_body);
 		this._set_body_offset();
 		this.menu_body.show();
 		this.menu_transition.show();

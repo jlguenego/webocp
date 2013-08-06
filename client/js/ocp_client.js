@@ -3,8 +3,6 @@ function OCP(type) {
 
 OCP.prototype.hash = function(content) {
     var result = CryptoJS.SHA1(content);
-    console.log('hash');
-    console.log(result);
     return result.toString();
 };
 

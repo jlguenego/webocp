@@ -29,15 +29,17 @@ function ocp_action() {
 			break;
 		case 'perform_login':
 			if (ocp_action_authenticate()) {
-				$('#ocp_fm_tree').ocp_tree('open_item', '/');
-				ocp_display('file_manager');
+//				if (localStorage.server_base_url) {
+//					$('#ocp_fm_tree').ocp_tree('open_item', '/');
+//				}
+				window.location.hash = '#file_manager';
 			} else {
-				ocp_display('login_page');
+				window.location.hash = '#login';
 			}
 			break;
 		case 'logout':
 			ocp_action_logout();
-			ocp_display('cover_page');
+			window.location.hash = '#';
 			break;
 		case 'file_manager':
 			ocp_display('file_manager');
@@ -55,13 +57,39 @@ function ocp_action() {
 
 function ocp_action_authenticate() {
 	try {
-		g_user_is_logged = true;
 		ocp_val_form_validation('login');
+
+		var email = $('#ocp_lg_email').val();
+		var password = $('#ocp_lg_password').val();
+
+		var public_address = ocp_client.hash(email);
+		var public_content = {
+			email: email,
+			name: name
+		};
+		var private_address = ocp_client.hash(email + password);
+		var obj = {
+			root_dir: public_address,
+		};
+		var private_content = ocp_client.pcrypt(password, ocp_client.serialize(obj));
+
+		ajax_login({
+			public_object: {
+				address: public_address,
+				content: public_content
+			},
+			private_object: {
+				address: private_address,
+				content: private_content
+			}
+		});
+
 		g_session = {};
 		var email = $('#ocp_lg_email').val();
 		g_session.public_address = ocp_client.hash(email);
+		g_user_is_logged = true;
 	} catch (e) {
-		window.location.hash = '#register';
+		window.location.hash = '#login';
 		ocp_error_manage(e);
 		return false;
 	}
@@ -99,20 +127,17 @@ function ocp_action_register() {
 		var password = $('#ocp_reg_password').val();
 
 		ocp_val_form_validation('register');
-		console.log('public_address');
 		var public_address = ocp_client.hash(email);
 		var public_content = {
 			email: email,
 			name: name
 		};
-		console.log('private_address');
 		var private_address = ocp_client.hash(email + password);
 		var obj = {
 			root_dir: public_address,
 		};
 		var private_content = ocp_client.pcrypt(password, ocp_client.serialize(obj));
 
-		console.log('ajax_register');
 		ajax_register({
 			public_object: {
 				address: public_address,
@@ -135,8 +160,6 @@ function ocp_action_register() {
 
 $(document).ready(function() {
 	$(window).on('hashchange', function () {
-    	console.log('window.onhashchange');
-    	console.log('window.location.hash=' + window.location.hash);
         build_request_from_fi(window.location.hash);
         ocp_action();
     });
