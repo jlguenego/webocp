@@ -9,55 +9,67 @@
 		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
 		<!-- END JQUERY CDN -->
 
-		<!-- BLOB BUILDER -->
-		<script src="../_ext/BlobBuilder.min.js"></script>
-		<!-- END BLOB BUILDER -->
-
-		<!-- FILE SAVER -->
-		<script src="../_ext/FileSaver.min.js"></script>
-		<!-- END FILE SAVER -->
-
-		<script src="../js/ocp-client.js"></script>
+		<script src="../js/ocp_client.js"></script>
 		<style>
 			#drop_zone {
 				font-size: 30px;
 				text-align: center;
 				width: 100%;
-				height: 400px;
+				height: 200px;
 				border: 1px solid black;
 			}
 		</style>
 	</head>
 	<body>
 		<div id="drop_zone">Drop files here</div>
-		<output id="list"></output>
-
 		<script>
+			function error(e) {
+				console.log('error');
+				console.log(e);
+			}
+			function error_from_readentries(e) {
+				console.log('error_from_readentries');
+				console.log(e);
+			}
+
+			function traverseFileTree(item, path) {
+				path = path || "";
+				if (item.isFile) {
+					// Get file
+					item.file(function(file) {
+						console.log("File: " + path + file.name);
+					}, error);
+				} else if (item.isDirectory) {
+					// Get folder contents
+					var dirReader = item.createReader();
+					dirReader.readEntries(function(entries) {
+						for (var i=0; i<entries.length; i++) {
+							traverseFileTree(entries[i], path + item.name + "/");
+						}
+					}, error_from_readentries);
+				}
+			}
+
 			function handleFileSelect(evt) {
 				evt.stopPropagation();
 				evt.preventDefault();
 
-				var files = evt.dataTransfer.files; // FileList object.
-
-				// files is a FileList of File objects. List some properties.
-				var output = [];
-				for (var i = 0, f; f = files[i]; i++) {
-					output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-						f.size, ' bytes, last modified: ',
-						f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-						'</li>'
-					);
+				var items = evt.dataTransfer.items;
+				for (var i = 0; i < items.length; i++) {
+					var item = items[i].webkitGetAsEntry();
+					if (item) {
+						traverseFileTree(item);
+					}
 				}
-				$('#list').html('<ul>' + output.join('') + '</ul>');
 			}
 
 			function handleDragOver(evt) {
 				evt.stopPropagation();
 				evt.preventDefault();
-				evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+				evt.dataTransfer.dropEffect = 'copy';
 			}
 
-			// Setup the dnd listeners.
+			//Setup the dnd listeners.
 			var dropZone = document.getElementById('drop_zone');
 			dropZone.addEventListener('dragover', handleDragOver, false);
 			dropZone.addEventListener('drop', handleFileSelect, false);
