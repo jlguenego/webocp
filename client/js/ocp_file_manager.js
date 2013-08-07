@@ -302,13 +302,13 @@ $(document).ready(function() {
 	$('#ocp_fm_file').change(function() {
 		var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
 		var form = $('#ocp_fm_file_form')[0];
-		var file = $('#ocp_fm_file').get(0).files[0];
-		if (!file) {
+		var file_nbr = $('#ocp_fm_file').get(0).files.length;
+		if (file_nbr == 0) {
 			return;
 		}
 
 		try {
-			ajax_upload_file(normalize_path(path + '/' + file.name), form, function() {
+			ajax_upload_file(normalize_path(path), form, function() {
 				tree.ocp_tree('open_item', path);
 			});
 		} catch (e) {

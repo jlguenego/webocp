@@ -77,7 +77,10 @@ function ajax_upload_file(path, form, after_success) {
 
 	var formData = new FormData(form);
 	formData.append('action', 'upload_file');
-	formData.append('input_name', $(form).find('input').attr('name'));
+
+	var fieldname = $(form).find('input').attr('name');
+	fieldname = fieldname.substr(0, fieldname.length - 2);
+	formData.append('input_name', fieldname);
 	formData.append('path', '/' + g_session.public_address + path);
 	var result = null;
     $.ajax({

@@ -133,13 +133,26 @@
 	}
 
 	function action_upload_file() {
+		debug_r('_GET', $_GET);
+		debug_r('_FILES', $_FILES);
 		$path = $_GET['path'];
-		if (file_exists(ROOT.$path)) {
-			throw new Exception("This file already exists:\n\n" . '"' . $path . '"');
-		}
 		$input_name = $_GET['input_name'];
-		$filename = get_file($input_name);
-		rename($filename, ROOT.$path);
+
+		if (!isset($_FILES[$input_name])) {
+			throw new Exception("Cannot retrieve file uploaded with fieldname=$filename");
+		}
+
+		$file_nbr = count($_FILES[$input_name]['name']);
+
+		for ($i = 0; $i < $file_nbr; $i++) {
+			$filename = ROOT . $path . '/' . $_FILES[$input_name]['name'][$i];
+			$tmp_filename = get_file($input_name, $i);
+
+			if (file_exists($filename)) {
+				unlink($filename);
+			}
+			rename($tmp_filename, $filename);
+		}
 
 		echo json_encode(array($_GET, $_FILES));
 	}
