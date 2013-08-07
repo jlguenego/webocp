@@ -322,9 +322,7 @@ $(document).ready(function() {
 	// UPLOAD FOLDER
 	$('#ocp_fm_dir_button').click(function() {
 		if (!window.webkitURL) {
-			ocp_error_manage( {
-				msg: 'This action is only available on <a href="http://en.wikipedia.org/wiki/List_of_web_browsers#WebKit-based" target="_blank">Webkit browsers</a>. (Chrome, Safari, ...)'
-			} );
+			ocp_info('This action is only available on <a href="http://en.wikipedia.org/wiki/List_of_web_browsers#WebKit-based" target="_blank">Webkit browsers</a>. (Chrome, Safari, ...)');
 			return;
 		}
 		$('#ocp_fm_dir').trigger('click');

@@ -8,6 +8,11 @@ function ocp_error_manage(e) {
 	$('#ocp_misc_error_dialog').ocp_dialog('open');
 }
 
+function ocp_info(msg) {
+	$('#ocp_misc_info_dialog').find('span').html(msg);
+	$('#ocp_misc_info_dialog').ocp_dialog('open');
+}
+
 $(document).ready(function() {
 	$('#page').ocp_header_content({ content: $('#cover_page') });
 
@@ -43,6 +48,14 @@ $(document).ready(function() {
 		buttons: {
 			OK: function() {
 				$('#ocp_misc_error_dialog').ocp_dialog('close');
+			}
+		}
+	});
+
+	$('#ocp_misc_info_dialog').ocp_dialog({
+		buttons: {
+			OK: function() {
+				$('#ocp_misc_info_dialog').ocp_dialog('close');
 			}
 		}
 	});
