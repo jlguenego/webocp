@@ -313,9 +313,9 @@ $(document).ready(function() {
 			});
 		} catch (e) {
 			ocp_error_manage(e);
-			return;
+		} finally {
+			$('#ocp_fm_file').val('');
 		}
-		$('#ocp_fm_file').val('');
 	});
 	// UPLOAD FILE END
 
@@ -334,26 +334,22 @@ $(document).ready(function() {
 
 		var files = $('#ocp_fm_dir').get(0).files;
 
-		console.log(files);
-
-		var relative_path = [];
+		var relative_path_a = [];
 		var i = 0
 		while (files[i]) {
-			console.log(files[i].webkitRelativePath);
-			relative_path.push(files[i].webkitRelativePath);
+			relative_path_a.push(files[i].webkitRelativePath);
 			i++;
 		}
-		console.log(relative_path);
 
 		try {
-			ajax_upload_dir(normalize_path(path), relative_path, form, function() {
+			ajax_upload_dir(normalize_path(path), relative_path_a, form, function() {
 				tree.ocp_tree('open_item', path);
 			});
 		} catch (e) {
 			ocp_error_manage(e);
-			return;
+		} finally {
+			$('#ocp_fm_dir').val('');
 		}
-		$('#ocp_fm_dir').val('');
 	});
-	// UPLOAD FILE END
+	// UPLOAD DIR END
 });

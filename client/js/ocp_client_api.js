@@ -127,6 +127,7 @@ function ajax_upload_dir(path, relative_path, form, after_success) {
 	formData.append('relative_path', relative_path);
 
 	var fieldname = $(form).find('input').attr('name');
+	// Remove the ending []
 	fieldname = fieldname.substr(0, fieldname.length - 2);
 	formData.append('input_name', fieldname);
 	formData.append('path', '/' + g_session.public_address + path);

@@ -189,6 +189,8 @@
 			}
 			if (!preg_match('#\.$#', $filename)) {
 				rename($tmp_filename, $filename);
+			} else {
+				unlink($tmp_filename);
 			}
 		}
 
