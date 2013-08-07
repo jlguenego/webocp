@@ -29,6 +29,9 @@
 			case 'upload_file':
 				action_upload_file();
 				break;
+			case 'upload_dir':
+				action_upload_dir();
+				break;
 			case 'download_file':
 				action_download_file();
 				break;
@@ -152,6 +155,41 @@
 				unlink($filename);
 			}
 			rename($tmp_filename, $filename);
+		}
+
+		echo json_encode(array($_GET, $_FILES));
+	}
+
+	function action_upload_dir() {
+		debug_r('_GET', $_GET);
+		debug_r('_FILES', $_FILES);
+		$path = $_GET['path'];
+		$relative_path = explode(',', $_GET['relative_path']);
+		$input_name = $_GET['input_name'];
+
+		if (!isset($_FILES[$input_name])) {
+			throw new Exception("Cannot retrieve file uploaded with fieldname=$filename");
+		}
+
+		$file_nbr = count($_FILES[$input_name]['name']);
+
+		for ($i = 0; $i < $file_nbr; $i++) {
+			$filename = ROOT . $path . '/' . $relative_path[$i];
+			debug('filename=' . $filename);
+			$tmp_filename = get_file($input_name, $i);
+
+			if (file_exists($filename)) {
+				unlink($filename);
+			}
+
+
+			$dir = dirname($filename);
+			if ((!is_dir($dir)) && (!@mkdir($dir, 0777, true))) {
+				throw new Exception('Cannot create the folder with path: ' . $dir);
+			}
+			if (!preg_match('#\.$#', $filename)) {
+				rename($tmp_filename, $filename);
+			}
 		}
 
 		echo json_encode(array($_GET, $_FILES));

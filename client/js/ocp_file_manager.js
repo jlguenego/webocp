@@ -318,4 +318,44 @@ $(document).ready(function() {
 		$('#ocp_fm_file').val('');
 	});
 	// UPLOAD FILE END
+
+	// UPLOAD FOLDER
+	$('#ocp_fm_dir_button').click(function() {
+		if (!window.webkitURL) {
+			ocp_error_manage( {
+				msg: 'This action is only available on <a href="http://en.wikipedia.org/wiki/List_of_web_browsers#WebKit-based" target="_blank">Webkit browsers</a>. (Chrome, Safari, ...)'
+			} );
+			return;
+		}
+		$('#ocp_fm_dir').trigger('click');
+	});
+
+	$('#ocp_fm_dir').change(function() {
+		var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+		var form = $('#ocp_fm_dir_form')[0];
+
+		var files = $('#ocp_fm_dir').get(0).files;
+
+		console.log(files);
+
+		var relative_path = [];
+		var i = 0
+		while (files[i]) {
+			console.log(files[i].webkitRelativePath);
+			relative_path.push(files[i].webkitRelativePath);
+			i++;
+		}
+		console.log(relative_path);
+
+		try {
+			ajax_upload_dir(normalize_path(path), relative_path, form, function() {
+				tree.ocp_tree('open_item', path);
+			});
+		} catch (e) {
+			ocp_error_manage(e);
+			return;
+		}
+		$('#ocp_fm_dir').val('');
+	});
+	// UPLOAD FILE END
 });

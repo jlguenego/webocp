@@ -115,7 +115,7 @@
 								</ul>
 								<ul class="ocp_fm_button_group">
 									<li id="ocp_fm_file_button"><img src="image/up.png"/>Upload file</li>
-									<li><img src="image/folder-up.png"/>Upload folder</li>
+									<li id="ocp_fm_dir_button"><img src="image/folder-up.png"/>Upload folder</li>
 								</ul>
 							</div>
 							<div id="ocp_fm_breadcrumbs">
@@ -279,7 +279,10 @@
 			Are you sure you want to remove <span></span>?
 		</div>
 		<form style="display: none;" id="ocp_fm_file_form" enctype="multipart/form-data">
-			<input type="file" id="ocp_fm_file" name="file[]" multiple="" />
+			<input type="file" id="ocp_fm_file" name="file[]" multiple=""/>
+		</form>
+		<form style="display: none;" id="ocp_fm_dir_form" enctype="multipart/form-data">
+			<input type="file" id="ocp_fm_dir" name="dir[]" directory="" webkitdirectory="" mozdirectory="" />
 		</form>
 		<!-- FILE MANAGER OTHERS END -->
 
