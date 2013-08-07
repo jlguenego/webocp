@@ -101,7 +101,8 @@ function ocp_action_login() {
 
 		$('#ocp_lg_email').val('');
 		$('#ocp_lg_password').val('');
-		$('#ocp_lg_remember_me').prop('checked', false);
+		$('#ocp_lg_remember_me').prop('checked', false)
+			.parent().removeClass('checkboxOn').addClass('checkboxOff');
 	} catch (e) {
 		window.location.hash = '#login';
 		ocp_error_manage(e);
@@ -177,7 +178,8 @@ function ocp_action_register() {
 		$('#ocp_reg_name').val('');
 		$('#ocp_reg_email').val('');
 		$('#ocp_reg_password').val('');
-		$('#register_checkbox').prop('checked', false);
+		$('#register_checkbox').prop('checked', false)
+			.parent().removeClass('checkboxOn').addClass('checkboxOff');
 		ocp_display('register_success_page');
 	} catch (e) {
 		window.location.hash = '#register';
