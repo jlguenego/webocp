@@ -294,6 +294,28 @@ $(document).ready(function() {
 	});
 	// REMOVE END
 
+	var dir_list_a = [];
+
+	//DRAG AND DROP
+	$('#ocp_fm_file_form').bind('dragover', function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		e.originalEvent.dataTransfer.dropEffect = 'copy';
+	});
+
+	$('#ocp_fm_file_form').bind('drop', function(e) {
+		e.stopPropagation();
+		var items = e.originalEvent.dataTransfer.items;
+		for (var i = 0; i < items.length; i++) {
+			var item = items[i].webkitGetAsEntry();
+			if (item && item.isDirectory) {
+				dir_list_a.push(item.name);
+			}
+		}
+		console.log(dir_list_a);
+	});
+	//DRAG AND DROP END
+
 	// UPLOAD FILE
 	$('#ocp_fm_file_button').click(function() {
 		$('#ocp_fm_file').trigger('click');
@@ -310,11 +332,12 @@ $(document).ready(function() {
 		try {
 			ajax_upload_file(normalize_path(path), form, function() {
 				tree.ocp_tree('open_item', path);
-			});
+			}, dir_list_a);
 		} catch (e) {
 			ocp_error_manage(e);
 		} finally {
 			$('#ocp_fm_file').val('');
+			dir_list_a = [];
 		}
 	});
 	// UPLOAD FILE END
@@ -352,4 +375,6 @@ $(document).ready(function() {
 		}
 	});
 	// UPLOAD DIR END
+
+
 });

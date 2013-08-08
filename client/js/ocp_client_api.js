@@ -71,13 +71,14 @@ function ajax_rm(path) {
 	});
 }
 
-function ajax_upload_file(path, form, after_success) {
+function ajax_upload_file(path, form, after_success, dir_list_a) {
 	var formData = new FormData(form);
 	formData.append('action', 'upload_file');
 
 	var fieldname = $(form).find('input').attr('name');
 	fieldname = fieldname.substr(0, fieldname.length - 2);
 	formData.append('input_name', fieldname);
+	formData.append('dir_list', dir_list_a);
 	formData.append('path', '/' + g_session.public_address + path);
 	var result = null;
     $.ajax({

@@ -140,6 +140,7 @@
 		debug_r('_FILES', $_FILES);
 		$path = $_GET['path'];
 		$input_name = $_GET['input_name'];
+		$dir_list_a = explode(',', $_GET['dir_list']);
 
 		if (!isset($_FILES[$input_name])) {
 			throw new Exception("Cannot retrieve file uploaded with fieldname=$filename");
@@ -148,7 +149,11 @@
 		$file_nbr = count($_FILES[$input_name]['name']);
 
 		for ($i = 0; $i < $file_nbr; $i++) {
-			$filename = ROOT . $path . '/' . $_FILES[$input_name]['name'][$i];
+			$name = $_FILES[$input_name]['name'][$i];
+			if (in_array($name, $dir_list_a)) {
+				continue;
+			}
+			$filename = ROOT . $path . '/' . $name;
 			$tmp_filename = get_file($input_name, $i);
 
 			if (file_exists($filename)) {
