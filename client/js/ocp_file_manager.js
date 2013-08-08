@@ -81,6 +81,7 @@ function ocp_fm_dnd_drop(e) {
 
 function ocp_dnd_traverse_file_tree(item, path) {
 	path = path || "";
+	console.log("item.name=" + item.name);
 	if (item.isFile) {
 		// Get file
 		item.file(function(file) {
@@ -91,12 +92,12 @@ function ocp_dnd_traverse_file_tree(item, path) {
 			});
 		}, error);
 	} else if (item.isDirectory) {
+		var current_path = ocp_fm_get_current_path();
+		ajax_mkdir(normalize_path(current_path + '/' + path), item.name);
 		// Get folder contents
 		var dirReader = item.createReader();
 		dirReader.readEntries(function(entries) {
 			for (var i = 0; i < entries.length; i++) {
-				var current_path = ocp_fm_get_current_path();
-				ajax_mkdir(normalize_path(current_path + '/' + path), item.name);
 				ocp_dnd_traverse_file_tree(entries[i], path + item.name + "/");
 			}
 		}, error_from_readentries);
