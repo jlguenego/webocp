@@ -116,6 +116,10 @@ $.widget( "ui.ocp_grid", {
 		row.attr('id', id);
 		row.attr('data-rowid', index);
 
+		for (var metadata in data.meta_data) {
+			row.attr('data-md-' + metadata, data.meta_data[metadata]);
+		}
+
 		for (var colname in this.options.column) {
 			var cell = $('<div/>').appendTo(row);
 			cell.addClass('widget_grid_cell');

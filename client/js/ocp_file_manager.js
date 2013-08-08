@@ -131,21 +131,40 @@ function ocp_fm_upload_file_progress(e, path, name) {
 	var percent = Math.round((loaded * 100) / total);
 	var row = $('[data-rowid=' + id + ']');
 
+	var timestamp = ocp_now();
+
 	if (row.length == 0 && loaded < total) {
 		var data = {
 			"name": name,
 			"size": total,
 			"transfer_type": 'Upload',
 			"status": percent + '%',
-			"speed": 'N/A',
-			"elapsed_time": 'N/A',
-			"remaining_time": 'N/A'
+			"speed": '0 KB/s',
+			"elapsed_time": '0 s',
+			"remaining_time": 'N/A',
+			meta_data: {
+				loaded: loaded,
+				timestamp: timestamp,
+				start_t: timestamp
+			}
 		};
 
 		$('#ocp_fm_file_transfer').ocp_grid('add_row', data, id);
 		row = $('[data-rowid=' + id + ']');
 		row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar();
 	}
+	var prev_loaded = row.attr('data-md-loaded');
+	var prev_timestamp = row.attr('data-md-timestamp');
+	var speed = (loaded - prev_loaded) / (timestamp - prev_timestamp);
+	var start_t = row.attr('data-md-start_t');
+	var elapsed_t = ((timestamp - start_t) / 1000).toFixed(0);
+	var remaining_t = (((total - loaded) / speed) / 1000).toFixed(0);
+
+	row.attr('data-md-loaded', loaded);
+	row.attr('data-md-timestamp', timestamp);
+	row.find('.widget_grid_cell[data-colname=file_transfer_elapsed_time]').html(elapsed_t + ' s');
+	row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_t + ' s');
+	row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html((speed / 1024).toFixed(1) + ' KB/s');
 	row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', percent);
 
 	if (loaded >= total) {
