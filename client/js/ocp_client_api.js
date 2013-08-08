@@ -124,28 +124,34 @@ function ajax_upload_dir(path, relative_path, form, after_success) {
 	return result;
 }
 
-function ajax_upload_file(path, file, after_success) {
+function ajax_upload_file(path, file, after_success, on_progress) {
 	var formData = new FormData();
 	formData.append('input_name', 'file');
 	formData.append('path', '/' + g_session.public_address + path);
 	formData.append('file[]', file);
-	console.log(file);
 	var result = null;
     $.ajax({
         url: g_ocp_client.server_base_url + '/webocp/server/endpoint/?action=upload_file&file_size=' + file.size,  //server script to process data
         type: 'POST',
         data: formData,
+        async: true,
         xhr: function() {  // custom xhr
             var myXhr = $.ajaxSettings.xhr();
             if(myXhr.upload){ // check if upload property exists
-                //myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // for handling the progress of the upload
+                myXhr.upload.addEventListener('progress', function(e) {
+                	on_progress(e, file.name);
+                }, false); // for handling the progress of the upload
             }
             return myXhr;
         },
         beforeSend: function() {},
         success: function(data) {
 			try {
-				console.log(data);
+				var e = $.Event('progress');
+				e.total = 1;
+				e.loaded = 1;
+				on_progress(e, file.name);
+				//console.log(data);
 				var output = $.parseJSON(data);
 				if (output.error) {
 					throw new OCPException('Server answered: ' + output.error);

@@ -95,6 +95,8 @@ function ocp_dnd_traverse_file_tree(item, path) {
 			var current_path = ocp_fm_get_current_path();
 			ajax_upload_file(normalize_path(current_path + '/' + path), file, function() {
 				$('#ocp_fm_tree').ocp_tree('open_item', current_path);
+			}, function(e, filename) {
+				ocp_fm_upload_file_progress(e, normalize_path(path), filename);
 			});
 		}, error);
 	} else if (item.isDirectory) {
@@ -120,6 +122,39 @@ function error_from_readentries(e) {
 	console.log(e);
 }
 // DRAG AND DROP END
+
+// PROGRESS BAR
+function ocp_fm_upload_file_progress(e, path, name) {
+	var id = ocp_client.hash(normalize_path(path + '/' + name));
+	var total = e.total;
+	var loaded = e.loaded;
+	var percent = Math.round((loaded * 100) / total);
+	var row = $('[data-rowid=' + id + ']');
+
+	//console.log('percent=' + percent);
+
+	if (row.length == 0 && loaded < total) {
+		var data = {
+			"name": name,
+			"size": total,
+			"transfer_type": 'Upload',
+			"status": percent + '%',
+			"speed": 'N/A',
+			"elapsed_time": 'N/A',
+			"remaining_time": 'N/A'
+		};
+
+		$('#ocp_fm_file_transfer').ocp_grid('add_row', data, id);
+		row = $('[data-rowid=' + id + ']');
+	}
+	row.find('.widget_grid_cell[data-colname=file_transfer_status]').html(percent + '%');
+
+	if (loaded >= total) {
+		console.log('about to remove');
+		row.remove();
+	}
+}
+// PROGRESS BAR END
 
 $(document).ready(function() {
 	$('#file_manager').ocp_splitpane_v({
@@ -215,6 +250,7 @@ $(document).ready(function() {
 	});
 
 	$("#ocp_fm_file_transfer").ocp_grid({
+		id: 'file_transfer',
 		column: {
 			name: {
 				label: 'Name',
@@ -368,7 +404,7 @@ $(document).ready(function() {
 		var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
 		var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
 		if (!row) {
-			ocp_error_manage('Please select a file/folder.');
+			ocp_error_manage({ msg: 'Please select a file/folder.' });
 			return;
 		}
 		$('#ocp_fm_remove_dialog span').html(row.meta_data.name);
@@ -395,9 +431,10 @@ $(document).ready(function() {
 		try {
 			for (var i = 0; i < files.length; i++) {
 				var file = files[i];
-				console.log(file);
 				ajax_upload_file(normalize_path(path), file, function() {
 					tree.ocp_tree('open_item', path);
+				}, function(e, filename) {
+					ocp_fm_upload_file_progress(e, normalize_path(path), filename);
 				});
 			}
 		} catch (e) {
