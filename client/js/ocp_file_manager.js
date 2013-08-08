@@ -131,8 +131,6 @@ function ocp_fm_upload_file_progress(e, path, name) {
 	var percent = Math.round((loaded * 100) / total);
 	var row = $('[data-rowid=' + id + ']');
 
-	//console.log('percent=' + percent);
-
 	if (row.length == 0 && loaded < total) {
 		var data = {
 			"name": name,
@@ -150,7 +148,6 @@ function ocp_fm_upload_file_progress(e, path, name) {
 	row.find('.widget_grid_cell[data-colname=file_transfer_status]').html(percent + '%');
 
 	if (loaded >= total) {
-		console.log('about to remove');
 		row.remove();
 	}
 }
