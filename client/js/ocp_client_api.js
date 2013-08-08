@@ -71,14 +71,15 @@ function ajax_rm(path) {
 	});
 }
 
-function ajax_upload_file(path, form, after_success, dir_list_a) {
+function ajax_upload_dir(path, relative_path, form, after_success) {
 	var formData = new FormData(form);
-	formData.append('action', 'upload_file');
+	formData.append('action', 'upload_dir');
+	formData.append('relative_path', relative_path);
 
 	var fieldname = $(form).find('input').attr('name');
+	// Remove the ending []
 	fieldname = fieldname.substr(0, fieldname.length - 2);
 	formData.append('input_name', fieldname);
-	formData.append('dir_list', dir_list_a);
 	formData.append('path', '/' + g_session.public_address + path);
 	var result = null;
     $.ajax({
@@ -95,6 +96,7 @@ function ajax_upload_file(path, form, after_success, dir_list_a) {
         beforeSend: function() {},
         success: function(data) {
 			try {
+				console.log(data);
 				var output = $.parseJSON(data);
 				if (output.error) {
 					throw new OCPException(output.error);
@@ -122,16 +124,12 @@ function ajax_upload_file(path, form, after_success, dir_list_a) {
 	return result;
 }
 
-function ajax_upload_dir(path, relative_path, form, after_success) {
-	var formData = new FormData(form);
-	formData.append('action', 'upload_dir');
-	formData.append('relative_path', relative_path);
-
-	var fieldname = $(form).find('input').attr('name');
-	// Remove the ending []
-	fieldname = fieldname.substr(0, fieldname.length - 2);
-	formData.append('input_name', fieldname);
+function ajax_upload_file(path, file, after_success) {
+	var formData = new FormData();
+	formData.append('action', 'upload_file');
+	formData.append('input_name', 'file');
 	formData.append('path', '/' + g_session.public_address + path);
+	formData.append('file[]', file);
 	var result = null;
     $.ajax({
         url: g_ocp_client.server_base_url + '/webocp/server/endpoint/',  //server script to process data

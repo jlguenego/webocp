@@ -55,10 +55,13 @@
 	function action_mkdir() {
 		$output = array();
 		try {
+			debug_r('_GET', $_GET);
 			$path = ROOT.$_GET['path'];
 			$name = $_GET['name'];
-			if (!@mkdir($path . '/' . $name)) {
-				throw new Exception('Cannot create the folder with path: ' . $path);
+			if (!is_dir($path . '/' . $name)) {
+				if (!@mkdir($path . '/' . $name)) {
+					throw new Exception('Cannot create the folder with path: ' . $path);
+				}
 			}
 		} catch (Exception $e) {
 			$output['error'] = $e->getMessage();
@@ -140,7 +143,6 @@
 		debug_r('_FILES', $_FILES);
 		$path = $_GET['path'];
 		$input_name = $_GET['input_name'];
-		$dir_list_a = explode(',', $_GET['dir_list']);
 
 		if (!isset($_FILES[$input_name])) {
 			throw new Exception("Cannot retrieve file uploaded with fieldname=$filename");
@@ -150,9 +152,6 @@
 
 		for ($i = 0; $i < $file_nbr; $i++) {
 			$name = $_FILES[$input_name]['name'][$i];
-			if (in_array($name, $dir_list_a)) {
-				continue;
-			}
 			$filename = ROOT . $path . '/' . $name;
 			$tmp_filename = get_file($input_name, $i);
 
@@ -189,8 +188,10 @@
 
 
 			$dir = dirname($filename);
-			if ((!is_dir($dir)) && (!@mkdir($dir, 0777, true))) {
-				throw new Exception('Cannot create the folder with path: ' . $dir);
+			if (!is_dir($dir)) {
+				if (!@mkdir($dir, 0777, true)) {
+					throw new Exception('Cannot create the folder with path: ' . $dir);
+				}
 			}
 			if (!preg_match('#\.$#', $filename)) {
 				rename($tmp_filename, $filename);
