@@ -216,17 +216,33 @@ $(document).ready(function() {
 
 	$("#ocp_fm_file_transfer").ocp_grid({
 		column: {
-			filename: {
-				label: 'File name',
-				width: 200
+			name: {
+				label: 'Name',
+				width: 500
 			},
 			size: {
 				label: 'Size',
 				width: 70
 			},
-			last_modified: {
-				label: 'Last modified',
-				width: 100
+			transfer_type: {
+				label: 'Transfer type',
+				width: 120
+			},
+			status: {
+				label: 'Status',
+				width: 250
+			},
+			speed: {
+				label: 'Speed',
+				width: 80
+			},
+			elapsed_time: {
+				label: 'Elapsed time',
+				width: 90
+			},
+			remaining_time: {
+				label: 'Remaining time',
+				width: 90
 			}
 		},
 		data: []
