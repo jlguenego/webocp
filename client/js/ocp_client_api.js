@@ -14,7 +14,7 @@ function ajax_command(data) {
 			console.log(data);
 			var output = $.parseJSON(data);
 			if (output.error) {
-				throw new OCPException(output.error);
+				throw new OCPException('Server answered: ' + output.error);
 			}
 			if (output.result) {
 				result = output.result;
@@ -99,7 +99,7 @@ function ajax_upload_dir(path, relative_path, form, after_success) {
 				console.log(data);
 				var output = $.parseJSON(data);
 				if (output.error) {
-					throw new OCPException(output.error);
+					throw new OCPException('Server answered: ' + output.error);
 				}
 				if (output.result) {
 					result = output.result;
@@ -126,13 +126,13 @@ function ajax_upload_dir(path, relative_path, form, after_success) {
 
 function ajax_upload_file(path, file, after_success) {
 	var formData = new FormData();
-	formData.append('action', 'upload_file');
 	formData.append('input_name', 'file');
 	formData.append('path', '/' + g_session.public_address + path);
 	formData.append('file[]', file);
+	console.log(file);
 	var result = null;
     $.ajax({
-        url: g_ocp_client.server_base_url + '/webocp/server/endpoint/',  //server script to process data
+        url: g_ocp_client.server_base_url + '/webocp/server/endpoint/?action=upload_file&file_size=' + file.size,  //server script to process data
         type: 'POST',
         data: formData,
         xhr: function() {  // custom xhr
@@ -148,7 +148,7 @@ function ajax_upload_file(path, file, after_success) {
 				console.log(data);
 				var output = $.parseJSON(data);
 				if (output.error) {
-					throw new OCPException(output.error);
+					throw new OCPException('Server answered: ' + output.error);
 				}
 				if (output.result) {
 					result = output.result;

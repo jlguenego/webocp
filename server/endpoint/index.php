@@ -7,12 +7,14 @@
 
 	require_once(BASE_DIR . '/include/misc.inc');
 	require_once(BASE_DIR . '/include/constant.inc');
+	require_once(BASE_DIR . '/include/format.inc');
 
-	$_GET = array_merge($_GET, $_POST);
+	$_REQUEST = array_merge($_GET, $_POST);
+	debug_r('_GET', $_GET);
 
 	//sleep(2);
 	try {
-		$action = $_GET['action'];
+		$action = $_REQUEST['action'];
 		switch($action) {
 			case 'ls':
 				action_ls();
@@ -42,7 +44,7 @@
 				action_login();
 				break;
 			default:
-				throw new Exception('Unknown action: ' . $_GET['action']);
+				throw new Exception('Unknown action: ' . $_REQUEST['action']);
 		}
 	} catch (Exception $e) {
 		$output = array();
@@ -55,9 +57,8 @@
 	function action_mkdir() {
 		$output = array();
 		try {
-			debug_r('_GET', $_GET);
-			$path = ROOT.$_GET['path'];
-			$name = $_GET['name'];
+			$path = ROOT.$_REQUEST['path'];
+			$name = $_REQUEST['name'];
 			if (!is_dir($path . '/' . $name)) {
 				if (!@mkdir($path . '/' . $name)) {
 					throw new Exception('Cannot create the folder with path: ' . $path);
@@ -73,8 +74,8 @@
 	function action_mv() {
 		$output = array();
 		try {
-			$old_path = $_GET['old_path'];
-			$new_path = $_GET['new_path'];
+			$old_path = $_REQUEST['old_path'];
+			$new_path = $_REQUEST['new_path'];
 			if (file_exists(ROOT.$new_path)) {
 				throw new Exception("This file/folder already exists:\n\n" . '"' . $new_path . '"');
 			}
@@ -91,7 +92,7 @@
 	function action_rm() {
 		$output = array();
 		try {
-			$path = $_GET['path'];
+			$path = $_REQUEST['path'];
 			if (!file_exists(ROOT.$path)) {
 				throw new Exception("Cannot find the selected file:\n\n" . '"' . $new_path . '"');
 			}
@@ -106,7 +107,7 @@
 	function action_ls() {
 		$output = array();
 		try {
-			$path = ROOT . $_GET['path'];
+			$path = ROOT . $_REQUEST['path'];
 			$path = iconv('UTF-8', 'CP1252', $path);
 			$list = ls($path);
 			$files = array();
@@ -139,10 +140,10 @@
 	}
 
 	function action_upload_file() {
-		debug_r('_GET', $_GET);
+		check_post_max();
 		debug_r('_FILES', $_FILES);
-		$path = $_GET['path'];
-		$input_name = $_GET['input_name'];
+		$path = $_REQUEST['path'];
+		$input_name = $_REQUEST['input_name'];
 
 		if (!isset($_FILES[$input_name])) {
 			throw new Exception("Cannot retrieve file uploaded with fieldname=$filename");
@@ -161,15 +162,14 @@
 			rename($tmp_filename, $filename);
 		}
 
-		echo json_encode(array($_GET, $_FILES));
+		echo json_encode(array($_REQUEST, $_FILES));
 	}
 
 	function action_upload_dir() {
-		debug_r('_GET', $_GET);
 		debug_r('_FILES', $_FILES);
-		$path = $_GET['path'];
-		$relative_path = explode(',', $_GET['relative_path']);
-		$input_name = $_GET['input_name'];
+		$path = $_REQUEST['path'];
+		$relative_path = explode(',', $_REQUEST['relative_path']);
+		$input_name = $_REQUEST['input_name'];
 
 		if (!isset($_FILES[$input_name])) {
 			throw new Exception("Cannot retrieve file uploaded with fieldname=$filename");
@@ -200,14 +200,13 @@
 			}
 		}
 
-		echo json_encode(array($_GET, $_FILES));
+		echo json_encode(array($_REQUEST, $_FILES));
 	}
 
 	function action_register() {
 		$output = array();
 		try {
-			debug_r('_GET', $_GET);
-			$root_dir = ROOT . '/' . $_GET['account']['public_object']['address'];
+			$root_dir = ROOT . '/' . $_REQUEST['account']['public_object']['address'];
 			debug('path='.$root_dir);
 			if (is_dir($root_dir)) {
 				throw new Exception('This account already exists.');
@@ -226,8 +225,7 @@
 	function action_login() {
 		$output = array();
 		try {
-			debug_r('_GET', $_GET);
-			$root_dir = ROOT . '/' . $_GET['account']['public_object']['address'];
+			$root_dir = ROOT . '/' . $_REQUEST['account']['public_object']['address'];
 			debug('path='.$root_dir);
 			if (!is_dir($root_dir)) {
 				throw new Exception('This account does not exist.');

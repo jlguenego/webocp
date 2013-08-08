@@ -1,4 +1,6 @@
 <?php
+	require_once(BASE_DIR . '/include/format.inc');
+
 	function ls($dirname) {
 		$result = array();
 		 foreach(scandir($dirname) as $file) {
@@ -37,10 +39,10 @@
 		if (!array_key_exists($input_name, $_FILES)) {
 			throw new Exception("Cannot retrieve file uploaded with fieldname=$filename");
 		}
-		if ($_FILES[$input_name]["error"][$i] == 1) {
-			throw new Exception(" The uploaded file exceeds the upload_max_filesize directive in php.ini.");
-		}
 		if ($_FILES[$input_name]["error"][$i] > 0) {
+			if ($_FILES[$input_name]["error"][$i] == 1) {
+				throw new Exception(" The uploaded file exceeds the upload_max_filesize directive in php.ini.	");
+			}
 			throw new Exception("Error while retrieving the uploaded files: ".$_FILES[$input_name]["error"][$i]);
 		}
 		$file = $_FILES[$input_name]["tmp_name"][$i];
@@ -61,5 +63,12 @@
 		$content = ob_get_contents();
 		ob_clean();
 		debug($content);
+	}
+
+	function check_post_max() {
+		if (empty($_POST)) {
+			$file_size = format_size($_GET['file_size']);
+			throw new Exception('File is too large.... file_size=' . $file_size . ' > post_max_size=' . ini_get('post_max_size'));
+		}
 	}
 ?>
