@@ -144,8 +144,9 @@ function ocp_fm_upload_file_progress(e, path, name) {
 
 		$('#ocp_fm_file_transfer').ocp_grid('add_row', data, id);
 		row = $('[data-rowid=' + id + ']');
+		row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar();
 	}
-	row.find('.widget_grid_cell[data-colname=file_transfer_status]').html(percent + '%');
+	row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', percent);
 
 	if (loaded >= total) {
 		row.remove();

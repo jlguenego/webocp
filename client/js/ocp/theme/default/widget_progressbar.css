@@ -1,0 +1,64 @@
+.ocp_wd_pb_progressbar_block {
+	position: relative;
+}
+
+.ocp_wd_pb_progressbar_container {
+	position: absolute;
+	top: 50%;
+
+	height: 16px;
+	margin-top: -8px;
+	line-height: 16px;
+}
+
+.ocp_wd_pb_percentage {
+	float: right;
+	height: 16px;
+	width: 50px;
+	margin: 0;
+	background-color: #D9290B;
+	font-size: 13px;
+
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	-ms-border-radius: 15px;
+	-o-border-radius: 15px;
+	border-radius: 15px;
+
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	color: white;
+	text-align: center;
+}
+
+.ocp_wd_pb_progressbar {
+	height: 16px;
+	overflow: hidden;
+	margin: 0 60px 0 0;
+	background-color: #B8BCBF;
+
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	-ms-border-radius: 15px;
+	-o-border-radius: 15px;
+	border-radius: 15px;
+
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	border: 4px solid #B8BCBF;
+}
+
+.ocp_wd_pb_progressbar_fill {
+	width: 0px;
+	height: 8px;
+	background-color: white;
+	margin: 0;
+	-moz-border-radius: 15px;
+	-ms-border-radius: 15px;
+	-o-border-radius: 15px;
+	border-radius: 15px;
+}
