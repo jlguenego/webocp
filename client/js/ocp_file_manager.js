@@ -82,6 +82,12 @@ function ocp_fm_dnd_drop(e) {
 function ocp_dnd_traverse_file_tree(item, path) {
 	path = path || "";
 	console.log("item.name=" + item.name);
+
+	if (is_file_protocol()) {
+		console.log('file protocol: dnd disabled');
+		return;
+	}
+
 	if (item.isFile) {
 		// Get file
 		item.file(function(file) {

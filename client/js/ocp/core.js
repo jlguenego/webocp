@@ -111,6 +111,10 @@ function OCPException(msg) {
 	this.stacktrace = stacktrace();
 }
 
+function is_file_protocol() {
+	return /^file:\/\//i.test(window.location.href);
+}
+
 (function($) {
     $.fn.hasVerticalScrollBar = function() {
         return this.get(0).scrollHeight > this.height();
