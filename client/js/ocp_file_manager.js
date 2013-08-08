@@ -7,7 +7,7 @@ function ocp_build_grid_data_from_ls_enpoint(ls_data, path) {
 		row.last_modified = 'N/A';
 
 		if (ls_data[i].type != 'dir') {
-			row.size = ls_data[i].size;
+			row.size = ocp_format_size(ls_data[i].size);
 		} else {
 			row.size = "&nbsp;";
 		}
@@ -136,7 +136,7 @@ function ocp_fm_upload_file_progress(e, path, name) {
 	if (row.length == 0 && loaded < total) {
 		var data = {
 			"name": name,
-			"size": total,
+			"size": ocp_format_size(total),
 			"transfer_type": 'Upload',
 			"status": percent + '%',
 			"speed": '0 KB/s',
@@ -164,7 +164,7 @@ function ocp_fm_upload_file_progress(e, path, name) {
 	row.attr('data-md-timestamp', timestamp);
 	row.find('.widget_grid_cell[data-colname=file_transfer_elapsed_time]').html(elapsed_t + ' s');
 	row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_t + ' s');
-	row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html((speed / 1024).toFixed(1) + ' KB/s');
+	row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html(ocp_format_size(speed * 1000, 1) + '/s');
 	row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', percent);
 
 	if (loaded >= total) {
