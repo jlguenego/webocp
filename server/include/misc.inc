@@ -37,8 +37,11 @@
 		if (!array_key_exists($input_name, $_FILES)) {
 			throw new Exception("Cannot retrieve file uploaded with fieldname=$filename");
 		}
+		if ($_FILES[$input_name]["error"][$i] == 1) {
+			throw new Exception(" The uploaded file exceeds the upload_max_filesize directive in php.ini.");
+		}
 		if ($_FILES[$input_name]["error"][$i] > 0) {
-			throw new Exception("Error while retrieving the uploaded files: ".$_FILES[$input_name]["error"]);
+			throw new Exception("Error while retrieving the uploaded files: ".$_FILES[$input_name]["error"][$i]);
 		}
 		$file = $_FILES[$input_name]["tmp_name"][$i];
 		if (!file_exists($file)) {
