@@ -42,6 +42,9 @@ $.widget( "ui.ocp_progressbar", {
 	},
 
 	set_progress: function(progress) {
+		if (progress > 100) {
+			progress = 100;
+		}
 		this.progressbar_fill.width(progress + '%');
 		this.percentage.html(progress + '%');
 	}

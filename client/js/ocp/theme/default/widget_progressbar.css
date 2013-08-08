@@ -17,7 +17,6 @@
 	width: 50px;
 	margin: 0;
 	background-color: #D9290B;
-	font-size: 13px;
 
 	-webkit-border-radius: 15px;
 	-moz-border-radius: 15px;
@@ -25,17 +24,14 @@
 	-o-border-radius: 15px;
 	border-radius: 15px;
 
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
+	font-size: 13px;
 	color: white;
 	text-align: center;
 }
 
 .ocp_wd_pb_progressbar {
-	height: 16px;
 	overflow: hidden;
+	height: 16px;
 	margin: 0 60px 0 0;
 	background-color: #B8BCBF;
 
