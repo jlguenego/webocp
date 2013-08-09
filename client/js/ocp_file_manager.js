@@ -1,6 +1,7 @@
 var tree = null;
 var grid = null;
 var rename_dialog = null;
+var remove_dialog = null;
 
 function ocp_fm_refresh() {
 	if (tree) {
@@ -13,6 +14,31 @@ function ocp_fm_select_all() {
 	grid.ocp_grid('row_select_all');
 }
 // SELECT ALL END
+
+// DELETE ALL
+function ocp_fm_delete() {
+	try {
+		var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
+		if (selected_rows.length == 0) {
+			throw new OCPException('Please select a file/folder.');
+		}
+		if (selected_rows.length == 1) {
+			var rowid = selected_rows.attr('data-rowid');
+			var row = grid.ocp_grid('option', 'data')[rowid];
+			if (!row) {
+				throw new OCPException('Please select a file/folder.');
+			}
+			$('#ocp_fm_remove_dialog span').html(row.meta_data.name);
+		}
+		if (selected_rows.length > 1) {
+			$('#ocp_fm_remove_dialog span').html('these ' + selected_rows.length + ' elements');
+		}
+		remove_dialog.ocp_dialog('open');
+	} catch (e) {
+		ocp_error_manage(e);
+	}
+}
+// DELETE ALL END
 
 function ocp_build_grid_data_from_ls_enpoint(ls_data, path) {
 	var result = {};
@@ -424,7 +450,7 @@ $(document).ready(function() {
 	// RENAME END
 
 	// REMOVE
-	var remove_dialog = $('#ocp_fm_remove_dialog').ocp_dialog({
+	remove_dialog = $('#ocp_fm_remove_dialog').ocp_dialog({
 		buttons: {
 			'Delete permanantly': function() {
 				var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
@@ -452,27 +478,8 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_remove').click(function(evt) {
-		try {
-			evt.preventDefault();
-			var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
-			if (selected_rows.length == 0) {
-				throw new OCPException('Please select a file/folder.');
-			}
-			if (selected_rows.length == 1) {
-				var rowid = selected_rows.attr('data-rowid');
-				var row = grid.ocp_grid('option', 'data')[rowid];
-				if (!row) {
-					throw new OCPException('Please select a file/folder.');
-				}
-				$('#ocp_fm_remove_dialog span').html(row.meta_data.name);
-			}
-			if (selected_rows.length > 1) {
-				$('#ocp_fm_remove_dialog span').html('these ' + selected_rows.length + ' elements');
-			}
-			remove_dialog.ocp_dialog('open');
-		} catch (e) {
-			ocp_error_manage(e);
-		}
+		evt.preventDefault();
+		ocp_fm_delete();
 	});
 	// REMOVE END
 
@@ -550,6 +557,10 @@ $(document).ready(function() {
 
 	$(window).keydown(function(e) {
 		console.log(e);
+		if ($(e.target).is('input') || ocp_dialog_is_open()) {
+			console.log('Do nothing');
+			return;
+		}
 		switch(e.which) {
 			case 113: // F2
 				console.log('F2');
@@ -561,6 +572,10 @@ $(document).ready(function() {
 					e.stopPropagation();
 					ocp_fm_select_all();
 				}
+				break;
+			case 46: // Del
+				console.log('Del');
+				ocp_fm_delete();
 				break;
 			default:
 		}

@@ -128,3 +128,7 @@ $.widget( "ui.ocp_dialog", {
 });
 
 })( jQuery );
+
+function ocp_dialog_is_open() {
+	return $('.widget_dialog_overlay').is(':visible');
+}
