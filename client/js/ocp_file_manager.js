@@ -13,12 +13,17 @@ function ocp_build_grid_data_from_ls_enpoint(ls_data, path) {
 	for (var i = 0; i < ls_data.length; i++) {
 		var row = {};
 		row.filename = ls_data[i].label;
-		row.last_modified = 'N/A';
 
 		if (ls_data[i].type != 'dir') {
 			row.size = ocp_format_size(ls_data[i].size);
 		} else {
 			row.size = "&nbsp;";
+		}
+
+		if (ls_data[i].type != 'dir') {
+			row.last_modified = ocp_format_date(ls_data[i].last_modified, '%Y-%m-%d %H:%M');
+		} else {
+			row.last_modified = "&nbsp;";
 		}
 
 		row.meta_data = {

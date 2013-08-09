@@ -135,6 +135,40 @@ function ocp_format_size(bytes, precision) {
     return bytes + ' ' + units[pow];
 }
 
+function ocp_format_date(timestamp, format) {
+	format = format || '%Y-%m-%d %H:%M:%S';
+	var date = new Date(timestamp * 1000);
+
+	var month = date.getMonth() + 1;
+	if (month < 10) {
+		month = '0' + month;
+	}
+	var day = date.getDate();
+	if (day < 10) {
+		day = '0' + day;
+	}
+	var hour = date.getHours();
+	if (hour < 10) {
+		hour = '0' + hour;
+	}
+	var minute = date.getMinutes();
+	if (minute < 10) {
+		minute = '0' + minute;
+	}
+	var second = date.getSeconds();
+	if (second < 10) {
+		second = '0' + second;
+	}
+
+	var result = format.replace('%Y', date.getFullYear());
+	result = result.replace('%m', month);
+	result = result.replace('%d', day);
+	result = result.replace('%H', hour);
+	result = result.replace('%M', minute);
+	result = result.replace('%S', second);
+	return result;
+}
+
 (function($) {
     $.fn.hasVerticalScrollBar = function() {
         return this.get(0).scrollHeight > this.height();

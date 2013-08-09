@@ -118,6 +118,7 @@
 					'name' => $filename,
 					'label' => $filename,
 					'size' => filesize($path.'/'.$filename),
+					'last_modified' => filemtime($path.'/'.$filename),
 				);
 
 				if (preg_match('#\.pdf$#', $filename)) {
