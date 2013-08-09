@@ -373,17 +373,23 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#ocp_fm_rename').click(function(e) {
-		e.preventDefault();
-		var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
-		var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
-		if (!row) {
-			ocp_error_manage({ msg: 'Please select a file/folder.' });
-			return;
+	$('#ocp_fm_rename').click(function(evt) {
+		try {
+			evt.preventDefault();
+			var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
+			if (selected_rows.length != 1) {
+				throw new OCPException('Please select only one file/folder.');
+			}
+
+			var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
+			var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
+
+			$('#ocp_fm_rename_dialog #ocp_fm_new_name').val(row.meta_data.name);
+			$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
+			rename_dialog.ocp_dialog('open');
+		} catch(e) {
+			ocp_error_manage(e);
 		}
-		$('#ocp_fm_rename_dialog #ocp_fm_new_name').val(row.meta_data.name);
-		$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
-		rename_dialog.ocp_dialog('open');
 	});
 	// RENAME END
 
@@ -391,7 +397,8 @@ $(document).ready(function() {
 	var remove_dialog = $('#ocp_fm_remove_dialog').ocp_dialog({
 		buttons: {
 			'Delete permanantly': function() {
-				var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
+				var rows = $('#ocp_fm_grid .ocp_gd_selected');
+				var rowid = row.attr('data-rowid');
 				var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
 				var meta_data = row.meta_data;
 

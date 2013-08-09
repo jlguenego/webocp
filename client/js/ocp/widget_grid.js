@@ -185,12 +185,11 @@ $.widget( "ui.ocp_grid", {
 	},
 
 	row_select: function(row) {
-		$('.ocp_gd_selected').removeClass('ocp_gd_selected');
 		row.addClass('ocp_gd_selected');
 	},
 
 	row_deselect: function(row) {
-		$('.ocp_gd_selected').removeClass('ocp_gd_selected');
+		row.removeClass('ocp_gd_selected');
 	},
 
 	resize_col: function(col) {
