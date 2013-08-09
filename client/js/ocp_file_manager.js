@@ -1,3 +1,12 @@
+var tree = null;
+var grid = null;
+
+function ocp_fm_refresh() {
+	if (tree) {
+		tree.ocp_tree('open_item', ocp_fm_get_current_path());
+	}
+}
+
 function ocp_build_grid_data_from_ls_enpoint(ls_data, path) {
 	var result = {};
 	var rows = [];
@@ -56,7 +65,10 @@ function reorder_grid_result(array) {
 }
 
 function ocp_fm_get_current_path() {
-	return $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+	if (grid) {
+		return grid.ocp_grid('option', 'state').path;
+	}
+	return null;
 }
 
 // DRAG AND DROP
@@ -94,7 +106,7 @@ function ocp_dnd_traverse_file_tree(item, path) {
 			console.log("File: " + path + file.name);
 			var current_path = ocp_fm_get_current_path();
 			ajax_upload_file(normalize_path(current_path + '/' + path), file, function() {
-				$('#ocp_fm_tree').ocp_tree('open_item', current_path);
+				tree.ocp_tree('open_item', current_path);
 			}, function(e, filename) {
 				ocp_fm_upload_file_progress(e, normalize_path(path), filename);
 			});
@@ -219,7 +231,7 @@ $(document).ready(function() {
 			children: []
 		}
 	];
-	var tree = $('#ocp_fm_tree').ocp_tree({
+	tree = $('#ocp_fm_tree').ocp_tree({
 		source: src,
 		ls: ajax_ls,
 		open_item_error: function(path) {
@@ -232,7 +244,7 @@ $(document).ready(function() {
 	$('#ocp_fm_breadcrumbs').ocp_text_value();
 
 	// Put a grid on right pane
-	$("#ocp_fm_grid").ocp_grid({
+	grid = $("#ocp_fm_grid").ocp_grid({
 		column: {
 			filename: {
 				label: 'File name',
@@ -253,13 +265,13 @@ $(document).ready(function() {
 
 		row_dblclick: function(e) {
 			var row = $(e.currentTarget);
-			var rowid = row.attr('data-rowid');
-			var meta_data = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid].meta_data;
-			var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
-			var name = meta_data.name;
+			var path = ocp_fm_get_current_path();
+			var name = row.attr('data-md-name');
+			var type = row.attr('data-md-type');
 
-			if (meta_data.type == 'dir') {
-				$('#ocp_fm_tree').ocp_tree('open_item', normalize_path(path + '/' + name));
+
+			if (type == 'dir') {
+				tree.ocp_tree('open_item', normalize_path(path + '/' + name));
 			} else {
 				ajax_download_file(normalize_path(path + '/' + name));
 			}
@@ -305,21 +317,21 @@ $(document).ready(function() {
 	$('#ocp_fm_breadcrumbs input').keypress(function(e) {
 	    if(e.which == 13) {
 	        var path = normalize_path($(this).val());
-	        $('#ocp_fm_tree').ocp_tree('open_item', path);
+	        tree.ocp_tree('open_item', path);
 	    }
 	});
 
 	$('#ocp_fm_parent').click(function() {
-		var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+		var path = grid.ocp_grid('option', 'state').path;
 		path = dirname(path);
-		$('#ocp_fm_tree').ocp_tree('open_item', path);
+		tree.ocp_tree('open_item', path);
 	});
 
 	// CREATE NEW FOLDER
 	var new_folder_dialog = $('#ocp_fm_new_folder_dialog').ocp_dialog({
 		buttons: {
 			Create: function() {
-				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+				var path = grid.ocp_grid('option', 'state').path;
 				var folder_name = $('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val();
 				ajax_mkdir(path, folder_name);
 				tree.ocp_tree('open_item', path);
@@ -345,10 +357,10 @@ $(document).ready(function() {
 		buttons: {
 			Rename: function() {
 				var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
-				var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
+				var row = grid.ocp_grid('option', 'data')[rowid];
 				var meta_data = row.meta_data;
 
-				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+				var path = grid.ocp_grid('option', 'state').path;
 
 				var old_name = meta_data.name;
 				var new_name = $('#ocp_fm_rename_dialog #ocp_fm_new_name').val();
@@ -382,7 +394,7 @@ $(document).ready(function() {
 			}
 
 			var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
-			var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
+			var row = grid.ocp_grid('option', 'data')[rowid];
 
 			$('#ocp_fm_rename_dialog #ocp_fm_new_name').val(row.meta_data.name);
 			$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
@@ -397,23 +409,21 @@ $(document).ready(function() {
 	var remove_dialog = $('#ocp_fm_remove_dialog').ocp_dialog({
 		buttons: {
 			'Delete permanantly': function() {
-				var rows = $('#ocp_fm_grid .ocp_gd_selected');
-				var rowid = row.attr('data-rowid');
-				var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
-				var meta_data = row.meta_data;
+				var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
+				selected_rows.each(function() {
+					try {
+						var name = $(this).attr('data-md-name');
+						var path = ocp_fm_get_current_path();
+						var p = normalize_path(path + '/' + name);
+						console.log('rm ' + p);
 
-				var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
-				var p = normalize_path(path + '/' + meta_data.name);
-				console.log('rm ' + p);
+						ajax_rm(p);
+					} catch (e) {
+						ocp_error_manage(e);
+					}
+				});
 
-				try {
-					ajax_rm(p);
-				} catch (e) {
-					ocp_error_manage(e);
-					return;
-				}
-
-				tree.ocp_tree('open_item', path);
+				ocp_fm_refresh();
 
 				remove_dialog.ocp_dialog('close');
 			},
@@ -423,16 +433,28 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#ocp_fm_remove').click(function(e) {
-		e.preventDefault();
-		var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
-		var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
-		if (!row) {
-			ocp_error_manage({ msg: 'Please select a file/folder.' });
-			return;
+	$('#ocp_fm_remove').click(function(evt) {
+		try {
+			evt.preventDefault();
+			var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
+			if (selected_rows.length == 0) {
+				throw new OCPException('Please select a file/folder.');
+			}
+			if (selected_rows.length == 1) {
+				var rowid = selected_rows.attr('data-rowid');
+				var row = grid.ocp_grid('option', 'data')[rowid];
+				if (!row) {
+					throw new OCPException('Please select a file/folder.');
+				}
+				$('#ocp_fm_remove_dialog span').html(row.meta_data.name);
+			}
+			if (selected_rows.length > 1) {
+				$('#ocp_fm_remove_dialog span').html('these ' + selected_rows.length + ' elements');
+			}
+			remove_dialog.ocp_dialog('open');
+		} catch (e) {
+			ocp_error_manage(e);
 		}
-		$('#ocp_fm_remove_dialog span').html(row.meta_data.name);
-		remove_dialog.ocp_dialog('open');
 	});
 	// REMOVE END
 
@@ -448,7 +470,7 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_file').change(function() {
-		var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+		var path = grid.ocp_grid('option', 'state').path;
 		var form = $('#ocp_fm_file_form')[0];
 
 		var files = $('#ocp_fm_file').get(0).files;
@@ -480,7 +502,7 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_dir').change(function() {
-		var path = $("#ocp_fm_grid").ocp_grid('option', 'state').path;
+		var path = grid.ocp_grid('option', 'state').path;
 		var form = $('#ocp_fm_dir_form')[0];
 
 		var files = $('#ocp_fm_dir').get(0).files;
@@ -505,6 +527,6 @@ $(document).ready(function() {
 	// UPLOAD DIR END
 
 	if (g_ocp_client.server_base_url && g_session && g_session.public_address) {
-		$('#ocp_fm_tree').ocp_tree('open_item', '/');
+		tree.ocp_tree('open_item', '/');
 	}
 });
