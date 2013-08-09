@@ -1,5 +1,6 @@
 var tree = null;
 var grid = null;
+var rename_dialog = null;
 
 function ocp_fm_refresh() {
 	if (tree) {
@@ -190,6 +191,26 @@ function ocp_fm_upload_file_progress(e, path, name) {
 }
 // PROGRESS BAR END
 
+// RENAME
+function ocp_fm_rename() {
+	try {
+		var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
+		if (selected_rows.length != 1) {
+			throw new OCPException('Please select only one file/folder.');
+		}
+
+		var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
+		var row = grid.ocp_grid('option', 'data')[rowid];
+
+		$('#ocp_fm_rename_dialog #ocp_fm_new_name').val(row.meta_data.name);
+		$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
+		rename_dialog.ocp_dialog('open');
+	} catch(e) {
+		ocp_error_manage(e);
+	}
+}
+// RENAME END
+
 $(document).ready(function() {
 	$('#file_manager').ocp_splitpane_v({
 		overflow: 'hidden',
@@ -358,7 +379,7 @@ $(document).ready(function() {
 	// CREATE NEW FOLDER END
 
 	// RENAME
-	var rename_dialog = $('#ocp_fm_rename_dialog').ocp_dialog({
+	rename_dialog = $('#ocp_fm_rename_dialog').ocp_dialog({
 		buttons: {
 			Rename: function() {
 				var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
@@ -391,22 +412,8 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_rename').click(function(evt) {
-		try {
-			evt.preventDefault();
-			var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
-			if (selected_rows.length != 1) {
-				throw new OCPException('Please select only one file/folder.');
-			}
-
-			var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
-			var row = grid.ocp_grid('option', 'data')[rowid];
-
-			$('#ocp_fm_rename_dialog #ocp_fm_new_name').val(row.meta_data.name);
-			$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
-			rename_dialog.ocp_dialog('open');
-		} catch(e) {
-			ocp_error_manage(e);
-		}
+		evt.preventDefault();
+		ocp_fm_rename();
 	});
 	// RENAME END
 
@@ -534,4 +541,15 @@ $(document).ready(function() {
 	if (g_ocp_client.server_base_url && g_session && g_session.public_address) {
 		tree.ocp_tree('open_item', '/');
 	}
+
+	$(window).keydown(function(e) {
+		console.log('key pressed code=' + e.which);
+		switch(e.which) {
+			case 113: // F2
+				console.log('F2');
+				ocp_fm_rename();
+				break;
+			default:
+		}
+	});
 });
