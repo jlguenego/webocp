@@ -8,6 +8,12 @@ function ocp_fm_refresh() {
 	}
 }
 
+// SELECT ALL
+function ocp_fm_select_all() {
+	grid.ocp_grid('row_select_all');
+}
+// SELECT ALL END
+
 function ocp_build_grid_data_from_ls_enpoint(ls_data, path) {
 	var result = {};
 	var rows = [];
@@ -543,11 +549,18 @@ $(document).ready(function() {
 	}
 
 	$(window).keydown(function(e) {
-		console.log('key pressed code=' + e.which);
+		console.log(e);
 		switch(e.which) {
 			case 113: // F2
 				console.log('F2');
 				ocp_fm_rename();
+				break;
+			case 65: // A
+				if (e.ctrlKey) {
+					e.preventDefault();
+					e.stopPropagation();
+					ocp_fm_select_all();
+				}
 				break;
 			default:
 		}

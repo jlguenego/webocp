@@ -192,6 +192,13 @@ $.widget( "ui.ocp_grid", {
 		row.removeClass('ocp_gd_selected');
 	},
 
+	row_select_all: function() {
+		var self = this;
+		this.body.find('.widget_grid_body_row').each(function() {
+			self.row_select($(this));
+		});
+	},
+
 	resize_col: function(col) {
 		var colname = $(col).attr('data-colname');
 		var width = $(col).width();
