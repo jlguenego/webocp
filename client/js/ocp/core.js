@@ -39,7 +39,7 @@ function ocp_restore_local() {
 			}
 		} else {
 			g_ocp_client = {
-				server_base_url: 'http://localhost',
+				server_base_url: 'http://www.ocpforum.org',
 				session: null
 			};
 		}
@@ -126,16 +126,11 @@ function ocp_format_size(bytes, precision) {
     bytes = Math.max(bytes, 0);
     var pow = 0;
     if (bytes > 0) {
-    	console.log('bytes=' + bytes);
     	pow = Math.floor(Math.log(bytes) / Math.log(1024));
-    	console.log('pow=' + pow);
     }
 
     pow = Math.min(pow, units.length - 1);
-
-    // Uncomment one of the following alternatives
     bytes /= Math.pow(1024, pow);
-    // $bytes /= (1 << (10 * $pow));
 	bytes = Math.round(bytes * Math.pow(10, precision)) / Math.pow(10, precision);
     return bytes + ' ' + units[pow];
 }

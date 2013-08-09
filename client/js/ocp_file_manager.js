@@ -378,7 +378,7 @@ $(document).ready(function() {
 		var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
 		var row = $("#ocp_fm_grid").ocp_grid('option', 'data')[rowid];
 		if (!row) {
-			ocp_error_manage('Please select a file/folder.');
+			ocp_error_manage({ msg: 'Please select a file/folder.' });
 			return;
 		}
 		$('#ocp_fm_rename_dialog #ocp_fm_new_name').val(row.meta_data.name);
@@ -497,5 +497,7 @@ $(document).ready(function() {
 	});
 	// UPLOAD DIR END
 
-
+	if (g_ocp_client.server_base_url && g_session && g_session.public_address) {
+		$('#ocp_fm_tree').ocp_tree('open_item', '/');
+	}
 });
