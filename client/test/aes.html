@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+		<script src="../_ext/jquery-1.10.2.min.js"></script>
+		<script src="../_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="../_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- CRYPTO JS -->
+		<script src="../_ext/sha1.js"></script>
+		<script src="../_ext/aes.js"></script>
+		<!-- END CRYPTO JS -->
+
+		<style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+		</style>
+	</head>
+
+	<body>
+		<input type="text" id="secret_key" /><br/>
+		<textarea></textarea><br/>
+		<button id="encrypt">Encrypt</button> <button id="decrypt">Decrypt</button><br/><br/>
+		<div id="result"></div>
+
+		<script>
+			$('#encrypt').click(function() {
+				var content = $('textarea').val();
+				var secret_key = $('#secret_key').val();
+
+				var c_content = CryptoJS.AES.encrypt(content, secret_key);
+				console.log(c_content);
+				$('#result').html(c_content.toString());
+			});
+			$('#decrypt').click(function() {
+				var c_content = $('textarea').val();
+				var secret_key = $('#secret_key').val();
+
+				var content = CryptoJS.AES.decrypt(c_content, secret_key);
+				console.log(content);
+				var d_content = hex2a(content.toString());
+				console.log(d_content);
+				$('#result').html(d_content);
+			});
+
+			function hex2a(hex) {
+			    var str = '';
+			    for (var i = 0; i < hex.length; i += 2) {
+			        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+			    }
+			    return str;
+			}
+		</script>
+	</body>
+</html>

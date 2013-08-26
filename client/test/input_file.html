@@ -7,7 +7,11 @@
 		<script src="../_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
 		<link rel="stylesheet" href="../_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
 
-		<script src="../js/ocp/core.js"></script>
+		<!-- CRYPTO JS -->
+		<script src="../_ext/sha1.js"></script>
+		<!-- END CRYPTO JS -->
+
+		<script src="../js/ocp_client.js"></script>
 
 		<style>
 html, body {
@@ -51,8 +55,43 @@ html, body {
 							if (evt.target.readyState == FileReader.DONE) { // DONE == 2
 								var content = evt.target.result;
 								var filename = ocp.hash(content);
-								log('content=|'+content+'|');
-								log('hash='+filename);
+								console.log('content=|'+content+'|');
+								console.log('hash='+filename);
+
+								$.ajaxSetup({
+									cache: false,
+									scriptCharset: "utf-8"
+								});
+
+								var result = null;
+								$.ajax({
+									type: "POST",
+									url: 'http://localhost/webocp/server/test/endpoint/create_file_from_string.php',
+									async: false,
+									data: {
+										filename: filename,
+										content: content
+									},
+									success: function(data) {
+										console.log(data);
+										var output = $.parseJSON(data);
+										if (output.error) {
+											throw new OCPException('Server answered: ' + output.error);
+										}
+										if (output.result) {
+											result = output.result;
+										}
+									},
+									error: function(jqXHR, textStatus, errorThrown) {
+										console.log('ajax_ls error');
+										console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
+									},
+									statusCode: {
+										404: function() {
+											console.log("page not found");
+										}
+									}
+								});
 							}
 						};
 					})(start, stop, step);
