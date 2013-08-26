@@ -7,7 +7,7 @@ OCP.prototype.hash = function(content) {
 };
 
 OCP.prototype.pcrypt = function(password, clear_msg) {
-    return clear_msg;
+    return CryptoJS.AES.encrypt(clear_msg, password).toString();
 };
 
 OCP.prototype.pdecrypt = function(password, crypted_msg) {

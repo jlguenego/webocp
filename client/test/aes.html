@@ -42,7 +42,7 @@ html, body {
 
 				var content = CryptoJS.AES.decrypt(c_content, secret_key);
 				console.log(content);
-				var d_content = hex2a(content.toString());
+				var d_content = content.toString(CryptoJS.enc.Utf8);
 				console.log(d_content);
 				$('#result').html(d_content);
 			});
