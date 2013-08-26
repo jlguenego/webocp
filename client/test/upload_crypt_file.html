@@ -76,6 +76,8 @@ html, body {
 								var words = CryptoJS.enc.Hex.parse(hex);
 
 								var crypted_content = ocp.pcrypt(secret_key, words);
+								console.log('crypted_content=');
+								console.log(crypted_content);
 								var filename = ocp.hash(crypted_content);
 								$('#upload_name').html(filename);
 								console.log('content=|'+content+'|');
@@ -181,11 +183,12 @@ html, body {
 							result = output.result;
 						}
 
-						var crypted_content = result.content;
-						console.log('crypted_content=' + crypted_content);
+						var words = CryptoJS.enc.Latin1.parse(result.content);
+						var b64 = CryptoJS.enc.Base64.stringify(words);
+
 						var secret_key = $('#secret_key').val();
 
-						var words = CryptoJS.AES.decrypt(crypted_content, secret_key);
+						var words = CryptoJS.AES.decrypt(b64, secret_key);
 						var d_content = words.toString();
 						console.log('d_content=' + d_content);
 						console.log('length=' + d_content.length);
