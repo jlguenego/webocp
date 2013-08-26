@@ -19,8 +19,51 @@ html, body {
 	</head>
 
 	<body>
-		<input type="file" id="file" name="file" />
+		<input type="file" id="file" name="file" /><button>Send</button>
+
 		<script>
+			$(function() {
+				// Check for the various File API support.
+				if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+				  alert('The File APIs are not fully supported in this browser.');
+				  return;
+				}
+			});
+
+			function readBlob() {
+				$('#byte_content').html('');
+				var file = $('#file').get(0).files[0];
+				if (!file) {
+					alert('no file');
+					return;
+				}
+				var start = 0;
+				var step = 500;
+
+				var ocp = new OCP();
+				while (start < file.size) {
+					var stop = start + step;
+					var reader = new FileReader();
+
+					// If we use onloadend, we need to check the readyState.
+					reader.onload = (function(my_start, my_stop, my_step) {
+						return function(evt) {
+							if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+								var content = evt.target.result;
+								var filename = ocp.hash(content);
+								log('content=|'+content+'|');
+								log('hash='+filename);
+							}
+						};
+					})(start, stop, step);
+
+					var blob = file.slice(start, stop);
+					reader.readAsBinaryString(blob);
+					start += step;
+				}
+			}
+
+			$('button').click(readBlob);
 		</script>
 	</body>
 </html>
