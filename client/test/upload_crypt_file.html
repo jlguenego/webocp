@@ -44,6 +44,7 @@ html, body {
 		<div id="decrypted_content"></div>
 
 		<script>
+			var ocp = new OCP();
 			var profiler = new ocp_profile();
 			$(function() {
 				// Check for the various File API support.
@@ -63,9 +64,9 @@ html, body {
 					return;
 				}
 				var start = 0;
-				var step = file.size;
+				var step = 1 << 16;
+				console.log('step=' + step);
 
-				var ocp = new OCP();
 				while (start < file.size) {
 					var stop = start + step;
 					var reader = new FileReader();
@@ -85,8 +86,13 @@ html, body {
 								profiler.report('start encryption');
 								var crypted_content = ocp.pcrypt(secret_key, words);
 								profiler.report('end encryption');
+								console.log('content.length=' + content.length);
+								console.log('crypted_content.length=' + crypted_content.length);
 
+								profiler.report('start Hash');
 								var filename = ocp.hash(crypted_content);
+								profiler.report('end Hash');
+
 								$('#upload_name').html(filename);
 
 								$.ajaxSetup({
@@ -96,10 +102,18 @@ html, body {
 
 								var result = null;
 								profiler.report('start upload');
+
+								var formdata = new FormData();
+								formdata.append('filename', filename);
+								var blob = new Blob([crypted_content], { type: "text/plain" });
+								formdata.append('content', blob);
+
 								$.ajax({
 									type: "POST",
 									url: $('#server_uri').val() + '/webocp/server/test/endpoint/create_file_from_string.php',
 									async: true,
+									processData: false,
+									contentType: false,
 							        xhr: function() {  // custom xhr
 							            var myXhr = $.ajaxSettings.xhr();
 							            if(myXhr.upload){ // check if upload property exists
@@ -109,10 +123,7 @@ html, body {
 							            }
 							            return myXhr;
 							        },
-									data: {
-										filename: filename,
-										content: crypted_content
-									},
+									data: formdata,
 									success: function(data) {
 										profiler.report('end upload');
 										console.log(data);
@@ -193,17 +204,11 @@ html, body {
 							result = output.result;
 						}
 
-						profiler.report('start encoding from Latin1 to Base64');
-						var words = CryptoJS.enc.Latin1.parse(result.content);
-						var b64 = CryptoJS.enc.Base64.stringify(words);
-						profiler.report('end encoding from Latin1 to Base64');
-
 						var secret_key = $('#secret_key').val();
 
 						profiler.report('start decryption');
-						var words = CryptoJS.AES.decrypt(b64, secret_key);
+						var d_content = ocp.pdecrypt(secret_key, result.content);
 						profiler.report('end decryption');
-						var d_content = words.toString();
 
 						save_as(d_content, filename);
 					},

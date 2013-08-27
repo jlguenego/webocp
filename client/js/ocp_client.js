@@ -15,7 +15,10 @@ OCP.prototype.pcrypt = function(password, clear_msg) {
 };
 
 OCP.prototype.pdecrypt = function(password, crypted_msg) {
-    return crypted_msg;
+	var words = CryptoJS.enc.Latin1.parse(crypted_msg);
+	var b64 = CryptoJS.enc.Base64.stringify(words);
+	var d_words = CryptoJS.AES.decrypt(b64, password);
+    return d_words.toString();
 };
 
 OCP.prototype.crypt = function(secret_key, clear_msg) {

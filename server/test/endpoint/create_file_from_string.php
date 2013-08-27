@@ -10,6 +10,9 @@
 	define("TEST_DIR", ROOT . '/test/');
 
 	$_REQUEST = array_merge($_GET, $_POST);
+
+	debug_r('_FILES', $_FILES);
+	debug_r('_REQUEST', $_REQUEST);
 	$output = array();
 	try {
 		if (!is_dir(TEST_DIR)) {
@@ -22,7 +25,9 @@
 		if (file_exists($file)) {
 			throw new Exception('This file already exists.');
 		}
-		file_put_contents($file, $_REQUEST['content']);
+		$tmp_file = $_FILES['content']['tmp_name'];
+
+		rename($tmp_file, $file);
 		$output['result'] = 'OK';
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
