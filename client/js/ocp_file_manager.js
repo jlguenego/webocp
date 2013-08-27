@@ -175,7 +175,7 @@ function error_from_readentries(e) {
 
 // PROGRESS BAR
 function ocp_fm_upload_file_progress(e, path, name) {
-	var id = ocp_client.hash(normalize_path(path + '/' + name));
+	var id = ocp.hash(normalize_path(path + '/' + name));
 	var total = e.total;
 	var loaded = e.loaded;
 	var percent = Math.round((loaded * 100) / total);

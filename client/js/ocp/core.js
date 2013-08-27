@@ -1,5 +1,3 @@
-var ocp = {};
-
 ocp.base = '';
 ocp.css = {};
 ocp.css.theme = 'default';
