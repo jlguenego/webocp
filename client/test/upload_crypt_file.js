@@ -25,6 +25,21 @@ function str2hex(str) {
 			hex += "0";
 		}
 		hex += n.toString(16);
+		//console.log('n=' + n);
+		//console.log('hex_n=' + n.toString(16));
 	}
 	return hex;
+}
+
+function hex2wa(hexStr) {
+    // Shortcut
+    var hexStrLength = hexStr.length;
+
+    // Convert
+    var words = [];
+    for (var i = 0; i < hexStrLength; i += 2) {
+        words[i >>> 3] |= parseInt(hexStr.charAt(i) + hexStr.charAt(i + 1), 16) << (24 - (i % 8) * 4);
+    }
+
+    return CryptoJS.lib.WordArray.create(words, hexStrLength / 2);
 }
