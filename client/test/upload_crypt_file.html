@@ -34,6 +34,7 @@ html, body {
 	</head>
 
 	<body>
+		<input type="text" id="server_uri" value="http://localhost" /><br/>
 		<input type="text" id="secret_key" /><br/>
 		<input type="file" id="file" name="file" /><button id="send">Send</button>
 		<div id="progress" style="position: relative; width: 200px; height: 50px;"></div>
@@ -159,7 +160,7 @@ html, body {
 				var result = null;
 				$.ajax({
 					type: "POST",
-					url: 'http://localhost/webocp/server/test/endpoint/retrieve_file.php',
+					url: $('#server_uri').val() + '/webocp/server/test/endpoint/retrieve_file.php',
 					async: true,
 			        xhr: function() {  // custom xhr
 			            var myXhr = $.ajaxSettings.xhr();
