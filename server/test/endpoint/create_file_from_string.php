@@ -7,11 +7,17 @@
 	require_once(BASE_DIR . '/include/misc.inc');
 	require_once(BASE_DIR . '/include/constant.inc');
 	require_once(BASE_DIR . '/include/format.inc');
+	define("TEST_DIR", ROOT . '/test/');
 
 	$_REQUEST = array_merge($_GET, $_POST);
 	$output = array();
 	try {
-		$file = ROOT . '/test/' . $_REQUEST['filename'];
+		if (!is_dir(TEST_DIR)) {
+			if (!@mkdir(TEST_DIR)) {
+				throw new Exception('Cannot create the test folder.');
+			}
+		}
+		$file = TEST_DIR . $_REQUEST['filename'];
 		debug('path='.$file);
 		if (file_exists($file)) {
 			throw new Exception('This file already exists.');
