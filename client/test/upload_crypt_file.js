@@ -3,7 +3,6 @@
 	var buffer = hex2ab(content);
 
 	bb.append(buffer);
-	console.log(bb);
 	var blob = bb.getBlob("example/binary");
 	saveAs(blob, filename);
 }
@@ -14,9 +13,7 @@ function hex2ab(hex) {
     for (var i = 0; i < ab.byteLength; i++) {
     	var n = parseInt(hex.substr(i*2, 2), 16);
         data.setUint8(i, n);
-        console.log(n);
     }
-    console.log(ab);
     return ab;
 }
 
