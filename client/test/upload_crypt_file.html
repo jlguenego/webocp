@@ -21,7 +21,7 @@
 		<script src="../_ext/BlobBuilder.min.js"></script>
 		<script src="../_ext/Blob.js"></script>
 
-		<script src="../js/ocp_client.js"></script>
+		<script src="../js/ocp.js"></script>
 		<script src="../js/ocp_profile.js"></script>
 		<script src="upload_crypt_file.js"></script>
 
@@ -67,12 +67,14 @@ html, body {
 				var step = 1 << 16;
 				console.log('step=' + step);
 
+				var filelist = "";
+
 				while (start < file.size) {
 					var stop = start + step;
 					var reader = new FileReader();
 
 					// If we use onloadend, we need to check the readyState.
-					reader.onload = (function(my_start, my_stop, my_step) {
+					reader.onload = (function(stop, file_size) {
 						return function(evt) {
 							if (evt.target.readyState == FileReader.DONE) { // DONE == 2
 								profiler.report('read content');
@@ -93,66 +95,87 @@ html, body {
 								var filename = ocp.hash(crypted_content);
 								profiler.report('end Hash');
 
-								$('#upload_name').html(filename);
+								send_file(filename, crypted_content);
 
-								$.ajaxSetup({
-									cache: false,
-									scriptCharset: "utf-8"
-								});
+								filelist += filename + "\n";
+								if (stop >= file_size) {
+									profiler.report('start filelist');
+									profiler.report('start Hex to Word');
+									var hex = str2hex(filelist);
+									var words = hex2wa(hex);
+									profiler.report('end Hex to Word');
 
-								var result = null;
-								profiler.report('start upload');
+									profiler.report('start encryption');
+									var crypted_content = ocp.pcrypt(secret_key, words);
+									profiler.report('end encryption');
 
-								var formdata = new FormData();
-								formdata.append('filename', filename);
-								var blob = new Blob([crypted_content], { type: "text/plain" });
-								formdata.append('content', blob);
+									profiler.report('start Hash');
+									var filename = ocp.hash(crypted_content);
+									profiler.report('end Hash');
+									send_file(filename, crypted_content);
 
-								$.ajax({
-									type: "POST",
-									url: $('#server_uri').val() + '/webocp/server/test/endpoint/create_file_from_string.php',
-									async: true,
-									processData: false,
-									contentType: false,
-							        xhr: function() {  // custom xhr
-							            var myXhr = $.ajaxSettings.xhr();
-							            if(myXhr.upload){ // check if upload property exists
-							                myXhr.upload.addEventListener('progress', function(e) {
-							                	on_progress(e, filename);
-							                }, false); // for handling the progress of the upload
-							            }
-							            return myXhr;
-							        },
-									data: formdata,
-									success: function(data) {
-										profiler.report('end upload');
-										console.log(data);
-										var output = $.parseJSON(data);
-										if (output.error) {
-											throw new OCPException('Server answered: ' + output.error);
-										}
-										if (output.result) {
-											result = output.result;
-										}
-									},
-									error: function(jqXHR, textStatus, errorThrown) {
-										console.log('ajax_ls error');
-										console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
-									},
-									statusCode: {
-										404: function() {
-											console.log("page not found");
-										}
-									}
-								});
+									$('#upload_name').html(filename);
+								}
 							}
 						};
-					})(start, stop, step);
+					})(stop, file.size);
 
 					var blob = file.slice(start, stop);
 					reader.readAsBinaryString(blob);
 					start += step;
 				}
+			}
+
+			function send_file(filename, content) {
+				var formdata = new FormData();
+				formdata.append('filename', filename);
+				var blob = new Blob([content], { type: "text/plain" });
+				formdata.append('content', blob);
+
+				$.ajaxSetup({
+					cache: false,
+					scriptCharset: "utf-8"
+				});
+
+				var result = null;
+				profiler.report('start upload');
+				$.ajax({
+					type: "POST",
+					url: $('#server_uri').val() + '/webocp/server/test/endpoint/create_file_from_string.php',
+					async: true,
+					processData: false,
+					contentType: false,
+			        xhr: function() {  // custom xhr
+			            var myXhr = $.ajaxSettings.xhr();
+			            if(myXhr.upload){ // check if upload property exists
+			                myXhr.upload.addEventListener('progress', function(e) {
+			                	on_progress(e, filename);
+			                }, false); // for handling the progress of the upload
+			            }
+			            return myXhr;
+			        },
+					data: formdata,
+					success: function(data) {
+						profiler.report('end upload');
+						console.log(data);
+						var output = $.parseJSON(data);
+						if (output.error) {
+							throw new OCPException('Server answered: ' + output.error);
+						}
+						if (output.result) {
+							result = output.result;
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log('ajax_ls error');
+						console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
+					},
+					statusCode: {
+						404: function() {
+							console.log("page not found");
+						}
+					}
+				});
 			}
 
 			$('#send').click(readBlob);
