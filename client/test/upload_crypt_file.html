@@ -71,18 +71,12 @@ html, body {
 						return function(evt) {
 							if (evt.target.readyState == FileReader.DONE) { // DONE == 2
 								var content = evt.target.result;
-								console.log('content=');
-								console.log(content);
 								var hex = str2hex(content);
 								var words = CryptoJS.enc.Hex.parse(hex);
 
 								var crypted_content = ocp.pcrypt(secret_key, words);
-								console.log('crypted_content=');
-								console.log(crypted_content);
 								var filename = ocp.hash(crypted_content);
 								$('#upload_name').html(filename);
-								console.log('content=|'+content+'|');
-								console.log('hash='+filename);
 
 								$.ajaxSetup({
 									cache: false,
@@ -92,12 +86,11 @@ html, body {
 								var result = null;
 								$.ajax({
 									type: "POST",
-									url: 'http://localhost/webocp/server/test/endpoint/create_file_from_string.php',
+									url: $('#server_uri').val() + '/webocp/server/test/endpoint/create_file_from_string.php',
 									async: true,
 							        xhr: function() {  // custom xhr
 							            var myXhr = $.ajaxSettings.xhr();
 							            if(myXhr.upload){ // check if upload property exists
-							            	console.log('Upload');
 							                myXhr.upload.addEventListener('progress', function(e) {
 							                	on_progress(e, filename);
 							                }, false); // for handling the progress of the upload
@@ -146,7 +139,6 @@ html, body {
 				var total = e.total;
 				var loaded = e.loaded;
 				var percent = Math.round((loaded * 100) / total);
-				console.log('progress: ' + percent + '%');
 				$('#progress').ocp_progressbar('set_progress', percent);
 			}
 
