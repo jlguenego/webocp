@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+		<script src="../_ext/jquery-1.10.2.min.js"></script>
+		<script src="../_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="../_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- PROGRESSBAR -->
+		<script src="../js/ocp/widget_progressbar.js"></script>
+		<link rel="stylesheet" href="../js/ocp/theme/default/widget_progressbar.css" />
+		<!-- END PROGRESSBAR -->
+
+		<script src="../js/ocp.js"></script>
+		<script src="../js/ocp_profile.js"></script>
+		<script src="../js/ocp_progress.js"></script>
+		<script src="upload_crypt_file.js"></script>
+		<script src="worker_pool.js"></script>
+
+		<style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+		</style>
+	</head>
+
+	<body>
+		<button>Start</button>
+		<div id="progress" style="position: relative; width: 200px; height: 50px;"></div>
+
+		<script>
+			$('#progress').ocp_progressbar();
+
+			var progress = new ocp.progress(function(percent) {
+				$('#progress').ocp_progressbar('set_progress', percent);
+			});
+
+			$('button').click(function() {
+				$('#progress').ocp_progressbar('set_progress', 0);
+
+				var pool = new Pool(3);
+				pool.init();
+
+				var total = 300 * 10;
+				var performed = 0;
+				for (var i = 0; i < 10; i++) {
+					var task = new Task('worker_progress.js', function (event) {
+			            var data = $.parseJSON(event.data);
+			            if (data.increment) {
+				            performed += data.increment;
+							progress.update(performed, total);
+						}
+					}, 'start', i);
+					console.log('created task[' + task.name + ']');
+
+			        pool.addTask(task);
+			    };
+			});
+		</script>
+	</body>
+</html>

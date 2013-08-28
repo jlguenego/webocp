@@ -20,8 +20,6 @@ $.widget( "ui.ocp_progressbar", {
 	progressbar: null,
 	progressbar_fill: null,
 
-	last_call: 0,
-
 	_create: function() {
 		this.element.addClass('ocp_wd_pb_progressbar_block');
 
@@ -48,11 +46,6 @@ $.widget( "ui.ocp_progressbar", {
 			progress = 100;
 		}
 
-		var now = new Date().getTime();
-		if (now - this.last_call < 50 && progress != 100) {
-			//return;
-		}
-		this.last_call = now;
 		this.progressbar_fill.width(progress + '%');
 		this.percentage.html(progress + '%');
 	}
