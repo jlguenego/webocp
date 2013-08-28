@@ -12,25 +12,26 @@
 		<script id="worker_1" type="text/js-worker">
 			importScripts(base_url + '/worker_lib2.js');
 			importScripts(base_url + '/worker_lib3.js');
-
-			//start();
 		</script>
 
 		<script>
 			var base_url = window.location.href.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
 			var array = ['var base_url = "' + base_url + '";' + $('#worker_1').html()];
 			var blob = new Blob(array, {type: "text/javascript"});
+			var url = window.URL.createObjectURL(blob);
+			console.log(url);
 
+			var i = 0;
 			$('button').click(function() {
-				var url = window.URL.createObjectURL(blob);
-				console.log(url);
+
 				var worker = new Worker(url);
 				worker.addEventListener('message', function(event) {
 					$('#output').html(event.data.answer);
 				}, false);
 				worker.postMessage({
-					name: 'Yannis'
+					name: 'POPO' + i
 				});
+				i++;
 			});
 		</script>
 	</body>
