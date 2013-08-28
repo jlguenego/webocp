@@ -1,4 +1,6 @@
 function OCP() {
+	this.debug = false;
+
 	this.hash = function(content) {
 	    var result = CryptoJS.SHA1(content);
 	    return result.toString();

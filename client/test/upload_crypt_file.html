@@ -23,6 +23,7 @@
 
 		<script src="../js/ocp.js"></script>
 		<script src="../js/ocp_profile.js"></script>
+		<script src="../js/ocp_progress.js"></script>
 		<script src="upload_crypt_file.js"></script>
 
 		<style>
@@ -44,8 +45,6 @@ html, body {
 		<div id="decrypted_content"></div>
 
 		<script>
-			var ocp = new OCP();
-			var profiler = new ocp_profile();
 			$(function() {
 				// Check for the various File API support.
 				if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
@@ -54,79 +53,108 @@ html, body {
 				}
 			});
 
-			function readBlob() {
-				profiler.start();
+			$('#progress').ocp_progressbar();
+
+			$('#send').click(function() {
+				var total_operations = 0;
+				var performed = 0;
+				var progress = new ocp.progress(function(percent) {
+					$('#progress').ocp_progressbar('set_progress', percent);
+				});
+
+				function update_progress() {
+					performed++;
+					progress.update(performed, total_operations);
+				};
+
 				var secret_key = $('#secret_key').val();
+
+				$('#progress').ocp_progressbar('set_progress', 0);
+				ocp.profile.start();
 
 				var file = $('#file').get(0).files[0];
 				if (!file) {
 					alert('no file');
 					return;
 				}
-				var start = 0;
-				var step = 1 << 16;
-				console.log('step=' + step);
+				var cursor = 0;
+				var block_size = 1 << 16;
+				console.log('block_size=' + block_size);
+				// file_nbr = slices + header
+				var file_nbr = Math.ceil(file.size / block_size) + 1;
+				// Read content
+				// Content to word
+				// Encryption
+				// Hash
+				// Upload
+				total_operations = file_nbr * 5;
+				console.log('total_operations=' + total_operations);
 
-				var filelist = "";
+				function process_file(file_content) {
+					ocp.profile.report('start filelist');
+					update_progress();
 
-				while (start < file.size) {
-					var stop = start + step;
-					var reader = new FileReader();
+					ocp.profile.report('start Hex to Word');
+					var hex = str2hex(file_content);
+					var words = hex2wa(hex);
+					ocp.profile.report('end Hex to Word');
+					update_progress();
 
-					// If we use onloadend, we need to check the readyState.
-					reader.onload = (function(stop, file_size) {
-						return function(evt) {
-							if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-								profiler.report('read content');
-								var content = evt.target.result;
+					ocp.profile.report('start encryption');
+					var crypted_content = ocp.pcrypt(secret_key, words);
+					ocp.profile.report('end encryption');
+					update_progress();
 
-								profiler.report('start Hex to Word');
-								var hex = str2hex(content);
-								var words = hex2wa(hex);
-								profiler.report('end Hex to Word');
+					ocp.profile.report('start Hash');
+					var filename = ocp.hash(crypted_content);
+					ocp.profile.report('end Hash');
+					update_progress();
 
-								profiler.report('start encryption');
-								var crypted_content = ocp.pcrypt(secret_key, words);
-								profiler.report('end encryption');
-								console.log('content.length=' + content.length);
-								console.log('crypted_content.length=' + crypted_content.length);
+					send_file(filename, crypted_content, function() {
+						update_progress();
+					});
 
-								profiler.report('start Hash');
-								var filename = ocp.hash(crypted_content);
-								profiler.report('end Hash');
+					return filename;
+				};
 
-								send_file(filename, crypted_content);
+				var filelist = [];
+				var i = 0;
+				while (cursor < file.size) {
+					var cursor_next = cursor + block_size;
+					(function(i, cursor, cursor_next) {
+						setTimeout(function() {
+							var reader = new FileReader();
+							// If we use onloadend, we need to check the readyState.
+							reader.onload = (function(index, cursor_next, file_size) {
+								return function(evt) {
+									if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+										var filename = process_file(evt.target.result);
+										filelist.push({index: index, filename: filename});
 
-								filelist += filename + "\n";
-								if (stop >= file_size) {
-									profiler.report('start filelist');
-									profiler.report('start Hex to Word');
-									var hex = str2hex(filelist);
-									var words = hex2wa(hex);
-									profiler.report('end Hex to Word');
+										// For the last file
+										if (filelist.length == file_nbr - 1) {
+											var content = '';
+											for (var j = 0; j < filelist.length; j++) {
+												content += filelist[j].index + "_" + filelist[j].filename + "\n";
+											}
+											var filename = process_file(content);
 
-									profiler.report('start encryption');
-									var crypted_content = ocp.pcrypt(secret_key, words);
-									profiler.report('end encryption');
+											$('#upload_name').html(filename);
+										}
+									}
+								};
+							})(i, cursor_next, file.size);
 
-									profiler.report('start Hash');
-									var filename = ocp.hash(crypted_content);
-									profiler.report('end Hash');
-									send_file(filename, crypted_content);
-
-									$('#upload_name').html(filename);
-								}
-							}
-						};
-					})(stop, file.size);
-
-					var blob = file.slice(start, stop);
-					reader.readAsBinaryString(blob);
-					start += step;
+							var blob = file.slice(cursor, cursor_next);
+							reader.readAsBinaryString(blob);
+						}, 0);
+					})(i, cursor, cursor_next);
+					cursor = cursor_next;
+					i++;
 				}
-			}
+			});
 
-			function send_file(filename, content) {
+			function send_file(filename, content, success_func) {
 				var formdata = new FormData();
 				formdata.append('filename', filename);
 				var blob = new Blob([content], { type: "text/plain" });
@@ -138,26 +166,17 @@ html, body {
 				});
 
 				var result = null;
-				profiler.report('start upload');
+				ocp.profile.report('start upload');
 				$.ajax({
 					type: "POST",
 					url: $('#server_uri').val() + '/webocp/server/test/endpoint/create_file_from_string.php',
 					async: true,
 					processData: false,
 					contentType: false,
-			        xhr: function() {  // custom xhr
-			            var myXhr = $.ajaxSettings.xhr();
-			            if(myXhr.upload){ // check if upload property exists
-			                myXhr.upload.addEventListener('progress', function(e) {
-			                	on_progress(e, filename);
-			                }, false); // for handling the progress of the upload
-			            }
-			            return myXhr;
-			        },
 					data: formdata,
 					success: function(data) {
-						profiler.report('end upload');
-						console.log(data);
+						ocp.profile.report('end upload');
+						//console.log(data);
 						var output = $.parseJSON(data);
 						if (output.error) {
 							throw new OCPException('Server answered: ' + output.error);
@@ -165,6 +184,7 @@ html, body {
 						if (output.result) {
 							result = output.result;
 						}
+						success_func();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log('ajax_ls error');
@@ -178,19 +198,8 @@ html, body {
 				});
 			}
 
-			$('#send').click(readBlob);
-
-			$('#progress').ocp_progressbar();
-
-			function on_progress(e, filename) {
-				var total = e.total;
-				var loaded = e.loaded;
-				var percent = Math.round((loaded * 100) / total);
-				$('#progress').ocp_progressbar('set_progress', percent);
-			}
-
 			$('#retrieve').click(function() {
-				profiler.start();
+				ocp.profile.start();
 				var filename = $('#upload_name').html();
 				$.ajaxSetup({
 					cache: false,
@@ -198,7 +207,7 @@ html, body {
 				});
 
 				var result = null;
-				profiler.report('ask for file');
+				ocp.profile.report('ask for file');
 				$.ajax({
 					type: "POST",
 					url: $('#server_uri').val() + '/webocp/server/test/endpoint/retrieve_file.php',
@@ -216,7 +225,7 @@ html, body {
 						filename: filename
 					},
 					success: function(data) {
-						profiler.report('crypted file retrieved');
+						ocp.profile.report('crypted file retrieved');
 						console.log(data);
 
 						var output = $.parseJSON(data);
@@ -229,9 +238,9 @@ html, body {
 
 						var secret_key = $('#secret_key').val();
 
-						profiler.report('start decryption');
+						ocp.profile.report('start decryption');
 						var d_content = ocp.pdecrypt(secret_key, result.content);
-						profiler.report('end decryption');
+						ocp.profile.report('end decryption');
 
 						save_as(d_content, filename);
 					},
