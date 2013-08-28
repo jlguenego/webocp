@@ -6,8 +6,8 @@
 }
 
 function inform(obj) {
-	var json = JSON.stringify(obj);
-	this.postMessage(json);
+	//var json = JSON.stringify(obj);
+	this.postMessage(obj);
 }
 
 this.addEventListener('message', messageHandler, false);

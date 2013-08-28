@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+		<script src="../../_ext/jquery-1.10.2.min.js"></script>
+	</head>
+
+	<body>
+		<button>Start</button>
+		<div id="output"></div>
+
+		<script>
+			$('button').click(function() {
+				var worker = new Worker('worker_lib.js');
+				worker.addEventListener('message', function(event) {
+					$('#output').html(event.data.answer);
+				}, false);
+				worker.postMessage({
+					name: 'toto3'
+				});
+			});
+		</script>
+	</body>
+</html>

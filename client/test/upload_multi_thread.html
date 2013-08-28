@@ -1,0 +1,305 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+		<script src="../_ext/jquery-1.10.2.min.js"></script>
+		<script src="../_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="../_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- CRYPTO JS -->
+		<script src="../_ext/sha1.js"></script>
+		<script src="../_ext/aes.js"></script>
+		<!-- END CRYPTO JS -->
+
+		<!-- PROGRESSBAR -->
+		<script src="../js/ocp/widget_progressbar.js"></script>
+		<link rel="stylesheet" href="../js/ocp/theme/default/widget_progressbar.css" />
+		<!-- END PROGRESSBAR -->
+
+		<script src="../_ext/FileSaver.js"></script>
+		<script src="../_ext/BlobBuilder.min.js"></script>
+		<script src="../_ext/Blob.js"></script>
+
+		<script src="../js/ocp.js"></script>
+		<script src="../js/ocp_profile.js"></script>
+		<script src="../js/ocp_progress.js"></script>
+		<script src="upload_crypt_file.js"></script>
+		<script src="worker_pool.js"></script>
+
+		<style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+		</style>
+	</head>
+
+	<body>
+		<input type="text" id="server_uri" value="http://localhost" /><br/>
+		<input type="text" id="secret_key" /><br/>
+		<input type="file" id="file" name="file" /><button id="send">Send</button>
+		<div id="progress" style="position: relative; width: 200px; height: 50px;"></div>
+		<div id="upload_name"></div>
+		<button id="retrieve">Retrieve</button>
+		<div id="decrypted_content"></div>
+
+		<script>
+			$(function() {
+				// Check for the various File API support.
+				if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+				  alert('The File APIs are not fully supported in this browser.');
+				  return;
+				}
+			});
+
+			$('#progress').ocp_progressbar();
+
+			$('#send').click(function() {
+				var total_operations = 0;
+				var performed = 0;
+				var progress = new ocp.progress(function(percent) {
+					$('#progress').ocp_progressbar('set_progress', percent);
+				});
+
+				function update_progress() {
+					performed++;
+					progress.update(performed, total_operations);
+				};
+
+				var secret_key = $('#secret_key').val();
+
+				$('#progress').ocp_progressbar('set_progress', 0);
+				ocp.profile.start();
+
+				var file = $('#file').get(0).files[0];
+				if (!file) {
+					alert('no file');
+					return;
+				}
+				var cursor = 0;
+				var block_size = 1 << 16;
+				console.log('block_size=' + block_size);
+				// file_nbr = slices + header
+				var file_nbr = Math.ceil(file.size / block_size) + 1;
+				// Read content
+				// Content to word
+				// Encryption
+				// Hash
+				// Upload
+				total_operations = file_nbr * 5;
+				console.log('total_operations=' + total_operations);
+
+				var pool = new Pool(5);
+				pool.init();
+
+				var filelist = [];
+				var i = 0;
+				while (cursor < file.size) {
+					var cursor_next = cursor + block_size;
+
+					(function(file, cursor, cursor_next, i) {
+						var message = JSON.stringify({
+							file: file,
+							cursor: cursor,
+							cursor_next: cursor_next,
+							index: i,
+							server_uri: $('#server_uri').val()
+						});
+
+						function task_callback(event) {
+							console.log(event);
+							if (event.data.filename) {
+								filelist.push({index: index, filename: filename});
+
+								// For the last file
+								if (filelist.length == file_nbr - 1) {
+									var content = '';
+									for (var j = 0; j < filelist.length; j++) {
+										content += filelist[j].index + "_" + filelist[j].filename + "\n";
+									}
+									message.content = content;
+
+									var task = new Task('worker_progress.js', task_callback, message);
+									pool.addTask(task);
+
+									var filename = process_file(content, server_uri);
+
+									$('#upload_name').html(filename);
+								}
+							}
+							if (event.data.increment) {
+								update_progress();
+							}
+						};
+
+						var task = new Task('upload_multi_thread.js', task_callback, message, i);
+						pool.addTask(task);
+						//console.log('created new task[' + i + ']');
+					})(file, cursor, cursor_next, i);
+
+					cursor = cursor_next;
+					i++;
+				}
+			});
+
+			$('#retrieve').click(function() {
+				ocp.profile.start();
+				var filename = $('#upload_name').html();
+				$.ajaxSetup({
+					cache: false,
+					scriptCharset: "utf-8"
+				});
+
+				var result = null;
+				ocp.profile.report('ask for file');
+				$.ajax({
+					type: "POST",
+					url: $('#server_uri').val() + '/webocp/server/test/endpoint/retrieve_file.php',
+					async: true,
+			        xhr: function() {  // custom xhr
+			            var myXhr = $.ajaxSettings.xhr();
+			            if(myXhr.upload){ // check if upload property exists
+			                myXhr.upload.addEventListener('progress', function(e) {
+			                	on_progress(e, filename);
+			                }, false); // for handling the progress of the upload
+			            }
+			            return myXhr;
+			        },
+					data: {
+						filename: filename
+					},
+					success: function(data) {
+						ocp.profile.report('crypted file retrieved');
+						console.log(data);
+
+						var output = $.parseJSON(data);
+						if (output.error) {
+							throw new OCPException('Server answered: ' + output.error);
+						}
+						if (output.result) {
+							result = output.result;
+						}
+
+						var secret_key = $('#secret_key').val();
+
+						ocp.profile.report('start decryption');
+						var d_content = ocp.pdecrypt(secret_key, result.content);
+						ocp.profile.report('end decryption');
+
+						save_as(d_content, filename);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log('ajax_ls error');
+						console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
+					},
+					statusCode: {
+						404: function() {
+							console.log("page not found");
+						}
+					}
+				});
+			});
+
+			function hex2a(hex) {
+			    var str = '';
+			    for (var i = 0; i < hex.length; i += 2) {
+			        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+			    }
+			    return str;
+			}
+
+			function str2ab(str) {
+				var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+				var bufView = new Uint16Array(buf);
+				for (var i=0, strLen=str.length; i<strLen; i++) {
+					bufView[i] = str.charCodeAt(i);
+				}
+				return buf;
+			}
+			var keyStr = "ABCDEFGHIJKLMNOP" +
+               "QRSTUVWXYZabcdef" +
+               "ghijklmnopqrstuv" +
+               "wxyz0123456789+/" +
+               "=";
+
+			function str2b64(input) {
+				input = escape(input);
+				var output = "";
+				var chr1, chr2, chr3 = "";
+				var enc1, enc2, enc3, enc4 = "";
+				var i = 0;
+
+				do {
+					chr1 = input.charCodeAt(i++);
+					chr2 = input.charCodeAt(i++);
+					chr3 = input.charCodeAt(i++);
+
+					enc1 = chr1 >> 2;
+					enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+					enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+					enc4 = chr3 & 63;
+
+					if (isNaN(chr2)) {
+						enc3 = enc4 = 64;
+					} else if (isNaN(chr3)) {
+						enc4 = 64;
+					}
+
+					output = output +
+					keyStr.charAt(enc1) +
+					keyStr.charAt(enc2) +
+					keyStr.charAt(enc3) +
+					keyStr.charAt(enc4);
+					chr1 = chr2 = chr3 = "";
+					enc1 = enc2 = enc3 = enc4 = "";
+				} while (i < input.length);
+
+				return output;
+			}
+
+			function b642str(input) {
+				var output = "";
+				var chr1, chr2, chr3 = "";
+				var enc1, enc2, enc3, enc4 = "";
+				var i = 0;
+
+				// remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+				var base64test = /[^A-Za-z0-9\+\/\=]/g;
+				if (base64test.exec(input)) {
+					alert("There were invalid base64 characters in the input text.\n" +
+					"Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
+					"Expect errors in decoding.");
+				}
+				input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+				do {
+					enc1 = keyStr.indexOf(input.charAt(i++));
+					enc2 = keyStr.indexOf(input.charAt(i++));
+					enc3 = keyStr.indexOf(input.charAt(i++));
+					enc4 = keyStr.indexOf(input.charAt(i++));
+
+					chr1 = (enc1 << 2) | (enc2 >> 4);
+					chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+					chr3 = ((enc3 & 3) << 6) | enc4;
+
+					output = output + String.fromCharCode(chr1);
+
+					if (enc3 != 64) {
+						output = output + String.fromCharCode(chr2);
+					}
+					if (enc4 != 64) {
+						output = output + String.fromCharCode(chr3);
+					}
+
+					chr1 = chr2 = chr3 = "";
+					enc1 = enc2 = enc3 = enc4 = "";
+
+				} while (i < input.length);
+
+				return unescape(output);
+			}
+		</script>
+	</body>
+</html>

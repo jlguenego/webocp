@@ -13,9 +13,7 @@
 		<!-- END PROGRESSBAR -->
 
 		<script src="../js/ocp.js"></script>
-		<script src="../js/ocp_profile.js"></script>
 		<script src="../js/ocp_progress.js"></script>
-		<script src="upload_crypt_file.js"></script>
 		<script src="worker_pool.js"></script>
 
 		<style>
@@ -48,13 +46,14 @@ html, body {
 				var performed = 0;
 				for (var i = 0; i < 10; i++) {
 					var task = new Task('worker_progress.js', function (event) {
-			            var data = $.parseJSON(event.data);
-			            if (data.increment) {
-				            performed += data.increment;
+						console.log(event.data);
+			            //var data = $.parseJSON(event.data);
+			            if (event.data.increment) {
+				            performed += event.data.increment;
 							progress.update(performed, total);
 						}
 					}, 'start', i);
-					console.log('created task[' + task.name + ']');
+					//console.log('created task[' + task.name + ']');
 
 			        pool.addTask(task);
 			    };

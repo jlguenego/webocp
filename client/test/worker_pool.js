@@ -40,7 +40,7 @@ function Thread(pool, name) {
 
 	this.run = function(task) {
 		this.task = task;
-        console.log('thread[' + this.name + '] starting new task[' + this.task.name + '].');
+        //console.log('thread[' + this.name + '] starting new task[' + this.task.name + '].');
 
         if (this.task.script!= null) {
             var worker = new Worker(task.script);
@@ -51,10 +51,9 @@ function Thread(pool, name) {
         }
 
         function callback(event) {
-        	var data = $.parseJSON(event.data);
 			self.task.callback(event);
-        	if (data.finish) {
-        		console.log('thread[' + self.name + '] finished task[' + self.task.name + '].');
+        	if (event.data.finish) {
+        		//console.log('thread[' + self.name + '] finished task[' + self.task.name + '].');
 		        self.pool.freeThread(self);
 		    }
 	    }
