@@ -38,6 +38,8 @@ importScripts(base_url + '/js/ocp_utils.js');
 importScripts(base_url + '/js/ocp_worker_utils.js');
 importScripts(base_url + '/js/ocp_crypto.js');
 
+importScripts(base_url + '/_ext/WorkerFormData.js');
+
 ocp.worker_utils.init(this);
 
 function run(event) {
@@ -58,11 +60,10 @@ function upload_block(args) {
 	var reader = new FileReader();
 	reader.onload = function(evt) {
 		if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-			var filename = process_block(evt.target.result, args.secret_key);
+			var filename = process_block(evt.target.result, args.secret_key, args.serveur_uri);
 			report({
 				filename: filename,
-				block_id: args.block_id,
-				finish: true
+				block_id: args.block_id
 			});
 		}
 	};
@@ -70,19 +71,39 @@ function upload_block(args) {
 	console('update block');
 }
 
-function process_block(block_str, secret_key) {
+function process_block(block_str, secret_key, serveur_uri) {
 	// 1) crypt
-	var crypted_block_str = crypt(block_str, secret_key);
+	var crypted_block_str = ocp.crypto.pcrypt(secret_key, block_str);
 
 	// 2) hash
+	var filename = ocp.crypto.hash(crypted_block_str);
+
 	// 3) upload
-	console(block_str.substr(0, 10));
-	var filename = 'xx';
+	upload_file(serveur_uri, filename, crypted_block_str, function() {
+		finish: true
+	});
 	return filename;
 }
 
-function crypt(block_str, secret_key) {
-	return ocp.crypto.pcrypt(secret_key, block_str);
+function upload_file(url, filename, content, success_func) {
+	var formData = new FormData();
+	formData.append('filename', filename);
+	var blob = new Blob([content], { type: "text/plain" });
+	formData.append('content', blob);
+
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			var json_str = xhr.responseText;
+			var json_obj = JSON.parse(json_str);
+			console(json_obj);
+			report({
+				finish: true
+			});
+		}
+	}
+	xhr.open('POST', url, true);
+	xhr.send(formData);
 }
 		</script>
 <!-- END WORKER -->
@@ -102,6 +123,7 @@ $('#send').click(function() {
 	setup_upload_task(file, pool, secret_key);
 });
 
+var serveur_uri = $('#server_uri').val() + '/webocp/server/test/endpoint/create_file_from_string.php'
 var total_task = 0;
 var total_performed = 0;
 
@@ -118,7 +140,8 @@ function setup_upload_task(file, pool, secret_key) {
 			cursor: cursor,
 			cursor_next: cursor_next,
 			block_id: block_id,
-			secret_key: secret_key
+			secret_key: secret_key,
+			serveur_uri: serveur_uri
 		};
 
 		var callback_func = function(event) {

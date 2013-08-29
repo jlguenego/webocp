@@ -16,8 +16,7 @@
 
 		<script id="worker_1" type="text/js-worker">
 			importScripts(base_url + '/test/web_worker/worker_lib2.js');
-
-			ocp.worker_utils.init(this);
+			importScripts(base_url + '/_ext/WorkerFormData.js');
 
 			function run(event) {
 				var self = this;
@@ -29,19 +28,30 @@
 				reader.onload = function(evt) {
 					if (evt.target.readyState == FileReader.DONE) { // DONE == 2
 						result = evt.target.result;
+
+						var formData = new FormData();
+						var filename = 'toto.txt';
+						formData.append('filename', filename);
+						formData.append('content', blob);
+
+						var xhr = new XMLHttpRequest();
+						var url = 'http://localhost/webocp/server/test/endpoint/create_file_from_string.php';
+						xhr.open('POST', url, true);
+						xhr.onreadystatechange = function(){
+							if (xhr.readyState == 4 && xhr.status == 200) {
+								var json_str = xhr.responseText;
+								var json_obj = JSON.parse(json_str);
+								self.postMessage({
+									result: json_obj.result
+								});
+							}
+						}
+
+						xhr.send(formData);
 					}
-					self.postMessage({
-						answer: 'coucou',
-						result: result
-					});
 				};
 				var blob = msg.file.slice(0, 10);
 				reader.readAsBinaryString(blob);
-
-				this.postMessage({
-					answer: hello(event.data.name),
-					result: result
-				});
 			}
 
 			this.addEventListener('message', run, false);
@@ -56,11 +66,10 @@
 				worker.addEventListener('message', function(event) {
 					console.log(event.data);
 					var div = $('<div/>');
-					div.html(event.data.answer + ' ' + event.data.result);
+					div.html(event.data.result);
 					$('#output').append(div);
 				}, false);
 				worker.postMessage({
-					name: 'Yannis',
 					file: file
 				});
 			});

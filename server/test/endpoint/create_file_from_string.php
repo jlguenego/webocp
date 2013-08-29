@@ -14,6 +14,8 @@
 	debug_r('_FILES', $_FILES);
 	debug_r('_REQUEST', $_REQUEST);
 	$output = array();
+	$output['_REQUEST'] = $_REQUEST;
+	$output['_FILES'] = $_FILES;
 	try {
 		if (!is_dir(TEST_DIR)) {
 			if (!@mkdir(TEST_DIR)) {
