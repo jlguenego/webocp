@@ -1,16 +1,22 @@
-﻿(function(ocp, undefined) {
+﻿var console = null;
+
+(function(ocp, undefined) {
 	ocp.worker_utils = {};
 
 	ocp.worker_utils.init = function() {
 
 	};
 
-	ocp.worker_utils.console = function(worker, msg) {
-		worker.postMessage({
-			console: msg,
-			thread: worker.thread_name
-			//task: worker.task_name,
-		});
+	ocp.worker_utils.init_console = function(worker) {
+		if (console == null) {
+			console = function(msg) {
+				worker.postMessage({
+					console: msg,
+					thread: worker.thread_name
+					//task: worker.task_name,
+				});
+			}
+		}
 	};
 
 	ocp.worker_utils.run = function(worker, func) {

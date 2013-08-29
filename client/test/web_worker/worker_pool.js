@@ -1,6 +1,8 @@
 ﻿importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_worker_utils.js');
 
+ocp.worker_utils.init_console(this);
+
 function run(event) {
     var task = event.data;
     switch(task.name) {
@@ -21,7 +23,7 @@ function work(args) {
 			increment: 1,
 			total: total
 		});
-		console(this, 'performed: ' + i);
+		console('performed: ' + i);
 	}
 }
 

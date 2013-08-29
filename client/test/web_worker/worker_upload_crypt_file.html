@@ -36,29 +36,17 @@ importScripts(base_url + '/js/ocp_crypto.js');
 
 function run(event) {
     var task = event.data;
-    if (task.name == 'set_name') {
-		this.thread_name = task.args;
-		return;
-	}
     switch(task.name) {
     	case 'upload_block':
     		upload_block(task.args);
     		break;
     }
-    this.postMessage({ finish: true });
 }
 
-this.addEventListener('message', ocp.worker_utils.run(run), false);
+this.addEventListener('message', ocp.worker_utils.run(this, run), false);
 
 function upload_block(args) {
-
-}
-
-function console(msg) {
-	this.postMessage({
-		console: msg,
-
-	 });
+	console(this, 'update block');
 }
 		</script>
 <!-- END WORKER -->
@@ -94,9 +82,7 @@ function setup_upload_task(file, pool) {
 		};
 
 		var callback_func = function(event) {
-			if (event.data.console) {
-				console.log(event.data.console);
-			}
+			console.log(event.data);
 		};
 
 		var task = new ocp.worker.Task(block_id, 'upload_block', args, callback_func);
