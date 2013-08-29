@@ -6,17 +6,15 @@
 }
 
 function inform(obj) {
-	//var json = JSON.stringify(obj);
 	this.postMessage(obj);
 }
 
 this.addEventListener('message', messageHandler, false);
 
-
 function work() {
-	var total = 300;
+	var total = 100;
 	for (var i = 0; i <= total; i++) {
-		sleep(10);
+		sleep(50);
 		inform({
 			performed: i,
 			increment: 1,

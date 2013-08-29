@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Web OCP</title>
+		<script src="../../_ext/jquery-1.10.2.min.js"></script>
+		<script src="../../_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="../../_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- PROGRESSBAR -->
+		<script src="../../js/ocp/widget_progressbar.js"></script>
+		<link rel="stylesheet" href="../../js/ocp/theme/default/widget_progressbar.css" />
+		<!-- END PROGRESSBAR -->
+
+		<script src="worker_pool_lib.js"></script>
+
+		<style>
+.progress {
+	display: inline-block;
+	position: relative;
+	width: 200px;
+	height: 14px;
+}
+		</style>
+	</head>
+
+	<body>
+		<button>Start</button>
+
+		<script>
+			function get_worker_url(filename) {
+				var worker = $('<script/>');
+				worker.attr('id', 'worker_1');
+				worker.attr('type', 'text/js-worker');
+				worker.html('importScripts(base_url + "/' + filename + '");');
+				$('body').append(worker);
+
+				var base_url = window.location.href.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
+				var array = ['var base_url = "' + base_url + '";' + $('#worker_1').html()];
+				var blob = new Blob(array, {type: "text/javascript"});
+				worker.remove();
+				return window.URL.createObjectURL(blob);
+			}
+
+			var url1 = get_worker_url('worker_pool_1.js');
+			var url2 = get_worker_url('worker_pool_2.js');
+
+			var progressbar_nbr = 10;
+			$(document).ready(function() {
+				for (var i = 0; i < progressbar_nbr; i++) {
+					var bar = $('<div id="progress'+ i + '" class="progress"/>').appendTo('body')
+						.before('Bar' + i + ': ')
+						.after('<br/>');
+				}
+				$('.progress').ocp_progressbar();
+			});
+
+			$('button').click(function() {
+				var pool = new Pool(3);
+				pool.init();
+				for (var i = 0; i < progressbar_nbr; i++) {
+					(function(i) {
+						var task_callback = function(event) {
+							if (event.data.performed) {
+								$('#progress' + i).ocp_progressbar('set_progress', event.data.performed);
+							}
+						};
+						var url = url1;
+						if (i % 2 == 0) {
+							url = url2;
+						}
+
+						var task = new Task(url, task_callback, 'start');
+						pool.addTask(task);
+					})(i);
+				}
+			});
+		</script>
+	</body>
+</html>
