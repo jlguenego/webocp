@@ -1,4 +1,5 @@
 ﻿var console = null;
+var report = null;
 
 (function(ocp, undefined) {
 	ocp.worker_utils = {};
@@ -7,7 +8,7 @@
 
 	};
 
-	ocp.worker_utils.init_console = function(worker) {
+	ocp.worker_utils.init = function(worker) {
 		if (console == null) {
 			console = function(msg) {
 				worker.postMessage({
@@ -16,6 +17,11 @@
 					task_id: worker.task_id,
 					task_name: worker.task_name
 				});
+			}
+		}
+		if (report == null) {
+			report = function(obj) {
+				worker.postMessage(obj);
 			}
 		}
 	};

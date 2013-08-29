@@ -1,7 +1,7 @@
 ﻿importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_worker_utils.js');
 
-ocp.worker_utils.init_console(this);
+ocp.worker_utils.init(this);
 
 function run(event) {
     var task = event.data;
@@ -18,7 +18,7 @@ function work(args) {
 	var total = 100;
 	for (var i = 0; i <= total; i++) {
 		sleep(args.sleep);
-		this.postMessage({
+		report({
 			performed: i,
 			increment: 1,
 			total: total

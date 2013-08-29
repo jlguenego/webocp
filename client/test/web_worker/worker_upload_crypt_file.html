@@ -48,7 +48,26 @@ function run(event) {
 this.addEventListener('message', ocp.worker_utils.run(this, run), false);
 
 function upload_block(args) {
+	var file = args.file;
+	var blob = file.slice(args.cursor, args.cursor_next);
+	var reader = new FileReader();
+	reader.onload = function(evt) {
+		if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+			var filename = process_block(evt.target.result);
+			report({
+				filename: filename,
+				block_id: args.block_id
+			});
+		}
+	};
+	reader.readAsBinaryString(blob);
 	console('update block');
+}
+
+function process_block(block_str) {
+	console(block_str.substr(0, 10));
+	var filename = 'xx';
+	return filename;
 }
 		</script>
 <!-- END WORKER -->
