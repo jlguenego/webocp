@@ -10,6 +10,7 @@ function run(event) {
     		work(task.args);
     		break;
     }
+    return true;
 }
 
 this.addEventListener('message', ocp.worker_utils.run(this, run), false);

@@ -35,10 +35,12 @@ var report = null;
 				worker.thread_name = task.args;
 				return;
 			}
-			func(event);
-			worker.postMessage({
-				finish: true
-			});
+			var b_finish = func(event);
+			if (b_finish) {
+				worker.postMessage({
+					finish: true
+				});
+			}
 		};
 	};
 })(ocp);

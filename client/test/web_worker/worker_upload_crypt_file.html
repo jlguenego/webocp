@@ -34,15 +34,16 @@ importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_worker_utils.js');
 importScripts(base_url + '/js/ocp_crypto.js');
 
-ocp.worker_utils.init_console(this);
+ocp.worker_utils.init(this);
 
 function run(event) {
     var task = event.data;
     switch(task.name) {
     	case 'upload_block':
     		upload_block(task.args);
-    		break;
+    		return false;
     }
+    return true;
 }
 
 this.addEventListener('message', ocp.worker_utils.run(this, run), false);
@@ -56,7 +57,8 @@ function upload_block(args) {
 			var filename = process_block(evt.target.result);
 			report({
 				filename: filename,
-				block_id: args.block_id
+				block_id: args.block_id,
+				finish: true
 			});
 		}
 	};
