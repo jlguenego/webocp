@@ -30,7 +30,11 @@
 
 <!-- WORKER -->
 		<script id="worker" type="text/js-worker">
+importScripts(base_url + '/_ext/sha1.js');
+importScripts(base_url + '/_ext/aes.js');
+
 importScripts(base_url + '/js/ocp.js');
+importScripts(base_url + '/js/ocp_utils.js');
 importScripts(base_url + '/js/ocp_worker_utils.js');
 importScripts(base_url + '/js/ocp_crypto.js');
 
@@ -54,7 +58,7 @@ function upload_block(args) {
 	var reader = new FileReader();
 	reader.onload = function(evt) {
 		if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-			var filename = process_block(evt.target.result);
+			var filename = process_block(evt.target.result, args.secret_key);
 			report({
 				filename: filename,
 				block_id: args.block_id,
@@ -66,10 +70,19 @@ function upload_block(args) {
 	console('update block');
 }
 
-function process_block(block_str) {
+function process_block(block_str, secret_key) {
+	// 1) crypt
+	var crypted_block_str = crypt(block_str, secret_key);
+
+	// 2) hash
+	// 3) upload
 	console(block_str.substr(0, 10));
 	var filename = 'xx';
 	return filename;
+}
+
+function crypt(block_str, secret_key) {
+	return ocp.crypto.pcrypt(secret_key, block_str);
 }
 		</script>
 <!-- END WORKER -->
@@ -86,10 +99,13 @@ $('#send').click(function() {
 	}
 	var url = ocp.worker.getEmbeddedURL('worker');
 	var pool = new ocp.worker.Pool(10, url);
-	setup_upload_task(file, pool);
+	setup_upload_task(file, pool, secret_key);
 });
 
-function setup_upload_task(file, pool) {
+var total_task = 0;
+var total_performed = 0;
+
+function setup_upload_task(file, pool, secret_key) {
 	var cursor = 0;
 	var block_size = 1 << 16;
 
@@ -101,19 +117,33 @@ function setup_upload_task(file, pool) {
 			file: file,
 			cursor: cursor,
 			cursor_next: cursor_next,
-			block_id: block_id
+			block_id: block_id,
+			secret_key: secret_key
 		};
 
 		var callback_func = function(event) {
 			console.log(event.data);
+			var progress = update_progress_from_task(event.data);
+			$('#progress').ocp_progressbar('set_progress', progress);
 		};
 
 		var task = new ocp.worker.Task(block_id, 'upload_block', args, callback_func);
 		pool.addTask(task);
+		total_task++;
 
 		cursor = cursor_next;
 		block_id++;
 	}
+}
+
+function update_progress_from_task(obj) {
+	if (total_task <= 0) {
+		return 100;
+	}
+	if (obj.finish) {
+		total_performed++;
+	}
+	return Math.floor(total_performed * 100 / total_task);
 }
 		</script>
 	</body>

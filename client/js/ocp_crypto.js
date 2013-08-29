@@ -7,7 +7,9 @@
 	};
 
 	ocp.crypto.pcrypt = function(password, clear_msg) {
-		var cipher = CryptoJS.AES.encrypt(clear_msg, password);
+		var hex = ocp.utils.str2hex(clear_msg);
+		var words = hex2wa(hex);
+		var cipher = CryptoJS.AES.encrypt(words, password);
 		var b64 = cipher.toString();
 		var words = CryptoJS.enc.Base64.parse(b64);
 		var latin1 = CryptoJS.enc.Latin1.stringify(words);
@@ -40,4 +42,17 @@
 	ocp.crypto.serialize = function(obj) {
 	    return $.param(obj);
 	};
+
+	function hex2wa(hexStr) {
+	    // Shortcut
+	    var hexStrLength = hexStr.length;
+
+	    // Convert
+	    var words = [];
+	    for (var i = 0; i < hexStrLength; i += 2) {
+	        words[i >>> 3] |= parseInt(hexStr.charAt(i) + hexStr.charAt(i + 1), 16) << (24 - (i % 8) * 4);
+	    }
+
+	    return CryptoJS.lib.WordArray.create(words, hexStrLength / 2);
+	}
 })(ocp);
