@@ -90,6 +90,10 @@
 		$('body').append(worker);
 
 		var base_url = window.location.href.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
+		var base_href = $('base').attr('href');
+		if (!/^http:\/\//.test(base_href)) {
+			base_url += base_href;
+		}
 		var array = ['var base_url = "' + base_url + '";' + $('#worker_1').html()];
 		var blob = new Blob(array, {type: "text/javascript"});
 		worker.remove();
