@@ -1,4 +1,7 @@
-﻿function run(event) {
+﻿importScripts(base_url + '/js/ocp.js');
+importScripts(base_url + '/js/ocp_worker_utils.js');
+
+function run(event) {
     var task = event.data;
     switch(task.name) {
     	case 'work':
@@ -7,25 +10,19 @@
     }
 }
 
-function inform(obj) {
-	this.postMessage(obj);
-}
-
-this.addEventListener('message', run, false);
+this.addEventListener('message', ocp.worker_utils.run(this, run), false);
 
 function work(args) {
 	var total = 100;
 	for (var i = 0; i <= total; i++) {
 		sleep(args.sleep);
-		inform({
+		this.postMessage({
 			performed: i,
 			increment: 1,
 			total: total
 		});
+		console(this, 'performed: ' + i);
 	}
-	inform({
-		finish: true
-	});
 }
 
 function sleep(milliSeconds) {

@@ -1,4 +1,6 @@
 ﻿(function(ocp, undefined) {
+	ocp.crypto = {};
+
 	ocp.crypto.hash = function(content) {
 	    var result = CryptoJS.SHA1(content);
 	    return result.toString();

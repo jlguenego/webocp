@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<title>Web OCP</title>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_worker.js"></script>
+	</head>
+
+	<body>
+		<input type="file" id="file" name="file" /><button>Start</button>
+		<div id="output"></div>
+
+		<script id="worker_1" type="text/js-worker">
+			importScripts(base_url + '/test/web_worker/worker_lib2.js');
+
+			function run(event) {
+				var self = this;
+				var msg = event.data;
+				var result = '';
+
+				var reader = new FileReader();
+				// If we use onloadend, we need to check the readyState.
+				reader.onload = function(evt) {
+					if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+						result = evt.target.result;
+					}
+					self.postMessage({
+						answer: 'coucou',
+						result: result
+					});
+				};
+				var blob = msg.file.slice(0, 10);
+				reader.readAsBinaryString(blob);
+
+				this.postMessage({
+					answer: hello(event.data.name),
+					result: result
+				});
+			}
+
+			this.addEventListener('message', run, false);
+		</script>
+
+		<script>
+			var url = ocp.worker.getEmbeddedURL('worker_1');
+
+			$('button').click(function() {
+				var file = $('#file').get(0).files[0];
+				var worker = new Worker(url);
+				worker.addEventListener('message', function(event) {
+					console.log(event.data);
+					var div = $('<div/>');
+					div.html(event.data.answer + ' ' + event.data.result);
+					$('#output').append(div);
+				}, false);
+				worker.postMessage({
+					name: 'Yannis',
+					file: file
+				});
+			});
+		</script>
+	</body>
+</html>

@@ -59,18 +59,6 @@ function strip_slash(str) {
     return str;
 }
 
-function basename(path) {
-    return path.replace(/\\/g,'/').replace( /.*\//, '' );
-}
-
-function dirname(path) {
-    var result = path.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
-    if (result == '') {
-    	result = '/';
-    }
-    return result;
-}
-
 function is_even(n) {
 	return (n % 2) == 0;
 }

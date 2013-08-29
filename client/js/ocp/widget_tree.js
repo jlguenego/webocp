@@ -182,7 +182,7 @@ $.widget( "ui.ocp_tree", {
 		var my_path = path;
 
 		while (this.element.find('[data-path="' + my_path + '"]').length == 0) {
-			my_path = dirname(my_path);
+			my_path = ocp.dirname(my_path);
 		}
 
 		var my_path_a = my_path.split('/');

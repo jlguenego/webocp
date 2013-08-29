@@ -9,11 +9,9 @@
 	    this.taskQueue = []; // tasks waiting for execution
 	    this.size = size; // number of thread
 
-	    this.init = function() {
-	        for (var i = 0 ; i < this.size ; i++) {
-	            self.threadQueue.push(new ocp.worker.Thread(self, i, url));
-	        }
-	    }
+        for (var i = 0 ; i < this.size ; i++) {
+            self.threadQueue.push(new ocp.worker.Thread(self, i, url));
+        }
 
 	    this.addTask = function(task) {
 	        if (self.threadQueue.length > 0) {
@@ -41,6 +39,12 @@
 		this.name = name;
 
 		this.worker = new Worker(url);
+
+		this.worker.postMessage({
+			name: 'set_name',
+			args: name
+		});
+
 		this.worker.addEventListener('message', callback, false);
 
 		this.task = null;
@@ -56,6 +60,10 @@
 		};
 
 		function callback(event) {
+			if (event.data.console) {
+				console.log('thread[' + event.data.thread + ']: ' + event.data.console);
+				return;
+			}
         	if (self.task.callback_func) {
 				self.task.callback_func(event);
 			}
@@ -89,14 +97,27 @@
 		worker.html('importScripts(base_url + "/' + filename + '");');
 		$('body').append(worker);
 
-		var base_url = window.location.href.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
+		var base_url = ocp.dirname(window.location.href);
 		var base_href = $('base').attr('href');
-		if (!/^http:\/\//.test(base_href)) {
-			base_url += base_href;
+		if (!/^http:\/\//.test(base_href)) { // Is base_href relative?
+			base_url += '/' + base_href;
 		}
 		var array = ['var base_url = "' + base_url + '";' + $('#worker_1').html()];
 		var blob = new Blob(array, {type: "text/javascript"});
 		worker.remove();
+		return window.URL.createObjectURL(blob);
+	};
+
+	ocp.worker.getEmbeddedURL = function(id) {
+		var base_url = ocp.dirname(window.location.href);
+		var base_href = $('base').attr('href');
+		if (!/^http:\/\//.test(base_href)) { // Is base_href relative?
+			base_url += '/' + base_href;
+		}
+		var script_content = $('#' + id).html();
+
+		var array = ['var base_url = "' + base_url + '";' + script_content];
+		var blob = new Blob(array, {type: "text/javascript"});
 		return window.URL.createObjectURL(blob);
 	};
 })(ocp)

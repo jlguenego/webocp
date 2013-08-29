@@ -381,7 +381,7 @@ $(document).ready(function() {
 
 	$('#ocp_fm_parent').click(function() {
 		var path = grid.ocp_grid('option', 'state').path;
-		path = dirname(path);
+		path = ocp.dirname(path);
 		tree.ocp_tree('open_item', path);
 	});
 

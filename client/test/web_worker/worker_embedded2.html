@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<title>Web OCP</title>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_worker.js"></script>
+	</head>
+
+	<body>
+		<button>Start</button>
+		<div id="output"></div>
+
+		<script id="worker_1" type="text/js-worker">
+			importScripts(base_url + '/test/web_worker/worker_lib2.js');
+
+			function run(event) {
+				var msg = event.data;
+				this.postMessage({ answer: hello(event.data.name)});
+			}
+
+			this.addEventListener('message', run, false);
+		</script>
+
+		<script>
+			var url = ocp.worker.getEmbeddedURL('worker_1');
+
+			$('button').click(function() {
+				var worker = new Worker(url);
+				worker.addEventListener('message', function(event) {
+					$('#output').html(event.data.answer);
+				}, false);
+				worker.postMessage({
+					name: 'Yannis'
+				});
+			});
+		</script>
+	</body>
+</html>
