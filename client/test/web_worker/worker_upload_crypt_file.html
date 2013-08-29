@@ -34,6 +34,8 @@ importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_worker_utils.js');
 importScripts(base_url + '/js/ocp_crypto.js');
 
+ocp.worker_utils.init_console(this);
+
 function run(event) {
     var task = event.data;
     switch(task.name) {
@@ -46,7 +48,7 @@ function run(event) {
 this.addEventListener('message', ocp.worker_utils.run(this, run), false);
 
 function upload_block(args) {
-	console(this, 'update block');
+	console('update block');
 }
 		</script>
 <!-- END WORKER -->

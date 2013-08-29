@@ -61,7 +61,7 @@
 
 		function callback(event) {
 			if (event.data.console) {
-				console.log('thread[' + event.data.thread + ']: ' + event.data.console);
+				console.log('Thread[' + event.data.thread + ']-Task[' + event.data.task_name + '-' + event.data.task_id + ']: ' + event.data.console);
 				return;
 			}
         	if (self.task.callback_func) {
