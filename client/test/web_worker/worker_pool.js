@@ -1,20 +1,22 @@
-﻿function messageHandler(event) {
-    var data = event.data;
-    if (data == 'start') {
-    	work();
-	}
+﻿function run(event) {
+    var task = event.data;
+    switch(task.name) {
+    	case 'work':
+    		work(task.args);
+    		break;
+    }
 }
 
 function inform(obj) {
 	this.postMessage(obj);
 }
 
-this.addEventListener('message', messageHandler, false);
+this.addEventListener('message', run, false);
 
-function work() {
+function work(args) {
 	var total = 100;
 	for (var i = 0; i <= total; i++) {
-		sleep(50);
+		sleep(args.sleep);
 		inform({
 			performed: i,
 			increment: 1,
@@ -24,7 +26,6 @@ function work() {
 	inform({
 		finish: true
 	});
-	this.close();
 }
 
 function sleep(milliSeconds) {

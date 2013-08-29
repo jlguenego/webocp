@@ -12,7 +12,8 @@
 		<link rel="stylesheet" href="../../js/ocp/theme/default/widget_progressbar.css" />
 		<!-- END PROGRESSBAR -->
 
-		<script src="worker_pool_lib.js"></script>
+		<script src="../../js/ocp.js"></script>
+		<script src="../../js/ocp_worker.js"></script>
 
 		<style>
 .progress {
@@ -28,22 +29,7 @@
 		<button>Start</button>
 
 		<script>
-			function get_worker_url(filename) {
-				var worker = $('<script/>');
-				worker.attr('id', 'worker_1');
-				worker.attr('type', 'text/js-worker');
-				worker.html('importScripts(base_url + "/' + filename + '");');
-				$('body').append(worker);
-
-				var base_url = window.location.href.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
-				var array = ['var base_url = "' + base_url + '";' + $('#worker_1').html()];
-				var blob = new Blob(array, {type: "text/javascript"});
-				worker.remove();
-				return window.URL.createObjectURL(blob);
-			}
-
-			var url1 = get_worker_url('worker_pool_1.js');
-			var url2 = get_worker_url('worker_pool_2.js');
+			var url = ocp.worker.getURL('worker_pool.js');
 
 			var progressbar_nbr = 10;
 			$(document).ready(function() {
@@ -56,21 +42,19 @@
 			});
 
 			$('button').click(function() {
-				var pool = new Pool(3);
+				var pool = new ocp.worker.Pool(3, url);
 				pool.init();
 				for (var i = 0; i < progressbar_nbr; i++) {
 					(function(i) {
-						var task_callback = function(event) {
+						var task_callback_func = function(event) {
 							if (event.data.performed) {
 								$('#progress' + i).ocp_progressbar('set_progress', event.data.performed);
 							}
 						};
-						var url = url1;
-						if (i % 2 == 0) {
-							url = url2;
-						}
 
-						var task = new Task(url, task_callback, 'start');
+						var task = new ocp.worker.Task(i, 'work', {
+							sleep: i * 10
+						}, task_callback_func);
 						pool.addTask(task);
 					})(i);
 				}
