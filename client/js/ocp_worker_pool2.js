@@ -10,7 +10,7 @@
 	    this.threadQueue = []; // threads waiting for a task
 	    this.threadList = []; // all threads
 	    this.taskQueue = []; // tasks waiting for execution
-	    this.activeTaskQueue = []; // tasks being executed
+	    this.activeTaskQueue = {}; // tasks being executed
 	    this.size = size; // number of thread
 
         for (var i = 0 ; i < this.size ; i++) {
@@ -76,6 +76,7 @@
 	ocp.worker_pool.Thread = function(pool, url, name) {
 		var self = this;
 
+		this.name = name;
 		this.pool = pool;
 		this.worker = new Worker(url);
 		this.worker.postMessage({

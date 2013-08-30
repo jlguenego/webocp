@@ -13,6 +13,11 @@
 		<link rel="stylesheet" href="js/ocp/theme/default/widget_progressbar.css" />
 		<!-- END PROGRESSBAR -->
 
+		<!-- PROGRESSBAR -->
+		<script src="js/ocp/widget_pool_view.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_pool_view.css" />
+		<!-- END PROGRESSBAR -->
+
 		<script src="js/ocp.js"></script>
 		<script src="js/ocp_worker_misc.js"></script>
 		<script src="js/ocp_worker_pool2.js"></script>
@@ -28,6 +33,8 @@
 	</head>
 
 	<body>
+		<div id="pool_view"></div>
+		<button id="refresh">Refresh</button><br/><br/>
 		<button id="add">Add Task</button><br/>
 		<button id="start">Start</button><button id="stop">Stop</button><input type="checkbox" id="force" />force<br/>
 
@@ -43,6 +50,7 @@ $(document).ready(function() {
 			.after('<br/>');
 	}
 	$('.progress').ocp_progressbar();
+	$('#pool_view').ocp_pool_view();
 });
 
 var pool = null;
@@ -77,13 +85,19 @@ function add_task(i) {
 
 $('#start').click(function() {
 	pool = new ocp.worker_pool.Pool(3, url);
+	$('#pool_view').ocp_pool_view('attach', pool);
 	for (var i = 0; i < progressbar_nbr; i++) {
 		add_task(i);
 	}
+	$('#pool_view').ocp_pool_view('attach', pool);
 });
 
 $('#stop').click(function() {
 	pool.terminate(force);
+});
+
+$('#refresh').click(function() {
+	$('#pool_view').ocp_pool_view('refresh');
 });
 
 $('#force').click(function() {
