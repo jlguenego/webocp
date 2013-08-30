@@ -148,6 +148,7 @@ function setup_upload_task(file, pool, secret_key) {
 			console.log(event.data);
 			var progress = update_progress_from_task(event.data);
 			$('#progress').ocp_progressbar('set_progress', progress);
+
 		};
 
 		var task = new ocp.worker.Task(block_id, 'upload_block', args, callback_func);
