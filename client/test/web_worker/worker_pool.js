@@ -24,7 +24,7 @@ function work(args) {
 			increment: 1,
 			total: total
 		});
-		console('performed: ' + i);
+		console.log('performed: ' + i);
 	}
 }
 

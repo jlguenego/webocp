@@ -10,7 +10,8 @@ var report = null;
 
 	ocp.worker_utils.init = function(worker) {
 		if (console == null) {
-			console = function(msg) {
+			console = {};
+			console.log = function(msg) {
 				worker.postMessage({
 					console: msg,
 					thread: worker.thread_name,
@@ -44,5 +45,3 @@ var report = null;
 		};
 	};
 })(ocp);
-
-var console = ocp.worker_utils.console;

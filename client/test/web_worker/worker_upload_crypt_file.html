@@ -61,21 +61,21 @@ function run(event) {
 this.addEventListener('message', ocp.worker_utils.run(this, run), false);
 
 function upload_hat_init(args) {
-	console('upload hat init');
+	console.log('upload hat init');
 	this.upload_hat = {};
 	this.upload_hat.block_nbr = Math.ceil(args.file.size / args.block_size);
 	this.upload_hat.secret_key = args.secret_key;
 	this.upload_hat.server_uri = args.server_uri;
 	this.upload_hat.summary = [];
-	console('block_nbr=' + this.upload_hat.block_nbr);
+	console.log('block_nbr=' + this.upload_hat.block_nbr);
 }
 
 function upload_hat_push(args) {
-	console('upload hat push');
+	console.log('upload hat push');
 	this.upload_hat.summary.push(args);
 
 	if (this.upload_hat.summary.length == this.upload_hat.block_nbr) {
-		console('ready to send the summary');
+		console.log('ready to send the summary');
 		var content = '';
 		for (var i = 0; i < this.upload_hat.summary.length; i++) {
 			var obj = this.upload_hat.summary[i];
@@ -102,7 +102,7 @@ function upload_block(args) {
 		}
 	};
 	reader.readAsBinaryString(blob);
-	console('update block');
+	console.log('update block');
 }
 
 function process_block(block_str, secret_key, server_uri) {
@@ -130,7 +130,7 @@ function upload_file(url, filename, content, success_func) {
 		if (xhr.readyState == 4 && xhr.status == 200) { // on success
 			var json_str = xhr.responseText;
 			var json_obj = JSON.parse(json_str);
-			console(json_obj);
+			console.log(json_obj);
 			report({
 				finish: true
 			});

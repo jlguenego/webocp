@@ -28,7 +28,7 @@ function run(event) {
     var file = event.data.file;
 
     upload_file(event.data.url, file.name, file.slice(0, 10), function() {
-    	console('success');
+    	console.log('success');
     });
 }
 
@@ -45,7 +45,7 @@ function upload_file(url, filename, content, success_func) {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			var json_str = xhr.responseText;
 			var json_obj = JSON.parse(json_str);
-			console(json_obj);
+			console.log(json_obj);
 			report({
 				finish: true
 			});
