@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<title>Web OCP</title>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_worker_misc.js"></script>
+		<script src="js/ocp_worker_pool2.js"></script>
+	</head>
+
+	<body>
+		<button id="start">Start</button id="stop"><button id="stop">Stop</button><br/>
+		<input type="text" id="nbr1" /> + <input type="text" id="nbr2" /> <button id="plus">result</button>
+		<div id="result"></div>
+
+		<script id="worker_1" type="text/js-worker">
+importScripts(base_url + '/test/web_worker/worker_lib2.js');
+
+importScripts(base_url + '/js/ocp.js');
+importScripts(base_url + '/js/ocp_worker.js');
+
+ocp.worker.init(this);
+
+function run(event) {
+    var task = event.data;
+    console.log(event.data);
+    switch(task.name) {
+    	case 'additionner':
+    		additionner(task);
+    		break;
+    }
+}
+
+function additionner(task) {
+	switch(task.message) {
+		case 'plus':
+			additionner_plus(task.args);
+			break;
+	}
+}
+
+function additionner_plus(args) {
+	report({ result: args.nbr1 + args.nbr2});
+}
+
+this.addEventListener('message', ocp.worker.run(this, run), false);
+		</script>
+
+		<script>
+var url = ocp.worker_misc.getEmbeddedURL('worker_1');
+
+var pool = null;
+
+var callback_func = function(event) {
+	$('#result').html(event.data.result);
+};
+
+var args = {};
+var task = new ocp.worker_pool.Task(1, 'additionner', args, callback_func);
+
+
+
+$('#plus').click(function() {
+	if (!pool) {
+		$('#result').html('Pool does not exist.');
+		return;
+	}
+	var nbr1 = parseFloat($('#nbr1').val());
+	var nbr2 = parseFloat($('#nbr2').val());
+	var args = {
+		nbr1: nbr1,
+		nbr2: nbr2
+	};
+	var task = pool.getTask(1);
+	task.sendMessage('plus', args);
+});
+
+$('#start').click(function() {
+	$('#result').html('initiate pool');
+	pool = new ocp.worker_pool.Pool(1, url);
+	pool.addTask(task);
+});
+
+$('#stop').click(function() {
+	$('#result').html('terminate pool');
+	pool.terminate();
+	pool = null;
+});
+		</script>
+	</body>
+</html>

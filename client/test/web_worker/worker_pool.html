@@ -44,7 +44,7 @@
 			});
 
 			$('button').click(function() {
-				var pool = new ocp.worker_pool.Pool(10, url);
+				var pool = new ocp.worker_pool.Pool(3, url);
 				for (var i = 0; i < progressbar_nbr; i++) {
 					(function(i) {
 						var task_callback_func = function(event) {

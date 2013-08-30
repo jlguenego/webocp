@@ -10,7 +10,6 @@ function run(event) {
     		work(task.args);
     		break;
     }
-    return true;
 }
 
 this.addEventListener('message', ocp.worker.run(this, run), false);
@@ -26,6 +25,9 @@ function work(args) {
 		});
 		console.log('performed: ' + i);
 	}
+	report({
+		finish: true
+	});
 }
 
 function sleep(milliSeconds) {

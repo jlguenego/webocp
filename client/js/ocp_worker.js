@@ -4,10 +4,6 @@ var report = null;
 (function(ocp, undefined) {
 	ocp.worker = {};
 
-	ocp.worker.init = function() {
-
-	};
-
 	ocp.worker.init = function(worker) {
 		if (console == null) {
 			console = {};
@@ -27,6 +23,7 @@ var report = null;
 		}
 	};
 
+	// Pool specific
 	ocp.worker.run = function(worker, func) {
 		return function(event) {
 			var task = event.data;
@@ -36,12 +33,7 @@ var report = null;
 				worker.thread_name = task.args;
 				return;
 			}
-			var b_finish = func(event);
-			if (b_finish) {
-				worker.postMessage({
-					finish: true
-				});
-			}
+			func(event);
 		};
 	};
 })(ocp);

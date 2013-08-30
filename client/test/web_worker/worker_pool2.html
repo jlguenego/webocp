@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<title>Web OCP</title>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- PROGRESSBAR -->
+		<script src="js/ocp/widget_progressbar.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_progressbar.css" />
+		<!-- END PROGRESSBAR -->
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_worker_misc.js"></script>
+		<script src="js/ocp_worker_pool2.js"></script>
+
+		<style>
+.progress {
+	display: inline-block;
+	position: relative;
+	width: 200px;
+	height: 14px;
+}
+		</style>
+	</head>
+
+	<body>
+		<button id="add">Add Task</button><br/>
+		<button id="start">Start</button><button id="stop">Stop</button><input type="checkbox" id="force" />force<br/>
+
+		<script>
+var url = ocp.worker_misc.getURL('test/web_worker/worker_pool.js');
+
+
+var progressbar_nbr = 3;
+$(document).ready(function() {
+	for (var i = 0; i < progressbar_nbr; i++) {
+		var bar = $('<div id="progress'+ i + '" class="progress"/>').appendTo('body')
+			.before('Bar' + i + ': ')
+			.after('<br/>');
+	}
+	$('.progress').ocp_progressbar();
+});
+
+var pool = null;
+var force = false;
+
+$('#add').click(function() {
+	var bar = $('<div id="progress'+ progressbar_nbr + '" class="progress"/>').appendTo('body')
+			.before('Bar' + progressbar_nbr + ': ')
+			.after('<br/>');
+	bar.ocp_progressbar();
+	progressbar_nbr++;
+	if (pool != null) {
+		add_task(progressbar_nbr - 1);
+	}
+});
+
+function add_task(i) {
+	var task_callback_func = function(event) {
+		if (event.data.performed) {
+			$('#progress' + i).ocp_progressbar('set_progress', event.data.performed);
+		}
+		if (event.data.console) {
+			console.log('thread[' + event.data.thread + ']:' + event.data.console);
+		}
+	};
+
+	var task = new ocp.worker_pool.Task(i, 'work', {
+		sleep: i * 10
+	}, task_callback_func);
+	pool.addTask(task);
+}
+
+$('#start').click(function() {
+	pool = new ocp.worker_pool.Pool(3, url);
+	for (var i = 0; i < progressbar_nbr; i++) {
+		add_task(i);
+	}
+});
+
+$('#stop').click(function() {
+	pool.terminate(force);
+});
+
+$('#force').click(function() {
+	if ($(this).is(':checked')) {
+		force = true;
+	} else {
+		force = false;
+	}
+	console.log('force=' + force);
+});
+		</script>
+	</body>
+</html>
