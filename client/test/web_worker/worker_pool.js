@@ -1,7 +1,7 @@
 ﻿importScripts(base_url + '/js/ocp.js');
-importScripts(base_url + '/js/ocp_worker_utils.js');
+importScripts(base_url + '/js/ocp_worker.js');
 
-ocp.worker_utils.init(this);
+ocp.worker.init(this);
 
 function run(event) {
     var task = event.data;
@@ -13,7 +13,7 @@ function run(event) {
     return true;
 }
 
-this.addEventListener('message', ocp.worker_utils.run(this, run), false);
+this.addEventListener('message', ocp.worker.run(this, run), false);
 
 function work(args) {
 	var total = 100;

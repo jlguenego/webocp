@@ -1,123 +1,47 @@
-﻿(function(ocp, undefined) {
+﻿var console = null;
+var report = null;
+
+(function(ocp, undefined) {
 	ocp.worker = {};
 
-	ocp.worker.Pool = function (size, url) {
-	    var self = this;
+	ocp.worker.init = function() {
 
-	    // set some defaults
-	    this.threadQueue = []; // threads waiting for a task
-	    this.taskQueue = []; // tasks waiting for execution
-	    this.size = size; // number of thread
+	};
 
-        for (var i = 0 ; i < this.size ; i++) {
-            self.threadQueue.push(new ocp.worker.Thread(self, i, url));
-        }
+	ocp.worker.init = function(worker) {
+		if (console == null) {
+			console = {};
+			console.log = function(msg) {
+				worker.postMessage({
+					console: msg,
+					thread: worker.thread_name,
+					task_id: worker.task_id,
+					task_name: worker.task_name
+				});
+			}
+		}
+		if (report == null) {
+			report = function(obj) {
+				worker.postMessage(obj);
+			}
+		}
+	};
 
-	    this.addTask = function(task) {
-	        if (self.threadQueue.length > 0) {
-	            var thread = self.threadQueue.shift();
-	            thread.run(task);
-	        } else {
-	            self.taskQueue.push(task);
-	        }
-	    }
-
-	    this.freeThread = function(thread) {
-	        if (self.taskQueue.length > 0) {
-	            var task = self.taskQueue.shift();
-	            thread.run(task);
-	        } else {
-	            self.threadQueue.push(thread);
-	        }
-	    }
-	}
-
-	ocp.worker.Thread = function(pool, name, url) {
-		var self = this;
-
-		this.pool = pool;
-		this.name = name;
-
-		this.worker = new Worker(url);
-
-		this.worker.postMessage({
-			name: 'set_name',
-			args: name
-		});
-
-		this.worker.addEventListener('message', callback, false);
-
-		this.task = null;
-
-		this.run = function(task) {
-			this.task = task;
-
-	        if (this.task != null) {
-	            this.worker.postMessage(this.task.getObject());
-	        } else {
-	        	this.pool.freeThread(this);
-	        }
-		};
-
-		function callback(event) {
-			if (event.data.console) {
-				console.log('Thread[' + event.data.thread + ']-Task[' + event.data.task_name + '-' + event.data.task_id + ']: ' + event.data.console);
+	ocp.worker.run = function(worker, func) {
+		return function(event) {
+			var task = event.data;
+			worker.task_id = task.id;
+			worker.task_name = task.name;
+			if (task.name == 'set_name') {
+				worker.thread_name = task.args;
 				return;
 			}
-        	if (self.task.callback_func) {
-				self.task.callback_func(event);
-			}
-        	if (event.data.finish) {
-        		self.task = null;
-		        self.pool.freeThread(self);
-		    }
-	    }
-	}
-
-	ocp.worker.Task = function(id, name, args, callback_func) {
-		this.id = id; // id should be unique
-		this.name = name; // program name to be run by the worker
-		this.args = args; // args to be given to the program
-		this.callback_func = callback_func; // function to call when a message is received
-
-		this.getObject = function() {
-			return {
-				id: id,
-				name: name,
-				args: args
+			var b_finish = func(event);
+			if (b_finish) {
+				worker.postMessage({
+					finish: true
+				});
 			}
 		};
-	}
-
-
-	ocp.worker.getURL = function(filename) {
-		var worker = $('<script/>');
-		worker.attr('id', 'worker_1');
-		worker.attr('type', 'text/js-worker');
-		worker.html('importScripts(base_url + "/' + filename + '");');
-		$('body').append(worker);
-
-		var base_url = ocp.dirname(window.location.href);
-		var base_href = $('base').attr('href');
-		if (!/^http:\/\//.test(base_href)) { // Is base_href relative?
-			base_url += '/' + base_href;
-		}
-		var array = ['var base_url = "' + base_url + '";' + $('#worker_1').html()];
-		var blob = new Blob(array, {type: "text/javascript"});
-		worker.remove();
-		return window.URL.createObjectURL(blob);
 	};
-
-	ocp.worker.getEmbeddedURL = function(id) {
-		var base_url = ocp.dirname(window.location.href);
-		var base_href = $('base').attr('href');
-		if (!/^http:\/\//.test(base_href)) { // Is base_href relative?
-			base_url += '/' + base_href;
-		}
-		var script_content = $('#' + id).html();
-
-		var array = ['var base_url = "' + base_url + '";' + script_content];
-		var blob = new Blob(array, {type: "text/javascript"});
-		return window.URL.createObjectURL(blob);
-	};
-})(ocp)
+})(ocp);

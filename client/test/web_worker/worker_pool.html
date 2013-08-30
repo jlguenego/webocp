@@ -14,7 +14,8 @@
 		<!-- END PROGRESSBAR -->
 
 		<script src="js/ocp.js"></script>
-		<script src="js/ocp_worker.js"></script>
+		<script src="js/ocp_worker_misc.js"></script>
+		<script src="js/ocp_worker_pool.js"></script>
 
 		<style>
 .progress {
@@ -30,7 +31,7 @@
 		<button>Start</button>
 
 		<script>
-			var url = ocp.worker.getURL('test/web_worker/worker_pool.js');
+			var url = ocp.worker_misc.getURL('test/web_worker/worker_pool.js');
 
 			var progressbar_nbr = 10;
 			$(document).ready(function() {
@@ -43,7 +44,7 @@
 			});
 
 			$('button').click(function() {
-				var pool = new ocp.worker.Pool(3, url);
+				var pool = new ocp.worker_pool.Pool(10, url);
 				for (var i = 0; i < progressbar_nbr; i++) {
 					(function(i) {
 						var task_callback_func = function(event) {
@@ -55,7 +56,7 @@
 							}
 						};
 
-						var task = new ocp.worker.Task(i, 'work', {
+						var task = new ocp.worker_pool.Task(i, 'work', {
 							sleep: i * 10
 						}, task_callback_func);
 						pool.addTask(task);

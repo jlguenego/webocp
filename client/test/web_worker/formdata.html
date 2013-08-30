@@ -18,9 +18,9 @@
 
 importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_utils.js');
-importScripts(base_url + '/js/ocp_worker_utils.js');
+importScripts(base_url + '/js/ocp_worker.js');
 
-ocp.worker_utils.init(this);
+ocp.worker.init(this);
 importScripts(base_url + '/test/web_worker/formdata_test.js');
 
 function run(event) {
@@ -32,7 +32,7 @@ function run(event) {
     });
 }
 
-this.addEventListener('message', ocp.worker_utils.run(this, run), false);
+this.addEventListener('message', ocp.worker.run(this, run), false);
 
 function upload_file(url, filename, content, success_func) {
 	var formData = new FormData();

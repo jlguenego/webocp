@@ -17,7 +17,8 @@
 		<script src="_ext/Blob.js"></script>
 
 		<script src="js/ocp.js"></script>
-		<script src="js/ocp_worker.js"></script>
+		<script src="js/ocp_worker_misc.js"></script>
+		<script src="js/ocp_worker_pool.js"></script>
 	</head>
 
 	<body>
@@ -35,12 +36,12 @@ importScripts(base_url + '/_ext/aes.js');
 
 importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_utils.js');
-importScripts(base_url + '/js/ocp_worker_utils.js');
+importScripts(base_url + '/js/ocp_worker.js');
 importScripts(base_url + '/js/ocp_crypto.js');
 
 importScripts(base_url + '/_ext/WorkerFormData.js');
 
-ocp.worker_utils.init(this);
+ocp.worker.init(this);
 
 function run(event) {
     var task = event.data;
@@ -58,7 +59,7 @@ function run(event) {
     return true;
 }
 
-this.addEventListener('message', ocp.worker_utils.run(this, run), false);
+this.addEventListener('message', ocp.worker.run(this, run), false);
 
 function upload_hat_init(args) {
 	console.log('upload hat init');
@@ -152,7 +153,7 @@ $('#send').click(function() {
 		alert('no file');
 		return;
 	}
-	var url = ocp.worker.getEmbeddedURL('worker');
+	var url = ocp.worker_misc.getEmbeddedURL('worker');
 	setup_upload_task(file, url, secret_key);
 });
 
@@ -161,7 +162,7 @@ var total_task = 0;
 var total_performed = 0;
 
 function setup_upload_task(file, url, secret_key) {
-	var pool = new ocp.worker.Pool(10, url);
+	var pool = new ocp.worker_pool.Pool(10, url);
 
 	var cursor = 0;
 	var block_size = 1 << 16;
@@ -191,7 +192,7 @@ function setup_upload_task(file, url, secret_key) {
 			}
 		};
 
-		var task = new ocp.worker.Task(block_id, 'upload_block', args, callback_func);
+		var task = new ocp.worker_pool.Task(block_id, 'upload_block', args, callback_func);
 		pool.addTask(task);
 		total_task++;
 
@@ -251,7 +252,7 @@ function get_hat_worker(url, file, block_size, secret_key) {
 				filename: data.filename,
 				block_id: data.block_id
 			}
-	});
+		});
 	};
 	return hat_worker;
 }
