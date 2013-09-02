@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<title>Web OCP</title>
+
+		<!-- JQUERY CDN -->
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<!-- END JQUERY CDN -->
+
+		<script src="_ext/Blob.js"></script>
+		<script src="_ext/sha1.js"></script>
+		<script src="_ext/aes.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_crypto.js"></script>
+	</head>
+	<body>
+		<input type="file" id="file"/><button id="read">Read</button>
+		<pre id="pre"></pre>
+		<script>
+			var secret_key = 'toto';
+			$('#read').click(function() {
+				var file = $('#file').get(0).files[0];
+
+				var reader = new FileReader();
+
+				// If we use onloadend, we need to check the readyState.
+				reader.onloadend = (function(my_file) {
+        			return function(evt) {
+						if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+							$('#pre').html(evt.target.result);
+							console.log(new Uint8Array(evt.target.result));
+							var str = ab2str(evt.target.result);
+							var clear_hash = ocp.crypto.hash(str);
+							console.log('str=' + str);
+							console.log('    clear_hash=' + clear_hash);
+
+							var c_content = CryptoJS.AES.encrypt(ab2wa(evt.target.result), secret_key);
+							var d_content = CryptoJS.AES.decrypt(c_content, secret_key);
+
+							var decrypted_hash = ocp.crypto.hash(d_content);
+							console.log('decrypted_hash=' + decrypted_hash);
+							console.log('d_content=' + d_content);
+						}
+					}
+				})(file);
+
+				var blob = file.slice(0, file.size);
+				reader.readAsArrayBuffer(blob);
+			});
+
+			function ab2str(buf) {
+				return String.fromCharCode.apply(null, new Uint8Array(buf));
+			}
+
+			function str2ab(str) {
+				var buf = new ArrayBuffer(str.length);
+				var bufView = new Uint8Array(buf);
+				for (var i = 0; i < str.length; i++) {
+					bufView[i] = str.charCodeAt(i);
+				}
+				return buf;
+			}
+
+			function ab2wa(ab) {
+			    // Shortcut
+			    var bufView = new Uint8Array(ab);
+
+			    var words = [];
+			    for (var i = 0; i < bufView.length; i++) {
+			        words[i >>> 2] |= bufView[i] << (24 - (i % 4) * 8);
+			    }
+
+			    return CryptoJS.lib.WordArray.create(bufView, bufView.length);
+			}
+		</script>
+	</body>
+</html>

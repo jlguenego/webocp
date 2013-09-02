@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- CRYPTO JS -->
+		<script src="_ext/sha1.js"></script>
+		<script src="_ext/aes.js"></script>
+		<!-- END CRYPTO JS -->
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_crypto.js"></script>
+
+		<style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+		</style>
+	</head>
+
+	<body>
+		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
+		Clear content: <textarea id="clear">é</textarea><br/>
+		Crypted content: <textarea id="crypted"></textarea><br/>
+		Decrypted content: <textarea id="decrypted"></textarea><br/>
+		<button id="encrypt">Encrypt</button> <button id="decrypt">Decrypt</button>
+
+		<script>
+			$('#encrypt').click(function() {
+				var content = $('#clear').val();
+				var ab = ocp.utils.str2ab(content);
+				console.log(new Uint8Array(ab));
+				var content2 = ocp.utils.ab2str(ab);
+				$('#decrypted').html(content2);
+//				var secret_key = $('#secret_key').val();
+//
+//				var crypted_content = ocp.crypto.pcrypt(secret_key, content);
+//				console.log('clear_content=|' + content + '|');
+//				console.log('crypted_content=|' + crypted_content + '|');
+//				$('#crypted').val(crypted_content);
+			});
+			$('#decrypt').click(function() {
+				var crypted_content = $('#crypted').val();
+				var secret_key = $('#secret_key').val();
+
+				var decrypted_str = ocp.crypto.pdecrypt(secret_key, crypted_content);
+				console.log('crypted_content=|' + crypted_content + '|');
+				console.log('decrypted_str=|' + decrypted_str + '|');
+				$('#decrypted').html(decrypted_str);
+			});
+		</script>
+	</body>
+</html>

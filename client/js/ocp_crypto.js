@@ -9,6 +9,7 @@
 	ocp.crypto.pcrypt = function(password, clear_msg) {
 		var hex = ocp.utils.str2hex(clear_msg);
 		var words = hex2wa(hex);
+		console.log(words);
 		var cipher = CryptoJS.AES.encrypt(words, password);
 		var b64 = cipher.toString();
 		var words = CryptoJS.enc.Base64.parse(b64);
@@ -20,7 +21,7 @@
 		var words = CryptoJS.enc.Latin1.parse(crypted_msg);
 		var b64 = CryptoJS.enc.Base64.stringify(words);
 		var d_words = CryptoJS.AES.decrypt(b64, password);
-	    return d_words.toString();
+	    return d_words.toString(CryptoJS.enc.Latin1);
 	};
 
 	ocp.crypto.crypt = function(secret_key, clear_msg) {

@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<title>Web OCP</title>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- PROGRESSBAR -->
+		<script src="js/ocp/widget_progressbar.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_progressbar.css" />
+		<!-- END PROGRESSBAR -->
+
+		<!-- POOL VIEW -->
+		<script src="js/ocp/widget_pool_view.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_pool_view.css" />
+		<!-- END POOL VIEW -->
+
+		<script src="_ext/FileSaver.js"></script>
+		<script src="_ext/Blob.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_worker_misc.js"></script>
+		<script src="js/ocp_worker_pool.js"></script>
+	</head>
+
+	<body>
+		<div id="pool_view"></div>
+		Serveur URL: <input type="text" id="server_uri" value="http://localhost" /><br/>
+		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
+		Upload name: <input type="text" id="upload_name" value="4e5a7ddee74b47696be364f2b75eb1dc2f74bc39" style="width: 300px;"/><br/>
+		<button id="retrieve">Retrieve</button>
+		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
+
+<!-- WORKER -->
+		<script id="worker" type="text/js-worker">
+importScripts(base_url + '/_ext/sha1.js');
+importScripts(base_url + '/_ext/aes.js');
+
+importScripts(base_url + '/js/ocp.js');
+importScripts(base_url + '/js/ocp_utils.js');
+importScripts(base_url + '/js/ocp_worker.js');
+importScripts(base_url + '/js/ocp_crypto.js');
+
+importScripts(base_url + '/_ext/WorkerFormData.js');
+
+ocp.worker.init(this);
+
+function run(event) {
+    var task = event.data;
+    switch(task.name) {
+    	case 'download_hat':
+    		download_hat(task.args);
+    		return false;
+    	case 'download_block':
+    		download_block(task.args);
+    		return false;
+    }
+    return true;
+}
+
+this.addEventListener('message', ocp.worker.run(this, run), false);
+
+function download_block(args) {
+	var clear_content = retrieve_block(args.block_name, args.secret_key, args.server_uri);
+	report({
+		block_id: args.block_id,
+		content: clear_content
+	});
+}
+
+function download_hat(args) {
+	var filelist_str = retrieve_block(args.block_name, args.secret_key, args.server_uri);
+	var filelist = filelist_str.split("\n");
+	//console.log(filelist);
+	for (var i = 0; i < filelist.length; i++) {
+		if (filelist[i] == '') {
+			continue;
+		}
+		var block = filelist[i].split('_');
+		//console.log(block);
+		if (!block[0]) {
+			console.log('block_id is empty');
+			return;
+		}
+		if (!block[1]) {
+			console.log('block_name is empty');
+			return;
+		}
+		report({
+			block_id: block[0],
+			block_name: block[1]
+		});
+	}
+}
+
+function retrieve_block(block_name, secret_key, server_uri) {
+	// 1) download
+	console.log('download file: ' + block_name);
+	var crypted_content = download_file(server_uri, block_name)
+
+	// 2) verify
+	//console.log('verify integrity');
+	if (verify_file_integrity(block_name, crypted_content)) {
+		console.log('integrity ok');
+	} else {
+		console.log('integrity error');
+		return;
+	}
+
+	// 2) decrypt
+	console.log('decrypt');
+	var decrypted_str = ocp.crypto.pdecrypt(secret_key, crypted_content);
+	//console.log(decrypted_str);
+
+	return decrypted_str;
+}
+
+function verify_file_integrity(block_name, crypted_content) {
+	var crypted_content_hash = ocp.crypto.hash(crypted_content);
+	return block_name == crypted_content_hash;
+}
+
+function download_file(url, filename) {
+	var formData = new FormData();
+	formData.append('filename', filename);
+
+	var xhr = new XMLHttpRequest();
+	var content = '';
+	xhr.onreadystatechange = function(){
+		if (xhr.readyState == 4 && xhr.status == 200) { // on success
+			var json_str = xhr.responseText;
+			var json_obj = JSON.parse(json_str);
+			content = json_obj.result.content;
+			//console.log('content extract=' + content.substr(0, 10));
+		}
+	}
+	xhr.open('POST', url, false); // Wait before processing file => Synchronous request
+	xhr.send(formData);
+
+	return content;
+}
+		</script>
+<!-- END WORKER -->
+
+		<script>
+$('.progress').ocp_progressbar();
+$('#pool_view').ocp_pool_view();
+
+var server_uri = $('#server_uri').val() + '/webocp/server/test/endpoint/retrieve_file.php';
+var total_task = 0;
+var total_performed = 0;
+
+function update_progress_from_task(obj) {
+	if (total_task <= 0) {
+		return 100;
+	}
+	if (obj.finish) {
+		total_performed++;
+	}
+	return Math.floor(total_performed * 100 / total_task);
+}
+
+$('#retrieve').click(function() {
+	var secret_key = $('#secret_key').val();
+	var filename = $('#upload_name').val();
+	if (!filename) {
+		alert('no file');
+		return;
+	}
+	var url = ocp.worker_misc.getEmbeddedURL('worker');
+	setup_download_task(filename, url, secret_key);
+});
+
+function setup_download_task(filename, url, secret_key) {
+	var pool = new ocp.worker_pool.Pool(10, url);
+	$('#pool_view').ocp_pool_view('attach', pool);
+
+
+	var hat_worker = new Worker(url);
+
+	var hat_worker_callback = function() {
+		if (event.data.console) {
+			console.log('Thread[' + event.data.thread + ']-Task[' + event.data.task_name + '-' + event.data.task_id + ']: ');
+			console.log(event.data.console);
+			return;
+		}
+		var progress = update_progress_from_task(event.data);
+		$('#progress').ocp_progressbar('set_progress', progress);
+		console.log(event.data);
+		if (event.data.block_id) {
+			var args = {
+				block_id: event.data.block_id,
+				block_name: event.data.block_name,
+				secret_key: secret_key,
+				server_uri: server_uri
+			};
+			var callback_func = function(event) {
+				var progress = update_progress_from_task(event.data);
+				$('#progress').ocp_progressbar('set_progress', progress);
+				if (event.data.content) {
+					console.log('content extract=' + event.data.content.substr(0, 20));
+				}
+			}
+			var task = new ocp.worker_pool.Task(event.data.block_id, 'download_block', args, callback_func);
+			pool.addTask(task);
+			total_task++;
+		}
+	};
+
+	hat_worker.addEventListener('message', hat_worker_callback, false);
+
+	hat_worker.postMessage({
+		name: 'set_name',
+		args: 'hat'
+	});
+
+	hat_worker.postMessage({
+		id: 'hat',
+		name: 'download_hat',
+		args: {
+			block_name: filename,
+			server_uri: server_uri,
+			secret_key: secret_key
+		}
+	});
+
+	total_task++;
+}
+		</script>
+	</body>
+</html>
