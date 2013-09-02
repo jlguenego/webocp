@@ -67,7 +67,7 @@ $.widget( "ui.ocp_pool_view", {
 			var task = pool.activeTaskQueue[task_id];
 			this.add_active_task(pool.activeTaskQueue[task_id]);
 		}
-		//pool.addEventListener('evt_name', callback, false);
+		pool.addEventListener('update', this.refresh, false);
 	},
 
 	add_queued_thread: function(thread) {

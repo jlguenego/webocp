@@ -13,10 +13,15 @@
 	    this.activeTaskQueue = {}; // tasks being executed
 	    this.size = size; // number of thread
 
+	    this.sendUpdateEvent = function() {
+			this.dispatchEvent(new Event('update'));
+	    }
+
         for (var i = 0 ; i < this.size ; i++) {
         	var thread = new ocp.worker_pool.Thread(self, url, i);
             self.threadQueue.push(thread);
             self.threadList.push(thread);
+            this.sendUpdateEvent();
         }
 
 	    this.addTask = function(task) {
@@ -31,6 +36,7 @@
 	        } else {
 	            self.taskQueue.push(task);
 	        }
+	        this.sendUpdateEvent();
 	    }
 
 	    this.getTask = function(taskId) {
@@ -42,12 +48,14 @@
 
 	    this.addActiveTask = function(task) {
 	    	this.activeTaskQueue[task.id] = task;
+	    	this.sendUpdateEvent();
 	    }
 
 	    this.removeTask = function(taskId) {
 	    	if (this.activeTaskQueue[taskId]) {
 	    		delete this.activeTaskQueue[taskId];
 	    	}
+	    	this.sendUpdateEvent();
 	    }
 
 	    this.terminate = function(force) {
@@ -55,6 +63,7 @@
 	    		console.log('terminate pool now');
 				while (this.threadQueue.length > 0) {
 					this.threadQueue.shift();
+					this.sendUpdateEvent();
 				}
 				while (this.threadList.length > 0) {
 					var thread = this.threadList.shift();
@@ -67,6 +76,7 @@
 					while (this.threadQueue.length > 0) {
 						var thread = this.threadQueue.shift();
 						thread.worker.terminate();
+						this.sendUpdateEvent();
 					}
 				}
 	    	}
@@ -128,6 +138,7 @@
 		        	this.pool.threadQueue.push(this);
 		        }
 	        }
+	        this.pool.sendUpdateEvent();
 	    }
 	}
 

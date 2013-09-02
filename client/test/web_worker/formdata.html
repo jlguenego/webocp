@@ -7,7 +7,7 @@
 
 		<script src="_ext/jquery-1.10.2.min.js"></script>
 		<script src="js/ocp.js"></script>
-		<script src="js/ocp_worker.js"></script>
+		<script src="js/ocp_worker_misc.js"></script>
 	</head>
 
 	<body>
@@ -57,7 +57,7 @@ function upload_file(url, filename, content, success_func) {
 		</script>
 
 		<script>
-var url = ocp.worker.getEmbeddedURL('worker_1');
+var url = ocp.worker_misc.getEmbeddedURL('worker_1');
 
 $('#send').click(function() {
 	var file = $('#file').get(0).files[0];
