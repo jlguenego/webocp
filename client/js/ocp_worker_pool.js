@@ -3,6 +3,7 @@
 
 	ocp.worker_pool.Pool = function(size, url) {
 	    var self = this;
+	    var c_i = 0;
 
 		this.ask_for_termination = false;
 
@@ -16,7 +17,8 @@
 	    this.sendUpdateEvent = function() {
 	    	var event = new CustomEvent('ocp.worker_pool.Pool.update', { 'detail': { pool: this } });
 			window.dispatchEvent(event);
-			console.log('sent ocp.worker_pool.Pool.update');
+			console.log('sent ocp.worker_pool.Pool.update ' + c_i);
+			c_i++;
 	    }
 
 	    this.addTask = function(task) {
