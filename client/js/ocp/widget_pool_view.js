@@ -15,7 +15,8 @@ $.widget( "ui.ocp_pool_view", {
 		// Callback
 	},
 
-	treadQueue: null,
+	table: null,
+	threadQueue: null,
 	taskQueue: null,
 	activeTask: null,
 
@@ -23,33 +24,34 @@ $.widget( "ui.ocp_pool_view", {
 
 	_create: function() {
 		this.element.addClass('ocp_pool_viewer');
+		this.table = $('<table/>').appendTo(this.element);
 
-		this.treadQueue = $('<div/>').appendTo(this.element);
-		this.treadQueue.addClass('ocp_pv_line ocp_pv_tread_queue');
-		var treadQueue_title = $('<div/>').html('Thread queue');
-		treadQueue_title.addClass('title');
-		this.treadQueue.append(treadQueue_title);
-		var treadQueue_blocks = $('<div/>');
-		treadQueue_blocks.addClass('blocks');
-		this.treadQueue.append(treadQueue_blocks);
+		this.threadQueue = $('<tr/>').appendTo(this.table);
+		this.threadQueue.addClass('ocp_pv_line ocp_pv_thread_queue');
+		var threadQueue_title = $('<td/>').html('Thread queue:');
+		threadQueue_title.addClass('title');
+		this.threadQueue.append(threadQueue_title);
+		var threadQueue_blocks = $('<td/>');
+		threadQueue_blocks.addClass('blocks');
+		this.threadQueue.append(threadQueue_blocks);
 
-		this.taskQueue = $('<div/>').appendTo(this.element);
-		this.taskQueue.addClass('ocp_pv_line ocp_pv_task_queue');
-		var taskQueue_title = $('<div/>').html('Task queue');
-		taskQueue_title.addClass('title');
-		this.taskQueue.append(taskQueue_title);
-		var taskQueue_blocks = $('<div/>');
-		taskQueue_blocks.addClass('blocks');
-		this.taskQueue.append(taskQueue_blocks);
-
-		this.activeTask = $('<div/>').appendTo(this.element);
-		this.activeTask.addClass('ocp_pv_line ocp_pv_active_tread');
-		var activeThread_title = $('<div/>').html('Active tasks');
+		this.activeTask = $('<tr/>').appendTo(this.table);
+		this.activeTask.addClass('ocp_pv_line ocp_pv_active_thread');
+		var activeThread_title = $('<td/>').html('Active tasks:');
 		activeThread_title.addClass('title');
 		this.activeTask.append(activeThread_title);
-		var activeThread_blocks = $('<div/>');
+		var activeThread_blocks = $('<td/>');
 		activeThread_blocks.addClass('blocks');
 		this.activeTask.append(activeThread_blocks);
+
+		this.taskQueue = $('<tr/>').appendTo(this.table);
+		this.taskQueue.addClass('ocp_pv_line ocp_pv_task_queue');
+		var taskQueue_title = $('<td/>').html('Task queue:');
+		taskQueue_title.addClass('title');
+		this.taskQueue.append(taskQueue_title);
+		var taskQueue_blocks = $('<td/>');
+		taskQueue_blocks.addClass('blocks');
+		this.taskQueue.append(taskQueue_blocks);
 
 		var self = this;
 		window.addEventListener('ocp.worker_pool.Pool.update', function(e) {
@@ -78,9 +80,9 @@ $.widget( "ui.ocp_pool_view", {
 
 	add_queued_thread: function(thread) {
 		var thread_block = $('<div/>');
-		thread_block.addClass('block ocp_pv_tread_block');
+		thread_block.addClass('block ocp_pv_thread_block');
 		thread_block.html(thread.name);
-		thread_block.appendTo(this.treadQueue.find('.blocks'));
+		thread_block.appendTo(this.threadQueue.find('.blocks'));
 	},
 
 	add_queued_task: function(task) {
@@ -94,7 +96,13 @@ $.widget( "ui.ocp_pool_view", {
 	add_active_task: function(task) {
 		var active_task_block = $('<div/>');
 		active_task_block.addClass('block ocp_pv_active_task_block');
-		active_task_block.html('[' + task.thread.name + '] ' + task.id + '-' + task.name);
+		active_task_block.html(task.id + '-' + task.name);
+
+		var thread_block = $('<div/>');
+		thread_block.addClass('block ocp_pv_thread_block');
+		thread_block.html(task.thread.name);
+		thread_block.prependTo(active_task_block);
+
 		active_task_block.attr('data-id', task.id);
 		active_task_block.appendTo(this.activeTask.find('.blocks'));
 	},
@@ -104,7 +112,7 @@ $.widget( "ui.ocp_pool_view", {
 			return;
 		}
 
-		this.treadQueue.find('.blocks').html('');
+		this.threadQueue.find('.blocks').html('');
 		this.taskQueue.find('.blocks').html('');
 		this.activeTask.find('.blocks').html('');
 		this.attach(this.pool);

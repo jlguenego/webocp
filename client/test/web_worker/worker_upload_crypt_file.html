@@ -13,6 +13,11 @@
 		<link rel="stylesheet" href="js/ocp/theme/default/widget_progressbar.css" />
 		<!-- END PROGRESSBAR -->
 
+		<!-- POOL VIEW -->
+		<script src="js/ocp/widget_pool_view.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_pool_view.css" />
+		<!-- END POOL VIEW -->
+
 		<script src="_ext/FileSaver.js"></script>
 		<script src="_ext/Blob.js"></script>
 
@@ -22,6 +27,7 @@
 	</head>
 
 	<body>
+		<div id="pool_view"></div>
 		Serveur URL: <input type="text" id="server_uri" value="http://localhost" /><br/>
 		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
 		<input type="file" id="file" name="file" /><button id="send">Send</button>
@@ -145,6 +151,7 @@ function upload_file(url, filename, content, success_func) {
 
 		<script>
 $('#progress').ocp_progressbar();
+$('#pool_view').ocp_pool_view();
 
 $('#send').click(function() {
 	var secret_key = $('#secret_key').val();
@@ -163,6 +170,7 @@ var total_performed = 0;
 
 function setup_upload_task(file, url, secret_key) {
 	var pool = new ocp.worker_pool.Pool(10, url);
+	$('#pool_view').ocp_pool_view('attach', pool);
 
 	var cursor = 0;
 	var block_size = 1 << 16;

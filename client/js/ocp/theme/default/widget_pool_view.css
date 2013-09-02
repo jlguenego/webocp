@@ -1,48 +1,56 @@
-﻿.ocp_pool_viewer {
-	font-size: 15px;
-	line-height: 15px;
+﻿.ocp_pool_viewer table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px solid black;
 }
 
-.ocp_pv_line {
-	border: 1px solid #4E4E4E;
+.ocp_pool_viewer table tr:nth-child(even) {
+	background-color: #FAFAFA;
 }
 
 .ocp_pool_viewer .title {
-	display: inline-block;
-	padding: 10px 5px;
+	vertical-align: top;
+	text-align: right;
 	width: 100px;
-
-	text-align: center;
-
-	border-right: 1px solid #4E4E4E;
-}
-
-.ocp_pool_viewer .blocks {
-	display: inline-block;
+	padding: 5px;
 }
 
 .ocp_pool_viewer .block {
 	display: inline-block;
-	min-width: 15px;
-	height: 15px;
+	height: 16px;
+	min-width: 40px;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	-ms-border-radius: 15px;
+	-o-border-radius: 15px;
+	border-radius: 15px;
+	font-size: 13px;
+	padding: 0px;
 
-	padding: 3px;
-	margin: 0px 5px;
+	margin: 5px;
 
 	text-align: center;
+	line-height: 16px;
 }
 
-.ocp_pv_tread_block {
-	border: 1px solid #E6E6E6;
-	background-color: #D1D1D1;
+.ocp_pool_viewer .ocp_pv_thread_block {
+	color: white;
+	background-color: #D9290B;
 }
 
-.ocp_pv_task_block {
-	border: 1px solid #FFFFBB;
-	background-color: #F0E87B;
+.ocp_pool_viewer .ocp_pv_task_block {
+	background-color: #00E600;
+	padding: 0px 10px;
+	color: white;
 }
 
-.ocp_pv_active_task_block {
-	border: 1px solid #88FF88;
-	background-color: #00BB00;
+.ocp_pool_viewer .ocp_pv_active_task_block {
+	background-color: #00E600;
+	padding-right: 10px;
+	color: white;
+}
+
+.ocp_pool_viewer .ocp_pv_active_task_block .ocp_pv_thread_block {
+	margin: 0px;
+	margin-right: 5px;
 }

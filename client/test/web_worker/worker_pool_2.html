@@ -13,10 +13,10 @@
 		<link rel="stylesheet" href="js/ocp/theme/default/widget_progressbar.css" />
 		<!-- END PROGRESSBAR -->
 
-		<!-- PROGRESSBAR -->
+		<!-- POOL VIEW -->
 		<script src="js/ocp/widget_pool_view.js"></script>
 		<link rel="stylesheet" href="js/ocp/theme/default/widget_pool_view.css" />
-		<!-- END PROGRESSBAR -->
+		<!-- END POOL VIEW -->
 
 		<script src="js/ocp.js"></script>
 		<script src="js/ocp_worker_misc.js"></script>
@@ -33,7 +33,7 @@
 	</head>
 
 	<body>
-		<div id="pool_view"></div>
+		<div id="pool_view" style="width: 400px;"></div>
 		<button id="refresh">Refresh</button><br/><br/>
 		<button id="add">Add Task</button><br/>
 		<button id="start">Start</button><button id="stop">Stop</button><input type="checkbox" id="force" />force<br/>
@@ -55,6 +55,7 @@ $(document).ready(function() {
 
 var pool = null;
 var force = false;
+
 
 $('#add').click(function() {
 	var bar = $('<div id="progress'+ progressbar_nbr + '" class="progress"/>').appendTo('body')
