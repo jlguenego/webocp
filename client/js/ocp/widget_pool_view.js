@@ -50,6 +50,13 @@ $.widget( "ui.ocp_pool_view", {
 		var activeThread_blocks = $('<div/>');
 		activeThread_blocks.addClass('blocks');
 		this.activeTask.append(activeThread_blocks);
+
+		var self = this;
+		window.addEventListener('ocp.worker_pool.Pool.update', function(e) {
+			if (e.detail.pool == self.pool) {
+				self.refresh();
+			}
+		}, false);
 	},
 
 	_destroy: function() {
@@ -67,7 +74,6 @@ $.widget( "ui.ocp_pool_view", {
 			var task = pool.activeTaskQueue[task_id];
 			this.add_active_task(pool.activeTaskQueue[task_id]);
 		}
-		pool.addEventListener('update', this.refresh, false);
 	},
 
 	add_queued_thread: function(thread) {
@@ -86,7 +92,6 @@ $.widget( "ui.ocp_pool_view", {
 	},
 
 	add_active_task: function(task) {
-		console.log(task);
 		var active_task_block = $('<div/>');
 		active_task_block.addClass('block ocp_pv_active_task_block');
 		active_task_block.html('[' + task.thread.name + '] ' + task.id + '-' + task.name);
@@ -95,6 +100,10 @@ $.widget( "ui.ocp_pool_view", {
 	},
 
 	refresh: function() {
+		if (!this.pool) {
+			return;
+		}
+
 		this.treadQueue.find('.blocks').html('');
 		this.taskQueue.find('.blocks').html('');
 		this.activeTask.find('.blocks').html('');

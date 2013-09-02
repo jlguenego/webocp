@@ -72,9 +72,6 @@ function add_task(i) {
 		if (event.data.performed) {
 			$('#progress' + i).ocp_progressbar('set_progress', event.data.performed);
 		}
-		if (event.data.console) {
-			console.log('thread[' + event.data.thread + ']:' + event.data.console);
-		}
 	};
 
 	var task = new ocp.worker_pool.Task(i, 'work', {
@@ -106,7 +103,6 @@ $('#force').click(function() {
 	} else {
 		force = false;
 	}
-	console.log('force=' + force);
 });
 		</script>
 	</body>

@@ -23,7 +23,7 @@ function work(args) {
 			increment: 1,
 			total: total
 		});
-		console.log('performed: ' + i);
+		//console.log('performed: ' + i);
 	}
 	report({
 		finish: true

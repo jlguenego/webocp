@@ -14,22 +14,16 @@
 	    this.size = size; // number of thread
 
 	    this.sendUpdateEvent = function() {
-			this.dispatchEvent(new Event('update'));
+	    	var event = new CustomEvent('ocp.worker_pool.Pool.update', { 'detail': { pool: this } });
+			window.dispatchEvent(event);
+			console.log('sent ocp.worker_pool.Pool.update');
 	    }
-
-        for (var i = 0 ; i < this.size ; i++) {
-        	var thread = new ocp.worker_pool.Thread(self, url, i);
-            self.threadQueue.push(thread);
-            self.threadList.push(thread);
-            this.sendUpdateEvent();
-        }
 
 	    this.addTask = function(task) {
 	    	if (this.ask_for_termination) {
 	    		console.log('addTask ignored because termination asked.');
 	    		return;
 	    	}
-	    	console.log('addTask');
 	        if (self.threadQueue.length > 0) {
 	            var thread = self.threadQueue.shift();
 	            thread.run(task);
@@ -48,39 +42,40 @@
 
 	    this.addActiveTask = function(task) {
 	    	this.activeTaskQueue[task.id] = task;
-	    	this.sendUpdateEvent();
 	    }
 
 	    this.removeTask = function(taskId) {
 	    	if (this.activeTaskQueue[taskId]) {
 	    		delete this.activeTaskQueue[taskId];
 	    	}
-	    	this.sendUpdateEvent();
 	    }
 
 	    this.terminate = function(force) {
 	    	if (force) {
-	    		console.log('terminate pool now');
 				while (this.threadQueue.length > 0) {
 					this.threadQueue.shift();
-					this.sendUpdateEvent();
 				}
 				while (this.threadList.length > 0) {
 					var thread = this.threadList.shift();
 					thread.worker.terminate();
 				}
 	    	} else {
-	    		console.log('terminate pool nicely');
 				this.ask_for_termination = true;
 				if (this.taskQueue.length == 0) {
 					while (this.threadQueue.length > 0) {
 						var thread = this.threadQueue.shift();
 						thread.worker.terminate();
-						this.sendUpdateEvent();
 					}
 				}
 	    	}
 	    }
+
+		for (var i = 0 ; i < this.size ; i++) {
+        	var thread = new ocp.worker_pool.Thread(self, url, i);
+            self.threadQueue.push(thread);
+            self.threadList.push(thread);
+        }
+	    this.sendUpdateEvent();
 	}
 
 	ocp.worker_pool.Thread = function(pool, url, name) {
