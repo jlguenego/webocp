@@ -28,20 +28,16 @@
 			if (b1 < a[0]) {
 				result += String.fromCharCode(b1);
 				i++;
-			} else if (b1 < a[1]) {
-				var a = bufView.subarray(i, i + 2);
-				var code = ocp.utils.utf8b2unicode(a);
-				console.log('unicode=' + code.toString(16));
-				result += String.fromCharCode(code);
-				i += 2;
-			} else if (b1 < a[2]) {
-				var a = bufView.subarray(i, i + 3);
-				var code = ocp.utils.utf8b2unicode(a);
-				console.log('unicode=' + code.toString(16));
-				result += String.fromCharCode(code);
-				i += 3;
-			} else {
-				i++;
+			}
+			for (var j = 1; j < a.length; j++) {
+				if (b1 < a[j]) {
+					var a = bufView.subarray(i, i + j + 1);
+					var code = ocp.utils.utf8b2unicode(a);
+					console.log('unicode=' + code.toString(16));
+					result += String.fromCharCode(code);
+					i += j + 1;
+					break;
+				}
 			}
 		}
 		return result;
