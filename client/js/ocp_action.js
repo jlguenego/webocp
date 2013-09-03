@@ -99,7 +99,7 @@ var g_request = {};
 
 			if (remember_me) {
 				g_ocp_client.session = g_session;
-				ocp_save_local();
+				ocp.saveLocal();
 			}
 
 			$('#ocp_lg_email').val('');
@@ -118,7 +118,7 @@ var g_request = {};
 	ocp.action.logout = function() {
 		g_session = null;
 		g_ocp_client.session = g_session;
-		ocp_save_local();
+		ocp.saveLocal();
 	};
 
 	ocp.action.display = function(page_id) {

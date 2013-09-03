@@ -21,29 +21,6 @@ String.prototype.getFileExtention = function() {
 var g_ocp_client = null;
 var g_session = null;
 
-function ocp_save_local() {
-	if (localStorage) {
-		localStorage.setItem('ocp_client', JSON.stringify(g_ocp_client));
-	}
-}
-
-function ocp_restore_local() {
-	if (localStorage) {
-		var obj = localStorage.getItem('ocp_client');
-		if (obj) {
-			g_ocp_client = JSON.parse(obj);
-			if (g_ocp_client.session) {
-				g_session = g_ocp_client.session;
-			}
-		} else {
-			g_ocp_client = {
-				server_base_url: 'http://www.ocpforum.org',
-				session: null
-			};
-		}
-	}
-}
-
 function normalize_path(path) {
     path = path.replace(/[\/]{2,}/g,'/');
 	if (path != '/' && path.endsWith('/')) {

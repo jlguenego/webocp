@@ -1,5 +1,5 @@
 //localStorage.removeItem('ocp_client');
-ocp_restore_local();
+ocp.restoreLocal();
 
 function ocp_error_manage(e) {
 	console.log(e);
@@ -29,7 +29,7 @@ $(document).ready(function() {
 		buttons: {
 			Save: function() {
 				g_ocp_client.server_base_url = strip_slash($('#ocp_fm_server_base_url').val());
-				ocp_save_local();
+				ocp.saveLocal();
 				general_settings_dialog.ocp_dialog('close');
 			},
 			Cancel: function() {
