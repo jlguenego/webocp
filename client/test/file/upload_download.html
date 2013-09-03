@@ -17,6 +17,7 @@
 		<script src="js/ocp.js"></script>
 		<script src="js/ocp_utils.js"></script>
 		<script src="js/ocp_crypto.js"></script>
+		<script src="js/ocp_file.js"></script>
 	</head>
 
 	<body>
@@ -28,6 +29,8 @@
 
 		<script>
 $('#start').click(function() {
+	ocp.cfg.server_uri = $('#server_uri').val();
+
 	var secret_key = $('#secret_key').val();
 	var file = $('#file').get(0).files[0];
 
@@ -39,9 +42,9 @@ $('#start').click(function() {
 				$('#clear_hash').html(clear_hash);
 
 				var c_content = ocp.crypto.pcrypt(secret_key, evt.target.result);
-				send_file(file.name, c_content);
+				ocp.file.send(file.name, c_content);
 
-				var retrived_ab = retrieve_file(file.name);
+				var retrived_ab = ocp.file.retrieve(file.name);
 				var da = ocp.crypto.pdecrypt(secret_key, retrived_ab);
 
 				var decrypted_hash = ocp.crypto.hash(da);
@@ -57,47 +60,6 @@ $('#start').click(function() {
 	var blob = file.slice(0, file.size);
 	reader.readAsArrayBuffer(blob);
 });
-
-function send_file(filename, content) {
-	var upload_server_uri = $('#server_uri').val() + '/webocp/server/test/endpoint/create_file_from_string.php';
-
-	var formData = new FormData();
-	formData.append('filename', filename);
-	var blob = new Blob([content], { type: "application/octet-stream" });
-	formData.append('content', blob);
-
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function(){
-		if (xhr.readyState == 4 && xhr.status == 200) { // on success
-			var json_obj = JSON.parse(xhr.responseText);
-			console.log(json_obj);
-		}
-	}
-	xhr.open('POST', upload_server_uri, false); // sync
-	xhr.send(formData);
-}
-
-function retrieve_file(filename) {
-	var download_server_uri = $('#server_uri').val() + '/webocp/server/test/endpoint/retrieve_file.php';
-
-	var formData = new FormData();
-	formData.append('filename', filename);
-
-	var xhr = new XMLHttpRequest();
-	var content = '';
-	xhr.onreadystatechange = function(){
-		if (xhr.readyState == 4 && xhr.status == 200) { // on success
-			console.log('xhr.responseText=' + xhr.responseText);
-			var json_obj = JSON.parse(xhr.responseText);
-			console.log(json_obj);
-			content = ocp.utils.b642ab(json_obj.result.content);
-		}
-	}
-	xhr.open('POST', download_server_uri, false); // Wait before processing file => Synchronous request
-	xhr.send(formData);
-	console.log('content=' + content);
-	return content;
-}
 		</script>
 	</body>
 </html>

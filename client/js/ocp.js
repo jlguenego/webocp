@@ -15,3 +15,5 @@ function OCP() {
 }
 
 var ocp = new OCP();
+
+ocp.cfg = {};

@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="utf-8" />
 		<base href="../.." />
-		<title>Web OCP</title>
 		<script src="_ext/jquery-1.10.2.min.js"></script>
 		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
 		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
@@ -43,6 +42,7 @@ importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_utils.js');
 importScripts(base_url + '/js/ocp_worker.js');
 importScripts(base_url + '/js/ocp_crypto.js');
+importScripts(base_url + '/js/ocp_file.js');
 
 importScripts(base_url + '/_ext/WorkerFormData.js');
 
@@ -68,10 +68,11 @@ this.addEventListener('message', ocp.worker.run(this, run), false);
 
 function upload_hat_init(args) {
 	console.log('upload hat init');
+	ocp.cfg.server_uri = args.server_uri;
+
 	this.upload_hat = {};
 	this.upload_hat.block_nbr = Math.ceil(args.file.size / args.block_size);
 	this.upload_hat.secret_key = args.secret_key;
-	this.upload_hat.server_uri = args.server_uri;
 	this.upload_hat.summary = [];
 	console.log('block_nbr=' + this.upload_hat.block_nbr);
 }
@@ -87,23 +88,30 @@ function upload_hat_push(args) {
 			var obj = this.upload_hat.summary[i];
 			content += obj.block_id + '_' + obj.filename + "\n";
 		}
+		console.log('content=' + content);
 		var filename = process_block(content, this.upload_hat.secret_key, this.upload_hat.server_uri);
 		report({
-			filename: filename
+			filename: filename,
+			finish: true
 		});
 	}
 }
 
 function upload_block(args) {
+	ocp.cfg.server_uri = args.server_uri;
+
 	var file = args.file;
 	var blob = file.slice(args.cursor, args.cursor_next);
 	var reader = new FileReader();
 	reader.onload = function(evt) {
 		if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-			var filename = process_block(evt.target.result, args.secret_key, args.server_uri);
+			var filename = process_block(evt.target.result, args.secret_key);
 			report({
 				filename: filename,
 				block_id: args.block_id
+			});
+			report({
+				finish: true
 			});
 		}
 	};
@@ -111,7 +119,7 @@ function upload_block(args) {
 	console.log('update block');
 }
 
-function process_block(block_ab, secret_key, server_uri) {
+function process_block(block_ab, secret_key) {
 	// 1) crypt
 	var crypted_block_ab = ocp.crypto.pcrypt(secret_key, block_ab);
 
@@ -119,31 +127,9 @@ function process_block(block_ab, secret_key, server_uri) {
 	var filename = ocp.crypto.hash(crypted_block_ab);
 
 	// 3) upload
-	upload_file(server_uri, filename, crypted_block_ab, function() {
-		finish: true
-	});
+	console.log('about to send: ' + filename);
+	ocp.file.send(filename, crypted_block_ab);
 	return filename;
-}
-
-function upload_file(url, filename, content, success_func) {
-	var formData = new FormData();
-	formData.append('filename', filename);
-	var blob = new Blob([content], { type: "application/octet-stream" });
-	formData.append('content', blob);
-
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function(){
-		if (xhr.readyState == 4 && xhr.status == 200) { // on success
-			var json_str = xhr.responseText;
-			var json_obj = JSON.parse(json_str);
-			console.log(json_obj);
-			report({
-				finish: true
-			});
-		}
-	}
-	xhr.open('POST', url, true);
-	xhr.send(formData);
 }
 		</script>
 <!-- END WORKER -->
@@ -153,6 +139,7 @@ $('.progress').ocp_progressbar();
 $('#pool_view').ocp_pool_view();
 
 $('#send').click(function() {
+	ocp.cfg.server_uri = $('#server_uri').val();
 	var secret_key = $('#secret_key').val();
 	var file = $('#file').get(0).files[0];
 	if (!file) {
@@ -163,7 +150,6 @@ $('#send').click(function() {
 	setup_upload_task(file, url, secret_key);
 });
 
-var server_uri = $('#server_uri').val() + '/webocp/server/test/endpoint/create_file_from_string.php';
 var total_task = 0;
 var total_performed = 0;
 var pool = null;
@@ -187,7 +173,7 @@ function setup_upload_task(file, url, secret_key) {
 			cursor_next: cursor_next,
 			block_id: block_id,
 			secret_key: secret_key,
-			server_uri: server_uri
+			server_uri: ocp.cfg.server_uri
 		};
 
 		var callback_func = function(event) {
@@ -223,7 +209,8 @@ function get_hat_worker(url, file, block_size, secret_key) {
 
 	var hat_worker_callback = function() {
 		if (event.data.console) {
-			console.log('Thread[' + event.data.thread + ']-Task[' + event.data.task_name + '-' + event.data.task_id + ']: ' + event.data.console);
+			console.log('Thread[' + event.data.thread + ']-Task[' + event.data.task_name + '-' + event.data.task_id + ']:');
+			console.log(event.data.console);
 			return;
 		}
 		console.log(event.data);
@@ -245,7 +232,7 @@ function get_hat_worker(url, file, block_size, secret_key) {
 		args: {
 			file: file,
 			block_size: block_size,
-			server_uri: server_uri,
+			server_uri: ocp.cfg.server_uri,
 			secret_key: secret_key
 		}
 	});
@@ -262,87 +249,6 @@ function get_hat_worker(url, file, block_size, secret_key) {
 			}
 		});
 	};
-	return hat_worker;
-}
-
-var retrieve_server_uri = $('#server_uri').val() + '/webocp/server/test/endpoint/retrieve_file.php';
-var retrieve_total_task = 0;
-var retrieve_total_performed = 0;
-
-function update_retrieve_progress_from_task(obj) {
-	if (retrieve_total_task <= 0) {
-		return 100;
-	}
-	if (obj.finish) {
-		retrieve_total_performed++;
-	}
-	return Math.floor(retrieve_total_performed * 100 / retrieve_total_task);
-}
-
-$('#retrieve').click(function() {
-	var secret_key = $('#secret_key').val();
-	var filename = $('#upload_name').val();
-	if (!filename) {
-		alert('no file');
-		return;
-	}
-	var url = ocp.worker_misc.getEmbeddedURL('worker');
-	setup_download_task(filename, url, secret_key);
-});
-
-function setup_download_task(filename, url, secret_key) {
-	var pool = new ocp.worker_pool.Pool(10, url);
-	$('#pool_view').ocp_pool_view('attach', pool);
-
-	var hat_worker = get_retrieve_hat_worker(url, filename, pool, secret_key);
-	retrieve_total_task++;
-}
-
-function get_retrieve_hat_worker(url, filename, pool, secret_key) {
-	var hat_worker = new Worker(url);
-
-	var hat_worker_callback = function() {
-		if (event.data.console) {
-			console.log('Thread[' + event.data.thread + ']-Task[' + event.data.task_name + '-' + event.data.task_id + ']: ');
-			console.log(event.data.console);
-			return;
-		}
-		var progress = update_retrieve_progress_from_task(event.data);
-		$('#retrieve_progress').ocp_progressbar('set_progress', progress);
-		console.log(event.data);
-		if (event.data.block_id) {
-			var args = {
-				block_id: event.data.block_id,
-				block_name: event.data.block_name,
-				secret_key: secret_key,
-				server_uri: retrieve_server_uri
-			};
-			var callback_func = function(event) {
-				var progress = update_retrieve_progress_from_task(event.data);
-				$('#retrieve_progress').ocp_progressbar('set_progress', progress);
-				if (event.data.content) {
-					console.log('content extract=' + event.data.content.substr(0, 20));
-				}
-			}
-			var task = new ocp.worker_pool.Task(event.data.block_id, 'download_block', args, callback_func);
-			pool.addTask(task);
-			retrieve_total_task++;
-		}
-	};
-	hat_worker.addEventListener('message', hat_worker_callback, false);
-	hat_worker.postMessage({
-		name: 'set_name',
-		args: 'hat'
-	});
-	hat_worker.postMessage({
-		id: 'hat',
-		name: 'download_hat',
-		args: {
-			block_name: filename,
-			server_uri: retrieve_server_uri,
-			secret_key: secret_key
-		}
-	});
 	return hat_worker;
 }
 		</script>
