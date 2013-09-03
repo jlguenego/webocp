@@ -33,17 +33,21 @@
 						if (evt.target.readyState == FileReader.DONE) { // DONE == 2
 							$('#pre').html(evt.target.result);
 							console.log(new Uint8Array(evt.target.result));
-							var str = ab2str(evt.target.result);
-							var clear_hash = ocp.crypto.hash(str);
-							console.log('str=' + str);
-							console.log('    clear_hash=' + clear_hash);
+							var wa = ocp.utils.ab2wa(evt.target.result);
 
-							var c_content = CryptoJS.AES.encrypt(ocp.utils.ab2wa(evt.target.result), secret_key);
-							var d_content = CryptoJS.AES.decrypt(c_content, secret_key);
+							console.log('wa=' + wa);
+							console.log(wa);
 
-							var decrypted_hash = ocp.crypto.hash(d_content);
-							console.log('decrypted_hash=' + decrypted_hash);
-							console.log('d_content=' + d_content);
+							var c_content = CryptoJS.AES.encrypt(wa, secret_key);
+							var da = CryptoJS.AES.decrypt(c_content, secret_key);
+
+							console.log('da=' + da);
+							console.log(da);
+							var wa_hash = ocp.crypto.hash(evt.target.result);
+							console.log('wa_hash=' + wa_hash);
+							var da_hash = ocp.crypto.hash(ocp.utils.wa2ab(da));
+							console.log('da_hash=' + da_hash);
+
 						}
 					}
 				})(file);

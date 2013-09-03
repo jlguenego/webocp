@@ -42,6 +42,26 @@
 		return result;
 	}
 
+	ocp.utils.ab2hex = function(buf) {
+		var bufView = new Uint8Array(buf);
+		var result = '';
+		for (var i = 0; i < bufView.length; i++) {
+			result += bufView[i].toString(16);
+		}
+		return result;
+	}
+
+	ocp.utils.hex2ab = function(hex) {
+	    var buf = new ArrayBuffer(hex.length / 2);
+	    var bufView = new Uint8Array(buf);
+
+	    for (var i = 0; i < hex.length; i += 2) {
+	        bufView[i >>> 1] = parseInt(hex.charAt(i) + hex.charAt(i + 1), 16);
+	    }
+
+	    return buf;
+	}
+
 	ocp.utils.str2ab = function(str) {
 		console.log('str2ab');
 		var array = [];
@@ -117,6 +137,31 @@
 	        words[i >>> 2] |= bufView[i] << (24 - (i % 4) * 8);
 	    }
 
-	    return CryptoJS.lib.WordArray.create(bufView, bufView.length);
+	    return CryptoJS.lib.WordArray.create(words, bufView.length);
+	}
+
+	ocp.utils.wa2ab = function(wa) {
+	    // Shortcut
+	    var buf = new ArrayBuffer(wa.sigBytes);
+		var bufView = new Uint8Array(buf);
+
+	    for (var i = 0; i < wa.sigBytes; i++) {
+			bufView[i] = (wa.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+	    }
+
+	    return buf;
+	}
+
+	ocp.utils.hex2wa = function(hexStr) {
+	    // Shortcut
+	    var hexStrLength = hexStr.length;
+
+	    // Convert
+	    var words = [];
+	    for (var i = 0; i < hexStrLength; i += 2) {
+	        words[i >>> 3] |= parseInt(hexStr.charAt(i) + hexStr.charAt(i + 1), 16) << (24 - (i % 8) * 4);
+	    }
+
+	    return CryptoJS.lib.WordArray.create(words, hexStrLength / 2);
 	}
 })(ocp);

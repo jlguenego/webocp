@@ -34,11 +34,27 @@ html, body {
 		<script>
 			$('#encrypt').click(function() {
 				var content = $('#clear').val();
-				var ab = ocp.utils.str2ab(content);
+				var ab = ocp.utils.hex2ab(content);
+				console.log('ab=');
 				console.log(new Uint8Array(ab));
-//				var wa = ocp.utils.ab2wa(ab);
-//				var ab2 = ocp.utils.wa2ab(wa);
-				var content2 = ocp.utils.ab2str(ab);
+				var wa = ocp.utils.ab2wa(ab);
+				console.log('wa=');
+				console.log(wa);
+
+				var hex = ocp.utils.ab2hex(ab);
+				var wa2 = ocp.utils.hex2wa(hex);
+				console.log('wa2=');
+				console.log(wa2);
+
+				var cipher = ocp.crypto.pcrypt('toto', ab);
+				console.log('cipher=');
+				console.log(new Uint8Array(cipher));
+
+				var decrypted_ab = ocp.crypto.pdecrypt('toto', cipher);
+				console.log('decrypted_ab=');
+				console.log(new Uint8Array(decrypted_ab));
+
+				var content2 = ocp.utils.ab2hex(decrypted_ab);
 				$('#decrypted').html(content2);
 //				var secret_key = $('#secret_key').val();
 //
