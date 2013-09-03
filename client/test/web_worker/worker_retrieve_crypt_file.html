@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="utf-8" />
 		<base href="../.." />
-		<title>Web OCP</title>
 		<script src="_ext/jquery-1.10.2.min.js"></script>
 		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
 		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
@@ -30,7 +29,7 @@
 		<div id="pool_view"></div>
 		Serveur URL: <input type="text" id="server_uri" value="http://localhost" /><br/>
 		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
-		Upload name: <input type="text" id="upload_name" value="4e5a7ddee74b47696be364f2b75eb1dc2f74bc39" style="width: 300px;"/><br/>
+		Upload name: <input type="text" id="upload_name" value="f66664bab352bc42d1e2ce0171c772651536bca1" style="width: 300px;"/><br/>
 		<button id="retrieve">Retrieve</button>
 		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
 
@@ -43,6 +42,7 @@ importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_utils.js');
 importScripts(base_url + '/js/ocp_worker.js');
 importScripts(base_url + '/js/ocp_crypto.js');
+importScripts(base_url + '/js/ocp_file.js');
 
 importScripts(base_url + '/_ext/WorkerFormData.js');
 
@@ -64,7 +64,8 @@ function run(event) {
 this.addEventListener('message', ocp.worker.run(this, run), false);
 
 function download_block(args) {
-	var clear_content = retrieve_block(args.block_name, args.secret_key, args.server_uri);
+	ocp.cfg.server_uri = args.server_uri;
+	var clear_content = retrieve_block(args.block_name, args.secret_key);
 	report({
 		block_id: args.block_id,
 		content: clear_content
@@ -72,37 +73,42 @@ function download_block(args) {
 }
 
 function download_hat(args) {
-	var filelist_str = retrieve_block(args.block_name, args.secret_key, args.server_uri);
+	ocp.cfg.server_uri = args.server_uri;
+	var filelist_ab = retrieve_block(args.block_name, args.secret_key);
+	console.log('filelist_ab=');
+	console.log(filelist_ab);
+	var filelist_str = ocp.utils.ab2str(filelist_ab);
+	console.log('filelist_str=');
+	console.log(filelist_str);
 	var filelist = filelist_str.split("\n");
-	//console.log(filelist);
-	for (var i = 0; i < filelist.length; i++) {
-		if (filelist[i] == '') {
-			continue;
-		}
-		var block = filelist[i].split('_');
-		//console.log(block);
-		if (!block[0]) {
-			console.log('block_id is empty');
-			return;
-		}
-		if (!block[1]) {
-			console.log('block_name is empty');
-			return;
-		}
-		report({
-			block_id: block[0],
-			block_name: block[1]
-		});
-	}
+	console.log(filelist);
+//	for (var i = 0; i < filelist.length; i++) {
+//		if (filelist[i] == '') {
+//			continue;
+//		}
+//		var block = filelist[i].split('_');
+//		//console.log(block);
+//		if (!block[0]) {
+//			console.log('block_id is empty');
+//			return;
+//		}
+//		if (!block[1]) {
+//			console.log('block_name is empty');
+//			return;
+//		}
+//		report({
+//			block_id: block[0],
+//			block_name: block[1]
+//		});
+//	}
 }
 
-function retrieve_block(block_name, secret_key, server_uri) {
+function retrieve_block(block_name, secret_key) {
 	// 1) download
 	console.log('download file: ' + block_name);
-	var crypted_content = download_file(server_uri, block_name)
+	var crypted_content = ocp.file.retrieve(block_name)
 
 	// 2) verify
-	//console.log('verify integrity');
 	if (verify_file_integrity(block_name, crypted_content)) {
 		console.log('integrity ok');
 	} else {
@@ -112,35 +118,15 @@ function retrieve_block(block_name, secret_key, server_uri) {
 
 	// 2) decrypt
 	console.log('decrypt');
-	var decrypted_str = ocp.crypto.pdecrypt(secret_key, crypted_content);
-	//console.log(decrypted_str);
+	console.log('crypted_content=' + ocp.utils.ab2str(crypted_content));
+	var decrypted_ab = ocp.crypto.pdecrypt(secret_key, crypted_content);
 
-	return decrypted_str;
+	return decrypted_ab;
 }
 
 function verify_file_integrity(block_name, crypted_content) {
 	var crypted_content_hash = ocp.crypto.hash(crypted_content);
 	return block_name == crypted_content_hash;
-}
-
-function download_file(url, filename) {
-	var formData = new FormData();
-	formData.append('filename', filename);
-
-	var xhr = new XMLHttpRequest();
-	var content = '';
-	xhr.onreadystatechange = function(){
-		if (xhr.readyState == 4 && xhr.status == 200) { // on success
-			var json_str = xhr.responseText;
-			var json_obj = JSON.parse(json_str);
-			content = json_obj.result.content;
-			//console.log('content extract=' + content.substr(0, 10));
-		}
-	}
-	xhr.open('POST', url, false); // Wait before processing file => Synchronous request
-	xhr.send(formData);
-
-	return content;
 }
 		</script>
 <!-- END WORKER -->
@@ -149,7 +135,6 @@ function download_file(url, filename) {
 $('.progress').ocp_progressbar();
 $('#pool_view').ocp_pool_view();
 
-var server_uri = $('#server_uri').val() + '/webocp/server/test/endpoint/retrieve_file.php';
 var total_task = 0;
 var total_performed = 0;
 
@@ -164,6 +149,7 @@ function update_progress_from_task(obj) {
 }
 
 $('#retrieve').click(function() {
+	ocp.cfg.server_uri = $('#server_uri').val();
 	var secret_key = $('#secret_key').val();
 	var filename = $('#upload_name').val();
 	if (!filename) {
@@ -177,7 +163,6 @@ $('#retrieve').click(function() {
 function setup_download_task(filename, url, secret_key) {
 	var pool = new ocp.worker_pool.Pool(10, url);
 	$('#pool_view').ocp_pool_view('attach', pool);
-
 
 	var hat_worker = new Worker(url);
 
@@ -222,7 +207,7 @@ function setup_download_task(filename, url, secret_key) {
 		name: 'download_hat',
 		args: {
 			block_name: filename,
-			server_uri: server_uri,
+			server_uri: ocp.cfg.server_uri,
 			secret_key: secret_key
 		}
 	});

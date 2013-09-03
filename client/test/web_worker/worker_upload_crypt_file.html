@@ -89,7 +89,7 @@ function upload_hat_push(args) {
 			content += obj.block_id + '_' + obj.filename + "\n";
 		}
 		console.log('content=' + content);
-		var filename = process_block(content, this.upload_hat.secret_key, this.upload_hat.server_uri);
+		var filename = process_block(ocp.utils.str2ab(content), this.upload_hat.secret_key);
 		report({
 			filename: filename,
 			finish: true
