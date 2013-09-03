@@ -24,16 +24,15 @@
 		var i = 0;
 		while (i < bufView.length) {
 			var b1 = bufView[i];
-			console.log('b1=' + b1.toString(16));
 			if (b1 < a[0]) {
 				result += String.fromCharCode(b1);
 				i++;
+				continue;
 			}
 			for (var j = 1; j < a.length; j++) {
 				if (b1 < a[j]) {
-					var a = bufView.subarray(i, i + j + 1);
-					var code = ocp.utils.utf8b2unicode(a);
-					console.log('unicode=' + code.toString(16));
+					var sa = bufView.subarray(i, i + j + 1);
+					var code = ocp.utils.utf8b2unicode(sa);
 					result += String.fromCharCode(code);
 					i += j + 1;
 					break;
@@ -92,7 +91,7 @@
 		var unicode = 0;
 		var j = 0;
 		for (var i = array.length - 1; i >= 0; i--) {
-			console.log(array[i].toString(16));
+			//console.log(array[i].toString(16));
 			var code = 0;
 			if (i > 0) {
 				code = (array[i] & 0x3f) << (6 * j);
@@ -101,11 +100,23 @@
 				code = array[0] & ((1 << significative_bit) - 1);
 				code = code << (6 * j);
 			}
-			console.log('code=' + code.toString(2));
+			//console.log('code=' + code.toString(2));
 			unicode = unicode + code;
 			j++;
 		}
-		console.log('unicode=' + unicode.toString(2));
+		//console.log('unicode=' + unicode.toString(2));
 		return unicode;
+	}
+
+	ocp.utils.ab2wa = function(ab) {
+	    // Shortcut
+	    var bufView = new Uint8Array(ab);
+
+	    var words = [];
+	    for (var i = 0; i < bufView.length; i++) {
+	        words[i >>> 2] |= bufView[i] << (24 - (i % 4) * 8);
+	    }
+
+	    return CryptoJS.lib.WordArray.create(bufView, bufView.length);
 	}
 })(ocp);

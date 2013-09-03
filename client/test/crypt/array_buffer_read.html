@@ -38,7 +38,7 @@
 							console.log('str=' + str);
 							console.log('    clear_hash=' + clear_hash);
 
-							var c_content = CryptoJS.AES.encrypt(ab2wa(evt.target.result), secret_key);
+							var c_content = CryptoJS.AES.encrypt(ocp.utils.ab2wa(evt.target.result), secret_key);
 							var d_content = CryptoJS.AES.decrypt(c_content, secret_key);
 
 							var decrypted_hash = ocp.crypto.hash(d_content);
@@ -63,18 +63,6 @@
 					bufView[i] = str.charCodeAt(i);
 				}
 				return buf;
-			}
-
-			function ab2wa(ab) {
-			    // Shortcut
-			    var bufView = new Uint8Array(ab);
-
-			    var words = [];
-			    for (var i = 0; i < bufView.length; i++) {
-			        words[i >>> 2] |= bufView[i] << (24 - (i % 4) * 8);
-			    }
-
-			    return CryptoJS.lib.WordArray.create(bufView, bufView.length);
 			}
 		</script>
 	</body>
