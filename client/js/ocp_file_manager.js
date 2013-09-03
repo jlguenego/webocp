@@ -551,7 +551,7 @@ $(document).ready(function() {
 	});
 	// UPLOAD DIR END
 
-	if (g_ocp_client.server_base_url && g_session && g_session.public_address) {
+	if (ocp.cfg.server_base_url && g_session && g_session.public_address) {
 		tree.ocp_tree('open_item', '/');
 	}
 

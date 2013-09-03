@@ -7,7 +7,7 @@ function ajax_command(data) {
 	var result = null;
 	$.ajax({
 		type: "GET",
-		url: g_ocp_client.server_base_url + '/webocp/server/endpoint/',
+		url: ocp.cfg.server_base_url + '/webocp/server/endpoint/',
 		async: false,
 		data: data,
 		success: function(data) {
@@ -83,7 +83,7 @@ function ajax_upload_dir(path, relative_path, form, after_success) {
 	formData.append('path', '/' + g_session.public_address + path);
 	var result = null;
     $.ajax({
-        url: g_ocp_client.server_base_url + '/webocp/server/endpoint/',  //server script to process data
+        url: ocp.cfg.server_base_url + '/webocp/server/endpoint/',  //server script to process data
         type: 'POST',
         data: formData,
         xhr: function() {  // custom xhr
@@ -131,7 +131,7 @@ function ajax_upload_file(path, file, after_success, on_progress) {
 	formData.append('file[]', file);
 	var result = null;
     $.ajax({
-        url: g_ocp_client.server_base_url + '/webocp/server/endpoint/?action=upload_file&file_size=' + file.size,  //server script to process data
+        url: ocp.cfg.server_base_url + '/webocp/server/endpoint/?action=upload_file&file_size=' + file.size,  //server script to process data
         type: 'POST',
         data: formData,
         async: true,
@@ -181,7 +181,7 @@ function ajax_upload_file(path, file, after_success, on_progress) {
 
 function ajax_download_file(path) {
 	console.log('ajax_download_file, path=' + path);
-	window.location = g_ocp_client.server_base_url + '/webocp/server/endpoint/download.php?path=' + '/' + g_session.public_address + path;
+	window.location = ocp.cfg.server_base_url + '/webocp/server/endpoint/download.php?path=' + '/' + g_session.public_address + path;
 }
 
 function ajax_register(account) {

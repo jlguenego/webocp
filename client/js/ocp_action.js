@@ -34,7 +34,7 @@ var g_request = {};
 			case 'perform_login':
 				if (ocp.action.login()) {
 					console.log('g_session.public_address=' + g_session.public_address);
-					if (g_ocp_client.server_base_url) {
+					if (ocp.cfg.server_base_url) {
 						$('#ocp_fm_tree').ocp_tree('open_item', '/');
 					}
 					window.location.hash = '#file_manager';
@@ -98,7 +98,7 @@ var g_request = {};
 			g_session.public_address = public_address;
 
 			if (remember_me) {
-				g_ocp_client.session = g_session;
+				ocp.cfg.session = g_session;
 				ocp.saveLocal();
 			}
 
@@ -117,7 +117,7 @@ var g_request = {};
 
 	ocp.action.logout = function() {
 		g_session = null;
-		g_ocp_client.session = g_session;
+		ocp.cfg.session = g_session;
 		ocp.saveLocal();
 	};
 

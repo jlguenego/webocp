@@ -23,12 +23,12 @@ $(document).ready(function() {
 	$('#logout_button').ocp_menu();
 	$('#register_page_button').ocp_menu();
 
-	console.log('g_ocp_client.server_base_url=' + g_ocp_client.server_base_url);
+	console.log('ocp.cfg.server_base_url=' + ocp.cfg.server_base_url);
 
 	var general_settings_dialog = $('#ocp_fm_general_settings_dialog').ocp_dialog({
 		buttons: {
 			Save: function() {
-				g_ocp_client.server_base_url = strip_slash($('#ocp_fm_server_base_url').val());
+				ocp.cfg.server_base_url = strip_slash($('#ocp_fm_server_base_url').val());
 				ocp.saveLocal();
 				general_settings_dialog.ocp_dialog('close');
 			},
@@ -41,7 +41,7 @@ $(document).ready(function() {
 	$('[href=#general_settings]').click(function(e) {
 		e.preventDefault();
 		general_settings_dialog.ocp_dialog('open');
-		general_settings_dialog.find('#ocp_fm_server_base_url').val(g_ocp_client.server_base_url);
+		general_settings_dialog.find('#ocp_fm_server_base_url').val(ocp.cfg.server_base_url);
 	});
 
 	$('#ocp_misc_error_dialog').ocp_dialog({
