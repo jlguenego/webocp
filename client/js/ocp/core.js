@@ -18,7 +18,6 @@ String.prototype.getFileExtention = function() {
     return (/[.]/.exec(this)) ? /[^.]+$/.exec(this) : undefined;
 };
 
-var ocp.cfg = null;
 var g_session = null;
 
 function normalize_path(path) {

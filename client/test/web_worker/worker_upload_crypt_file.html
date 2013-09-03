@@ -108,9 +108,7 @@ function upload_block(args) {
 			var filename = process_block(evt.target.result, args.secret_key);
 			report({
 				filename: filename,
-				block_id: args.block_id
-			});
-			report({
+				block_id: args.block_id,
 				finish: true
 			});
 		}

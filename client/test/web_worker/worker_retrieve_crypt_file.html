@@ -68,7 +68,8 @@ function download_block(args) {
 	var clear_content = retrieve_block(args.block_name, args.secret_key);
 	report({
 		block_id: args.block_id,
-		content: clear_content
+		content: clear_content,
+		finish: true
 	});
 }
 
@@ -101,6 +102,9 @@ function download_hat(args) {
 			block_name: block[1]
 		});
 	}
+	report({
+		finish: true
+	});
 }
 
 function retrieve_block(block_name, secret_key) {
@@ -192,6 +196,9 @@ function setup_download_task(filename, url, secret_key) {
 			var task = new ocp.worker_pool.Task(event.data.block_id, 'download_block', args, callback_func);
 			pool.addTask(task);
 			total_task++;
+		}
+		if (event.data.finish) {
+			pool.terminate();
 		}
 	};
 

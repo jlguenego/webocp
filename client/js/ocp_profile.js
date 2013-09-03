@@ -4,7 +4,7 @@
 		start: function() {
 			this.start_t = new Date().getTime();
 		},
-		report: function() {
+		report: function(tag) {
 			var elapsed = new Date().getTime() - this.start_t;
 			if (ocp.debug) {
 				console.log('[PROFILE] ' + tag + ': ' + elapsed + 'ms');
