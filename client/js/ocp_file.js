@@ -2,7 +2,7 @@
 	ocp.file = {};
 
 	ocp.file.send = function(filename, content) {
-		var upload_server_uri = ocp.cfg.server_uri + '/webocp/server/test/endpoint/create_file_from_string.php';
+		var upload_server_uri = ocp.cfg.server_base_url + '/webocp/server/test/endpoint/create_file_from_string.php';
 		console.log('upload_server_uri=' + upload_server_uri);
 
 		var formData = new FormData();
@@ -22,7 +22,7 @@
 	}
 
 	ocp.file.retrieve = function(filename) {
-		var download_server_uri = ocp.cfg.server_uri + '/webocp/server/test/endpoint/retrieve_file.php';
+		var download_server_uri = ocp.cfg.server_base_url + '/webocp/server/test/endpoint/retrieve_file.php';
 
 		var formData = new FormData();
 		formData.append('filename', filename);

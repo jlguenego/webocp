@@ -68,7 +68,7 @@ this.addEventListener('message', ocp.worker.run(this, run), false);
 
 function upload_hat_init(args) {
 	console.log('upload hat init');
-	ocp.cfg.server_uri = args.server_uri;
+	ocp.cfg.server_base_url = args.server_uri;
 
 	this.upload_hat = {};
 	this.upload_hat.block_nbr = Math.ceil(args.file.size / args.block_size);
@@ -98,7 +98,7 @@ function upload_hat_push(args) {
 }
 
 function upload_block(args) {
-	ocp.cfg.server_uri = args.server_uri;
+	ocp.cfg.server_base_url = args.server_uri;
 
 	var file = args.file;
 	var blob = file.slice(args.cursor, args.cursor_next);
@@ -139,7 +139,7 @@ $('.progress').ocp_progressbar();
 $('#pool_view').ocp_pool_view();
 
 $('#send').click(function() {
-	ocp.cfg.server_uri = $('#server_uri').val();
+	ocp.cfg.server_base_url = $('#server_uri').val();
 	var secret_key = $('#secret_key').val();
 	var file = $('#file').get(0).files[0];
 	if (!file) {
@@ -173,7 +173,7 @@ function setup_upload_task(file, url, secret_key) {
 			cursor_next: cursor_next,
 			block_id: block_id,
 			secret_key: secret_key,
-			server_uri: ocp.cfg.server_uri
+			server_uri: ocp.cfg.server_base_url
 		};
 
 		var callback_func = function(event) {
@@ -232,7 +232,7 @@ function get_hat_worker(url, file, block_size, secret_key) {
 		args: {
 			file: file,
 			block_size: block_size,
-			server_uri: ocp.cfg.server_uri,
+			server_uri: ocp.cfg.server_base_url,
 			secret_key: secret_key
 		}
 	});
