@@ -26,10 +26,10 @@ html, body {
 
 	<body>
 		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
-		Clear content: <textarea id="clear">Guénégo</textarea><br/>
-		Crypted content: <textarea id="crypted"></textarea><br/>
-		Decrypted content: <textarea id="decrypted"></textarea><br/>
-		<button id="encrypt">Encrypt</button> <button id="decrypt">Decrypt</button>
+		(Hex)Clear content: <textarea id="clear">FFFF</textarea><br/>
+		(Hex)Crypted content: <textarea id="crypted"></textarea><br/>
+		(Hex)Decrypted content: <textarea id="decrypted"></textarea><br/>
+		<button id="encrypt">Encrypt</button>
 
 		<script>
 			$('#encrypt').click(function() {
@@ -46,31 +46,20 @@ html, body {
 				console.log('wa2=');
 				console.log(wa2);
 
-				var cipher = ocp.crypto.pcrypt('toto', ab);
+				var secret_key = $('#secret_key').val();
+
+				var cipher = ocp.crypto.pcrypt(secret_key, ab);
 				console.log('cipher=');
 				console.log(new Uint8Array(cipher));
 
-				var decrypted_ab = ocp.crypto.pdecrypt('toto', cipher);
+				$('#crypted').val(ocp.utils.ab2hex(cipher));
+
+				var decrypted_ab = ocp.crypto.pdecrypt(secret_key, cipher);
 				console.log('decrypted_ab=');
 				console.log(new Uint8Array(decrypted_ab));
 
 				var content2 = ocp.utils.ab2hex(decrypted_ab);
-				$('#decrypted').html(content2);
-//				var secret_key = $('#secret_key').val();
-//
-//				var crypted_content = ocp.crypto.pcrypt(secret_key, content);
-//				console.log('clear_content=|' + content + '|');
-//				console.log('crypted_content=|' + crypted_content + '|');
-//				$('#crypted').val(crypted_content);
-			});
-			$('#decrypt').click(function() {
-				var crypted_content = $('#crypted').val();
-				var secret_key = $('#secret_key').val();
-
-				var decrypted_str = ocp.crypto.pdecrypt(secret_key, crypted_content);
-				console.log('crypted_content=|' + crypted_content + '|');
-				console.log('decrypted_str=|' + decrypted_str + '|');
-				$('#decrypted').html(decrypted_str);
+				$('#decrypted').val(content2);
 			});
 		</script>
 	</body>
