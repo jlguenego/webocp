@@ -16,10 +16,12 @@
 		if (!file_exists($file)) {
 			throw new Exception('This file does not exists.');
 		}
-		$output['result']['content'] = file_get_contents($file);
+		$output['result']['content'] = base64_encode(file_get_contents($file));
+		debug("File content:\n" . $output['result']['content']);
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
 	}
 	$result = json_encode($output);
+	debug('$result=' . $result);
 	echo $result;
 ?>

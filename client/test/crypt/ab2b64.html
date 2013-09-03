@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/sha1.js"></script>
+		<script src="_ext/aes.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
+	</head>
+
+	<body>
+		Input: <input type="text" id="input" value="http://localhost" /><br/>
+		Result: <input type="text" id="result" /><br/>
+		<button id="start">Start</button><br/>
+
+		<script>
+$('#start').click(function() {
+	var input = $('#input').val();
+	var ab = ocp.utils.str2ab(input);
+	console.log('ab=');
+	console.log(ab);
+	var b64 = ocp.utils.ab2b64(ab);
+	console.log('b64=');
+	console.log(b64);
+	var ab2 = ocp.utils.b642ab(b64);
+	console.log('ab2=');
+	console.log(ab2);
+	$('#result').val(ocp.utils.ab2str(ab2));
+});
+		</script>
+	</body>
+</html>

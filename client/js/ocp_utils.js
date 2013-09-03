@@ -63,7 +63,6 @@
 	}
 
 	ocp.utils.str2ab = function(str) {
-		console.log('str2ab');
 		var array = [];
 
 		var length = 0;
@@ -76,10 +75,6 @@
 		var bufView = new Uint8Array(buf);
 		for (var i = 0; i < array.length; i++) {
 			bufView[i] = array[i];
-		}
-
-		for (var i = 0; i < bufView.length; i++) {
-			console.log('buf[' + i + ']=' + bufView[i].toString(16));
 		}
 		return buf;
 	}
@@ -163,5 +158,15 @@
 	    }
 
 	    return CryptoJS.lib.WordArray.create(words, hexStrLength / 2);
+	}
+
+	ocp.utils.b642ab = function(b64) {
+		var wa = CryptoJS.enc.Base64.parse(b64);
+		return ocp.utils.wa2ab(wa);
+	}
+
+	ocp.utils.ab2b64 = function(ab) {
+		var wa = ocp.utils.ab2wa(ab);
+		return CryptoJS.enc.Base64.stringify(wa);
 	}
 })(ocp);

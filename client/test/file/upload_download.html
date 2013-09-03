@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<title>Web OCP</title>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="_ext/sha1.js"></script>
+		<script src="_ext/aes.js"></script>
+
+		<script src="_ext/FileSaver.js"></script>
+		<script src="_ext/Blob.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_crypto.js"></script>
+	</head>
+
+	<body>
+		Serveur URL: <input type="text" id="server_uri" value="http://localhost" /><br/>
+		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
+		<input type="file" id="file" name="file" /><button id="start">Start</button><br/>
+		Clear file hash: <span id="clear_hash"></span><br/>
+		Decrypted file hash: <span id="decrypted_hash"></span>
+
+		<script>
+$('#start').click(function() {
+	var secret_key = $('#secret_key').val();
+	var file = $('#file').get(0).files[0];
+
+	var reader = new FileReader();
+	reader.onloadend = (function(my_file) {
+		return function(evt) {
+			if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+				var clear_hash = ocp.crypto.hash(evt.target.result);
+				$('#clear_hash').html(clear_hash);
+
+				var c_content = ocp.crypto.pcrypt(secret_key, evt.target.result);
+				send_file(file.name, c_content);
+
+				var retrived_ab = retrieve_file(file.name);
+				var da = ocp.crypto.pdecrypt(secret_key, retrived_ab);
+
+				var decrypted_hash = ocp.crypto.hash(da);
+				$('#decrypted_hash').html(decrypted_hash);
+
+				var blob = new Blob([da]);
+
+				saveAs(blob, file.name);
+			}
+		}
+	})(file);
+
+	var blob = file.slice(0, file.size);
+	reader.readAsArrayBuffer(blob);
+});
+
+function send_file(filename, content) {
+	var upload_server_uri = $('#server_uri').val() + '/webocp/server/test/endpoint/create_file_from_string.php';
+
+	var formData = new FormData();
+	formData.append('filename', filename);
+	var blob = new Blob([content], { type: "application/octet-stream" });
+	formData.append('content', blob);
+
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (xhr.readyState == 4 && xhr.status == 200) { // on success
+			var json_obj = JSON.parse(xhr.responseText);
+			console.log(json_obj);
+		}
+	}
+	xhr.open('POST', upload_server_uri, false); // sync
+	xhr.send(formData);
+}
+
+function retrieve_file(filename) {
+	var download_server_uri = $('#server_uri').val() + '/webocp/server/test/endpoint/retrieve_file.php';
+
+	var formData = new FormData();
+	formData.append('filename', filename);
+
+	var xhr = new XMLHttpRequest();
+	var content = '';
+	xhr.onreadystatechange = function(){
+		if (xhr.readyState == 4 && xhr.status == 200) { // on success
+			console.log('xhr.responseText=' + xhr.responseText);
+			var json_obj = JSON.parse(xhr.responseText);
+			console.log(json_obj);
+			content = ocp.utils.b642ab(json_obj.result.content);
+		}
+	}
+	xhr.open('POST', download_server_uri, false); // Wait before processing file => Synchronous request
+	xhr.send(formData);
+	console.log('content=' + content);
+	return content;
+}
+		</script>
+	</body>
+</html>

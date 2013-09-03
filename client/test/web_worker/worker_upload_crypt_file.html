@@ -32,9 +32,7 @@
 		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
 		<input type="file" id="file" name="file" /><button id="send">Send</button>
 		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
-		Upload name: <input type="text" id="upload_name" value="4e5a7ddee74b47696be364f2b75eb1dc2f74bc39" style="width: 300px;"/><br/>
-		<button id="retrieve">Retrieve</button>
-		<div id="retrieve_progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
+		Upload name: <div id="upload_name"></div>
 
 <!-- WORKER -->
 		<script id="worker" type="text/js-worker">
@@ -62,97 +60,11 @@ function run(event) {
     	case 'upload_hat_push':
     		upload_hat_push(task.args);
     		return false;
-    	case 'download_hat':
-    		download_hat(task.args);
-    		return false;
-    	case 'download_block':
-    		download_block(task.args);
-    		return false;
     }
     return true;
 }
 
 this.addEventListener('message', ocp.worker.run(this, run), false);
-
-function download_block(args) {
-	var clear_content = retrieve_block(args.block_name, args.secret_key, args.server_uri);
-	report({
-		block_id: args.block_id,
-		content: clear_content
-	});
-}
-
-function download_hat(args) {
-	var filelist_str = retrieve_block(args.block_name, args.secret_key, args.server_uri);
-	var filelist = filelist_str.split("\n");
-	//console.log(filelist);
-	for (var i = 0; i < filelist.length; i++) {
-		if (filelist[i] == '') {
-			continue;
-		}
-		var block = filelist[i].split('_');
-		//console.log(block);
-		if (!block[0]) {
-			console.log('block_id is empty');
-			return;
-		}
-		if (!block[1]) {
-			console.log('block_name is empty');
-			return;
-		}
-		report({
-			block_id: block[0],
-			block_name: block[1]
-		});
-	}
-}
-
-function retrieve_block(block_name, secret_key, server_uri) {
-	// 1) download
-	console.log('download file: ' + block_name);
-	var crypted_content = download_file(server_uri, block_name)
-
-	// 2) verify
-	//console.log('verify integrity');
-	if (verify_file_integrity(block_name, crypted_content)) {
-		console.log('integrity ok');
-	} else {
-		console.log('integrity error');
-		return;
-	}
-
-	// 2) decrypt
-	console.log('decrypt');
-	var decrypted_str = ocp.crypto.pdecrypt(secret_key, crypted_content);
-	//console.log(decrypted_str);
-
-	return decrypted_str;
-}
-
-function verify_file_integrity(block_name, crypted_content) {
-	var crypted_content_hash = ocp.crypto.hash(crypted_content);
-	return block_name == crypted_content_hash;
-}
-
-function download_file(url, filename) {
-	var formData = new FormData();
-	formData.append('filename', filename);
-
-	var xhr = new XMLHttpRequest();
-	var content = '';
-	xhr.onreadystatechange = function(){
-		if (xhr.readyState == 4 && xhr.status == 200) { // on success
-			var json_str = xhr.responseText;
-			var json_obj = JSON.parse(json_str);
-			content = json_obj.result.content;
-			//console.log('content extract=' + content.substr(0, 10));
-		}
-	}
-	xhr.open('POST', url, false); // Wait before processing file => Synchronous request
-	xhr.send(formData);
-
-	return content;
-}
 
 function upload_hat_init(args) {
 	console.log('upload hat init');
@@ -195,19 +107,19 @@ function upload_block(args) {
 			});
 		}
 	};
-	reader.readAsBinaryString(blob);
+	reader.readAsArrayBuffer(blob);
 	console.log('update block');
 }
 
-function process_block(block_str, secret_key, server_uri) {
+function process_block(block_ab, secret_key, server_uri) {
 	// 1) crypt
-	var crypted_block_str = ocp.crypto.pcrypt(secret_key, block_str);
+	var crypted_block_ab = ocp.crypto.pcrypt(secret_key, block_ab);
 
 	// 2) hash
-	var filename = ocp.crypto.hash(crypted_block_str);
+	var filename = ocp.crypto.hash(crypted_block_ab);
 
 	// 3) upload
-	upload_file(server_uri, filename, crypted_block_str, function() {
+	upload_file(server_uri, filename, crypted_block_ab, function() {
 		finish: true
 	});
 	return filename;
@@ -216,7 +128,7 @@ function process_block(block_str, secret_key, server_uri) {
 function upload_file(url, filename, content, success_func) {
 	var formData = new FormData();
 	formData.append('filename', filename);
-	var blob = new Blob([content], { type: "text/plain" });
+	var blob = new Blob([content], { type: "application/octet-stream" });
 	formData.append('content', blob);
 
 	var xhr = new XMLHttpRequest();
@@ -254,12 +166,12 @@ $('#send').click(function() {
 var server_uri = $('#server_uri').val() + '/webocp/server/test/endpoint/create_file_from_string.php';
 var total_task = 0;
 var total_performed = 0;
+var pool = null;
 
 function setup_upload_task(file, url, secret_key) {
-	var pool = new ocp.worker_pool.Pool(10, url);
-	$('#pool_view').ocp_pool_view('attach', pool);
+	pool = new ocp.worker_pool.Pool(10, url);
+	$('#pool_view').ocp_pool_view('attach', pool);	var cursor = 0;
 
-	var cursor = 0;
 	var block_size = 1 << 16;
 
 	var hat_worker = get_hat_worker(url, file, block_size, secret_key);
@@ -294,7 +206,6 @@ function setup_upload_task(file, url, secret_key) {
 		cursor = cursor_next;
 		block_id++;
 	}
-	pool.terminate();
 }
 
 function update_progress_from_task(obj) {
@@ -319,8 +230,9 @@ function get_hat_worker(url, file, block_size, secret_key) {
 		var progress = update_progress_from_task(event.data);
 		$('#progress').ocp_progressbar('set_progress', progress);
 		if (event.data.filename) {
-			$('#upload_name').val(event.data.filename);
+			$('#upload_name').html(event.data.filename);
 		}
+		pool.terminate();
 	};
 	hat_worker.addEventListener('message', hat_worker_callback, false);
 	hat_worker.postMessage({
