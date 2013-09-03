@@ -82,25 +82,25 @@ function download_hat(args) {
 	console.log(filelist_str);
 	var filelist = filelist_str.split("\n");
 	console.log(filelist);
-//	for (var i = 0; i < filelist.length; i++) {
-//		if (filelist[i] == '') {
-//			continue;
-//		}
-//		var block = filelist[i].split('_');
-//		//console.log(block);
-//		if (!block[0]) {
-//			console.log('block_id is empty');
-//			return;
-//		}
-//		if (!block[1]) {
-//			console.log('block_name is empty');
-//			return;
-//		}
-//		report({
-//			block_id: block[0],
-//			block_name: block[1]
-//		});
-//	}
+	for (var i = 0; i < filelist.length; i++) {
+		if (filelist[i] == '') {
+			continue;
+		}
+		var block = filelist[i].split('_');
+		//console.log(block);
+		if (!block[0]) {
+			console.log('block_id is empty');
+			return;
+		}
+		if (!block[1]) {
+			console.log('block_name is empty');
+			return;
+		}
+		report({
+			block_id: block[0],
+			block_name: block[1]
+		});
+	}
 }
 
 function retrieve_block(block_name, secret_key) {
@@ -118,7 +118,6 @@ function retrieve_block(block_name, secret_key) {
 
 	// 2) decrypt
 	console.log('decrypt');
-	console.log('crypted_content=' + ocp.utils.ab2str(crypted_content));
 	var decrypted_ab = ocp.crypto.pdecrypt(secret_key, crypted_content);
 
 	return decrypted_ab;
@@ -180,13 +179,14 @@ function setup_download_task(filename, url, secret_key) {
 				block_id: event.data.block_id,
 				block_name: event.data.block_name,
 				secret_key: secret_key,
-				server_uri: server_uri
+				server_uri: ocp.cfg.server_uri
 			};
 			var callback_func = function(event) {
 				var progress = update_progress_from_task(event.data);
 				$('#progress').ocp_progressbar('set_progress', progress);
 				if (event.data.content) {
-					console.log('content extract=' + event.data.content.substr(0, 20));
+					console.log(event.data);
+					saveAs(new Blob([ event.data.content ]), 'test.jpg');
 				}
 			}
 			var task = new ocp.worker_pool.Task(event.data.block_id, 'download_block', args, callback_func);

@@ -115,6 +115,7 @@
 	        if (this.task != null) {
 	        	this.task.thread = this;
 	        	this.pool.addActiveTask(this.task);
+	        	console.log(this.task.getObject());
 	        	this.worker.postMessage(this.task.getObject());
 	        } else {
 	        	this.free();
