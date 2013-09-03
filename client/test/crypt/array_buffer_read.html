@@ -32,20 +32,17 @@
         			return function(evt) {
 						if (evt.target.readyState == FileReader.DONE) { // DONE == 2
 							$('#pre').html(evt.target.result);
+							console.log('evt.target.result=');
 							console.log(new Uint8Array(evt.target.result));
-							var wa = ocp.utils.ab2wa(evt.target.result);
 
-							console.log('wa=' + wa);
-							console.log(wa);
-
-							var c_content = CryptoJS.AES.encrypt(wa, secret_key);
-							var da = CryptoJS.AES.decrypt(c_content, secret_key);
+							var c_content = ocp.crypto.pcrypt(secret_key, evt.target.result);
+							var da = ocp.crypto.pdecrypt(secret_key, c_content);
 
 							console.log('da=' + da);
-							console.log(da);
+							console.log(new Uint8Array(da));
 							var wa_hash = ocp.crypto.hash(evt.target.result);
 							console.log('wa_hash=' + wa_hash);
-							var da_hash = ocp.crypto.hash(ocp.utils.wa2ab(da));
+							var da_hash = ocp.crypto.hash(da);
 							console.log('da_hash=' + da_hash);
 
 						}
