@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- POOL VIEW -->
+		<script src="js/ocp/widget_pool_view.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_pool_view.css" />
+		<!-- END POOL VIEW -->
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_worker_misc.js"></script>
+		<script src="js/ocp_worker_pool.js"></script>
+	</head>
+
+	<body>
+		<div id="pool_view"></div>
+		Filename: <input type="text" id="filename" value="toto.txt" /><br/>
+		Block nbr: <input type="number" id="block_nbr" value="12" /><br/>
+		<button id="start">Start</button><br/>
+		Readed content: <div id="readed_content"></div>
+
+		<script id="worker" type="text/js-worker">
+importScripts(base_url + '/js/ocp.js');
+importScripts(base_url + '/js/ocp_worker.js');
+
+ocp.worker.init(this);
+
+function run(event) {
+    var task = event.data;
+    switch(task.name) {
+    	case 'work':
+    		work(task.args);
+    		break;
+    }
+}
+
+this.addEventListener('message', ocp.worker.run(this, run), false);
+
+this.requestFileSystemSync = this.webkitRequestFileSystemSync || this.requestFileSystemSync;
+var fs = this.requestFileSystemSync(TEMPORARY, 1024 * 1024 * 1024);
+
+function work(args) {
+	var time = Math.floor((Math.random()*3000) + 1000);
+	sleep(time);
+
+	write(args.filename, args.block_id);
+
+	console.log('Work done');
+	report({
+		finish: true
+	});
+}
+
+function sleep(milliSeconds) {
+	var startTime = new Date().getTime();
+	while (new Date().getTime() < startTime + milliSeconds);
+}
+
+function write(filename, block_id) {
+	try {
+		var fileEntry = fs.root.getFile(filename, {create: false});
+
+		var fileWriter = fileEntry.createWriter();
+		fileWriter.seek(block_id);
+		var blob = new Blob(['1']);
+		fileWriter.write(blob);
+		console.log(fileWriter.toString());
+	} catch(e) {
+		onError(e);
+	}
+}
+
+function onError(e) {
+  console.log('ERROR: ' + e.toString());
+}
+		</script>
+
+		<script>
+var fs = null;
+window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+window.requestFileSystem(window.TEMPORARY, 1024 * 1024 * 1024, onInitFs, errorHandler);
+
+
+function onInitFs(filesystem) {
+	console.log('FileSystem OK');
+	fs = filesystem;
+}
+
+$('#pool_view').ocp_pool_view();
+
+var url = ocp.worker_misc.getEmbeddedURL('worker');
+
+var block_nbr = 0;
+var is_file_ready = false;
+var pool = null;
+
+$('#start').click(function() {
+	is_file_ready = false;
+	block_nbr = parseInt($('#block_nbr').val());
+	create();
+});
+
+function create() {
+	console.log('Create File');
+	var filename = $('#filename').val();
+
+	fs.root.getFile(filename, {create: true, exclusive: true}, function(fileEntry) {
+		fileEntry.createWriter(function(fileWriter) {
+			fileWriter.onwriteend = function(e) {
+				console.log('Write completed: ' + filename);
+				retrieve();
+				start_tasks();
+			};
+			fileWriter.onerror = function(e) {
+				console.log('Write failed: ' + e.toString());
+			};
+
+			var content = '';
+			for (var i = 0; i < block_nbr; i++) {
+				content += '0';
+			}
+			var blob = new Blob([content], {type: 'text/plain'});
+			fileWriter.write(blob);
+		}, errorHandler);
+	}, function(e) {
+		if (e.code == FileError.INVALID_MODIFICATION_ERR) {
+			remove(create);
+		} else {
+			errorHandler(e);
+		}
+	});
+}
+
+function retrieve() {
+	console.log('Read File');
+	var filename = $('#filename').val();
+
+	fs.root.getFile(filename, {}, function(fileEntry) {
+		fileEntry.file(function(file) {
+			var reader = new FileReader();
+			reader.onloadend = function(e) {
+				$('#readed_content').html(this.result);
+			};
+			reader.readAsText(file);
+		}, errorHandler);
+
+	}, errorHandler);
+}
+
+function start_tasks() {
+	pool = new ocp.worker_pool.Pool(10, url);
+	$('#pool_view').ocp_pool_view('attach', pool);
+	var filename = $('#filename').val();
+
+	for (var i = 0; i < block_nbr; i++) {
+		var args = {
+			filename: filename,
+			block_id: i
+		};
+		var callback_func = function(event) {
+			if (event.data.finish) {
+				retrieve();
+			}
+		}
+		var task = new ocp.worker_pool.Task(i, 'work', args, callback_func);
+		pool.addTask(task);
+	}
+}
+
+function update() {
+	var filename = $('#filename').val();
+
+	var append = $('#append').is(':checked');
+
+	fs.root.getFile(filename, {create: false, exclusive: false}, function(fileEntry) {
+		fileEntry.createWriter(function(fileWriter) {
+			var pos = 0;
+			if (append) {
+				pos = fileWriter.length;
+			}
+			console.log('Append to the file? ' + append);
+			fileWriter.seek(pos); // Start write position pos.
+			fileWriter.onwriteend = function(e) {
+				console.log('Write completed: ' + filename);
+			};
+			fileWriter.onerror = function(e) {
+				console.log('Write failed: ' + e.toString());
+			};
+
+			var content = $('#content').val();
+			var blob = new Blob([content], {type: 'text/plain'});
+			console.log(blob);
+			fileWriter.write(blob);
+		}, errorHandler);
+	}, errorHandler);
+}
+
+function remove(on_success_func) {
+	on_success_func = on_success_func || function() {};
+	var filename = $('#filename').val();
+	fs.root.getFile(filename, {create: false}, function(fileEntry) {
+		fileEntry.remove(function() {
+			console.log('File removed: ' + filename);
+			on_success_func();
+		}, errorHandler);
+	}, function(e) {
+		if (e.code != FileError.NOT_FOUND_ERR) {
+			errorHandler(e);
+		}
+	});
+}
+
+
+
+
+function errorHandler(e) {
+	var msg = '';
+	switch (e.code) {
+		case FileError.QUOTA_EXCEEDED_ERR:
+			msg = 'QUOTA_EXCEEDED_ERR';
+			break;
+		case FileError.NOT_FOUND_ERR:
+			msg = 'NOT_FOUND_ERR';
+			break;
+		case FileError.SECURITY_ERR:
+			msg = 'SECURITY_ERR';
+			break;
+		case FileError.INVALID_MODIFICATION_ERR:
+			msg = 'INVALID_MODIFICATION_ERR';
+			break;
+		case FileError.INVALID_STATE_ERR:
+			msg = 'INVALID_STATE_ERR';
+			break;
+		default:
+			msg = 'Unknown Error';
+			break;
+	};
+	console.log('Error: ' + msg);
+}
+		</script>
+	</body>
+</html>
