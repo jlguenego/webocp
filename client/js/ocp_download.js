@@ -28,7 +28,10 @@
 		//console.log(args);
 
 		ocp.worker_file.write_block(args.hat_name, offset, content_ab);
-
+		console.log({
+			block_id: args.block_id,
+			finish: true
+		});
 		report({
 			block_id: args.block_id,
 			finish: true
@@ -56,7 +59,7 @@
 		// 2) decrypt
 		console.log('decrypt');
 		var decrypted_ab = ocp.crypto.pdecrypt(secret_key, crypted_content);
-
+		console.log('decryption done');
 		return decrypted_ab;
 	};
 

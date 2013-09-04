@@ -140,6 +140,9 @@ $('#save').click(function() {
 		var url = fileEntry.toURL();
 		var link = $('<a/>');
 		link.attr('href', url).attr('download', '');
+		console.log(link.get(0));
+		link.html('x');
+		$('body').append(link);
 		link[0].click();
 	}, errorHandler);
 });
