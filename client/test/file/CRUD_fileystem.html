@@ -20,6 +20,7 @@
 		<button id="update">Update</button>
 		<input type="checkbox" id="append" checked/> append content<br/>
 		<button id="delete">Delete</button><br/>
+		<button id="save">Save as</button><br/>
 		Readed content: <div id="readed_content"></div>
 		<script>
 var fs = null;
@@ -132,6 +133,16 @@ function remove(on_success_func) {
 		}
 	});
 }
+
+$('#save').click(function() {
+	var filename = $('#filename').val();
+	fs.root.getFile(filename, {create: false}, function(fileEntry) {
+		var url = fileEntry.toURL();
+		var link = $('<a/>');
+		link.attr('href', url).attr('download', '');
+		link[0].click();
+	}, errorHandler);
+});
 
 
 

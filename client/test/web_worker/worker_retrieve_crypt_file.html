@@ -29,7 +29,7 @@
 		<div id="pool_view"></div>
 		Serveur URL: <input type="text" id="server_uri" value="http://localhost" /><br/>
 		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
-		Upload name: <input type="text" id="upload_name" value="83ffd2ff967c3768652654cd3c795d8578491fc4" style="width: 300px;"/><br/>
+		Upload name: <input type="text" id="upload_name" value="a74332918d7830f01e4ea47c255e055d3f00dad2" style="width: 300px;"/><br/>
 		<button id="retrieve">Retrieve</button>
 		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
 
@@ -44,6 +44,7 @@ importScripts(base_url + '/js/ocp_worker.js');
 importScripts(base_url + '/js/ocp_crypto.js');
 importScripts(base_url + '/js/ocp_file.js');
 importScripts(base_url + '/js/ocp_worker_file.js');
+importScripts(base_url + '/js/ocp_download.js');
 
 importScripts(base_url + '/_ext/WorkerFormData.js');
 
@@ -53,79 +54,17 @@ function run(event) {
     var task = event.data;
     switch(task.name) {
     	case 'download_hat':
-    		download_hat(task.args);
+    		ocp.download.download_hat(task.args);
     		return false;
     	case 'download_block':
-    		download_block(task.args);
+    		ocp.download.download_block(task.args);
     		return false;
     }
     return true;
 }
 
 function init() {
-	this.requestFileSystemSync = this.webkitRequestFileSystemSync || this.requestFileSystemSync;
-	this.fs = this.requestFileSystemSync(TEMPORARY, 1024 * 1024 * 1024);
-}
-
-function download_block(args) {
-	ocp.cfg.server_base_url = args.server_uri;
-	var clear_content = retrieve_block(args.block_name, args.secret_key);
-	report({
-		block_id: args.block_id,
-		content: clear_content,
-		finish: true
-	});
-}
-
-function download_hat(args) {
-	ocp.cfg.server_base_url = args.server_uri;
-	var hat_ab = retrieve_block(args.block_name, args.secret_key);
-	var hat_str = ocp.utils.ab2str(hat_ab);
-	var hat = JSON.parse(hat_str);
-	console.log('hat=');
-	console.log(hat);
-	create_empty_file(args.block_name, hat.size);
-	return;
-
-	for (var i = 0; i < hat.summary.length; i++) {
-		report({
-			block_id: i,
-			block_name: hat.summary[i]
-		});
-	}
-	report({
-		finish: true
-	});
-}
-
-function create_empty_file(filename, file_length) {
-	var content_ab = new ArrayBuffer(file_length);
-	ocp.worker_file.create(filename, 0, content_ab);
-}
-
-function retrieve_block(block_name, secret_key) {
-	// 1) download
-	console.log('download file: ' + block_name);
-	var crypted_content = ocp.file.retrieve(block_name)
-
-	// 2) verify
-	if (verify_file_integrity(block_name, crypted_content)) {
-		console.log('integrity ok');
-	} else {
-		console.log('integrity error');
-		return;
-	}
-
-	// 2) decrypt
-	console.log('decrypt');
-	var decrypted_ab = ocp.crypto.pdecrypt(secret_key, crypted_content);
-
-	return decrypted_ab;
-}
-
-function verify_file_integrity(block_name, crypted_content) {
-	var crypted_content_hash = ocp.crypto.hash(crypted_content);
-	return block_name == crypted_content_hash;
+	ocp.download.init();
 }
 		</script>
 <!-- END WORKER -->
@@ -136,6 +75,8 @@ $('#pool_view').ocp_pool_view();
 
 var total_task = 0;
 var total_performed = 0;
+var blocks = [];
+var block_nbr = 0;
 
 function update_progress_from_task(obj) {
 	if (total_task <= 0) {
@@ -148,6 +89,8 @@ function update_progress_from_task(obj) {
 }
 
 $('#retrieve').click(function() {
+	blocks = [];
+	block_nbr = 0;
 	ocp.cfg.server_base_url = $('#server_uri').val();
 	var secret_key = $('#secret_key').val();
 	var filename = $('#upload_name').val();
@@ -160,6 +103,7 @@ $('#retrieve').click(function() {
 });
 
 function setup_download_task(filename, url, secret_key) {
+	total_task = 1;
 	var pool = new ocp.worker_pool.Pool(10, url);
 	$('#pool_view').ocp_pool_view('attach', pool);
 
@@ -171,12 +115,17 @@ function setup_download_task(filename, url, secret_key) {
 			console.log(event.data.console);
 			return;
 		}
+
+		console.log(event.data);
+		if (event.data.hat) {
+			for (var i = 0; i < event.data.hat.block_nbr; i++) {
+				create_task(filename, event.data.hat, i, secret_key, pool);
+			}
+		}
+
 		var progress = update_progress_from_task(event.data);
 		$('#progress').ocp_progressbar('set_progress', progress);
-		console.log(event.data);
-		if (event.data.block_id) {
-			create_retrieve_block_task(event.data, secret_key, pool)
-		}
+
 		if (event.data.finish) {
 			pool.terminate();
 		}
@@ -198,26 +147,55 @@ function setup_download_task(filename, url, secret_key) {
 			secret_key: secret_key
 		}
 	});
-
-	total_task++;
 }
 
-function create_retrieve_block_task(data, secret_key, pool) {
+function create_task(filename, hat, i, secret_key, pool) {
 	var args = {
-		block_id: data.block_id,
-		block_name: data.block_name,
+		block_id: i,
+		block_name: hat.summary[i],
 		secret_key: secret_key,
 		server_uri: ocp.cfg.server_base_url,
-		block_size: 1 << 16
+		block_size: hat.block_size,
+		hat_name: filename
 	};
+	total_task++;
 	var callback_func = function(event) {
 		var progress = update_progress_from_task(event.data);
 		$('#progress').ocp_progressbar('set_progress', progress);
+		if (event.data.block_id) {
+			console.log('processed block: ' + event.data.block_id)
+			blocks.push(event.data.block_id);
+		}
+		console.log(blocks);
+		if (blocks.length == block_nbr) {
+			console.log('download_finalize');
+			download_finalize();
+		}
 		console.log(event.data);
 	}
 	var task = new ocp.worker_pool.Task(event.data.block_id, 'download_block', args, callback_func);
 	pool.addTask(task);
-	total_task++;
+}
+
+function download_finalize() {
+	window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+	window.requestFileSystem(window.TEMPORARY, 1024 * 1024 * 1024, function(filesystem) {
+		var filename = $('#filename').val();
+		filesystem.root.getFile(filename, {create: false}, function(fileEntry) {
+			console.log(fileEntry);
+			var url = fileEntry.toURL();
+			var link = $('<a/>');
+			link.attr('href', url).attr('download', '');
+			link[0].click();
+		}, errorHandler('getFile'));
+	}, errorHandler('requestFileSystem'));
+}
+
+function errorHandler(tag) {
+	return function(e) {
+		console.log(tag + ' Error=');
+		console.log(e);
+	}
 }
 		</script>
 	</body>
