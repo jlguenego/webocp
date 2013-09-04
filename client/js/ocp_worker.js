@@ -5,6 +5,7 @@ var report = null;
 	ocp.worker = {};
 
 	ocp.worker.init = function(worker, used_in_pool) {
+		this.worker = worker;
 		if (console == null) {
 			console = {};
 			console.log = function(msg) {

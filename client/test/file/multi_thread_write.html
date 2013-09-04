@@ -28,6 +28,7 @@
 importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_utils.js');
 importScripts(base_url + '/js/ocp_worker.js');
+importScripts(base_url + '/js/ocp_worker_file.js');
 
 ocp.worker.init(this, true);
 
@@ -51,7 +52,7 @@ function work(args) {
 	var time = Math.floor((Math.random()*3000) + 1000);
 	sleep(time);
 
-	write(args.filename, args.block_id);
+	ocp.worker_file.write_block(args.filename, args.block_id, '1');
 
 	console.log('Work done');
 	report({
@@ -62,21 +63,6 @@ function work(args) {
 function sleep(milliSeconds) {
 	var startTime = new Date().getTime();
 	while (new Date().getTime() < startTime + milliSeconds);
-}
-
-function write(filename, block_id) {
-	try {
-		var fileEntry = this.fs.root.getFile(filename, {create: false});
-
-		var fileWriter = fileEntry.createWriter();
-		fileWriter.seek(block_id);
-		var blob = new Blob(['1']);
-		fileWriter.write(blob);
-
-		console.log(ocp.utils.getMethods(fileWriter));
-	} catch(e) {
-		onError(e);
-	}
 }
 
 function onError(e) {

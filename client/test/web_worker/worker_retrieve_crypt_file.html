@@ -181,14 +181,15 @@ function setup_download_task(filename, url, secret_key) {
 				block_id: event.data.block_id,
 				block_name: event.data.block_name,
 				secret_key: secret_key,
-				server_uri: ocp.cfg.server_base_url
+				server_uri: ocp.cfg.server_base_url,
+				block_size: 1 << 16
 			};
 			var callback_func = function(event) {
 				var progress = update_progress_from_task(event.data);
 				$('#progress').ocp_progressbar('set_progress', progress);
 				if (event.data.content) {
 					console.log(event.data);
-					saveAs(new Blob([ event.data.content ]), 'test.jpg');
+					//saveAs(new Blob([ event.data.content ]), 'test.jpg');
 				}
 			}
 			var task = new ocp.worker_pool.Task(event.data.block_id, 'download_block', args, callback_func);
