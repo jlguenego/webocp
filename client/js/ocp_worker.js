@@ -21,10 +21,16 @@ var report = null;
 				worker.postMessage(obj);
 			}
 		}
+
+		worker.addEventListener('message', ocp.worker.run(worker), false);
+
+		if (worker.init) {
+			worker.init();
+		}
 	};
 
 	// Pool specific
-	ocp.worker.run = function(worker, func) {
+	ocp.worker.run = function(worker) {
 		return function(event) {
 			var task = event.data;
 			worker.task_id = task.id;
@@ -33,7 +39,7 @@ var report = null;
 				worker.thread_name = task.args;
 				return;
 			}
-			func(event);
+			worker.run(event);
 		};
 	};
 })(ocp);
