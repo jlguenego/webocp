@@ -55,7 +55,6 @@ function create() {
 			var content = $('#content').val();
 			var blob = new Blob([content], {type: 'text/plain'});
 			fileWriter.write(blob);
-			console.log(fileWriter);
 		}, errorHandler);
 	}, function(e) {
 		console.log('Overwrite? ' + overwrite);

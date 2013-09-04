@@ -186,4 +186,14 @@
 		bytes = Math.round(bytes * Math.pow(10, precision)) / Math.pow(10, precision);
 	    return bytes + ' ' + units[pow];
 	}
+
+	ocp.utils.getMethods = function(obj) {
+		var func = [];
+		for (var prop in obj) {
+			if (typeof obj[prop] == 'function') {
+				func.push(prop);
+			}
+		}
+		return func.sort();
+	}
 })(ocp);

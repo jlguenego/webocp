@@ -26,6 +26,7 @@
 
 		<script id="worker" type="text/js-worker">
 importScripts(base_url + '/js/ocp.js');
+importScripts(base_url + '/js/ocp_utils.js');
 importScripts(base_url + '/js/ocp_worker.js');
 
 ocp.worker.init(this);
@@ -69,7 +70,8 @@ function write(filename, block_id) {
 		fileWriter.seek(block_id);
 		var blob = new Blob(['1']);
 		fileWriter.write(blob);
-		console.log(fileWriter.toString());
+
+		console.log(ocp.utils.getMethods(fileWriter));
 	} catch(e) {
 		onError(e);
 	}
