@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp/core.js"></script>
+	</head>
+
+	<body>
+		Filename: <input type=text id="filename" value="toto.txt" /><br/>
+		Content: <textarea id="content">Hello World</textarea><br/>
+		<button id="create">Create</button>
+		<input type="checkbox" id="overwrite" checked/> overwrite existing file<br/>
+		<button id="retrieve">Retrieve</button><br/>
+		<button id="update">Update</button>
+		<input type="checkbox" id="append" checked/> append content<br/>
+		<button id="delete">Delete</button><br/>
+		Readed content: <div id="readed_content"></div>
+		<script>
+var fs = null;
+window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+window.requestFileSystem(window.TEMPORARY, 1024 * 1024 * 1024, onInitFs, errorHandler);
+
+//console.log(window);
+
+function onInitFs(filesystem) {
+	console.log('FileSystem OK');
+	fs = filesystem;
+}
+
+$('#create').click(function() {
+	create();
+});
+
+function create() {
+	console.log('Create File');
+	var filename = $('#filename').val();
+
+	var overwrite = $('#overwrite').is(':checked'); // NO overwrite existing file?
+
+	fs.root.getFile(filename, {create: true, exclusive: true}, function(fileEntry) {
+		fileEntry.createWriter(function(fileWriter) {
+			fileWriter.onwriteend = function(e) {
+				console.log('Write completed: ' + filename);
+			};
+			fileWriter.onerror = function(e) {
+				console.log('Write failed: ' + e.toString());
+			};
+
+			var content = $('#content').val();
+			var blob = new Blob([content], {type: 'text/plain'});
+			fileWriter.write(blob);
+		}, errorHandler);
+	}, function(e) {
+		console.log('Overwrite? ' + overwrite);
+		if (e.code == FileError.INVALID_MODIFICATION_ERR && overwrite) {
+			remove(true);
+		} else {
+			errorHandler(e);
+		}
+	});
+}
+
+$('#retrieve').click(function() {
+	console.log('Read File');
+	var filename = $('#filename').val();
+
+	fs.root.getFile(filename, {}, function(fileEntry) {
+		fileEntry.file(function(file) {
+			var reader = new FileReader();
+			reader.onloadend = function(e) {
+				$('#readed_content').html(this.result);
+			};
+			reader.readAsText(file);
+		}, errorHandler);
+
+	}, errorHandler);
+});
+
+$('#update').click(function() {
+	console.log('Update File');
+	var filename = $('#filename').val();
+
+	var append = $('#append').is(':checked');
+
+	fs.root.getFile(filename, {create: false, exclusive: false}, function(fileEntry) {
+		fileEntry.createWriter(function(fileWriter) {
+			var pos = 0;
+			if (append) {
+				pos = fileWriter.length;
+			}
+			console.log('Append to the file? ' + append);
+			fileWriter.seek(pos); // Start write position pos.
+			fileWriter.onwriteend = function(e) {
+				console.log('Write completed: ' + filename);
+			};
+			fileWriter.onerror = function(e) {
+				console.log('Write failed: ' + e.toString());
+			};
+
+			var content = $('#content').val();
+			var blob = new Blob([content], {type: 'text/plain'});
+			fileWriter.write(blob);
+		}, errorHandler);
+	}, errorHandler);
+});
+
+$('#delete').click(function() {
+	remove();
+});
+
+function remove(recreate_file) {
+	var filename = $('#filename').val();
+	fs.root.getFile(filename, {create: false}, function(fileEntry) {
+		fileEntry.remove(function() {
+			console.log('File removed: ' + filename);
+			if (recreate_file) {
+				create();
+			}
+		}, errorHandler);
+	}, function(e) {
+		if (e.code != FileError.NOT_FOUND_ERR) {
+			errorHandler(e);
+		}
+	});
+}
+
+
+
+
+function errorHandler(e) {
+	var msg = '';
+	switch (e.code) {
+		case FileError.QUOTA_EXCEEDED_ERR:
+			msg = 'QUOTA_EXCEEDED_ERR';
+			break;
+		case FileError.NOT_FOUND_ERR:
+			msg = 'NOT_FOUND_ERR';
+			break;
+		case FileError.SECURITY_ERR:
+			msg = 'SECURITY_ERR';
+			break;
+		case FileError.INVALID_MODIFICATION_ERR:
+			msg = 'INVALID_MODIFICATION_ERR';
+			break;
+		case FileError.INVALID_STATE_ERR:
+			msg = 'INVALID_STATE_ERR';
+			break;
+		default:
+			msg = 'Unknown Error';
+			break;
+	};
+	console.log('Error: ' + msg);
+}
+		</script>
+	</body>
+</html>

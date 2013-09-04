@@ -46,9 +46,14 @@ $('#start').click(function() {
 						console.log('Write failed: ' + e.toString());
 					};
 
+					var content = '';
+					for (var j = 0; j < i; j++) {
+						content += 'coucou';
+					}
+					console.log('content=' + content);
+
 					// Create a new Blob and write it to log.txt.
-					for
-					var blob = new Blob(['coucou'], {type: 'text/plain'});
+					var blob = new Blob([content], {type: 'text/plain'});
 					fileWriter.write(blob);
 				}, errorHandler);
 			}, errorHandler);
