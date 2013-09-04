@@ -29,7 +29,7 @@ importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_utils.js');
 importScripts(base_url + '/js/ocp_worker.js');
 
-ocp.worker.init(this);
+ocp.worker.init(this, true);
 
 function run(event) {
     var task = event.data;

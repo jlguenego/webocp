@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="utf-8" />
 		<base href="../.." />
-		<title>Web OCP</title>
 		<script src="_ext/jquery-1.10.2.min.js"></script>
 
 		<script src="js/ocp.js"></script>
@@ -12,6 +11,7 @@
 	</head>
 
 	<body>
+		Start worker wich wait for message<br/>
 		<button id="start">Start</button id="stop"><button id="stop">Stop</button><br/>
 		<input type="text" id="nbr1" /> + <input type="text" id="nbr2" /> <button id="plus">result</button>
 		<div id="result"></div>
@@ -45,8 +45,6 @@ function additionner(task) {
 function additionner_plus(args) {
 	report({ result: args.nbr1 + args.nbr2});
 }
-
-this.addEventListener('message', ocp.worker.run(this, run), false);
 		</script>
 
 		<script>

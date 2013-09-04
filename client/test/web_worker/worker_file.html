@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="utf-8" />
 		<base href="../.." />
-		<title>Web OCP</title>
 		<script src="_ext/jquery-1.10.2.min.js"></script>
 
 		<script src="js/ocp.js"></script>
@@ -11,6 +10,7 @@
 	</head>
 
 	<body>
+		Send file to worker wich return 10 first characters of it... and say Hello.<br/>
 		<input type="file" id="file" name="file" /><button>Start</button>
 		<div id="output"></div>
 
@@ -45,8 +45,6 @@
 					result: result
 				});
 			}
-
-			this.addEventListener('message', run, false);
 		</script>
 
 		<script>

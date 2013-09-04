@@ -29,7 +29,7 @@
 		<div id="pool_view"></div>
 		Serveur URL: <input type="text" id="server_uri" value="http://localhost" /><br/>
 		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
-		Upload name: <input type="text" id="upload_name" value="f66664bab352bc42d1e2ce0171c772651536bca1" style="width: 300px;"/><br/>
+		Upload name: <input type="text" id="upload_name" value="2a9d2b49d4eee4ea911baefb259209fd3124fa64" style="width: 300px;"/><br/>
 		<button id="retrieve">Retrieve</button>
 		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
 
@@ -46,7 +46,7 @@ importScripts(base_url + '/js/ocp_file.js');
 
 importScripts(base_url + '/_ext/WorkerFormData.js');
 
-ocp.worker.init(this);
+ocp.worker.init(this, true);
 
 function run(event) {
     var task = event.data;
@@ -60,8 +60,6 @@ function run(event) {
     }
     return true;
 }
-
-this.addEventListener('message', ocp.worker.run(this, run), false);
 
 function download_block(args) {
 	ocp.cfg.server_base_url = args.server_uri;

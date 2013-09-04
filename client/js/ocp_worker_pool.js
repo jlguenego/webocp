@@ -17,7 +17,7 @@
 	    this.sendUpdateEvent = function() {
 	    	var event = new CustomEvent('ocp.worker_pool.Pool.update', { 'detail': { pool: this } });
 			window.dispatchEvent(event);
-			console.log('sent ocp.worker_pool.Pool.update ' + c_i);
+			//console.log('sent ocp.worker_pool.Pool.update ' + c_i);
 			c_i++;
 	    }
 
@@ -115,7 +115,7 @@
 	        if (this.task != null) {
 	        	this.task.thread = this;
 	        	this.pool.addActiveTask(this.task);
-	        	console.log(this.task.getObject());
+	        	//console.log(this.task.getObject());
 	        	this.worker.postMessage(this.task.getObject());
 	        } else {
 	        	this.free();

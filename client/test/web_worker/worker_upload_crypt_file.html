@@ -46,25 +46,26 @@ importScripts(base_url + '/js/ocp_file.js');
 
 importScripts(base_url + '/_ext/WorkerFormData.js');
 
-ocp.worker.init(this);
+ocp.worker.init(this, true);
 
 function run(event) {
     var task = event.data;
-    switch(task.name) {
-    	case 'upload_block':
-    		upload_block(task.args);
-    		return false;
-    	case 'upload_hat_init':
-    		upload_hat_init(task.args);
-    		return false;
-    	case 'upload_hat_push':
-    		upload_hat_push(task.args);
-    		return false;
-    }
-    return true;
+    try {
+	    switch(task.name) {
+	    	case 'upload_block':
+	    		upload_block(task.args);
+	    		break;
+	    	case 'upload_hat_init':
+	    		upload_hat_init(task.args);
+	    		break;
+	    	case 'upload_hat_push':
+	    		upload_hat_push(task.args);
+	    		break;
+	    }
+	} catch(e) {
+		console.log('Error: ' + e);
+	}
 }
-
-this.addEventListener('message', ocp.worker.run(this, run), false);
 
 function upload_hat_init(args) {
 	console.log('upload hat init');
@@ -98,6 +99,7 @@ function upload_hat_push(args) {
 }
 
 function upload_block(args) {
+	console.log(args);
 	ocp.cfg.server_base_url = args.server_uri;
 
 	var file = args.file;
@@ -105,6 +107,7 @@ function upload_block(args) {
 	var reader = new FileReader();
 	reader.onload = function(evt) {
 		if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+			console.log('block readed');
 			var filename = process_block(evt.target.result, args.secret_key);
 			report({
 				filename: filename,

@@ -32,8 +32,6 @@ function run(event) {
     });
 }
 
-this.addEventListener('message', ocp.worker.run(this, run), false);
-
 function upload_file(url, filename, content, success_func) {
 	var formData = new FormData();
 	formData.append('filename', filename);

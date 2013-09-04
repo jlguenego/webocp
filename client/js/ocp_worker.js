@@ -4,7 +4,7 @@ var report = null;
 (function(ocp, undefined) {
 	ocp.worker = {};
 
-	ocp.worker.init = function(worker) {
+	ocp.worker.init = function(worker, used_in_pool) {
 		if (console == null) {
 			console = {};
 			console.log = function(msg) {
@@ -21,8 +21,11 @@ var report = null;
 				worker.postMessage(obj);
 			}
 		}
-
-		worker.addEventListener('message', ocp.worker.run(worker), false);
+		if (used_in_pool) {
+			worker.addEventListener('message', ocp.worker.run(worker), false);
+		} else {
+			worker.addEventListener('message', worker.run, false);
+		}
 
 		if (worker.init) {
 			worker.init();
