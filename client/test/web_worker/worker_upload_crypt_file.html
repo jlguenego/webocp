@@ -43,6 +43,7 @@ importScripts(base_url + '/js/ocp_utils.js');
 importScripts(base_url + '/js/ocp_worker.js');
 importScripts(base_url + '/js/ocp_crypto.js');
 importScripts(base_url + '/js/ocp_file.js');
+importScripts(base_url + '/js/ocp_upload.js');
 
 importScripts(base_url + '/_ext/WorkerFormData.js');
 
@@ -53,84 +54,18 @@ function run(event) {
     try {
 	    switch(task.name) {
 	    	case 'upload_block':
-	    		upload_block(task.args);
+	    		ocp.upload.upload_block(task.args);
 	    		break;
 	    	case 'upload_hat_init':
-	    		upload_hat_init(task.args);
+	    		ocp.upload.hat_init(task.args);
 	    		break;
 	    	case 'upload_hat_push':
-	    		upload_hat_push(task.args);
+	    		ocp.upload.hat_push(task.args);
 	    		break;
 	    }
 	} catch(e) {
 		console.log('Error: ' + e);
 	}
-}
-
-function upload_hat_init(args) {
-	console.log('upload hat init');
-	ocp.cfg.server_base_url = args.server_uri;
-
-	this.upload_hat = {};
-	this.upload_hat.block_nbr = Math.ceil(args.file.size / args.block_size);
-	this.upload_hat.secret_key = args.secret_key;
-	this.upload_hat.summary = [];
-	console.log('block_nbr=' + this.upload_hat.block_nbr);
-}
-
-function upload_hat_push(args) {
-	console.log('upload hat push');
-	this.upload_hat.summary.push(args);
-
-	if (this.upload_hat.summary.length == this.upload_hat.block_nbr) {
-		console.log('ready to send the summary');
-		var content = '';
-		for (var i = 0; i < this.upload_hat.summary.length; i++) {
-			var obj = this.upload_hat.summary[i];
-			content += obj.block_id + '_' + obj.filename + "\n";
-		}
-		console.log('content=' + content);
-		var filename = process_block(ocp.utils.str2ab(content), this.upload_hat.secret_key);
-		report({
-			filename: filename,
-			finish: true
-		});
-	}
-}
-
-function upload_block(args) {
-	console.log(args);
-	ocp.cfg.server_base_url = args.server_uri;
-
-	var file = args.file;
-	var blob = file.slice(args.cursor, args.cursor_next);
-	var reader = new FileReader();
-	reader.onload = function(evt) {
-		if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-			console.log('block readed');
-			var filename = process_block(evt.target.result, args.secret_key);
-			report({
-				filename: filename,
-				block_id: args.block_id,
-				finish: true
-			});
-		}
-	};
-	reader.readAsArrayBuffer(blob);
-	console.log('update block');
-}
-
-function process_block(block_ab, secret_key) {
-	// 1) crypt
-	var crypted_block_ab = ocp.crypto.pcrypt(secret_key, block_ab);
-
-	// 2) hash
-	var filename = ocp.crypto.hash(crypted_block_ab);
-
-	// 3) upload
-	console.log('about to send: ' + filename);
-	ocp.file.send(filename, crypted_block_ab);
-	return filename;
 }
 		</script>
 <!-- END WORKER -->

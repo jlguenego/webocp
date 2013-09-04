@@ -3,7 +3,6 @@
 
 	ocp.file.send = function(filename, content) {
 		var upload_server_uri = ocp.cfg.server_base_url + '/webocp/server/test/endpoint/create_file_from_string.php';
-		console.log('upload_server_uri=' + upload_server_uri);
 
 		var formData = new FormData();
 		formData.append('filename', filename);
@@ -14,7 +13,6 @@
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
 				var json_obj = JSON.parse(xhr.responseText);
-				console.log(json_obj);
 			}
 		}
 		xhr.open('POST', upload_server_uri, false); // sync
@@ -32,13 +30,11 @@
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
 				var json_obj = JSON.parse(xhr.responseText);
-				console.log(json_obj);
 				content = ocp.utils.b642ab(json_obj.result.content);
 			}
 		}
 		xhr.open('POST', download_server_uri, false); // Wait before processing file => Synchronous request
 		xhr.send(formData);
-		console.log('content=' + content);
 		return content;
 	}
 })(ocp)

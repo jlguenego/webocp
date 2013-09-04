@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<title>Web OCP</title>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="_ext/sha1.js"></script>
+		<script src="_ext/aes.js"></script>
+
+		<script src="_ext/FileSaver.js"></script>
+		<script src="_ext/Blob.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_crypto.js"></script>
+		<script src="js/ocp_file.js"></script>
+	</head>
+
+	<body>
+		Serveur URL: <input type="text" id="server_uri" value="http://localhost" /><br/>
+		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
+		<input type="file" id="file" name="file" /><button id="start">Start</button><br/>
+		Clear file hash: <span id="clear_hash"></span><br/>
+		Decrypted file hash: <span id="decrypted_hash"></span>
+
+
+		<script id="worker" type="text/js-worker">
+importScripts(base_url + '/_ext/sha1.js');
+importScripts(base_url + '/_ext/aes.js');
+
+importScripts(base_url + '/js/ocp.js');
+importScripts(base_url + '/js/ocp_utils.js');
+importScripts(base_url + '/js/ocp_worker.js');
+importScripts(base_url + '/js/ocp_file.js');
+importScripts(base_url + '/js/ocp_worker_file.js');
+
+importScripts(base_url + '/_ext/WorkerFormData.js');
+
+ocp.worker.init(this, true);
+
+function run(event) {
+    var task = event.data;
+    switch(task.name) {
+    	case 'download_hat':
+    		download_hat(task.args);
+    		return false;
+    	case 'download_block':
+    		download_block(task.args);
+    		return false;
+    }
+    return true;
+}
+
+function init() {
+	this.requestFileSystemSync = this.webkitRequestFileSystemSync || this.requestFileSystemSync;
+	this.fs = this.requestFileSystemSync(TEMPORARY, 1024 * 1024 * 1024);
+	console.log('init done');
+}
+		</script>
+<!-- END WORKER -->
+
+		<script>
+$('#start').click(function() {
+	ocp.cfg.server_base_url = $('#server_uri').val();
+
+	var secret_key = $('#secret_key').val();
+	var file = $('#file').get(0).files[0];
+
+	var reader = new FileReader();
+	reader.onloadend = (function(my_file) {
+		return function(evt) {
+			if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+				var clear_hash = ocp.crypto.hash(evt.target.result);
+				$('#clear_hash').html(clear_hash);
+
+				var c_content = ocp.crypto.pcrypt(secret_key, evt.target.result);
+				ocp.file.send(file.name, c_content);
+
+				var retrived_ab = ocp.file.retrieve(file.name);
+				var da = ocp.crypto.pdecrypt(secret_key, retrived_ab);
+
+				var decrypted_hash = ocp.crypto.hash(da);
+				$('#decrypted_hash').html(decrypted_hash);
+
+				var blob = new Blob([da]);
+
+				saveAs(blob, file.name);
+			}
+		}
+	})(file);
+
+	var blob = file.slice(0, file.size);
+	reader.readAsArrayBuffer(blob);
+});
+		</script>
+	</body>
+</html>
