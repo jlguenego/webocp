@@ -55,11 +55,12 @@ function create() {
 			var content = $('#content').val();
 			var blob = new Blob([content], {type: 'text/plain'});
 			fileWriter.write(blob);
+			console.log(fileWriter);
 		}, errorHandler);
 	}, function(e) {
 		console.log('Overwrite? ' + overwrite);
 		if (e.code == FileError.INVALID_MODIFICATION_ERR && overwrite) {
-			remove(true);
+			remove(create);
 		} else {
 			errorHandler(e);
 		}
@@ -97,6 +98,9 @@ $('#update').click(function() {
 			console.log('Append to the file? ' + append);
 			fileWriter.seek(pos); // Start write position pos.
 			fileWriter.onwriteend = function(e) {
+				console.log(e);
+				this.onwriteend = null;
+				this.truncate(e.total);
 				console.log('Write completed: ' + filename);
 			};
 			fileWriter.onerror = function(e) {
@@ -105,6 +109,7 @@ $('#update').click(function() {
 
 			var content = $('#content').val();
 			var blob = new Blob([content], {type: 'text/plain'});
+			console.log(blob);
 			fileWriter.write(blob);
 		}, errorHandler);
 	}, errorHandler);
@@ -114,14 +119,13 @@ $('#delete').click(function() {
 	remove();
 });
 
-function remove(recreate_file) {
+function remove(on_success_func) {
+	on_success_func = on_success_func || function() {};
 	var filename = $('#filename').val();
 	fs.root.getFile(filename, {create: false}, function(fileEntry) {
 		fileEntry.remove(function() {
 			console.log('File removed: ' + filename);
-			if (recreate_file) {
-				create();
-			}
+			on_success_func();
 		}, errorHandler);
 	}, function(e) {
 		if (e.code != FileError.NOT_FOUND_ERR) {
