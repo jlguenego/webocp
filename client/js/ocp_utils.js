@@ -131,7 +131,6 @@
 	    for (var i = 0; i < bufView.length; i++) {
 	        words[i >>> 2] |= bufView[i] << (24 - (i % 4) * 8);
 	    }
-
 	    return CryptoJS.lib.WordArray.create(words, bufView.length);
 	}
 
@@ -195,5 +194,14 @@
 			}
 		}
 		return func.sort();
+	}
+
+	ocp.utils.toBinString = function(n) {
+		var result = '';
+		for (var i = 0; i < 32; i++) {
+			var x = (n & (1 << i)) >>> i;
+			result = x + result;
+		}
+		return result;
 	}
 })(ocp);

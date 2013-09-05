@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- CRYPTO JS -->
+		<script src="_ext/sha1.js"></script>
+		<script src="_ext/aes.js"></script>
+		<!-- END CRYPTO JS -->
+
+		<!-- SJCL -->
+		<script src="_ext/sjcl/sjcl.js"></script>
+		<!-- END SJCL -->
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
+	</head>
+
+	<body>
+		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
+		Clear content: <textarea id="clear">Hello World</textarea><br/>
+		Crypted content: <textarea id="crypted"></textarea><br/>
+		Decrypted content: <textarea id="decrypted"></textarea><br/>
+		<button id="encrypt">Encrypt</button>
+
+		<script>
+
+console.log(ocp.utils.toBinString(-1));
+$('#encrypt').click(function() {
+	var secret_key = $('#secret_key').val();
+	var clear_content = $('#clear').val();
+
+	var secret_key_a = [ 0, 1, 2, 3];
+	var aes = new sjcl.cipher.aes(secret_key_a);
+
+	//var clear_content_a	 = sjcl.codec.utf8String.toBits(clear_content);
+	var crypted_content = aes.encrypt([ 12, 13, 14, 15 ]);
+
+
+	var crypted_content = sjcl.encrypt(secret_key, clear_content);
+	console.log(JSON.parse(crypted_content));
+	$('#crypted').val(crypted_content);
+	var decrypted_content = sjcl.decrypt(secret_key, crypted_content);
+	$('#decrypted').val(decrypted_content);
+});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+	</head>
+
+	<body>
+		<button>Trigger</button>
+		<div></div>
+
+		<script>
+function Person(name) {
+	var self = this;
+
+	this.name = name;
+
+	this.sayHelloEverybody = function() {
+		console.log(name + ': Hello everybody!');
+		var event = new CustomEvent('hello_everybody', { 'detail': { person: this } });
+		this.dispatchEvent(event);
+	};
+
+	this.sayHello = function(person) {
+		console.log(this.name + ': Hello ' + person.name + '!');
+	};
+
+	this.dispatchEvent = function(e) {
+		window.dispatchEvent(e);
+	};
+
+	window.addEventListener('hello_everybody', function(e) {
+		if (e.detail.person != self) {
+			self.sayHello(e.detail.person);
+		}
+	}, false);
+}
+
+var a = new Person('Yannis');
+var b = new Person('Jean-Louis');
+var c = new Person('Suzana');
+
+$('button').click(function() {
+	a.sayHelloEverybody();
+});
+		</script>
+	</body>
+</html>

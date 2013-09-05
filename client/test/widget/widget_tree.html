@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="js/ocp/core.js"></script>
+		<script src="js/ocp/widget_tree.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_tree.css" />
+		<style>
+
+		</style>
+	</head>
+	<body>
+		<div class="tree" id="tree">
+		</div>
+		<script>
+			var src = [
+				{
+					name: '',
+					label: 'Root',
+					image: 'image/clouddrive.png',
+					type: 'dir',
+					expanded: true,
+					children: [
+						{
+							name: 'item_1',
+							image: 'image/clouddrive.png',
+							type: 'dir',
+							children: [
+								{
+									name: 'item_1_1',
+									label: 'Item 1.1',
+									type: 'dir',
+									children: [
+										{
+											name: 'item_1_1_1',
+											label: 'Item 1.1.1',
+											type: 'dir',
+											children: [
+												{
+												name: 'item_1_1_1_1',
+													label: 'Item 1.1.1.1',
+													type: 'dir',
+												},
+												{
+													name: 'item_1_1_1_2',
+													label: 'Item 1.1.1.2',
+													type: 'file',
+												}
+											]
+										},
+										{
+											name: 'item_1_1_2',
+											label: 'Item 1.1.2',
+											type: 'dir',
+											children: [
+												{
+													name: 'item_1_1_2_1',
+													label: 'Item 1.1.2.1',
+													type: 'file',
+												},
+												{
+													name: 'item_1_1_2_2',
+													label: 'Item 1.1.2.2',
+													type: 'file',
+												}
+											]
+										}
+									]
+								},
+								{
+									name: 'item_1_2',
+									label: 'Item 1.2',
+									type: 'file',
+								}
+							]
+						},
+						{
+							name: 'item_2',
+							label: 'Item 2',
+							type: 'dir',
+							children: []
+						},
+						{
+							name: 'item_3',
+							label: 'Item 3',
+							type: 'dir',
+							children: [
+								{
+									name: 'item_3_1',
+									label: 'Item 3.1',
+									type: 'dir',
+								},
+								{
+									name: 'item_3_2',
+									label: 'Item 3.2',
+									type: 'dir',
+									children: [
+										{
+											name: 'item_3_2_1',
+											label: 'Item 3.2.1',
+											type: 'dir',
+										},
+										{
+											name: 'item_3_2_2',
+											label: 'Item 3.2.2',
+											type: 'dir',
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			];
+			$('#tree').ocp_tree({
+				source: src,
+				//click: function() { console.log('item clicked') },
+			});
+		</script>
+	</body>
+</html>

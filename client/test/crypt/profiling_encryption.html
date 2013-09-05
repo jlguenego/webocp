@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<!-- CRYPTO JS -->
+		<script src="_ext/sha1.js"></script>
+		<script src="_ext/aes.js"></script>
+		<!-- END CRYPTO JS -->
+
+		<script src="js/ocp_profile.js"></script>
+		<script src="upload_crypt_file.js"></script>
+	</head>
+
+	<body>
+		<textarea>Hello World</textarea>
+		<button id="start">Start</button>
+
+		<script>
+			var profiler = new ocp_profile();
+			$(function() {
+				// Check for the various File API support.
+				if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+				  alert('The File APIs are not fully supported in this browser.');
+				  return;
+				}
+			});
+
+			$('#start').click(function() {
+				profiler.start();
+				var secret_key = 'toto';
+				profiler.report('start read content');
+				var content = ocp_get_data('http://localhost/webocp/server/image/jeunes_en_marche.jpg');
+				//console.log('content=|' + content + '|');
+				profiler.report('end read content');
+
+				profiler.report('start str2hex');
+				var hex = str2hex(content);
+				profiler.report('end str2hex');
+
+				profiler.report('start Hex to Word');
+				//var words = CryptoJS.enc.Hex.parse(hex);
+				var words = hex2wa(hex);
+				profiler.report('end Hex to Word');
+
+				console.log('words=');
+				console.log(words);
+
+				profiler.report('start encryption');
+				var cipher_object = CryptoJS.AES.encrypt(words, secret_key);
+				profiler.report('end encryption');
+
+				console.log('cipher_object=');
+				console.log(cipher_object);
+
+				profiler.report('start decryption');
+				var d_words = CryptoJS.AES.decrypt(cipher_object, secret_key);
+				profiler.report('end decryption');
+
+				console.log('d_words=');
+				console.log(d_words);
+
+				var result = d_words.toString();
+				//console.log('result=' + result);
+
+				console.log(' hash_origin=' + CryptoJS.SHA1(hex).toString());
+				console.log('hash_decrypt=' + CryptoJS.SHA1(result).toString());
+			});
+
+			function ocp_get_data(url) {
+				var req = new XMLHttpRequest();
+				req.open('GET', url, false);
+				if (req.overrideMimeType)
+					req.overrideMimeType('text/plain; charset=x-user-defined');
+				req.send(null);
+				if (req.status != 200) return '';
+				return req.responseText;
+			}
+		</script>
+	</body>
+</html>

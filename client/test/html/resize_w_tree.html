@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- GOOGLE FONT API -->
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans" />
+		<!-- END GOOGLE FONT API -->
+
+		<!-- CRYPTO JS -->
+		<script src="../_ext/sha1.js"></script>
+		<!-- END CRYPTO JS -->
+
+		<!-- JQWIDGET -->
+		<script src="../_ext/jqwidgets/jqxcore.js"></script>
+		<script src="../_ext/jqwidgets/jqxtree.js"></script>
+	    <link rel="stylesheet" href="../_ext/jqwidgets/styles/jqx.base.css" type="text/css" />
+		<!-- END JQWIDGET -->
+
+		<script src="../js/ocp-client.js"></script>
+		<style>
+* {
+	outline: none;
+}
+
+html, body {
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+
+#page {
+	width: 100%;
+}
+
+#header {
+	background-color: #EEEEEE;
+	height: 50px;
+	width: 100%;
+}
+
+#main {
+	position: relative;
+	width: 100%;
+	max-width: 100%;
+}
+
+#sidebar, #content {
+	white-space:nowrap;
+}
+
+#sidebar {
+	background-color: #EEFFFF;
+
+	width: 150px;
+}
+
+#tree {
+	overflow: auto;
+	width: 100%;
+	height: 100%;
+}
+
+#tree * {
+	margin-right: 0px !important;
+	padding-right: 0px !important;
+}
+
+#content {
+	position: absolute;
+	top: 0px;
+	background-color: #FFEEFF;
+	overflow: auto;
+}
+
+#footer {
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	background-color: #FFFFEE;
+	height: 150px;
+}
+
+.ui-resizable-helper {
+	border-right: 5px solid #DDDDDD;
+}
+
+.ui-resizable-e {
+	width: 5px;
+	right: -5px;
+	background-color: #CCCCCC;
+}
+		</style>
+	</head>
+	<body>
+		<div id="page">
+			<div id="header">
+			</div>
+			<div id="main">
+				<div id="sidebar">
+					<div id="tree">
+					</div>
+				</div>
+				<div id="content">content
+				</div>
+			</div>
+			<div id="footer">footer
+			</div>
+
+		</div>
+		<script>
+			var content_min_w = 100;
+           	$(function() {
+				$(window).resize(ocp_refresh);
+
+           		$('#sidebar').resizable({
+					content: 'parent',
+					helper: "ui-resizable-helper",
+					handles: 'e',
+					minWidth: 50,
+					start: function( event, ui ) {
+						var helper = ui.helper;
+						helper.height(helper.height() + 1);
+						helper.width(helper.width() + 1);
+					},
+					stop: function(e, ui) {
+	    				ocp_refresh();
+					}
+	    		});
+
+	    		ocp_refresh();
+
+				var source = [
+					{
+						label: "Item 1",
+						expanded: true,
+						items: [
+							{ label: "Item 1.1" },
+							{
+								label: "Item 1.2",
+								selected: true
+							}
+						]
+					},
+					{ label: "Item 2sdkbsdkjfbskdbfksjdbsdjsbvjsdksdbcfb" },
+					{ label: "Item 3" },
+					{
+						label: "Item 4",
+						items: [
+							{ label: "Item 4.1" },
+							{ label: "Item 4.2" }
+						]
+					},
+					{ label: "Item 5" },
+					{ label: "Item 6" },
+					{ label: "Item 7" }
+				];
+				// Create jqxTree.
+				$('#tree').jqxTree({
+					source: source
+				});
+			});
+
+			function ocp_refresh() {
+				var window_h = $(window).height();
+				var header_h = $('#header').height();
+				var footer_h = $('#footer').height();
+				$('#sidebar').height(window_h - header_h - footer_h);
+				$('#content').height(window_h - header_h - footer_h);
+
+				var sidebar_w = $('#sidebar').outerWidth() + 5; // resize bar width = 5px
+				var main_w = $('#main').width();
+				if (sidebar_w > main_w - content_min_w) {
+					sidebar_w = main_w - content_min_w;
+					$('#sidebar').width(sidebar_w);
+				}
+				$('#content').offset({ left: sidebar_w });
+				$('#content').width(main_w - sidebar_w);
+				$( "#sidebar" ).resizable( "option", "maxWidth", (main_w - content_min_w));
+			}
+		</script>
+	</body>
+</html>

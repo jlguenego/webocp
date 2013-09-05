@@ -1,0 +1,144 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans" />
+		<style>
+* {
+	outline: none;
+}
+
+html, body {
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+
+#page {
+	width: 100%;
+}
+
+#header {
+	background-color: #EEEEEE;
+	height: 50px;
+	width: 100%;
+}
+
+#main {
+	position: relative;
+	width: 100%;
+	max-width: 100%;
+}
+
+#sidebar, #content {
+	overflow: hidden;
+	white-space:nowrap;
+}
+
+#sidebar {
+	position: relative;
+	background-color: #EEFFFF;
+
+	width: 150px;
+}
+
+#sidebar_content {
+	overflow: auto;
+	width: 100%;
+	height: 100%;
+}
+
+#content {
+	position: absolute;
+	top: 0px;
+	background-color: #FFEEFF;
+}
+
+#footer {
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	background-color: #FFFFEE;
+	height: 150px;
+}
+
+.ui-resizable-helper {
+	border-right: 2px solid #DDDDDD;
+}
+.ui-resizable-e {
+	right: 0px;
+	background-color: #CCCCCC;
+}
+		</style>
+	</head>
+	<body>
+		<div id="page">
+			<div id="header">
+			</div>
+			<div id="main">
+				<div id="sidebar">
+					<div id="sidebar_content">the sidebar<br/>
+						<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+						<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+					</div>
+				</div>
+				<div id="content">content
+				</div>
+			</div>
+			<div id="footer">footer
+			</div>
+
+		</div>
+	</body>
+	<script>
+		$(function() {
+			$('#sidebar').resizable({
+				content: 'parent',
+				helper: "ui-resizable-helper",
+				handles: 'e',
+				minWidth: 50,
+				maxWidth: function() {
+					var main_w = $('#main').width();
+					return 200;
+				},
+				start: function( event, ui ) {
+					var helper = ui.helper;
+					helper.height(helper.height() + 1);
+					helper.width(helper.width() + 1);
+				},
+				stop: function(e, ui) {
+					content_refresh();
+				}
+    		});
+
+    		content_refresh();
+    		ocp_refresh();
+		})
+
+		function content_refresh() {
+			var sidebar_w = $('#sidebar').outerWidth();
+			$('#content').offset({
+				left: sidebar_w
+			});
+			var main_w = $('#main').width();
+			$('#content').width(main_w - sidebar_w);
+			$( "#sidebar" ).resizable( "option", "maxWidth", (main_w - 50));
+		}
+
+		function ocp_refresh() {
+			var window_h = $(window).height();
+			var header_h = $('#header').height();
+			var footer_h = $('#footer').height();
+			$('#sidebar').height(window_h - header_h - footer_h);
+			$('#content').height(window_h - header_h - footer_h);
+		}
+
+		$(window).resize(ocp_refresh);
+	</script>
+</html>

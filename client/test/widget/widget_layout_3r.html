@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="js/ocp/core.js"></script>
+		<script src="js/ocp/widget_splitpane_h.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_splitpane_h.css" />
+		<script src="js/ocp/widget_layout_3r.js"></script>
+
+		<style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+
+#page {
+	width: 100%;
+}
+
+#header {
+	background-color: red;
+}
+
+#sidebar {
+	background-color: blue;
+}
+
+#content {
+	background-color: green;
+}
+
+#footer {
+	background-color: orange;
+}
+
+		</style>
+	</head>
+
+	<body>
+		<div id="page">
+			<div id="header">
+			</div>
+			<div id="main">
+				<div id="sidebar">
+					Ceci est un tres tres long texte !
+				</div>
+				<div id="content">
+				</div>
+			</div>
+			<div id="footer">
+			</div>
+
+		</div>
+		<script>
+			$('#page').ocp_layout_3r({
+				header_h: 90,
+				footer_h: 150
+			});
+			$("#main").ocp_splitpane_h({
+				source: [
+					{ width: 200, }
+				]
+			});
+		</script>
+	</body>
+</html>

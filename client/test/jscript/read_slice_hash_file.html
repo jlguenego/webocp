@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- CRYPTO JS -->
+		<script src="_ext/sha1.js"></script>
+		<!-- END CRYPTO JS -->
+
+		<script src="js/ocp-client.js"></script>
+	</head>
+	<body>
+
+		<input type="file" id="file" name="file" /> <button>read</button>
+		<div id="byte_range"></div>
+		<table id="byte_content" border="1px" width="100%"></table>
+
+		<script>
+			$(function() {
+				// Check for the various File API support.
+				if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+				  alert('The File APIs are not fully supported in this browser.');
+				  return;
+				}
+			});
+
+			function readBlob2() {
+				var file = $('#file').get(0).files[0];
+				log(file);
+
+				var reader = new FileReader();
+				reader.onload = function(evt) {
+					log('onload');
+					var content = evt.target.result;
+					log('content='+content);
+				};
+
+				reader.onabort = function(evt) {
+					log('onabort');
+					var content = evt.target.result;
+					log('content='+content);
+				};
+
+				var blob = file.slice(0, 10);
+    			reader.readAsBinaryString(blob);
+
+    			var reader = new FileReader();
+				reader.onload = function(evt) {
+					log('onload');
+					var content = evt.target.result;
+					log('content='+content);
+				};
+    			blob = file.slice(11, 20);
+    			reader.readAsBinaryString(blob);
+			}
+
+			function readBlob() {
+				$('#byte_content').html('');
+				var file = $('#file').get(0).files[0];
+				if (!file) {
+					alert('no file');
+					return;
+				}
+				var start = 0;
+				var step = 500;
+
+				var ocp = new OCP();
+				while (start < file.size) {
+					var stop = start + step;
+					var reader = new FileReader();
+
+					// If we use onloadend, we need to check the readyState.
+					reader.onload = (function(my_start, my_stop, my_step) {
+						return function(evt) {
+							if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+								var content = evt.target.result;
+								log('content=|'+content+'|');
+								$('#byte_content').append('\
+<tr>\
+	<td width="100">' + my_start + '-' + my_stop + ': ' + my_step +'</td>\
+	<td><pre>' + content + '</pre></td>\
+	<td width="350">' + ocp.hash(content) + '</td>\
+</tr>\
+								');
+							}
+						};
+					})(start, stop, step);
+
+					//log(stop+'/'+file.size);
+					var blob = file.slice(start, stop);
+					reader.readAsBinaryString(blob);
+					start += step;
+				}
+			}
+
+			$('button').click(readBlob);
+		</script>
+	</body>
+</html>

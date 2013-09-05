@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+	</head>
+
+	<body>
+		<script>
+			var array = ['hello', 'world'];
+			function a(x) {
+				console.log('x=' + x);
+				var y = x.slice();
+				y.shift();
+				console.log('y=' + y);
+				console.log('array=' + array);
+			}
+			console.log('array=' + array);
+			a(array);
+			console.log('array=' + array);
+		</script>
+	</body>
+</html>

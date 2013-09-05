@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="js/ocp/core.js"></script>
+		<script src="js/ocp/widget_grid.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_grid.css" />
+
+		<style>
+html, body {
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+
+#grid {
+	width: 500px;
+	height: 150px;
+	padding: 20px;
+}
+		</style>
+	</head>
+
+	<body>
+		<div id="grid"></div>
+		<script>
+			$("#grid").ocp_grid({
+				column: {
+					filename: {
+						label: 'File name',
+						width: 200,
+						use_thumbnail: true
+					},
+					size: {
+						label: 'Size',
+						width: 70
+					},
+					last_modified: {
+						label: 'Last modified',
+						width: 100
+					}
+				},
+				data: [
+					{
+						filename: 'kiki.txt1',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'folder'
+						]
+					},
+					{
+						filename: 'keke.txt2',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'folder'
+						]
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'folder'
+						]
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'folder'
+						]
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'file'
+						]
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'file'
+						]
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'file'
+						]
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'file'
+						]
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'file'
+						]
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'file'
+						]
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'file'
+						]
+					},
+					{
+						filename: 'keke.txt',
+						size: '3Kb',
+						last_modified: '2012/02/03',
+						info: [
+							'file'
+						]
+					}
+				]
+			});
+		</script>
+	</body>
+</html>
