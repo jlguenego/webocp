@@ -19,11 +19,15 @@ function run(event) {
 	    	case 'upload_block':
 	    		ocp.upload.upload_block(task.args);
 	    		break;
-	    	case 'upload_hat_init':
-	    		ocp.upload.hat_init(task.args);
-	    		break;
-	    	case 'upload_hat_push':
-	    		ocp.upload.hat_push(task.args);
+	    	case 'upload_hat':
+	    		switch(task.message) {
+	    			case undefined:
+	    				ocp.upload.hat_init(task.args);
+	    				break
+	    			case 'push':
+	    				ocp.upload.hat_push(task.args);
+	    				break
+	    		}
 	    		break;
 	    }
 	} catch(e) {

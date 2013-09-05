@@ -22,7 +22,7 @@
 
 		<script src="js/ocp.js"></script>
 		<script src="js/ocp_worker_ui.js"></script>
-		<script src="js/ocp_worker_ui.pool.js"></script>
+		<script src="js/ocp_worker_ui_pool.js"></script>
 	</head>
 
 	<body>
@@ -39,30 +39,35 @@ $('#pool_view').ocp_pool_view();
 
 $('#send').click(function() {
 	ocp.cfg.server_base_url = $('#server_uri').val();
-	var secret_key = $('#secret_key').val();
 	var file = $('#file').get(0).files[0];
 	if (!file) {
 		alert('no file');
 		return;
 	}
-	var url = ocp.worker_ui.getURL('js/worker/upload.js');
-	setup_upload_task(file, url, secret_key);
+	var args = {
+		file: file,
+		secret_key: $('#secret_key').val(),
+		progress_bar: $('#progress')
+	}
+
+	file_upload(args);
 });
 
-var total_task = 0;
-var total_performed = 0;
-var pool = null;
-
-function setup_upload_task(file, url, secret_key) {
-	pool = new ocp.worker_ui.pool.Pool(10, url);
-	$('#pool_view').ocp_pool_view('attach', pool);	var cursor = 0;
-
+function file_upload(args) {
+	var file = args.file;
+	var secret_key = args.secret_key;
+	var progress_bar = args.progress_bar;
+	var total_task = 1;
+	var total_performed = 0;
+	var url = ocp.worker_ui.getURL('js/worker/upload.js');
+	var pool = new ocp.worker_ui.pool.Pool(10, url);
+	var cursor = 0;
 	var block_size = 1 << 16;
-
-	var hat_worker = get_hat_worker(url, file, block_size, secret_key);
-	total_task++;
-
+	var hat_worker = new Hat();
 	var block_id = 0;
+
+	$('#pool_view').ocp_pool_view('attach', pool);
+
 	while (cursor < file.size) {
 		var cursor_next = cursor + block_size;
 
@@ -78,7 +83,7 @@ function setup_upload_task(file, url, secret_key) {
 		var callback_func = function(event) {
 			console.log(event.data);
 			var progress = update_progress_from_task(event.data);
-			$('#progress').ocp_progressbar('set_progress', progress);
+			progress_bar.ocp_progressbar('set_progress', progress);
 			if (event.data.filename) {
 				hat_worker.push(event.data);
 			}
@@ -91,64 +96,48 @@ function setup_upload_task(file, url, secret_key) {
 		cursor = cursor_next;
 		block_id++;
 	}
-}
 
-function update_progress_from_task(obj) {
-	if (total_task <= 0) {
-		return 100;
-	}
-	if (obj.finish) {
-		total_performed++;
-	}
-	return Math.floor(total_performed * 100 / total_task);
-}
+	function Hat() {
+		var hat_callback = function() {
+			console.log(event.data);
+			var progress = update_progress_from_task(event.data);
+			progress_bar.ocp_progressbar('set_progress', progress);
+			if (event.data.filename) {
+				$('#upload_name').html(event.data.filename);
+			}
+			pool.terminate();
+		};
 
-function get_hat_worker(url, file, block_size, secret_key) {
-	var hat_worker = new Worker(url);
-
-	var hat_worker_callback = function() {
-		if (event.data.console) {
-			console.log('Thread[' + event.data.thread + ']-Task[' + event.data.task_name + '-' + event.data.task_id + ']:');
-			console.log(event.data.console);
-			return;
-		}
-		console.log(event.data);
-		var progress = update_progress_from_task(event.data);
-		$('#progress').ocp_progressbar('set_progress', progress);
-		if (event.data.filename) {
-			$('#upload_name').html(event.data.filename);
-		}
-		pool.terminate();
-	};
-	hat_worker.addEventListener('message', hat_worker_callback, false);
-	hat_worker.postMessage({
-		name: 'set_name',
-		args: 'hat'
-	});
-	hat_worker.postMessage({
-		id: 'hat',
-		name: 'upload_hat_init',
-		args: {
+		var hat_args = {
 			file: file,
 			block_size: block_size,
 			server_uri: ocp.cfg.server_base_url,
-			secret_key: secret_key
-		}
-	});
+			secret_key: secret_key,
+			message: 'init'
+		};
 
-	hat_worker.push = function(data) {
-		console.log('push');
-		console.log(data);
-		this.postMessage({
-			id: 'hat',
-			name: 'upload_hat_push',
-			args: {
+		var task = new ocp.worker_ui.pool.Task('hat', 'upload_hat', hat_args, hat_callback);
+		pool.addTask(task);
+
+		this.push = function(data) {
+			console.log('push');
+			console.log(data);
+			task.sendMessage('push', {
 				filename: data.filename,
 				block_id: data.block_id
-			}
-		});
-	};
-	return hat_worker;
+			});
+		};
+	}
+
+	function update_progress_from_task(obj) {
+		if (total_task <= 0) {
+			return 100;
+		}
+		if (obj.finish) {
+			total_performed++;
+		}
+		return Math.floor(total_performed * 100 / total_task);
+	}
 }
 		</script>
 	</body>
