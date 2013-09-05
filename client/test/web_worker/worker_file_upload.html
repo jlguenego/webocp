@@ -47,7 +47,8 @@ $('#send').click(function() {
 	var args = {
 		file: file,
 		secret_key: $('#secret_key').val(),
-		progress_bar: $('#progress')
+		progress_bar: $('#progress'),
+		pool_view: $('#pool_view')
 	}
 
 	file_upload(args);
@@ -66,7 +67,10 @@ function file_upload(args) {
 	var hat_worker = new Hat();
 	var block_id = 0;
 
-	$('#pool_view').ocp_pool_view('attach', pool);
+
+	if (args.pool_view) {
+		args.pool_view.ocp_pool_view('attach', pool);
+	}
 
 	while (cursor < file.size) {
 		var cursor_next = cursor + block_size;

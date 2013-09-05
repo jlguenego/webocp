@@ -52,7 +52,8 @@ $('#retrieve').click(function() {
 	args = {
 		filename: filename,
 		secret_key: $('#secret_key').val(),
-		progress_bar: $('#progress')
+		progress_bar: $('#progress'),
+		pool_view: $('#pool_view')
 	}
 	file_download(args);
 });
@@ -69,7 +70,9 @@ function file_download(args) {
 	var progress_bar = args.progress_bar;
 	var blocks = [];
 
-	$('#pool_view').ocp_pool_view('attach', pool);
+	if (args.pool_view) {
+		args.pool_view.ocp_pool_view('attach', pool);
+	}
 
 	var hat_args = {
 		block_name: filename,
