@@ -29,10 +29,12 @@
 
 		ocp.worker_file.write_block(args.hat_name, offset, content_ab);
 		console.log({
+			block_written: true,
 			block_id: args.block_id,
 			finish: true
 		});
 		report({
+			block_written: true,
 			block_id: args.block_id,
 			finish: true
 		});
@@ -69,3 +71,21 @@
 	}
 })(ocp);
 
+ocp.worker.init(this, true);
+
+function run(event) {
+    var task = event.data;
+    switch(task.name) {
+    	case 'download_hat':
+    		ocp.download.download_hat(task.args);
+    		return false;
+    	case 'download_block':
+    		ocp.download.download_block(task.args);
+    		return false;
+    }
+    return true;
+}
+
+function init() {
+	ocp.download.init();
+}
