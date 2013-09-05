@@ -5,6 +5,7 @@ function ajax_command(data) {
 	});
 
 	var result = null;
+	console.log(data);
 	$.ajax({
 		type: "GET",
 		url: ocp.cfg.server_base_url + '/webocp/server/endpoint/',

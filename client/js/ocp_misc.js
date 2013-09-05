@@ -4,6 +4,9 @@ ocp.restoreLocal();
 function ocp_error_manage(e) {
 	console.log(e);
 	console.log(stacktrace());
+	if (!e.msg) {
+		throw e;
+	}
 	$('#ocp_misc_error_dialog').find('span').html(e.msg);
 	$('#ocp_misc_error_dialog').ocp_dialog('open');
 }

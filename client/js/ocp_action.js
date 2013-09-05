@@ -71,16 +71,16 @@ var g_request = {};
 			var password = $('#ocp_lg_password').val();
 			var remember_me = $('#ocp_lg_remember_me').is(':checked');
 
-			var public_address = ocp.hash(email);
+			var public_address = ocp.crypto.hash(email);
 			var public_content = {
 				email: email,
 				name: name
 			};
-			var private_address = ocp.hash(email + password);
+			var private_address = ocp.crypto.hash(email + password);
 			var obj = {
 				root_dir: public_address,
 			};
-			var private_content = ocp.pcrypt(password, ocp.serialize(obj));
+			var private_content = ocp.crypto.pcrypt(password, ocp.crypto.serialize(obj));
 
 			ajax_login({
 				public_object: {
@@ -89,9 +89,10 @@ var g_request = {};
 				},
 				private_object: {
 					address: private_address,
-					content: private_content
+					content: ocp.utils.ab2str(private_content)
 				}
 			});
+			console.log('after ajax');
 
 			g_session = {};
 			var email = $('#ocp_lg_email').val();
@@ -156,16 +157,16 @@ var g_request = {};
 			ocp_val_form_validation('register');
 			console.log('ocp=');
 			console.log(ocp);
-			var public_address = ocp.hash(email);
+			var public_address = ocp.crypto.hash(email);
 			var public_content = {
 				email: email,
 				name: name
 			};
-			var private_address = ocp.hash(email + password);
+			var private_address = ocp.crypto.hash(email + password);
 			var obj = {
 				root_dir: public_address,
 			};
-			var private_content = ocp.pcrypt(password, ocp.serialize(obj));
+			var private_content = ocp.crypto.pcrypt(password, ocp.crypto.serialize(obj));
 
 			ajax_register({
 				public_object: {
@@ -174,7 +175,7 @@ var g_request = {};
 				},
 				private_object: {
 					address: private_address,
-					content: private_content
+					content: ocp.utils.ab2str(private_content)
 				}
 			});
 			g_session = {};
