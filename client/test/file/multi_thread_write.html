@@ -13,8 +13,8 @@
 		<!-- END POOL VIEW -->
 
 		<script src="js/ocp.js"></script>
-		<script src="js/ocp_worker_misc.js"></script>
-		<script src="js/ocp_worker_pool.js"></script>
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_worker_ui_pool.js"></script>
 	</head>
 
 	<body>
@@ -83,7 +83,7 @@ function onInitFs(filesystem) {
 
 $('#pool_view').ocp_pool_view();
 
-var url = ocp.worker_misc.getEmbeddedURL('worker');
+var url = ocp.worker_ui.getEmbeddedURL('worker');
 
 var block_nbr = 0;
 var is_file_ready = false;
@@ -143,7 +143,7 @@ function retrieve() {
 }
 
 function start_tasks() {
-	pool = new ocp.worker_pool.Pool(10, url);
+	pool = new ocp.worker_ui.pool.Pool(10, url);
 	$('#pool_view').ocp_pool_view('attach', pool);
 	var filename = $('#filename').val();
 
@@ -157,7 +157,7 @@ function start_tasks() {
 				retrieve();
 			}
 		}
-		var task = new ocp.worker_pool.Task(i, 'work', args, callback_func);
+		var task = new ocp.worker_ui.pool.Task(i, 'work', args, callback_func);
 		pool.addTask(task);
 	}
 }

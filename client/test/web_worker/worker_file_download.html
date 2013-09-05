@@ -21,8 +21,8 @@
 		<script src="_ext/Blob.js"></script>
 
 		<script src="js/ocp.js"></script>
-		<script src="js/ocp_worker_misc.js"></script>
-		<script src="js/ocp_worker_pool.js"></script>
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_worker_ui_pool.js"></script>
 	</head>
 
 	<body>
@@ -32,22 +32,6 @@
 		Upload name: <input type="text" id="upload_name" style="width: 300px;"/><br/>
 		<button id="retrieve">Retrieve</button>
 		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
-
-<!-- WORKER -->
-		<script id="worker" type="text/js-worker">
-importScripts(base_url + '/_ext/sha1.js');
-importScripts(base_url + '/_ext/aes.js');
-importScripts(base_url + '/_ext/WorkerFormData.js');
-
-importScripts(base_url + '/js/ocp.js');
-importScripts(base_url + '/js/ocp_utils.js');
-importScripts(base_url + '/js/ocp_worker.js');
-importScripts(base_url + '/js/ocp_crypto.js');
-importScripts(base_url + '/js/ocp_file.js');
-importScripts(base_url + '/js/ocp_worker_file.js');
-importScripts(base_url + '/js/ocp_download.js');
-		</script>
-<!-- END WORKER -->
 
 		<script>
 $('.progress').ocp_progressbar();
@@ -70,16 +54,16 @@ $('#retrieve').click(function() {
 		secret_key: $('#secret_key').val(),
 		progress_bar: $('#progress')
 	}
-	file_retrieve(args);
+	file_download(args);
 });
 
-function file_retrieve(args) {
-	var worker_url = ocp.worker_misc.getEmbeddedURL('worker');
+function file_download(args) {
+	var worker_url = ocp.worker_ui.getURL('js/worker/download.js');
 	var tm = {
 		total_task: 1, // download hat is the first task
 		total_performed: 0
 	};
-	var pool = new ocp.worker_pool.Pool(10, worker_url);
+	var pool = new ocp.worker_ui.pool.Pool(10, worker_url);
 	var filename = args.filename;
 	var secret_key = args.secret_key;
 	var progress_bar = args.progress_bar;
@@ -105,7 +89,7 @@ function file_retrieve(args) {
 		update_progress(event.data);
 	};
 
-	var task = new ocp.worker_pool.Task('hat', 'download_hat', hat_args, hat_callback);
+	var task = new ocp.worker_ui.pool.Task('hat', 'download_hat', hat_args, hat_callback);
 	pool.addTask(task);
 
 	function update_progress(obj) {
@@ -147,7 +131,7 @@ function file_retrieve(args) {
 				finalize();
 			}
 		}
-		var task = new ocp.worker_pool.Task(i, 'download_block', task_args, task_callback);
+		var task = new ocp.worker_ui.pool.Task(i, 'download_block', task_args, task_callback);
 		pool.addTask(task);
 	}
 

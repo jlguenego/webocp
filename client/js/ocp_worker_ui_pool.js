@@ -1,7 +1,7 @@
 ﻿(function(ocp, undefined) {
-	ocp.worker_pool = {};
+	ocp.worker_ui.pool = {};
 
-	ocp.worker_pool.Pool = function(size, url) {
+	ocp.worker_ui.pool.Pool = function(size, url) {
 	    var self = this;
 	    var c_i = 0;
 
@@ -15,9 +15,9 @@
 	    this.size = size; // number of thread
 
 	    this.sendUpdateEvent = function() {
-	    	var event = new CustomEvent('ocp.worker_pool.Pool.update', { 'detail': { pool: this } });
+	    	var event = new CustomEvent('ocp.worker_ui.pool.Pool.update', { 'detail': { pool: this } });
 			window.dispatchEvent(event);
-			//console.log('sent ocp.worker_pool.Pool.update ' + c_i);
+			//console.log('sent ocp.worker_ui.pool.Pool.update ' + c_i);
 			c_i++;
 	    }
 
@@ -73,14 +73,14 @@
 	    }
 
 		for (var i = 0 ; i < this.size ; i++) {
-        	var thread = new ocp.worker_pool.Thread(self, url, i);
+        	var thread = new ocp.worker_ui.pool.Thread(self, url, i);
             self.threadQueue.push(thread);
             self.threadList.push(thread);
         }
 	    this.sendUpdateEvent();
 	}
 
-	ocp.worker_pool.Thread = function(pool, url, name) {
+	ocp.worker_ui.pool.Thread = function(pool, url, name) {
 		var self = this;
 
 		this.name = name;
@@ -140,7 +140,7 @@
 	    }
 	}
 
-	ocp.worker_pool.Task = function(id, name, args, callback_func) {
+	ocp.worker_ui.pool.Task = function(id, name, args, callback_func) {
 		var self = this;
 
 		this.id = id; // id should be unique

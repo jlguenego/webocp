@@ -3,76 +3,153 @@
 	<head>
 		<meta charset="utf-8" />
 		<base href="../.." />
-		<title>Web OCP</title>
 		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- PROGRESSBAR -->
+		<script src="js/ocp/widget_progressbar.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_progressbar.css" />
+		<!-- END PROGRESSBAR -->
+
+		<!-- POOL VIEW -->
+		<script src="js/ocp/widget_pool_view.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_pool_view.css" />
+		<!-- END POOL VIEW -->
+
+		<script src="_ext/FileSaver.js"></script>
+		<script src="_ext/Blob.js"></script>
 
 		<script src="js/ocp.js"></script>
-		<script src="js/ocp_worker_misc.js"></script>
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_worker_ui.pool.js"></script>
 	</head>
 
 	<body>
-		<input type="file" id="file" name="file" /><button>Start</button>
-		<div id="output"></div>
-
-		<script id="worker_1" type="text/js-worker">
-			importScripts(base_url + '/test/web_worker/worker_lib2.js');
-			importScripts(base_url + '/_ext/WorkerFormData.js');
-
-			function run(event) {
-				var self = this;
-				var msg = event.data;
-				var result = '';
-
-				var reader = new FileReader();
-				// If we use onloadend, we need to check the readyState.
-				reader.onload = function(evt) {
-					if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-						result = evt.target.result;
-
-						var formData = new FormData();
-						var filename = 'toto.txt';
-						formData.append('filename', filename);
-						formData.append('content', blob);
-
-						var xhr = new XMLHttpRequest();
-						var url = 'http://localhost/webocp/server/test/endpoint/create_file_from_string.php';
-						xhr.open('POST', url, true);
-						xhr.onreadystatechange = function(){
-							if (xhr.readyState == 4 && xhr.status == 200) {
-								var json_str = xhr.responseText;
-								var json_obj = JSON.parse(json_str);
-								self.postMessage({
-									result: json_obj.result
-								});
-							}
-						}
-
-						xhr.send(formData);
-					}
-				};
-				var blob = msg.file.slice(0, 10);
-				reader.readAsBinaryString(blob);
-			}
-
-			this.addEventListener('message', run, false);
-		</script>
+		<div id="pool_view"></div>
+		Serveur URL: <input type="text" id="server_uri" value="http://localhost" /><br/>
+		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
+		<input type="file" id="file" name="file" /><button id="send">Send</button>
+		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
+		Upload name: <div id="upload_name"></div>
 
 		<script>
-			var url = ocp.worker_misc.getEmbeddedURL('worker_1');
+$('.progress').ocp_progressbar();
+$('#pool_view').ocp_pool_view();
 
-			$('button').click(function() {
-				var file = $('#file').get(0).files[0];
-				var worker = new Worker(url);
-				worker.addEventListener('message', function(event) {
-					console.log(event.data);
-					var div = $('<div/>');
-					div.html(event.data.result);
-					$('#output').append(div);
-				}, false);
-				worker.postMessage({
-					file: file
-				});
-			});
+$('#send').click(function() {
+	ocp.cfg.server_base_url = $('#server_uri').val();
+	var secret_key = $('#secret_key').val();
+	var file = $('#file').get(0).files[0];
+	if (!file) {
+		alert('no file');
+		return;
+	}
+	var url = ocp.worker_ui.getURL('js/worker/upload.js');
+	setup_upload_task(file, url, secret_key);
+});
+
+var total_task = 0;
+var total_performed = 0;
+var pool = null;
+
+function setup_upload_task(file, url, secret_key) {
+	pool = new ocp.worker_ui.pool.Pool(10, url);
+	$('#pool_view').ocp_pool_view('attach', pool);	var cursor = 0;
+
+	var block_size = 1 << 16;
+
+	var hat_worker = get_hat_worker(url, file, block_size, secret_key);
+	total_task++;
+
+	var block_id = 0;
+	while (cursor < file.size) {
+		var cursor_next = cursor + block_size;
+
+		var args = {
+			file: file,
+			cursor: cursor,
+			cursor_next: cursor_next,
+			block_id: block_id,
+			secret_key: secret_key,
+			server_uri: ocp.cfg.server_base_url
+		};
+
+		var callback_func = function(event) {
+			console.log(event.data);
+			var progress = update_progress_from_task(event.data);
+			$('#progress').ocp_progressbar('set_progress', progress);
+			if (event.data.filename) {
+				hat_worker.push(event.data);
+			}
+		};
+
+		var task = new ocp.worker_ui.pool.Task(block_id, 'upload_block', args, callback_func);
+		pool.addTask(task);
+		total_task++;
+
+		cursor = cursor_next;
+		block_id++;
+	}
+}
+
+function update_progress_from_task(obj) {
+	if (total_task <= 0) {
+		return 100;
+	}
+	if (obj.finish) {
+		total_performed++;
+	}
+	return Math.floor(total_performed * 100 / total_task);
+}
+
+function get_hat_worker(url, file, block_size, secret_key) {
+	var hat_worker = new Worker(url);
+
+	var hat_worker_callback = function() {
+		if (event.data.console) {
+			console.log('Thread[' + event.data.thread + ']-Task[' + event.data.task_name + '-' + event.data.task_id + ']:');
+			console.log(event.data.console);
+			return;
+		}
+		console.log(event.data);
+		var progress = update_progress_from_task(event.data);
+		$('#progress').ocp_progressbar('set_progress', progress);
+		if (event.data.filename) {
+			$('#upload_name').html(event.data.filename);
+		}
+		pool.terminate();
+	};
+	hat_worker.addEventListener('message', hat_worker_callback, false);
+	hat_worker.postMessage({
+		name: 'set_name',
+		args: 'hat'
+	});
+	hat_worker.postMessage({
+		id: 'hat',
+		name: 'upload_hat_init',
+		args: {
+			file: file,
+			block_size: block_size,
+			server_uri: ocp.cfg.server_base_url,
+			secret_key: secret_key
+		}
+	});
+
+	hat_worker.push = function(data) {
+		console.log('push');
+		console.log(data);
+		this.postMessage({
+			id: 'hat',
+			name: 'upload_hat_push',
+			args: {
+				filename: data.filename,
+				block_id: data.block_id
+			}
+		});
+	};
+	return hat_worker;
+}
 		</script>
 	</body>
 </html>

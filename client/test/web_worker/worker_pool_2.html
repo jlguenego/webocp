@@ -19,8 +19,8 @@
 		<!-- END POOL VIEW -->
 
 		<script src="js/ocp.js"></script>
-		<script src="js/ocp_worker_misc.js"></script>
-		<script src="js/ocp_worker_pool.js"></script>
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_worker_ui_pool.js"></script>
 
 		<style>
 .progress {
@@ -39,7 +39,7 @@
 		<button id="start">Start</button><button id="stop">Stop</button><input type="checkbox" id="force" />force<br/>
 
 		<script>
-var url = ocp.worker_misc.getURL('test/web_worker/worker_pool.js');
+var url = ocp.worker_ui.getURL('test/web_worker/worker_pool.js');
 
 
 var progressbar_nbr = 3;
@@ -75,14 +75,14 @@ function add_task(i) {
 		}
 	};
 
-	var task = new ocp.worker_pool.Task(i, 'work', {
+	var task = new ocp.worker_ui.pool.Task(i, 'work', {
 		sleep: i * 10
 	}, task_callback_func);
 	pool.addTask(task);
 }
 
 $('#start').click(function() {
-	pool = new ocp.worker_pool.Pool(3, url);
+	pool = new ocp.worker_ui.pool.Pool(3, url);
 	$('#pool_view').ocp_pool_view('attach', pool);
 	for (var i = 0; i < progressbar_nbr; i++) {
 		add_task(i);

@@ -25,7 +25,7 @@
 		<script src="../js/ocp_profile.js"></script>
 		<script src="../js/ocp_progress.js"></script>
 		<script src="upload_crypt_file.js"></script>
-		<script src="worker_pool.js"></script>
+		<script src="worker_ui_pool.js"></script>
 
 		<style>
 html, body {
@@ -91,7 +91,7 @@ html, body {
 				total_operations = file_nbr * 5;
 				console.log('total_operations=' + total_operations);
 
-				var pool = new Pool(5);
+				var pool = new ocp.worker_ui.pool.Pool(5);
 				pool.init();
 
 				var filelist = [];
@@ -121,7 +121,7 @@ html, body {
 									}
 									message.content = content;
 
-									var task = new Task('worker_progress.js', task_callback, message);
+									var task = new ocp.worker_ui.pool.Task('worker_progress.js', task_callback, message);
 									pool.addTask(task);
 
 									var filename = process_file(content, server_uri);

@@ -6,8 +6,8 @@
 		<script src="_ext/jquery-1.10.2.min.js"></script>
 
 		<script src="js/ocp.js"></script>
-		<script src="js/ocp_worker_misc.js"></script>
-		<script src="js/ocp_worker_pool.js"></script>
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_worker_ui_pool.js"></script>
 	</head>
 
 	<body>
@@ -48,7 +48,7 @@ function additionner_plus(args) {
 		</script>
 
 		<script>
-var url = ocp.worker_misc.getEmbeddedURL('worker_1');
+var url = ocp.worker_ui.getEmbeddedURL('worker_1');
 
 var pool = null;
 
@@ -57,7 +57,7 @@ var callback_func = function(event) {
 };
 
 var args = {};
-var task = new ocp.worker_pool.Task(1, 'additionner', args, callback_func);
+var task = new ocp.worker_ui.pool.Task(1, 'additionner', args, callback_func);
 
 
 
@@ -78,7 +78,7 @@ $('#plus').click(function() {
 
 $('#start').click(function() {
 	$('#result').html('initiate pool');
-	pool = new ocp.worker_pool.Pool(1, url);
+	pool = new ocp.worker_ui.pool.Pool(1, url);
 	pool.addTask(task);
 });
 

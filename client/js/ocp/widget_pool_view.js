@@ -54,7 +54,7 @@ $.widget( "ui.ocp_pool_view", {
 		this.taskQueue.append(taskQueue_blocks);
 
 		var self = this;
-		window.addEventListener('ocp.worker_pool.Pool.update', function(e) {
+		window.addEventListener('ocp.worker_ui.pool.Pool.update', function(e) {
 			if (e.detail.pool == self.pool) {
 				self.refresh();
 			}

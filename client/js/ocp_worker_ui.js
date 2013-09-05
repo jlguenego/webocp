@@ -1,7 +1,7 @@
 ﻿(function(ocp, undefined) {
-	ocp.worker_misc = {};
+	ocp.worker_ui = {};
 
-	ocp.worker_misc.getURL = function(filename) {
+	ocp.worker_ui.getURL = function(filename) {
 		var worker = $('<script/>');
 		worker.attr('id', 'worker_1');
 		worker.attr('type', 'text/js-worker');
@@ -19,7 +19,7 @@
 		return window.URL.createObjectURL(blob);
 	};
 
-	ocp.worker_misc.getEmbeddedURL = function(id) {
+	ocp.worker_ui.getEmbeddedURL = function(id) {
 		var base_url = ocp.dirname(window.location.href);
 		var base_href = $('base').attr('href');
 		if (!/^http:\/\//.test(base_href)) { // Is base_href relative?
