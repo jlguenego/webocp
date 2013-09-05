@@ -159,10 +159,10 @@ function file_retrieve(args) {
 				var url = fileEntry.toURL();
 				console.log(url);
 				var link = $('<a/>');
-				link.attr('href', url).attr('download', '');
+				link.attr('href', url).attr('download', filename);
 				console.log(link[0]);
 				//link.html('xxx');
-				$('body').append(link);
+				//$('body').append(link);
 				link[0].click();
 			}, errorHandler('getFile'));
 		}, errorHandler('requestFileSystem'));
