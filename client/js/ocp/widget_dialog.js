@@ -21,6 +21,7 @@ $.widget( "ui.ocp_dialog", {
 
 		// Callback
 		close: function() {},
+		on_open: function() {}
 	},
 
 	overlay: null,
@@ -131,6 +132,7 @@ $.widget( "ui.ocp_dialog", {
 		this.element.bind('keydown', function(e) {
 			self._on_keydown(e, self);
 		});
+		this.options.on_open();
 	},
 
 	close: function() {

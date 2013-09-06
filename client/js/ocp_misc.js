@@ -29,6 +29,12 @@ $(document).ready(function() {
 	console.log('ocp.cfg.server_base_url=' + ocp.cfg.server_base_url);
 
 	var general_settings_dialog = $('#ocp_fm_general_settings_dialog').ocp_dialog({
+		on_open: function() {
+			$('#ocp_st_scenario').ocp_select({
+				on_window_load: false
+			});
+		},
+
 		buttons: {
 			Save: function() {
 				ocp.cfg.server_base_url = strip_slash($('#ocp_fm_server_base_url').val());

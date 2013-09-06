@@ -14,7 +14,8 @@
 $.widget( "ui.ocp_select", {
 	version: "0.0.1",
 	options: {
-		max_width: null
+		max_width: null,
+		on_window_load: true
 	},
 
 	container: null,
@@ -43,9 +44,13 @@ $.widget( "ui.ocp_select", {
 		this.option_box_div.addClass('widget_select_option_box');
 
 		var self = this;
-		$(window).load(function() {
-			self._set_content();
-		});
+		if (this.options.on_window_load) {
+			$(window).load(function() {
+				self.set_content();
+			});
+		} else {
+			this.set_content();
+		}
 
 		$(window).click(function(e) {
 			if (e.target != self.text_div[0] && e.target != self.arrow_div[0]) {
@@ -58,6 +63,7 @@ $.widget( "ui.ocp_select", {
 				return;
 			}
 			self.option_box_div.toggle();
+			console.log(self.option_box_div.outerWidth(true));
 		});
 
 		return this;
@@ -73,7 +79,7 @@ $.widget( "ui.ocp_select", {
 		this.element.val(value);
 	},
 
-	_set_content: function() {
+	set_content: function() {
 		var options = this.element.find('option');
 
 		for (var i = 0; i < options.length; i++) {
@@ -89,8 +95,10 @@ $.widget( "ui.ocp_select", {
 		}
 
 		this.options.max_width = this.options.max_width || this.option_box_div.outerWidth(true);
+		console.log(this.option_box_div.outerWidth(true));
 
 		this.selector_div.outerWidth(this.options.max_width + 40); // 25 for the arrow on the right
+		this.option_box_div.outerWidth(this.options.max_width + 26);
 
 		var current_selected = this.element.find(':selected').eq(0);
 		this._update_selector(current_selected);
