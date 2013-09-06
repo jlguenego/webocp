@@ -87,6 +87,7 @@ body {
 	color: black;
 	text-align: center;
 	line-height: 28px;
+	text-decoration: none;
 
 	background-color: #DADEE1;
 	-webkit-border-radius: 3px;
@@ -97,7 +98,7 @@ body {
 	cursor: pointer;
 }
 
-.widget_dialog_button:hover {
+.widget_dialog_button:hover, .widget_dialog_button:focus {
 	color: #FFFFFF;
 	background-color: #D8290A;
 }

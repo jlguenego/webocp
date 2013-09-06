@@ -87,9 +87,10 @@ $.widget( "ui.ocp_dialog", {
 		header.addClass('widget_dialog_header');
 		header.html(this.element.attr('title'));
 
-		var close_btn = $('<div class="widget_dialog_close"/>').prependTo(header);
+		var close_btn = $('<a href="#" class="widget_dialog_close"/>').prependTo(header);
 		var self = this;
-		close_btn.click(function() {
+		close_btn.click(function(e) {
+			e.preventDefault();
 			self.close();
 		});
 
@@ -105,11 +106,15 @@ $.widget( "ui.ocp_dialog", {
 		var footer = $('<div/>').appendTo(this.element);
 		footer.addClass('widget_dialog_footer');
 		for (var name in this.options.buttons) {
-			var button = $('<div/>').appendTo(footer);
+			var button = $('<a href="#"/>').appendTo(footer);
 			button.addClass('widget_dialog_button');
 			button.html(name);
 
-			button.click(this.options.buttons[name]);
+			var self = this;
+			button.click(function(e) {
+				e.preventDefault();
+				self.options.buttons[name]();
+			});
 		}
 	},
 
@@ -117,7 +122,7 @@ $.widget( "ui.ocp_dialog", {
 		this._center_dialog();
 		this.overlay.show();
 		this.element.show();
-		this.element.find('input').eq(0).focus();
+		this.element.find(':tabbable').eq(1).focus();
 		this.element.bind('keydown', this._on_keydown);
 	},
 
