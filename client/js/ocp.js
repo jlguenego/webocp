@@ -14,7 +14,9 @@ function OCP() {
 	};
 
 	this.saveLocal = function() {
+		console.log('save local');
 		if (localStorage) {
+			console.log(ocp.cfg);
 			localStorage.setItem('ocp_client', JSON.stringify(ocp.cfg));
 		}
 	}
@@ -27,13 +29,14 @@ function OCP() {
 				if (ocp.cfg.session) {
 					g_session = ocp.cfg.session;
 				}
-			} else {
-				ocp.cfg = {
-					server_base_url: 'http://www.ocpforum.org',
-					session: null
-				};
+				return;
 			}
 		}
+		ocp.cfg = {
+			server_base_url: 'http://www.ocpforum.org',
+			session: null,
+			scenario: null
+		};
 	}
 }
 

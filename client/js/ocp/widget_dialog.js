@@ -115,10 +115,14 @@ $.widget( "ui.ocp_dialog", {
 			button.html(name);
 
 			var self = this;
-			button.click(function(e) {
-				e.preventDefault();
-				self.options.buttons[name]();
-			});
+			(function(name) {
+				button.click(function(e) {
+					e.preventDefault();
+					console.log('name=' + name);
+					console.log(self.options.buttons);
+					self.options.buttons[name]();
+				});
+			})(name);
 		}
 	},
 

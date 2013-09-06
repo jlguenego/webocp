@@ -28,7 +28,7 @@ $(document).ready(function() {
 
 	console.log('ocp.cfg.server_base_url=' + ocp.cfg.server_base_url);
 
-	var general_settings_dialog = $('#ocp_fm_general_settings_dialog').ocp_dialog({
+	var general_settings_dialog = $('#ocp_st_general_settings_dialog').ocp_dialog({
 		on_open: function() {
 			$('#ocp_st_scenario').ocp_select({
 				on_window_load: false
@@ -37,7 +37,9 @@ $(document).ready(function() {
 
 		buttons: {
 			Save: function() {
-				ocp.cfg.server_base_url = strip_slash($('#ocp_fm_server_base_url').val());
+				console.log('ocp=' + ocp);
+				ocp.cfg.server_base_url = strip_slash($('#ocp_st_server_base_url').val());
+				ocp.cfg.scenario = $('#ocp_st_scenario').val();
 				ocp.saveLocal();
 				general_settings_dialog.ocp_dialog('close');
 			},
@@ -49,8 +51,9 @@ $(document).ready(function() {
 
 	$('[href=#general_settings]').click(function(e) {
 		e.preventDefault();
+		general_settings_dialog.find('#ocp_st_server_base_url').val(ocp.cfg.server_base_url);
+		general_settings_dialog.find('#ocp_st_scenario').find('option[value=' + ocp.cfg.scenario + ']').attr('selected', '');
 		general_settings_dialog.ocp_dialog('open');
-		general_settings_dialog.find('#ocp_fm_server_base_url').val(ocp.cfg.server_base_url);
 	});
 
 	$('#ocp_misc_error_dialog').ocp_dialog({
