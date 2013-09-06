@@ -57,7 +57,6 @@ $.widget( "ui.ocp_select", {
 				self.option_box_div.hide();
 				return;
 			}
-			console.log('max_width=' + self.option_box_div.outerWidth(true));
 			self.option_box_div.toggle();
 		});
 
@@ -71,7 +70,7 @@ $.widget( "ui.ocp_select", {
 		this.text_div.html(current_selected.html());
 		var value = current_selected.attr('data-value') || current_selected.val();
 
-		this.text_div.attr('data-value', value);
+		this.element.val(value);
 	},
 
 	_set_content: function() {
@@ -90,7 +89,6 @@ $.widget( "ui.ocp_select", {
 		}
 
 		this.options.max_width = this.options.max_width || this.option_box_div.outerWidth(true);
-		console.log('max_width=' + this.option_box_div.outerWidth(true));
 
 		this.selector_div.outerWidth(this.options.max_width + 40); // 25 for the arrow on the right
 
