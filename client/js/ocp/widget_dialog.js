@@ -123,7 +123,11 @@ $.widget( "ui.ocp_dialog", {
 		this.overlay.show();
 		this.element.show();
 		this.element.find(':tabbable').eq(1).focus();
-		this.element.bind('keydown', this._on_keydown);
+
+		var self = this;
+		this.element.bind('keydown', function(e) {
+			self._on_keydown(e, self);
+		});
 	},
 
 	close: function() {
@@ -133,11 +137,11 @@ $.widget( "ui.ocp_dialog", {
 		this.options.close();
 	},
 
-	_on_keydown: function(e) {
+	_on_keydown: function(e, self) {
 		if ( e.keyCode !== $.ui.keyCode.TAB ) {
 			return;
 		}
-		var tabbables = dialog.find(":tabbable");
+		var tabbables = self.element.find(":tabbable");
 		var first = tabbables.filter(":first");
 		var last  = tabbables.filter(":last");
 

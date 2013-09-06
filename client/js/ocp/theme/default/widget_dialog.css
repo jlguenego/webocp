@@ -76,7 +76,7 @@ body {
 .widget_dialog_footer {
 }
 
-.widget_dialog_button {
+a.widget_dialog_button {
 	float: right;
 	height: 30px;
 	margin: 5px 10px;
