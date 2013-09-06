@@ -117,13 +117,32 @@ $.widget( "ui.ocp_dialog", {
 		this._center_dialog();
 		this.overlay.show();
 		this.element.show();
-		this.element.find('input').focus();
+		this.element.find('input').eq(0).focus();
+		this.element.bind('keydown', this._on_keydown);
 	},
 
 	close: function() {
 		this.overlay.hide();
 		this.element.hide();
+		this.element.unbind('keydown');
 		this.options.close();
+	},
+
+	_on_keydown: function(e) {
+		if ( e.keyCode !== $.ui.keyCode.TAB ) {
+			return;
+		}
+		var tabbables = dialog.find(":tabbable");
+		var first = tabbables.filter(":first");
+		var last  = tabbables.filter(":last");
+
+		if ( ( e.target === last[0] ) && !e.shiftKey ) {
+			first.focus(1);
+			e.preventDefault();
+		} else if ( ( e.target === first[0] ) && e.shiftKey ) {
+			last.focus(1);
+			e.preventDefault();
+		}
 	}
 });
 

@@ -38,28 +38,28 @@ var dialog = $('#dialog').ocp_dialog({
 });
 $('#open').click(function() {
 	dialog.ocp_dialog('open');
-	dialog.bind('keydown', on_keydown);
+	//dialog.bind('keydown', on_keydown);
 });
 
-function on_keydown(e) {
-	console.log(e);
-	console.log(e.target);
-
-	if ( e.keyCode !== $.ui.keyCode.TAB ) {
-		return;
-	}
-	var tabbables = dialog.find(":tabbable"),
-		first = tabbables.filter(":first"),
-		last  = tabbables.filter(":last");
-
-	if ( ( e.target === last[0] ) && !e.shiftKey ) {
-		first.focus(1);
-		e.preventDefault();
-	} else if ( ( e.target === first[0] ) && e.shiftKey ) {
-		last.focus( 1 );
-		e.preventDefault();
-	}
-}
+//function on_keydown(e) {
+//	console.log(e);
+//	console.log(e.target);
+//
+//	if ( e.keyCode !== $.ui.keyCode.TAB ) {
+//		return;
+//	}
+//	var tabbables = dialog.find(":tabbable"),
+//		first = tabbables.filter(":first"),
+//		last  = tabbables.filter(":last");
+//
+//	if ( ( e.target === last[0] ) && !e.shiftKey ) {
+//		first.focus(1);
+//		e.preventDefault();
+//	} else if ( ( e.target === first[0] ) && e.shiftKey ) {
+//		last.focus( 1 );
+//		e.preventDefault();
+//	}
+//}
 		</script>
 	</body>
 </html>
