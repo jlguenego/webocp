@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="js/ocp/widget_dialog.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_dialog.css" />
+	</head>
+
+	<body>
+		<form>
+			field1 <input type="text" id="field1"/>
+			field2 <input type="text" id="field2"/>
+			field3 <input type="text" id="field3"/>
+		</form>
+		field4 <input type="text" id="field4"/>
+		field5 <input type="text" id="field5"/>
+
+		<div id="dialog" title="My Dialog">
+			field6 <input type="text" id="field6"/>
+			field7 <input type="text" id="field7"/>
+			field8 <input type="text" id="field8"/>
+			field9 <input type="text" id="field9"/>
+			field10 <input type="text" id="field10" />
+		</div>
+
+		<script>
+var dialog = $('#dialog');
+dialog.find(':focusable').bind('blur', onfocusout);
+
+function onfocusout(e) {
+	e.preventDefault();
+	console.log('focusout');
+	console.log(e);
+	console.log(e.target);
+
+	if (!e.relatedTarget) {
+		console.log('related target is null. focus on target');
+		var target = dialog.find(':focusable')[0];
+		console.log(target);
+		setTimeout(function() {
+			target.focus();
+		}, 0);
+		return;
+	}
+
+	if (dialog.find(e.relatedTarget).length > 0) { // e.relatedTarget is in dialog
+		console.log('related target in dialog');
+		return;
+	}
+	console.log('related target not in dialog');
+	console.log('focus on target');
+
+	e.target.focus();
+}
+		</script>
+	</body>
+</html>

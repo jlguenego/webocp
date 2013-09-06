@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="js/ocp/widget_dialog.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_dialog.css" />
+	</head>
+
+	<body>
+		<form>
+			field1 <input type="text" id="field1"/>
+			field2 <input type="text" id="field2"/>
+			field3 <input type="text" id="field3"/>
+		</form>
+		field4 <input type="text" id="field4"/>
+		field5 <input type="text" id="field5"/>
+		<button id="open">open dialog</button>
+		<div id="dialog" title="My Dialog">
+			field6 <input type="text" id="field6"/>
+			field7 <input type="text" id="field7"/>
+			field8 <input type="text" id="field8"/>
+			field9 <input type="text" id="field9"/>
+			field10 <input type="text" id="field10" />
+		</div>
+
+		<script>
+var dialog = $('#dialog').ocp_dialog({
+	buttons: {
+		Close: function() {
+			$('#dialog').ocp_dialog('close');
+		}
+	}
+});
+$('#open').click(function() {
+	dialog.ocp_dialog('open');
+	dialog.bind('keydown', on_keydown);
+});
+
+function on_keydown(e) {
+	console.log(e);
+	console.log(e.target);
+
+	if ( e.keyCode !== $.ui.keyCode.TAB ) {
+		return;
+	}
+	var tabbables = dialog.find(":tabbable"),
+		first = tabbables.filter(":first"),
+		last  = tabbables.filter(":last");
+
+	if ( ( e.target === last[0] ) && !e.shiftKey ) {
+		first.focus(1);
+		e.preventDefault();
+	} else if ( ( e.target === first[0] ) && e.shiftKey ) {
+		last.focus( 1 );
+		e.preventDefault();
+	}
+}
+		</script>
+	</body>
+</html>
