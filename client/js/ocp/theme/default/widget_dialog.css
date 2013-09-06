@@ -76,8 +76,14 @@ body {
 .widget_dialog_footer {
 }
 
-a.widget_dialog_button {
+.widget_dialog_button_container {
+	display: inline-block;
 	float: right;
+	padding: 5px 0px;
+}
+
+a.widget_dialog_button {
+	display: inline-block;
 	height: 30px;
 	margin: 5px 10px;
 	padding: 1px 30px 3px 30px;

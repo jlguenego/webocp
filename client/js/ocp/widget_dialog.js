@@ -105,8 +105,11 @@ $.widget( "ui.ocp_dialog", {
 	_add_buttons: function() {
 		var footer = $('<div/>').appendTo(this.element);
 		footer.addClass('widget_dialog_footer');
+		var button_div = $('<div/>').appendTo(footer);
+		button_div.addClass('widget_dialog_button_container');
+
 		for (var name in this.options.buttons) {
-			var button = $('<a href="#"/>').appendTo(footer);
+			var button = $('<a href="#"/>').appendTo(button_div);
 			button.addClass('widget_dialog_button');
 			button.html(name);
 
