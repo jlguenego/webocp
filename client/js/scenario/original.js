@@ -79,5 +79,12 @@
 				name: name
 			}, this.endpoint);
 		};
+
+		this.rm = function(path) {
+			ocp.client.command({
+				action: 'rm',
+				path: '/' + ocp.session.user_id + path
+			}, this.endpoint);
+		};
 	};
 })(ocp);

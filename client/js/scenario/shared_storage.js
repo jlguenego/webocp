@@ -38,13 +38,18 @@
 			return result;
 		};
 
-
-
 		this.mkdir = function(path, name) {
 			ocp.client.command({
 				action: 'mkdir',
 				path: '/shared_storage' + path,
 				name: name
+			}, this.endpoint);
+		};
+
+		this.rm = function(path) {
+			ocp.client.command({
+				action: 'rm',
+				path: '/shared_storage' + path
 			}, this.endpoint);
 		};
 	};

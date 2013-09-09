@@ -68,10 +68,8 @@
 	}
 
 	ocp.client.rm = function(path) {
-		ocp.client.command({
-			action: 'rm',
-			path: '/' + ocp.session.user_id + path
-		});
+		var scenario = ocp.scenario.get(ocp.cfg.scenario);
+		var result = scenario.rm(path);
 	}
 
 	ocp.client.upload_dir = function(path, relative_path, form, after_success) {
