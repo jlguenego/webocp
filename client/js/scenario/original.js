@@ -20,7 +20,7 @@
 
 			console.log('url=' + this.endpoint);
 
-			ocp.ajax.command({
+			ocp.client.command({
 				action: 'register',
 				account: {
 					public_object: {
@@ -46,7 +46,7 @@
 			};
 			var private_content = ocp.crypto.pcrypt(args.password, ocp.crypto.serialize(obj));
 
-			ocp.ajax.login({
+			ocp.client.login({
 				public_object: {
 					address: public_address,
 					content: public_content

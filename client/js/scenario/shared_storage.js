@@ -12,7 +12,7 @@
 				email: args.email,
 				password: args.password
 			};
-			ocp.ajax.command(my_args, this.endpoint);
+			ocp.client.command(my_args, this.endpoint);
 
 			ocp.session = {};
 			ocp.session.user_id = args.email;
@@ -24,7 +24,7 @@
 				email: args.email,
 				password: args.password
 			};
-			ocp.ajax.command(my_args, this.endpoint);
+			ocp.client.command(my_args, this.endpoint);
 
 			ocp.session = {};
 			ocp.session.user_id = args.email;

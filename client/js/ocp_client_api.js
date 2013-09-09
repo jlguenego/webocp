@@ -1,7 +1,7 @@
 (function(ocp, undefined) {
-	ocp.ajax = {};
+	ocp.client = {};
 
-	ocp.ajax.command = function(data, url) {
+	ocp.client.command = function(data, url) {
 		if (!url) {
 			url = ocp.cfg.server_base_url + '/webocp/server/endpoint/';
 		}
@@ -29,7 +29,7 @@
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-				console.log('ocp.ajax error');
+				console.log('ocp.client error');
 				console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
 			},
 			statusCode: {
@@ -42,8 +42,8 @@
 		return result;
 	};
 
-	ocp.ajax.ls = function(path) {
-		var result = ocp.ajax.command({
+	ocp.client.ls = function(path) {
+		var result = ocp.client.command({
 			action: 'ls',
 			path: '/' + ocp.session.user_id + path
 		});
@@ -56,30 +56,30 @@
 		return ocp.file_manager.filter_dir(result);
 	}
 
-	ocp.ajax.mkdir = function(path, name) {
-		ocp.ajax.command({
+	ocp.client.mkdir = function(path, name) {
+		ocp.client.command({
 			action: 'mkdir',
 			path: '/' + ocp.session.user_id + path,
 			name: name
 		});
 	}
 
-	ocp.ajax.mv = function(old_path, new_path) {
-		ocp.ajax.command({
+	ocp.client.mv = function(old_path, new_path) {
+		ocp.client.command({
 			action: 'mv',
 			old_path: '/' + ocp.session.user_id + old_path,
 			new_path: '/' + ocp.session.user_id + new_path
 		});
 	}
 
-	ocp.ajax.rm = function(path) {
-		ocp.ajax.command({
+	ocp.client.rm = function(path) {
+		ocp.client.command({
 			action: 'rm',
 			path: '/' + ocp.session.user_id + path
 		});
 	}
 
-	ocp.ajax.upload_dir = function(path, relative_path, form, after_success) {
+	ocp.client.upload_dir = function(path, relative_path, form, after_success) {
 		var formData = new FormData(form);
 		formData.append('action', 'upload_dir');
 		formData.append('relative_path', relative_path);
@@ -121,7 +121,7 @@
 				}
 			},
 	        error: function(jqXHR, textStatus, errorThrown) {
-				console.log('ocp.ajax.ls error');
+				console.log('ocp.client.ls error');
 				console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
 			},
 	        //Options to tell JQuery not to process data or worry about content-type
@@ -132,7 +132,7 @@
 		return result;
 	}
 
-	ocp.ajax.upload_file = function(path, file, after_success, on_progress) {
+	ocp.client.upload_file = function(path, file, after_success, on_progress) {
 		var formData = new FormData();
 		formData.append('input_name', 'file');
 		formData.append('path', '/' + ocp.session.user_id + path);
@@ -176,7 +176,7 @@
 				}
 			},
 	        error: function(jqXHR, textStatus, errorThrown) {
-				console.log('ocp.ajax.ls error');
+				console.log('ocp.client.ls error');
 				console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
 			},
 	        //Options to tell JQuery not to process data or worry about content-type
@@ -187,13 +187,13 @@
 		return result;
 	}
 
-	ocp.ajax.download_file = function(path) {
-		console.log('ocp.ajax.download_file, path=' + path);
+	ocp.client.download_file = function(path) {
+		console.log('ocp.client.download_file, path=' + path);
 		window.location = ocp.cfg.server_base_url + '/webocp/server/endpoint/download.php?path=' + '/' + ocp.session.user_id + path;
 	}
 
-	ocp.ajax.login = function(account) {
-		ocp.ajax.command({
+	ocp.client.login = function(account) {
+		ocp.client.command({
 			action: 'login',
 			account: account
 		});
