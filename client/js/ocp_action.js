@@ -44,7 +44,6 @@ var g_request = {};
 				break;
 			case 'logout':
 				ocp.action.logout();
-				window.location.hash = '#';
 				break;
 			case 'file_manager':
 				if (!ocp.action.require_authentication()) {
@@ -120,6 +119,7 @@ var g_request = {};
 		g_session = null;
 		ocp.cfg.session = g_session;
 		ocp.saveLocal();
+		window.location.hash = '#';
 	};
 
 	ocp.action.display = function(page_id) {

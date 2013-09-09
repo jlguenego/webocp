@@ -2,6 +2,9 @@
 	ocp.crypto = {};
 
 	ocp.crypto.hash = function(ab) {
+		if (typeof ab == 'string') {
+			ab = ocp.utils.str2ab(ab);
+		}
 		var wa = ocp.utils.ab2wa(ab);
 	    var result = CryptoJS.SHA1(wa);
 	    return result.toString();

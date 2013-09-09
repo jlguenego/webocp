@@ -4,14 +4,15 @@
 	ocp.validation.form = function(form_name) {
 		switch(form_name) {
 			case 'register':
-				ocp.validation.check_checked($('#ocp_reg_name'));
+				ocp.validation.check_empty($('#ocp_reg_name'));
 				ocp.validation.check_mail($('#ocp_reg_email'));
-				ocp.validation.check_checked($('#ocp_reg_password'));
+				ocp.validation.check_empty($('#ocp_reg_password'));
 				ocp.validation.check_checked($('#register_checkbox'), 'You must agree with the OCP Terms of Service.');
 				break;
 			case 'login':
 				ocp.validation.check_mail($('#ocp_lg_email'));
-				ocp.validation.check_checked($('#ocp_lg_password'));
+				ocp.validation.check_empty($('#ocp_lg_password'));
+				ocp.validation.check_checked($('#ocp_lg_remember_me'));
 				break;
 			default:
 		}
@@ -20,7 +21,7 @@
 	ocp.validation.check_checked = function(obj, error_msg) {
 		if (!obj.is(':checked')) {
 			obj.focus();
-			throw new OCPException(error_msg);
+			throw new OCPException('check_checked: ' + error_msg);
 		}
 	};
 
