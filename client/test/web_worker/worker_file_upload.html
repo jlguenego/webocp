@@ -60,7 +60,7 @@ function file_upload(args) {
 	var progress_bar = args.progress_bar;
 	var total_task = 1;
 	var total_performed = 0;
-	var url = ocp.worker_ui.getURL('js/worker/upload.js');
+	var url = ocp.worker_ui.getURL('js/worker/ocp_upload.js');
 	var pool = new ocp.worker_ui.pool.Pool(10, url);
 	var cursor = 0;
 	var block_size = 1 << 16;

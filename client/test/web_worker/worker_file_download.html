@@ -37,8 +37,13 @@
 $('.progress').ocp_progressbar();
 $('#pool_view').ocp_pool_view();
 
-var host_uri = window.location.href.replace('/webocp/client/test/web_worker/worker_retrieve_crypt_file.html', '');
+
+var host_uri = 'http://localhost';
+if (!/^file/i.test(window.location.href)) {
+	host_uri = window.location.href.replace('/webocp/client/test/web_worker/worker_retrieve_crypt_file.html', '');
+}
 $('#server_uri').val(host_uri);
+
 
 $('#retrieve').click(function() {
 	blocks = [];
@@ -59,7 +64,7 @@ $('#retrieve').click(function() {
 });
 
 function file_download(args) {
-	var worker_url = ocp.worker_ui.getURL('js/worker/download.js');
+	var worker_url = ocp.worker_ui.getURL('js/worker/ocp_download.js');
 	var tm = {
 		total_task: 1, // download hat is the first task
 		total_performed: 0
