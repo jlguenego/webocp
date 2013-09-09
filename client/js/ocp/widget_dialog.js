@@ -26,6 +26,7 @@ $.widget( "ui.ocp_dialog", {
 
 	overlay: null,
 	content: null,
+	button_div: null,
 
 	_create: function() {
 		if ($('.widget_dialog_overlay').length == 0) {
@@ -95,6 +96,14 @@ $.widget( "ui.ocp_dialog", {
 			self.close();
 		});
 
+		this.element.bind('keydown', function(e) {
+			self._on_keydown(e, self);
+		});
+
+		this.button_div.bind('keydown', function(e) {
+			self._on_keydown_arrow(e, self);
+		});
+
 		this.element.removeAttr('title');
 
 		this.element.draggable({
@@ -106,11 +115,11 @@ $.widget( "ui.ocp_dialog", {
 	_add_buttons: function() {
 		var footer = $('<div/>').appendTo(this.element);
 		footer.addClass('widget_dialog_footer');
-		var button_div = $('<div/>').appendTo(footer);
-		button_div.addClass('widget_dialog_button_container');
+		this.button_div = $('<div/>').appendTo(footer);
+		this.button_div.addClass('widget_dialog_button_container');
 
 		for (var name in this.options.buttons) {
-			var button = $('<a href="#"/>').appendTo(button_div);
+			var button = $('<a href="#"/>').appendTo(this.button_div);
 			button.addClass('widget_dialog_button');
 			button.html(name);
 
@@ -118,8 +127,6 @@ $.widget( "ui.ocp_dialog", {
 			(function(name) {
 				button.click(function(e) {
 					e.preventDefault();
-					console.log('name=' + name);
-					console.log(self.options.buttons);
 					self.options.buttons[name]();
 				});
 			})(name);
@@ -132,10 +139,6 @@ $.widget( "ui.ocp_dialog", {
 		this.element.show();
 		this.element.find(':tabbable').eq(1).focus();
 
-		var self = this;
-		this.element.bind('keydown', function(e) {
-			self._on_keydown(e, self);
-		});
 		this.options.on_open();
 	},
 
@@ -160,6 +163,31 @@ $.widget( "ui.ocp_dialog", {
 		} else if ( ( e.target === first[0] ) && e.shiftKey ) {
 			last.focus(1);
 			e.preventDefault();
+		}
+	},
+
+	_on_keydown_arrow: function(e, self) {
+		if (e.keyCode != $.ui.keyCode.RIGHT && e.keyCode != $.ui.keyCode.LEFT) {
+			return;
+		}
+		e.preventDefault();
+
+		var tabbables = self.button_div.find(":tabbable");
+		var focused = self.button_div.find(':focus');
+		var first = tabbables.filter(":first");
+		var last  = tabbables.filter(":last");
+
+		if ( ( e.target === last[0] ) && (e.keyCode == $.ui.keyCode.RIGHT) ) {
+			return;
+		} else if ( ( e.target === first[0] ) && (e.keyCode == $.ui.keyCode.LEFT) ) {
+			return;
+		}
+
+		if (e.keyCode == $.ui.keyCode.RIGHT) {
+			focused.next(':tabbable').focus();
+		}
+		if (e.keyCode == $.ui.keyCode.LEFT) {
+			focused.prev(':tabbable').focus();
 		}
 	}
 });
