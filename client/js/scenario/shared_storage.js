@@ -163,6 +163,10 @@
 		        processData: false
 		    });
 			return result;
-		}
+		};
+
+		this.download_file = function(path) {
+			window.location = this.endpoint + 'download.php?path=' + '/shared_storage' + path;
+		};
 	};
 })(ocp);

@@ -82,7 +82,8 @@
 	};
 
 	ocp.client.download_file = function(path) {
+		var scenario = ocp.scenario.get(ocp.cfg.scenario);
+		scenario.download_file(path);
 		console.log('ocp.client.download_file, path=' + path);
-		window.location = ocp.cfg.server_base_url + '/webocp/server/endpoint/download.php?path=' + '/' + ocp.session.user_id + path;
 	}
 })(ocp);
