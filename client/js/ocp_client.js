@@ -123,59 +123,10 @@
 	}
 
 	ocp.client.upload_file = function(path, file, after_success, on_progress) {
-		var formData = new FormData();
-		formData.append('input_name', 'file');
-		formData.append('path', '/' + ocp.session.user_id + path);
-		formData.append('file[]', file);
-		var result = null;
-	    $.ajax({
-	        url: ocp.cfg.server_base_url + '/webocp/server/endpoint/?action=upload_file&file_size=' + file.size,  //server script to process data
-	        type: 'POST',
-	        data: formData,
-	        async: true,
-	        xhr: function() {  // custom xhr
-	            var myXhr = $.ajaxSettings.xhr();
-	            if(myXhr.upload){ // check if upload property exists
-	                myXhr.upload.addEventListener('progress', function(e) {
-	                	on_progress(e, file.name);
-	                }, false); // for handling the progress of the upload
-	            }
-	            return myXhr;
-	        },
-	        beforeSend: function() {},
-	        success: function(data) {
-				try {
-					var e = $.Event('progress');
-					e.total = 1;
-					e.loaded = 1;
-					on_progress(e, file.name);
-					//console.log(data);
-					var output = $.parseJSON(data);
-					if (output.error) {
-						throw new OCPException('Server answered: ' + output.error);
-					}
-					if (output.result) {
-						result = output.result;
-					}
-				} catch (e) {
-					ocp.error_manage(e);
-					return;
-				}
-				if (after_success) {
-					after_success();
-				}
-			},
-	        error: function(jqXHR, textStatus, errorThrown) {
-				console.log('ocp.client.ls error');
-				console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
-			},
-	        //Options to tell JQuery not to process data or worry about content-type
-	        cache: false,
-	        contentType: false,
-	        processData: false
-	    });
+		var scenario = ocp.scenario.get(ocp.cfg.scenario);
+		var result = scenario.upload_file(path, file, after_success, on_progress);
 		return result;
-	}
+	};
 
 	ocp.client.download_file = function(path) {
 		console.log('ocp.client.download_file, path=' + path);
