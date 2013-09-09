@@ -65,7 +65,7 @@ var g_request = {};
 
 	ocp.action.login = function() {
 		try {
-			ocp_val_form_validation('login');
+			ocp.validation.form('login');
 
 			var email = $('#ocp_lg_email').val();
 			var password = $('#ocp_lg_password').val();
@@ -154,7 +154,7 @@ var g_request = {};
 			var email = $('#ocp_reg_email').val();
 			var password = $('#ocp_reg_password').val();
 
-			ocp_val_form_validation('register');
+			ocp.validation.form('register');
 			console.log('ocp=');
 			console.log(ocp);
 			var public_address = ocp.crypto.hash(email);
