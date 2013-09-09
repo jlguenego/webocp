@@ -12,7 +12,6 @@
 			case 'login':
 				ocp.validation.check_mail($('#ocp_lg_email'));
 				ocp.validation.check_empty($('#ocp_lg_password'));
-				ocp.validation.check_checked($('#ocp_lg_remember_me'));
 				break;
 			default:
 		}

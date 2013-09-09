@@ -229,7 +229,7 @@
 			$root_dir = ROOT . '/' . $_REQUEST['account']['public_object']['address'];
 			debug('path='.$root_dir);
 			if (!is_dir($root_dir)) {
-				throw new Exception('This account does not exist.');
+				throw new Exception('Bad login/password.');
 			}
 			$output['result'] = 'OK';
 		} catch (Exception $e) {

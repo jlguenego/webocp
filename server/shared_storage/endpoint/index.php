@@ -10,10 +10,14 @@
 
 	require_once(BASE_DIR . '/include/constant.inc');
 
+	define("USER_ROOT", ROOT . '/shared_storage');
+
 	$_REQUEST = array_merge($_GET, $_POST);
 	debug_r('_GET', $_GET);
 
 	try {
+		mkdir_p(USER_ROOT);
+
 		$action = $_REQUEST['action'];
 		switch($action) {
 			case 'ls':
@@ -207,13 +211,9 @@
 	function action_register() {
 		$output = array();
 		try {
-			// create an account
 			$name = $_REQUEST['name'];
 			$email = $_REQUEST['email'];
 			$password = $_REQUEST['password'];
-
-			$root_dir = ROOT . '/shared_storage';
-			mkdir_p($root_dir);
 
 			$user_file = ROOT . '/user_file.txt';
 			$users = file($user_file);
@@ -236,12 +236,30 @@
 	function action_login() {
 		$output = array();
 		try {
-			$root_dir = ROOT . '/' . $_REQUEST['account']['public_object']['address'];
-			debug('path='.$root_dir);
-			if (!is_dir($root_dir)) {
-				throw new Exception('This account does not exist.');
+			$email = $_REQUEST['email'];
+			$password = $_REQUEST['password'];
+
+			$user_file = ROOT . '/user_file.txt';
+			$users = file($user_file);
+
+			foreach ($users as $line) {
+				$line = trim($line);
+				list($user_email, $user_name, $user_password) = explode(':', $line);
+				debug('email=' . $email);
+				debug('password=|' . $password .'|');
+				debug('user_email=' . $user_email);
+				debug('user_name=' . $user_name);
+				debug('user_password=|' . $user_password .'|');
+				if (($user_email == $email) && ($user_password == $password)) {
+					$output['result'] = 'OK';
+					debug('User found: ' . $user_email);
+					break;
+				}
 			}
-			$output['result'] = 'OK';
+			if (!isset($output['result'])) {
+				debug('Not found.');
+				throw new Exception('Bad login/password.');
+			}
 		} catch (Exception $e) {
 			$output['error'] = $e->getMessage();
 		}

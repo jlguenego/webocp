@@ -19,6 +19,15 @@
 		};
 
 		this.login= function(args) {
+			var my_args = {
+				action: 'login',
+				email: args.email,
+				password: args.password
+			};
+			ocp.ajax.command(my_args, this.endpoint);
+
+			ocp.session = {};
+			ocp.session.user_id = args.email;
 		};
 	};
 })(ocp);
