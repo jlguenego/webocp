@@ -59,10 +59,25 @@
 					}
 				}
 			}, this.endpoint);
-			console.log('after ajax');
 
 			ocp.session = {};
 			ocp.session.user_id = public_address;
+		};
+
+		this.ls = function(path) {
+			var result = ocp.client.command({
+				action: 'ls',
+				path: '/' + ocp.session.user_id + path
+			}, this.endpoint);
+			return result;
+		};
+
+		this.mkdir = function(path, name) {
+			ocp.client.command({
+				action: 'mkdir',
+				path: '/' + ocp.session.user_id + path,
+				name: name
+			}, this.endpoint);
 		};
 	};
 })(ocp);

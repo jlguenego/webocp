@@ -29,5 +29,23 @@
 			ocp.session = {};
 			ocp.session.user_id = args.email;
 		};
+
+		this.ls = function(path) {
+			var result = ocp.client.command({
+				action: 'ls',
+				path: '/shared_storage' + path
+			}, this.endpoint);
+			return result;
+		};
+
+
+
+		this.mkdir = function(path, name) {
+			ocp.client.command({
+				action: 'mkdir',
+				path: '/shared_storage' + path,
+				name: name
+			}, this.endpoint);
+		};
 	};
 })(ocp);

@@ -43,10 +43,8 @@
 	};
 
 	ocp.client.ls = function(path) {
-		var result = ocp.client.command({
-			action: 'ls',
-			path: '/' + ocp.session.user_id + path
-		});
+		var scenario = ocp.scenario.get(ocp.cfg.scenario);
+		var result = scenario.ls(path);
 
 		var grid_result = ocp.file_manager.build_grid_data_from_ls_enpoint(result, path);
 
@@ -57,11 +55,8 @@
 	}
 
 	ocp.client.mkdir = function(path, name) {
-		ocp.client.command({
-			action: 'mkdir',
-			path: '/' + ocp.session.user_id + path,
-			name: name
-		});
+		var scenario = ocp.scenario.get(ocp.cfg.scenario);
+		var result = scenario.mkdir(path, name);
 	}
 
 	ocp.client.mv = function(old_path, new_path) {
@@ -190,12 +185,5 @@
 	ocp.client.download_file = function(path) {
 		console.log('ocp.client.download_file, path=' + path);
 		window.location = ocp.cfg.server_base_url + '/webocp/server/endpoint/download.php?path=' + '/' + ocp.session.user_id + path;
-	}
-
-	ocp.client.login = function(account) {
-		ocp.client.command({
-			action: 'login',
-			account: account
-		});
 	}
 })(ocp);
