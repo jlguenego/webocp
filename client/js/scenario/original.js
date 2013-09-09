@@ -46,16 +46,19 @@
 			};
 			var private_content = ocp.crypto.pcrypt(args.password, ocp.crypto.serialize(obj));
 
-			ocp.client.login({
-				public_object: {
-					address: public_address,
-					content: public_content
-				},
-				private_object: {
-					address: private_address,
-					content: ocp.utils.ab2str(private_content)
+			ocp.client.command({
+				action: 'login',
+				account: {
+					public_object: {
+						address: public_address,
+						content: public_content
+					},
+					private_object: {
+						address: private_address,
+						content: ocp.utils.ab2str(private_content)
+					}
 				}
-			});
+			}, this.endpoint);
 			console.log('after ajax');
 
 			ocp.session = {};
