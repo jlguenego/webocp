@@ -44,12 +44,12 @@
 			path: '/' + g_session.public_address + path
 		});
 
-		var grid_result = ocp_build_grid_data_from_ls_enpoint(result, path);
+		var grid_result = ocp.file_manager.build_grid_data_from_ls_enpoint(result, path);
 
-		grid_result.rows = reorder_grid_result(grid_result.rows);
+		grid_result.rows = ocp.file_manager.reorder_grid_result(grid_result.rows);
 		$("#ocp_fm_grid").ocp_grid('reload', grid_result);
 		$('#ocp_fm_breadcrumbs input').val(path);
-		return filter_dir(result);
+		return ocp.file_manager.filter_dir(result);
 	}
 
 	ocp.ajax.mkdir = function(path, name) {
