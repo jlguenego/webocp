@@ -52,5 +52,13 @@
 				path: '/shared_storage' + path
 			}, this.endpoint);
 		};
+
+		this.mv = function(old_path, new_path) {
+			ocp.client.command({
+				action: 'mv',
+				old_path: '/shared_storage' + old_path,
+				new_path: '/shared_storage' + new_path
+			}, this.endpoint);
+		};
 	};
 })(ocp);

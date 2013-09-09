@@ -86,5 +86,13 @@
 				path: '/' + ocp.session.user_id + path
 			}, this.endpoint);
 		};
+
+		this.mv = function(old_path, new_path) {
+			ocp.client.command({
+				action: 'mv',
+				old_path: '/' + ocp.session.user_id + old_path,
+				new_path: '/' + ocp.session.user_id + new_path
+			}, this.endpoint);
+		};
 	};
 })(ocp);

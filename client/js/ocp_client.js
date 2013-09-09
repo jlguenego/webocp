@@ -60,11 +60,8 @@
 	}
 
 	ocp.client.mv = function(old_path, new_path) {
-		ocp.client.command({
-			action: 'mv',
-			old_path: '/' + ocp.session.user_id + old_path,
-			new_path: '/' + ocp.session.user_id + new_path
-		});
+		var scenario = ocp.scenario.get(ocp.cfg.scenario);
+		var result = scenario.mv(old_path, new_path);
 	}
 
 	ocp.client.rm = function(path) {
