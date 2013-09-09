@@ -69,10 +69,21 @@
 		var result = scenario.rm(path);
 	}
 
-	ocp.client.upload_dir = function(path, relative_path, form, after_success) {
-		var scenario = ocp.scenario.get(ocp.cfg.scenario);
-		var result = scenario.upload_dir(path, relative_path, form, after_success);
-		return result;
+	ocp.client.upload_dir = function(path, files, after_success_func, on_progress_func) {
+		for (var i = 0; i < files.length; i++) {
+			var file = files[i];
+			if (/\/\.$/.test(file.webkitRelativePath)) { // end with '/.'
+				console.log(file.webkitRelativePath + ' is dir');
+				var name = ocp.basename(file.webkitRelativePath);
+				console.log('name=' + name);
+				ocp.client.mkdir(path + ocp.dirname(file.webkitRelativePath), name);
+			} else {
+				console.log(file.webkitRelativePath + ' is file');
+				ocp.client.upload_file(path + ocp.dirname(file.webkitRelativePath), file, after_success_func, on_progress_func);
+			}
+			console.log('file=');
+			console.log(file);
+		}
 	}
 
 	ocp.client.upload_file = function(path, file, after_success, on_progress) {

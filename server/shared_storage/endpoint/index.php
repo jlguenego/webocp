@@ -63,11 +63,7 @@
 		try {
 			$path = ROOT.$_REQUEST['path'];
 			$name = $_REQUEST['name'];
-			if (!is_dir($path . '/' . $name)) {
-				if (!@mkdir($path . '/' . $name)) {
-					throw new Exception('Cannot create the folder with path: ' . $path);
-				}
-			}
+			mkdir_p($path . '/' . $name);
 		} catch (Exception $e) {
 			$output['error'] = $e->getMessage();
 		}

@@ -541,16 +541,11 @@ $(document).ready(function() {
 
 		var files = $('#ocp_fm_dir').get(0).files;
 
-		var relative_path_a = [];
-		var i = 0
-		while (files[i]) {
-			relative_path_a.push(files[i].webkitRelativePath);
-			i++;
-		}
-
 		try {
-			ocp.client.upload_dir(normalize_path(path), relative_path_a, form, function() {
+			ocp.client.upload_dir(normalize_path(path), files, function() {
 				tree.ocp_tree('open_item', path);
+			}, function(e, filename) {
+				ocp.file_manager.upload_file_progress(e, normalize_path(path), filename);
 			});
 		} catch (e) {
 			ocp.error_manage(e);

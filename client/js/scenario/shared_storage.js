@@ -120,8 +120,9 @@
 		    return result;
 		};
 
-		this.upload_dir = function(path, relative_path, form, after_success) {
+		this.upload_dir = function(path, relative_path, form, after_success_func, on_progress_func) {
 			var formData = new FormData(form);
+			console.log(form);
 			formData.append('action', 'upload_dir');
 			formData.append('relative_path', relative_path);
 
