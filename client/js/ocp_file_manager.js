@@ -40,7 +40,7 @@ var remove_dialog = null;
 			}
 			remove_dialog.ocp_dialog('open');
 		} catch (e) {
-			ocp_error_manage(e);
+			ocp.error_manage(e);
 		}
 	};
 	// DELETE ALL END
@@ -245,7 +245,7 @@ var remove_dialog = null;
 			$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
 			rename_dialog.ocp_dialog('open');
 		} catch(e) {
-			ocp_error_manage(e);
+			ocp.error_manage(e);
 		}
 	}
 	// RENAME END
@@ -435,7 +435,7 @@ $(document).ready(function() {
 				try {
 					ocp.ajax.mv(normalize_path(path + '/' + old_name), normalize_path(path + '/' + new_name));
 				} catch (e) {
-					ocp_error_manage(e);
+					ocp.error_manage(e);
 					$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
 					return;
 				}
@@ -472,7 +472,7 @@ $(document).ready(function() {
 
 						ocp.ajax.rm(p);
 					} catch (e) {
-						ocp_error_manage(e);
+						ocp.error_manage(e);
 					}
 				});
 
@@ -518,7 +518,7 @@ $(document).ready(function() {
 				});
 			}
 		} catch (e) {
-			ocp_error_manage(e);
+			ocp.error_manage(e);
 		} finally {
 			$('#ocp_fm_file').val('');
 			dir_list_a = [];
@@ -529,7 +529,7 @@ $(document).ready(function() {
 	// UPLOAD FOLDER
 	$('#ocp_fm_dir_button').click(function() {
 		if (!window.webkitURL) {
-			ocp_info('This action is only available on <a href="http://en.wikipedia.org/wiki/List_of_web_browsers#WebKit-based" target="_blank">Webkit browsers</a>. (Chrome, Safari, ...)');
+			ocp.info('This action is only available on <a href="http://en.wikipedia.org/wiki/List_of_web_browsers#WebKit-based" target="_blank">Webkit browsers</a>. (Chrome, Safari, ...)');
 			return;
 		}
 		$('#ocp_fm_dir').trigger('click');
@@ -553,7 +553,7 @@ $(document).ready(function() {
 				tree.ocp_tree('open_item', path);
 			});
 		} catch (e) {
-			ocp_error_manage(e);
+			ocp.error_manage(e);
 		} finally {
 			$('#ocp_fm_dir').val('');
 		}

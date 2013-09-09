@@ -43,3 +43,6 @@ function OCP() {
 var ocp = new OCP();
 
 ocp.cfg = {};
+
+//localStorage.removeItem('ocp_client');
+ocp.restoreLocal();

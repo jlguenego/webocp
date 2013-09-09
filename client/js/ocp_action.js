@@ -109,7 +109,7 @@ var g_request = {};
 				.parent().removeClass('checkboxOn').addClass('checkboxOff');
 		} catch (e) {
 			window.location.hash = '#login';
-			ocp_error_manage(e);
+			ocp.error_manage(e);
 			return false;
 		}
 
@@ -189,7 +189,7 @@ var g_request = {};
 			ocp.action.display('register_success_page');
 		} catch (e) {
 			window.location.hash = '#register';
-			ocp_error_manage(e);
+			ocp.error_manage(e);
 			return;
 		}
 	}

@@ -109,7 +109,7 @@
 						result = output.result;
 					}
 				} catch (e) {
-					ocp_error_manage(e);
+					ocp.error_manage(e);
 					return;
 				}
 				if (after_success) {
@@ -164,7 +164,7 @@
 						result = output.result;
 					}
 				} catch (e) {
-					ocp_error_manage(e);
+					ocp.error_manage(e);
 					return;
 				}
 				if (after_success) {

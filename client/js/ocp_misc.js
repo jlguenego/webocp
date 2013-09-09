@@ -1,20 +1,20 @@
-//localStorage.removeItem('ocp_client');
-ocp.restoreLocal();
+(function(ocp, undefined) {
+	ocp.error_manage = function(e) {
+		console.log(e);
+		console.log(stacktrace());
+		if (!e.msg) {
+			throw e;
+		}
+		$('#ocp_misc_error_dialog').find('span').html(e.msg);
+		$('#ocp_misc_error_dialog').ocp_dialog('open');
+	};
 
-function ocp_error_manage(e) {
-	console.log(e);
-	console.log(stacktrace());
-	if (!e.msg) {
-		throw e;
-	}
-	$('#ocp_misc_error_dialog').find('span').html(e.msg);
-	$('#ocp_misc_error_dialog').ocp_dialog('open');
-}
+	ocp.info = function(msg) {
+		$('#ocp_misc_info_dialog').find('span').html(msg);
+		$('#ocp_misc_info_dialog').ocp_dialog('open');
+	};
 
-function ocp_info(msg) {
-	$('#ocp_misc_info_dialog').find('span').html(msg);
-	$('#ocp_misc_info_dialog').ocp_dialog('open');
-}
+})(ocp);
 
 $(document).ready(function() {
 	$('#page').ocp_header_content({ content: $('#cover_page') });
