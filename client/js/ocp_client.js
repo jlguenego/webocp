@@ -70,55 +70,8 @@
 	}
 
 	ocp.client.upload_dir = function(path, relative_path, form, after_success) {
-		var formData = new FormData(form);
-		formData.append('action', 'upload_dir');
-		formData.append('relative_path', relative_path);
-
-		var fieldname = $(form).find('input').attr('name');
-		// Remove the ending []
-		fieldname = fieldname.substr(0, fieldname.length - 2);
-		formData.append('input_name', fieldname);
-		formData.append('path', '/' + ocp.session.user_id + path);
-		var result = null;
-	    $.ajax({
-	        url: ocp.cfg.server_base_url + '/webocp/server/endpoint/',  //server script to process data
-	        type: 'POST',
-	        data: formData,
-	        xhr: function() {  // custom xhr
-	            var myXhr = $.ajaxSettings.xhr();
-	            if(myXhr.upload){ // check if upload property exists
-	                //myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // for handling the progress of the upload
-	            }
-	            return myXhr;
-	        },
-	        beforeSend: function() {},
-	        success: function(data) {
-				try {
-					console.log(data);
-					var output = $.parseJSON(data);
-					if (output.error) {
-						throw new OCPException('Server answered: ' + output.error);
-					}
-					if (output.result) {
-						result = output.result;
-					}
-				} catch (e) {
-					ocp.error_manage(e);
-					return;
-				}
-				if (after_success) {
-					after_success();
-				}
-			},
-	        error: function(jqXHR, textStatus, errorThrown) {
-				console.log('ocp.client.ls error');
-				console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
-			},
-	        //Options to tell JQuery not to process data or worry about content-type
-	        cache: false,
-	        contentType: false,
-	        processData: false
-	    });
+		var scenario = ocp.scenario.get(ocp.cfg.scenario);
+		var result = scenario.upload_dir(path, relative_path, form, after_success);
 		return result;
 	}
 
