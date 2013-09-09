@@ -96,14 +96,6 @@ $.widget( "ui.ocp_dialog", {
 			self.close();
 		});
 
-		this.element.bind('keydown', function(e) {
-			self._on_keydown(e, self);
-		});
-
-		this.button_div.bind('keydown', function(e) {
-			self._on_keydown_arrow(e, self);
-		});
-
 		this.element.removeAttr('title');
 
 		this.element.draggable({
@@ -139,6 +131,15 @@ $.widget( "ui.ocp_dialog", {
 		this.element.show();
 		this.element.find(':tabbable').eq(1).focus();
 
+		var self = this;
+		this.element.bind('keydown', function(e) {
+			self._on_keydown(e, self);
+		});
+
+		this.button_div.bind('keydown', function(e) {
+			self._on_keydown_arrow(e, self);
+		});
+
 		this.options.on_open();
 	},
 
@@ -146,10 +147,16 @@ $.widget( "ui.ocp_dialog", {
 		this.overlay.hide();
 		this.element.hide();
 		this.element.unbind('keydown');
+		this.button_div.unbind('keydown');
 		this.options.close();
 	},
 
 	_on_keydown: function(e, self) {
+		if ( e.keyCode === $.ui.keyCode.ESCAPE ) {
+			self.close();
+			return;
+		}
+
 		if ( e.keyCode !== $.ui.keyCode.TAB ) {
 			return;
 		}
