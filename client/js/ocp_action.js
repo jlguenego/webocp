@@ -82,7 +82,7 @@ var g_request = {};
 			};
 			var private_content = ocp.crypto.pcrypt(password, ocp.crypto.serialize(obj));
 
-			ajax_login({
+			ocp.ajax.login({
 				public_object: {
 					address: public_address,
 					content: public_content
@@ -168,7 +168,7 @@ var g_request = {};
 			};
 			var private_content = ocp.crypto.pcrypt(password, ocp.crypto.serialize(obj));
 
-			ajax_register({
+			ocp.ajax.register({
 				public_object: {
 					address: public_address,
 					content: public_content

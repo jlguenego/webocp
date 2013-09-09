@@ -143,7 +143,7 @@ function ocp_dnd_traverse_file_tree(item, path) {
 		item.file(function(file) {
 			console.log("File: " + path + file.name);
 			var current_path = ocp_fm_get_current_path();
-			ajax_upload_file(normalize_path(current_path + '/' + path), file, function() {
+			ocp.ajax.upload_file(normalize_path(current_path + '/' + path), file, function() {
 				tree.ocp_tree('open_item', current_path);
 			}, function(e, filename) {
 				ocp_fm_upload_file_progress(e, normalize_path(path), filename);
@@ -151,7 +151,7 @@ function ocp_dnd_traverse_file_tree(item, path) {
 		}, error);
 	} else if (item.isDirectory) {
 		var current_path = ocp_fm_get_current_path();
-		ajax_mkdir(normalize_path(current_path + '/' + path), item.name);
+		ocp.ajax.mkdir(normalize_path(current_path + '/' + path), item.name);
 		// Get folder contents
 		var dirReader = item.createReader();
 		dirReader.readEntries(function(entries) {
@@ -291,7 +291,7 @@ $(document).ready(function() {
 	];
 	tree = $('#ocp_fm_tree').ocp_tree({
 		source: src,
-		ls: ajax_ls,
+		ls: ocp.ajax.ls,
 		open_item_error: function(path) {
 			$('#ocp_misc_error_dialog').find('span').html('Cannot go to directory ' + path);
 			$('#ocp_fm_breadcrumbs input').val(path);
@@ -331,7 +331,7 @@ $(document).ready(function() {
 			if (type == 'dir') {
 				tree.ocp_tree('open_item', normalize_path(path + '/' + name));
 			} else {
-				ajax_download_file(normalize_path(path + '/' + name));
+				ocp.ajax.download_file(normalize_path(path + '/' + name));
 			}
 		}
 	});
@@ -391,7 +391,7 @@ $(document).ready(function() {
 			Create: function() {
 				var path = grid.ocp_grid('option', 'state').path;
 				var folder_name = $('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val();
-				ajax_mkdir(path, folder_name);
+				ocp.ajax.mkdir(path, folder_name);
 				tree.ocp_tree('open_item', path);
 
 				new_folder_dialog.ocp_dialog('close');
@@ -424,7 +424,7 @@ $(document).ready(function() {
 				var new_name = $('#ocp_fm_rename_dialog #ocp_fm_new_name').val();
 
 				try {
-					ajax_mv(normalize_path(path + '/' + old_name), normalize_path(path + '/' + new_name));
+					ocp.ajax.mv(normalize_path(path + '/' + old_name), normalize_path(path + '/' + new_name));
 				} catch (e) {
 					ocp_error_manage(e);
 					$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
@@ -461,7 +461,7 @@ $(document).ready(function() {
 						var p = normalize_path(path + '/' + name);
 						console.log('rm ' + p);
 
-						ajax_rm(p);
+						ocp.ajax.rm(p);
 					} catch (e) {
 						ocp_error_manage(e);
 					}
@@ -502,7 +502,7 @@ $(document).ready(function() {
 		try {
 			for (var i = 0; i < files.length; i++) {
 				var file = files[i];
-				ajax_upload_file(normalize_path(path), file, function() {
+				ocp.ajax.upload_file(normalize_path(path), file, function() {
 					tree.ocp_tree('open_item', path);
 				}, function(e, filename) {
 					ocp_fm_upload_file_progress(e, normalize_path(path), filename);
@@ -540,7 +540,7 @@ $(document).ready(function() {
 		}
 
 		try {
-			ajax_upload_dir(normalize_path(path), relative_path_a, form, function() {
+			ocp.ajax.upload_dir(normalize_path(path), relative_path_a, form, function() {
 				tree.ocp_tree('open_item', path);
 			});
 		} catch (e) {
