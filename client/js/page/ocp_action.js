@@ -32,15 +32,7 @@ var g_request = {};
 				ocp.action.display('login_page');
 				break;
 			case 'perform_login':
-				if (ocp.action.login()) {
-					console.log('ocp.session.user_id=' + ocp.session.user_id);
-					if (ocp.cfg.server_base_url) {
-						$('#ocp_fm_tree').ocp_tree('open_item', '/');
-					}
-					window.location.hash = '#file_manager';
-				} else {
-					window.location.hash = '#login';
-				}
+				ocp.action.login();
 				break;
 			case 'logout':
 				ocp.action.logout();
@@ -62,42 +54,43 @@ var g_request = {};
 		}
 	};
 
+	ocp.action.register = function() {
+		try {
+			ocp.validation.form('register');
+
+			var args = {
+				name: $('#ocp_reg_name').val(),
+				email: $('#ocp_reg_email').val(),
+				password: $('#ocp_reg_password').val()
+			};
+			var scenario = ocp.scenario.get(ocp.cfg.scenario);
+			scenario.register(args);
+
+			$('#ocp_reg_name').val('');
+			$('#ocp_reg_email').val('');
+			$('#ocp_reg_password').val('');
+			$('#register_checkbox').prop('checked', false)
+				.parent().removeClass('checkboxOn').addClass('checkboxOff');
+			ocp.action.display('register_success_page');
+		} catch (e) {
+			window.location.hash = '#register';
+			ocp.error_manage(e);
+			return;
+		}
+	}
+
 	ocp.action.login = function() {
 		try {
 			ocp.validation.form('login');
 
-			var email = $('#ocp_lg_email').val();
-			var password = $('#ocp_lg_password').val();
-			var remember_me = $('#ocp_lg_remember_me').is(':checked');
-
-			var public_address = ocp.crypto.hash(email);
-			var public_content = {
-				email: email,
-				name: name
+			var args = {
+				email: $('#ocp_lg_email').val(),
+				password: $('#ocp_lg_password').val()
 			};
-			var private_address = ocp.crypto.hash(email + password);
-			var obj = {
-				root_dir: public_address,
-			};
-			var private_content = ocp.crypto.pcrypt(password, ocp.crypto.serialize(obj));
+			var scenario = ocp.scenario.get(ocp.cfg.scenario);
+			scenario.login(args);
 
-			ocp.ajax.login({
-				public_object: {
-					address: public_address,
-					content: public_content
-				},
-				private_object: {
-					address: private_address,
-					content: ocp.utils.ab2str(private_content)
-				}
-			});
-			console.log('after ajax');
-
-			ocp.session = {};
-			var email = $('#ocp_lg_email').val();
-			ocp.session.user_id = public_address;
-
-			if (remember_me) {
+			if ($('#ocp_lg_remember_me').is(':checked')) {
 				ocp.cfg.session = ocp.session;
 				ocp.saveLocal();
 			}
@@ -106,13 +99,20 @@ var g_request = {};
 			$('#ocp_lg_password').val('');
 			$('#ocp_lg_remember_me').prop('checked', false)
 				.parent().removeClass('checkboxOn').addClass('checkboxOff');
+
+			if (!ocp.action.user_is_logged()) {
+				throw new OCPException('Login failed: bad login/password.');
+			}
+
+			console.log('ocp.session.user_id=' + ocp.session.user_id);
+			if (ocp.cfg.server_base_url) {
+				$('#ocp_fm_tree').ocp_tree('open_item', '/');
+			}
+			window.location.hash = '#file_manager';
 		} catch (e) {
 			window.location.hash = '#login';
 			ocp.error_manage(e);
-			return false;
 		}
-
-		return ocp.action.user_is_logged();
 	};
 
 	ocp.action.logout = function() {
@@ -148,30 +148,7 @@ var g_request = {};
 		return true;
 	}
 
-	ocp.action.register = function() {
-		try {
-			ocp.validation.form('register');
 
-			var args = {
-				name: $('#ocp_reg_name').val(),
-				email: $('#ocp_reg_email').val(),
-				password: $('#ocp_reg_password').val()
-			};
-			var scenario = ocp.scenario.get(ocp.cfg.scenario);
-			scenario.register(args);
-
-			$('#ocp_reg_name').val('');
-			$('#ocp_reg_email').val('');
-			$('#ocp_reg_password').val('');
-			$('#register_checkbox').prop('checked', false)
-				.parent().removeClass('checkboxOn').addClass('checkboxOff');
-			ocp.action.display('register_success_page');
-		} catch (e) {
-			window.location.hash = '#register';
-			ocp.error_manage(e);
-			return;
-		}
-	}
 })(ocp);
 
 

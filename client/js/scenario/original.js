@@ -36,5 +36,30 @@
 			ocp.session = {};
 			ocp.session.user_id = public_address;
 		};
+
+		this.login= function(args) {
+			var public_address = ocp.crypto.hash(args.email);
+			var public_content = {};
+			var private_address = ocp.crypto.hash(args.email + args.password);
+			var obj = {
+				root_dir: public_address,
+			};
+			var private_content = ocp.crypto.pcrypt(args.password, ocp.crypto.serialize(obj));
+
+			ocp.ajax.login({
+				public_object: {
+					address: public_address,
+					content: public_content
+				},
+				private_object: {
+					address: private_address,
+					content: ocp.utils.ab2str(private_content)
+				}
+			});
+			console.log('after ajax');
+
+			ocp.session = {};
+			ocp.session.user_id = public_address;
+		};
 	};
 })(ocp);

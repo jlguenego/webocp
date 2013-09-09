@@ -4,5 +4,9 @@
 			console.log('Crypt Blob args: ');
 			console.log(args);
 		};
+
+		this.login= function(args) {
+			console.log('TODO: login');
+		};
 	};
 })(ocp);

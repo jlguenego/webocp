@@ -4,5 +4,9 @@
 			console.log('User Storage args: ');
 			console.log(args);
 		};
+
+		this.login= function(args) {
+			console.log('TODO: login');
+		};
 	};
 })(ocp);

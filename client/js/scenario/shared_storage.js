@@ -6,7 +6,6 @@
 			console.log('Shared Storage args: ');
 			console.log(args);
 
-
 			var my_args = {
 				action: 'register',
 				name: args.name,
@@ -17,6 +16,9 @@
 
 			ocp.session = {};
 			ocp.session.user_id = args.email;
+		};
+
+		this.login= function(args) {
 		};
 	};
 })(ocp);
