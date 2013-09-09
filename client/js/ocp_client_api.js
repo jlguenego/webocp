@@ -1,7 +1,10 @@
 (function(ocp, undefined) {
 	ocp.ajax = {};
 
-	ocp.ajax.command = function(data) {
+	ocp.ajax.command = function(data, url) {
+		if (!url) {
+			url = ocp.cfg.server_base_url + '/webocp/server/endpoint/';
+		}
 		$.ajaxSetup({
 			cache: false,
 			scriptCharset: "utf-8"
@@ -9,9 +12,10 @@
 
 		var result = null;
 		console.log(data);
+		console.log('url=' + url);
 		$.ajax({
 			type: "GET",
-			url: ocp.cfg.server_base_url + '/webocp/server/endpoint/',
+			url: url,
 			async: false,
 			data: data,
 			success: function(data) {
@@ -41,7 +45,7 @@
 	ocp.ajax.ls = function(path) {
 		var result = ocp.ajax.command({
 			action: 'ls',
-			path: '/' + g_session.public_address + path
+			path: '/' + ocp.session.user_id + path
 		});
 
 		var grid_result = ocp.file_manager.build_grid_data_from_ls_enpoint(result, path);
@@ -55,7 +59,7 @@
 	ocp.ajax.mkdir = function(path, name) {
 		ocp.ajax.command({
 			action: 'mkdir',
-			path: '/' + g_session.public_address + path,
+			path: '/' + ocp.session.user_id + path,
 			name: name
 		});
 	}
@@ -63,15 +67,15 @@
 	ocp.ajax.mv = function(old_path, new_path) {
 		ocp.ajax.command({
 			action: 'mv',
-			old_path: '/' + g_session.public_address + old_path,
-			new_path: '/' + g_session.public_address + new_path
+			old_path: '/' + ocp.session.user_id + old_path,
+			new_path: '/' + ocp.session.user_id + new_path
 		});
 	}
 
 	ocp.ajax.rm = function(path) {
 		ocp.ajax.command({
 			action: 'rm',
-			path: '/' + g_session.public_address + path
+			path: '/' + ocp.session.user_id + path
 		});
 	}
 
@@ -84,7 +88,7 @@
 		// Remove the ending []
 		fieldname = fieldname.substr(0, fieldname.length - 2);
 		formData.append('input_name', fieldname);
-		formData.append('path', '/' + g_session.public_address + path);
+		formData.append('path', '/' + ocp.session.user_id + path);
 		var result = null;
 	    $.ajax({
 	        url: ocp.cfg.server_base_url + '/webocp/server/endpoint/',  //server script to process data
@@ -131,7 +135,7 @@
 	ocp.ajax.upload_file = function(path, file, after_success, on_progress) {
 		var formData = new FormData();
 		formData.append('input_name', 'file');
-		formData.append('path', '/' + g_session.public_address + path);
+		formData.append('path', '/' + ocp.session.user_id + path);
 		formData.append('file[]', file);
 		var result = null;
 	    $.ajax({
@@ -185,14 +189,7 @@
 
 	ocp.ajax.download_file = function(path) {
 		console.log('ocp.ajax.download_file, path=' + path);
-		window.location = ocp.cfg.server_base_url + '/webocp/server/endpoint/download.php?path=' + '/' + g_session.public_address + path;
-	}
-
-	ocp.ajax.register = function(account) {
-		ocp.ajax.command({
-			action: 'register',
-			account: account
-		});
+		window.location = ocp.cfg.server_base_url + '/webocp/server/endpoint/download.php?path=' + '/' + ocp.session.user_id + path;
 	}
 
 	ocp.ajax.login = function(account) {

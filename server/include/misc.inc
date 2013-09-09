@@ -71,4 +71,8 @@
 			throw new Exception('File is too large.... file_size=' . $file_size . ' > post_max_size=' . ini_get('post_max_size'));
 		}
 	}
+
+	function mkdir_p($path) {
+		@mkdir($path, 0777, true);
+	}
 ?>

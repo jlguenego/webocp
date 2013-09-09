@@ -27,7 +27,7 @@ function OCP() {
 			if (obj) {
 				ocp.cfg = JSON.parse(obj);
 				if (ocp.cfg.session) {
-					g_session = ocp.cfg.session;
+					ocp.session = ocp.cfg.session;
 				}
 				return;
 			}
@@ -42,7 +42,8 @@ function OCP() {
 
 var ocp = new OCP();
 
-ocp.cfg = {};
+ocp.cfg = {}; // object stored in localStorage
+ocp.session = {}; // object for current session only (disappears on browser close)
 
 //localStorage.removeItem('ocp_client');
 ocp.restoreLocal();

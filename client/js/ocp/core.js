@@ -18,8 +18,6 @@ String.prototype.getFileExtention = function() {
     return (/[.]/.exec(this)) ? /[^.]+$/.exec(this) : undefined;
 };
 
-var g_session = null;
-
 function normalize_path(path) {
     path = path.replace(/[\/]{2,}/g,'/');
 	if (path != '/' && path.endsWith('/')) {

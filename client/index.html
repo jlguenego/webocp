@@ -27,18 +27,23 @@
 		<script src="js/ocp.js"></script>
 		<script src="js/ocp_utils.js"></script>
 		<script src="js/ocp_crypto.js"></script>
+		<script src="js/ocp_client_api.js"></script>
+		<script src="js/ocp_validation.js"></script>
+		<script src="js/ocp_scenario.js"></script>
 		<!-- END OBJECT -->
 
 		<script src="js/ocp/core.js"></script>
 		<link rel="stylesheet" href="js/ocp/theme/default/core.css" />
 
-		<script src="js/ocp_client_api.js"></script>
-		<script src="js/ocp_validation.js"></script>
-
 		<script src="js/page/ocp_misc.js"></script>
 		<script src="js/page/ocp_action.js"></script>
 		<script src="js/page/ocp_register.js"></script>
 		<script src="js/page/ocp_file_manager.js"></script>
+
+		<script src="js/scenario/original.js"></script>
+		<script src="js/scenario/shared_storage.js"></script>
+		<script src="js/scenario/user_storage.js"></script>
+		<script src="js/scenario/crypt_blob.js"></script>
 
 		<!-- SPLITPANE -->
 		<script src="js/ocp/widget_splitpane_h.js"></script>
@@ -277,6 +282,7 @@
 			Choose your scenario:
 			<select id="ocp_st_scenario">
 				<option value=""></option>
+				<option value="0">Original</option>
 				<option value="1">Scenario 1</option>
 				<option value="2">Scenario 2</option>
 				<option value="3">Scenario 3</option>

@@ -33,7 +33,7 @@ var g_request = {};
 				break;
 			case 'perform_login':
 				if (ocp.action.login()) {
-					console.log('g_session.public_address=' + g_session.public_address);
+					console.log('ocp.session.user_id=' + ocp.session.user_id);
 					if (ocp.cfg.server_base_url) {
 						$('#ocp_fm_tree').ocp_tree('open_item', '/');
 					}
@@ -93,12 +93,12 @@ var g_request = {};
 			});
 			console.log('after ajax');
 
-			g_session = {};
+			ocp.session = {};
 			var email = $('#ocp_lg_email').val();
-			g_session.public_address = public_address;
+			ocp.session.user_id = public_address;
 
 			if (remember_me) {
-				ocp.cfg.session = g_session;
+				ocp.cfg.session = ocp.session;
 				ocp.saveLocal();
 			}
 
@@ -116,8 +116,8 @@ var g_request = {};
 	};
 
 	ocp.action.logout = function() {
-		g_session = null;
-		ocp.cfg.session = g_session;
+		ocp.session = {};
+		ocp.cfg.session = ocp.session;
 		ocp.saveLocal();
 		window.location.hash = '#';
 	};
@@ -137,7 +137,7 @@ var g_request = {};
 	};
 
 	ocp.action.user_is_logged = function() {
-		return (g_session && g_session.public_address);
+		return (ocp.session && ocp.session.user_id);
 	}
 
 	ocp.action.require_authentication = function() {
@@ -150,36 +150,15 @@ var g_request = {};
 
 	ocp.action.register = function() {
 		try {
-			var name = $('#ocp_reg_name').val();
-			var email = $('#ocp_reg_email').val();
-			var password = $('#ocp_reg_password').val();
-
 			ocp.validation.form('register');
-			console.log('ocp=');
-			console.log(ocp);
-			var public_address = ocp.crypto.hash(email);
-			var public_content = {
-				email: email,
-				name: name
-			};
-			var private_address = ocp.crypto.hash(email + password);
-			var obj = {
-				root_dir: public_address,
-			};
-			var private_content = ocp.crypto.pcrypt(password, ocp.crypto.serialize(obj));
 
-			ocp.ajax.register({
-				public_object: {
-					address: public_address,
-					content: public_content
-				},
-				private_object: {
-					address: private_address,
-					content: ocp.utils.ab2str(private_content)
-				}
-			});
-			g_session = {};
-			g_session.public_address = public_address;
+			var args = {
+				name: $('#ocp_reg_name').val(),
+				email: $('#ocp_reg_email').val(),
+				password: $('#ocp_reg_password').val()
+			};
+			var scenario = ocp.scenario.get(ocp.cfg.scenario);
+			scenario.register(args);
 
 			$('#ocp_reg_name').val('');
 			$('#ocp_reg_email').val('');
