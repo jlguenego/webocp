@@ -41,7 +41,7 @@ $(document).ready(function() {
 				var old_scenario = ocp.cfg.scenario;
 				ocp.cfg.server_base_url = strip_slash($('#ocp_st_server_base_url').val());
 				ocp.cfg.scenario = $('#ocp_st_scenario').val();
-				ocp.saveLocal();
+				ocp.storage.saveLocal();
 				general_settings_dialog.ocp_dialog('close');
 
 				if (old_scenario != ocp.cfg.scenario) {

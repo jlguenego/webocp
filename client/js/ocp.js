@@ -13,31 +13,7 @@ function OCP() {
 	    return result;
 	};
 
-	this.saveLocal = function() {
-		console.log('save local');
-		if (localStorage) {
-			console.log(ocp.cfg);
-			localStorage.setItem('ocp_client', JSON.stringify(ocp.cfg));
-		}
-	}
 
-	this.restoreLocal = function() {
-		if (localStorage) {
-			var obj = localStorage.getItem('ocp_client');
-			if (obj) {
-				ocp.cfg = JSON.parse(obj);
-				if (ocp.cfg.session) {
-					ocp.session = ocp.cfg.session;
-				}
-				return;
-			}
-		}
-		ocp.cfg = {
-			server_base_url: 'http://www.ocpforum.org',
-			session: null,
-			scenario: null
-		};
-	}
 }
 
 var ocp = new OCP();
@@ -45,5 +21,3 @@ var ocp = new OCP();
 ocp.cfg = {}; // object stored in localStorage
 ocp.session = {}; // object for current session only (disappears on browser close)
 
-//localStorage.removeItem('ocp_client');
-ocp.restoreLocal();

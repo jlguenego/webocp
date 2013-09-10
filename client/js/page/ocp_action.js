@@ -71,6 +71,11 @@ var g_request = {};
 			$('#ocp_reg_password').val('');
 			$('#register_checkbox').prop('checked', false)
 				.parent().removeClass('checkboxOn').addClass('checkboxOff');
+
+			// update the file manager.
+			if (ocp.cfg.server_base_url) {
+				$('#ocp_fm_tree').ocp_tree('open_item', '/');
+			}
 			ocp.action.display('register_success_page');
 		} catch (e) {
 			window.location.hash = '#register';
@@ -92,7 +97,7 @@ var g_request = {};
 
 			if ($('#ocp_lg_remember_me').is(':checked')) {
 				ocp.cfg.session = ocp.session;
-				ocp.saveLocal();
+				ocp.storage.saveLocal();
 			}
 
 			$('#ocp_lg_email').val('');
@@ -118,7 +123,7 @@ var g_request = {};
 	ocp.action.logout = function() {
 		ocp.session = {};
 		ocp.cfg.session = ocp.session;
-		ocp.saveLocal();
+		ocp.storage.saveLocal();
 		window.location.hash = '#';
 	};
 

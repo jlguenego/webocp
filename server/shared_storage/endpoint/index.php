@@ -212,6 +212,7 @@
 			$password = $_REQUEST['password'];
 
 			$user_file = ROOT . '/user_file.txt';
+			touch($user_file);
 			$users = file($user_file);
 			foreach ($users as $user) {
 				list($user_email, $user_name, $user_password) = explode(':', $user);
@@ -236,8 +237,8 @@
 			$password = $_REQUEST['password'];
 
 			$user_file = ROOT . '/user_file.txt';
+			touch($user_file);
 			$users = file($user_file);
-
 			foreach ($users as $line) {
 				$line = trim($line);
 				list($user_email, $user_name, $user_password) = explode(':', $line);
