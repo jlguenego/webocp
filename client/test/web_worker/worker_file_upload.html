@@ -21,37 +21,41 @@
 		<script src="_ext/Blob.js"></script>
 
 		<script src="js/ocp.js"></script>
+		<script src="js/ocp_storage.js"></script>
 		<script src="js/ocp_worker_ui.js"></script>
 		<script src="js/ocp_worker_ui_pool.js"></script>
 	</head>
 
 	<body>
 		<div id="pool_view"></div>
-		Serveur URL: <input type="text" id="server_uri" value="http://localhost" /><br/>
+		Serveur URL: <input type="text" id="server_uri" value="" /><br/>
 		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
 		<input type="file" id="file" name="file" /><button id="send">Send</button>
 		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
 		Upload name: <div id="upload_name"></div>
 
 		<script>
-$('.progress').ocp_progressbar();
-$('#pool_view').ocp_pool_view();
+$(document).ready(function() {
+	$('#server_uri').val(ocp.cfg.server_base_url);
+	$('.progress').ocp_progressbar();
+	$('#pool_view').ocp_pool_view();
 
-$('#send').click(function() {
-	ocp.cfg.server_base_url = $('#server_uri').val();
-	var file = $('#file').get(0).files[0];
-	if (!file) {
-		alert('no file');
-		return;
-	}
-	var args = {
-		file: file,
-		secret_key: $('#secret_key').val(),
-		progress_bar: $('#progress'),
-		pool_view: $('#pool_view')
-	}
+	$('#send').click(function() {
+		ocp.cfg.server_base_url = $('#server_uri').val();
+		var file = $('#file').get(0).files[0];
+		if (!file) {
+			alert('no file');
+			return;
+		}
+		var args = {
+			file: file,
+			secret_key: $('#secret_key').val(),
+			progress_bar: $('#progress'),
+			pool_view: $('#pool_view')
+		}
 
-	file_upload(args);
+		file_upload(args);
+	});
 });
 
 function file_upload(args) {
