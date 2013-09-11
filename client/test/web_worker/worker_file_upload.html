@@ -158,8 +158,8 @@ function file_upload(args) {
 		console.log(e);
 		console.log(e.stack);
 		console.log(e.toString());
-		throw e;
 		pool.terminate(true);
+		throw e;
 	}
 }
 		</script>

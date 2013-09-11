@@ -1,10 +1,12 @@
 (function(ocp, undefined) {
 	ocp.file = {};
 
-	ocp.file.max_retry = 5;
+	ocp.file.max_retry = 4;
 
 	ocp.file.send = function(filename, content, retry) {
 		retry = retry || 0;
+		var b_success = false;
+
 		var upload_server_uri = ocp.cfg.server_base_url + '/webocp/server/test/endpoint/create_file_from_string.php';
 
 		var formData = new FormData();
@@ -12,9 +14,8 @@
 		var blob = new Blob([content], { type: "application/octet-stream" });
 		formData.append('content', blob);
 
-		b_success = true;
-
 		var xhr = new XMLHttpRequest();
+		xhr.timeout = 4000;
 		xhr.upload.addEventListener('progress', onprogress, false);
 		xhr.onreadystatechange = function() {
 			console.log('xhr.readyState=' + xhr.readyState);
@@ -23,18 +24,9 @@
 			}
 			console.log('xhr.status=' + xhr.status);
 			if (xhr.status == 0 || xhr.status >= 400) { // no success
-				if (retry < ocp.file.max_retry) {
-					retry++;
-					console.log('xhr.readyState=' + xhr.readyState);
-					ocp.file.send(filename, content, retry);
-				} else {
-					console.log('Too many retries: sending exception.');
-					b_success = false;
-				}
+				return;
 			}
-			if (xhr.status == 200) { // on success
-				var json_obj = JSON.parse(xhr.responseText);
-			}
+			b_success = true;
 		}
 
 		function onprogress(e) {
@@ -42,16 +34,21 @@
 			console.log(e);
 		};
 
-		xhr.open('POST', upload_server_uri, false); // async for progress access
+		xhr.open('POST', upload_server_uri, false); // sync
 
 		try {
 			xhr.send(formData);
 		} catch (e) {
 			console.log('error=' + e);
 		} finally {
-			if (!b_success) {
-				throw 'Cannot send the file.';
+			if (b_success) {
+				return;
 			}
+			if (retry < ocp.file.max_retry) {
+				retry++;
+				ocp.file.send(filename, content, retry);
+			}
+			throw 'Cannot send the file.';
 		}
 	}
 

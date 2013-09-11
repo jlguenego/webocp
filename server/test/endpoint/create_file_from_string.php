@@ -12,6 +12,7 @@
 
 	$_REQUEST = array_merge($_GET, $_POST);
 
+	//sleep(10);
 	$bad_mood = rand(0, 10) < 0;
 
 	if ($bad_mood) {

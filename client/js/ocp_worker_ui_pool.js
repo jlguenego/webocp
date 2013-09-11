@@ -53,16 +53,20 @@
 	    }
 
 	    this.terminate = function(force) {
+			this.ask_for_termination = true;
 	    	if (force) {
 				while (this.threadQueue.length > 0) {
 					this.threadQueue.shift();
 				}
 				while (this.threadList.length > 0) {
 					var thread = this.threadList.shift();
+					delete this.activeTaskQueue[thread.task.id];
 					thread.worker.terminate();
 				}
+				while (this.taskQueue.length > 0) {
+					this.taskQueue.shift();
+				}
 	    	} else {
-				this.ask_for_termination = true;
 				if (this.taskQueue.length == 0) {
 					while (this.threadQueue.length > 0) {
 						var thread = this.threadQueue.shift();
@@ -70,6 +74,7 @@
 					}
 				}
 	    	}
+	    	this.sendUpdateEvent();
 	    }
 
 		for (var i = 0 ; i < this.size ; i++) {
