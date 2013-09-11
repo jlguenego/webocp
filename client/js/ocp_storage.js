@@ -23,7 +23,9 @@
 		ocp.cfg = {
 			server_base_url: 'http://www.ocpforum.org',
 			session: null,
-			scenario: 0
+			scenario: 0,
+			upload_connection_nbr: 5,
+			block_size: 1 << 16
 		};
 	}
 })(ocp);

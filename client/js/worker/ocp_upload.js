@@ -9,6 +9,9 @@ importScripts(base_url + '/js/ocp_file.js');
 
 importScripts(base_url + '/_ext/WorkerFormData.js');
 
+var upload_hat = null;
+var upload_block = null;
+
 (function(ocp, undefined) {
 	ocp.upload = {};
 
@@ -51,17 +54,15 @@ importScripts(base_url + '/_ext/WorkerFormData.js');
 			console.log(content);
 			var str = JSON.stringify(content);
 
-			var filename = ocp.upload.process_block(ocp.utils.str2ab(str), ocp.upload.hat.secret_key);
-			report({
-				filename: filename,
-				finish: true
-			});
+			upload_hat.filename = ocp.upload.process_block(ocp.utils.str2ab(str), ocp.upload.hat.secret_key);
+
 		}
 	}
 
 	ocp.upload.upload_block = function(args) {
 		console.log(args);
 		ocp.cfg.server_base_url = args.server_uri;
+		upload_block.block_id = args.block_id;
 
 		var file = args.file;
 		var blob = file.slice(args.cursor, args.cursor_next);
@@ -69,18 +70,15 @@ importScripts(base_url + '/_ext/WorkerFormData.js');
 		reader.onload = function(evt) {
 			if (evt.target.readyState == FileReader.DONE) { // DONE == 2
 				console.log('block readed');
-				var filename = ocp.upload.process_block(evt.target.result, args.secret_key);
-				report({
-					filename: filename,
-					block_id: args.block_id,
-					finish: true
-				});
+				upload_block.filename = ocp.upload.process_block(evt.target.result, args.secret_key);
+				console.log('upload_block.filename=' + upload_block.filename);
 			}
 		};
 		reader.readAsArrayBuffer(blob);
 		console.log('update block');
 	}
 
+	// call by the two tasks
 	ocp.upload.process_block = function(block_ab, secret_key) {
 		try {
 			// 1) crypt
@@ -91,7 +89,12 @@ importScripts(base_url + '/_ext/WorkerFormData.js');
 
 			// 3) upload
 			console.log('about to send: ' + filename);
-			ocp.file.send(filename, crypted_block_ab);
+			report({
+				action: 'send',
+				task_id: ocp.worker.worker.task_id,
+				filename: filename,
+				content: crypted_block_ab
+			});
 		} catch (e) {
 			report({
 				exception: e.toString()
@@ -99,7 +102,26 @@ importScripts(base_url + '/_ext/WorkerFormData.js');
 		}
 
 		return filename;
-	}
+	};
+
+	ocp.upload.hat_finalize = function() {
+		report({
+			action: 'finalize',
+			filename: upload_hat.filename,
+			finish: true
+		});
+		upload_hat = null;
+	};
+
+	ocp.upload.block_finalize = function() {
+		report({
+			action: 'push',
+			filename: upload_block.filename,
+			block_id: upload_block.block_id,
+			finish: true
+		});
+		upload_block = null;
+	};
 })(ocp);
 
 
@@ -111,15 +133,27 @@ function run(event) {
     try {
 	    switch(task.name) {
 	    	case 'upload_block':
-	    		ocp.upload.upload_block(task.args);
+	    		switch(task.message) {
+	    			case undefined:
+	    				upload_block = {};
+	    				ocp.upload.upload_block(task.args);
+	    				break
+	    			case 'finalize':
+	    				ocp.upload.block_finalize(task.args);
+	    				break
+	    		}
 	    		break;
 	    	case 'upload_hat':
 	    		switch(task.message) {
 	    			case undefined:
+	    				upload_hat = {};
 	    				ocp.upload.hat_init(task.args);
 	    				break
 	    			case 'push':
 	    				ocp.upload.hat_push(task.args);
+	    				break
+	    			case 'finalize':
+	    				ocp.upload.hat_finalize(task.args);
 	    				break
 	    		}
 	    		break;

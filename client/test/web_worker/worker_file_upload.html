@@ -24,6 +24,8 @@
 		<script src="js/ocp_storage.js"></script>
 		<script src="js/ocp_worker_ui.js"></script>
 		<script src="js/ocp_worker_ui_pool.js"></script>
+		<script src="js/ocp_file.js"></script>
+		<script src="js/ocp_transfer.js"></script>
 	</head>
 
 	<body>
@@ -65,9 +67,10 @@ function file_upload(args) {
 	var total_task = 1;
 	var total_performed = 0;
 	var url = ocp.worker_ui.getURL('js/worker/ocp_upload.js');
-	var pool = new ocp.worker_ui.pool.Pool(10, url);
+	var pool_nbr = ocp.cfg.upload_connection_nbr || 5;
+	var pool = new ocp.worker_ui.pool.Pool(pool_nbr, url);
 	var cursor = 0;
-	var block_size = 1 << 16;
+	var block_size = ocp.cfg.block_size || 1 << 16;
 	var hat_worker = new Hat();
 	var block_id = 0;
 
@@ -91,11 +94,20 @@ function file_upload(args) {
 		var callback_func = function(event) {
 			console.log(event.data);
 			check_error(event.data);
+			if (event.data.action == 'send') {
+				ocp.transfer.send_worker_block(event.data, function() {
+					var task = pool.getTask(event.data.task_id);
+					task.sendMessage('finalize');
+				});
+			} else if (event.data.action == 'push') {
+				hat_worker.push({
+					filename: event.data.filename,
+					block_id: event.data.block_id
+				});
+			}
+
 			var progress = update_progress_from_task(event.data);
 			progress_bar.ocp_progressbar('set_progress', progress);
-			if (event.data.filename) {
-				hat_worker.push(event.data);
-			}
 		};
 
 		var task = new ocp.worker_ui.pool.Task(block_id, 'upload_block', args, callback_func);
@@ -107,14 +119,21 @@ function file_upload(args) {
 	}
 
 	function Hat() {
-		var hat_callback = function() {
+		var hat_callback = function(event) {
 			console.log(event.data);
 			check_error(event.data);
-			var progress = update_progress_from_task(event.data);
-			progress_bar.ocp_progressbar('set_progress', progress);
-			if (event.data.filename) {
+			if (event.data.action == 'send') {
+				ocp.transfer.send_worker_block(event.data, function() {
+					var task = pool.getTask(event.data.task_id);
+					task.sendMessage('finalize');
+				});
+			} else if (event.data.action == 'finalize') {
 				$('#upload_name').html(event.data.filename);
 			}
+
+			var progress = update_progress_from_task(event.data);
+			progress_bar.ocp_progressbar('set_progress', progress);
+
 			pool.terminate();
 		};
 

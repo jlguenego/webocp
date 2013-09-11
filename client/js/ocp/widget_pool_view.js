@@ -56,8 +56,6 @@ $.widget( "ui.ocp_pool_view", {
 		var self = this;
 		window.addEventListener('ocp.worker_ui.pool.Pool.update', function(e) {
 			if (e.detail.pool == self.pool) {
-				console.log('my pool');
-				console.log(self.pool);
 				self.refresh();
 			}
 		}, false);

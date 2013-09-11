@@ -3,9 +3,9 @@
 
 	ocp.file.max_retry = 4;
 
-	ocp.file.send = function(filename, content, retry) {
+	ocp.file.send = function(filename, content, on_success, retry) {
 		retry = retry || 0;
-		var b_success = false;
+		on_success = on_success || function() {};
 
 		var upload_server_uri = ocp.cfg.server_base_url + '/webocp/server/test/endpoint/create_file_from_string.php';
 
@@ -15,7 +15,7 @@
 		formData.append('content', blob);
 
 		var xhr = new XMLHttpRequest();
-		xhr.timeout = 4000;
+		xhr.timeout = 10000;
 		xhr.upload.addEventListener('progress', onprogress, false);
 		xhr.onreadystatechange = function() {
 			console.log('xhr.readyState=' + xhr.readyState);
@@ -24,9 +24,15 @@
 			}
 			console.log('xhr.status=' + xhr.status);
 			if (xhr.status == 0 || xhr.status >= 400) { // no success
-				return;
+				retry++;
+				if (retry < ocp.file.max_retry) {
+					ocp.file.send(filename, content, on_success, retry);
+					return;
+				}
+				throw 'After ' + retry + ' times, cannot send the file: ' + filename;
 			}
-			b_success = true;
+			// success
+			on_success();
 		}
 
 		function onprogress(e) {
@@ -34,21 +40,12 @@
 			console.log(e);
 		};
 
-		xhr.open('POST', upload_server_uri, false); // sync
+		xhr.open('POST', upload_server_uri, true); // async for progress access.
 
 		try {
 			xhr.send(formData);
 		} catch (e) {
 			console.log('error=' + e);
-		} finally {
-			if (b_success) {
-				return;
-			}
-			if (retry < ocp.file.max_retry) {
-				retry++;
-				ocp.file.send(filename, content, retry);
-			}
-			throw 'Cannot send the file.';
 		}
 	}
 

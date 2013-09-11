@@ -155,6 +155,7 @@
 		this.thread = null; // the thread used to execute this task.
 
 		this.sendMessage = function(message, args) {
+			args = args || {};
 			this.thread.worker.postMessage({
 				id: self.id,
 				name: self.name,
