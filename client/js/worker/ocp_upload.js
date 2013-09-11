@@ -93,8 +93,11 @@ importScripts(base_url + '/_ext/WorkerFormData.js');
 			console.log('about to send: ' + filename);
 			ocp.file.send(filename, crypted_block_ab);
 		} catch (e) {
-			throw new OCP
+			report({
+				exception: e
+			});
 		}
+
 		return filename;
 	}
 })(ocp);

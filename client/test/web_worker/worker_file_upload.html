@@ -90,6 +90,7 @@ function file_upload(args) {
 
 		var callback_func = function(event) {
 			console.log(event.data);
+			check_error(event.data);
 			var progress = update_progress_from_task(event.data);
 			progress_bar.ocp_progressbar('set_progress', progress);
 			if (event.data.filename) {
@@ -108,6 +109,7 @@ function file_upload(args) {
 	function Hat() {
 		var hat_callback = function() {
 			console.log(event.data);
+			check_error(event.data);
 			var progress = update_progress_from_task(event.data);
 			progress_bar.ocp_progressbar('set_progress', progress);
 			if (event.data.filename) {
@@ -145,6 +147,13 @@ function file_upload(args) {
 			total_performed++;
 		}
 		return Math.floor(total_performed * 100 / total_task);
+	}
+
+	function check_error(data) {
+		if (!data.exception) {
+			return;
+		}
+		throw data.exception;
 	}
 }
 		</script>

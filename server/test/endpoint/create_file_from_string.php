@@ -4,12 +4,16 @@
 	header("Content-Type:text/plain; charset=UTF-8;");
 	define("BASE_DIR", dirname(dirname(dirname(__FILE__))));
 
+	require_once(BASE_DIR . '/include/global.inc');
 	require_once(BASE_DIR . '/include/misc.inc');
 	require_once(BASE_DIR . '/include/constant.inc');
 	require_once(BASE_DIR . '/include/format.inc');
 	define("TEST_DIR", ROOT . '/test/');
 
 	$_REQUEST = array_merge($_GET, $_POST);
+
+	http_response_code(404);
+	exit;
 
 	debug_r('_FILES', $_FILES);
 	debug_r('_REQUEST', $_REQUEST);
