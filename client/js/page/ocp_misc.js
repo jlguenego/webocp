@@ -1,11 +1,7 @@
 (function(ocp, undefined) {
 	ocp.error_manage = function(e) {
-		console.log(e);
-		console.log(ocp.stacktrace());
-		if (!e.msg) {
-			throw e;
-		}
-		$('#ocp_misc_error_dialog').find('span').html(e.msg);
+		console.log(e.stack);
+		$('#ocp_misc_error_dialog').find('span').html(e);
 		$('#ocp_misc_error_dialog').ocp_dialog('open');
 	};
 

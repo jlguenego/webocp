@@ -16,27 +16,6 @@ function OCP() {
 	    }
 	    return result;
 	};
-
-	this.Exception = function(msg) {
-		this.msg = msg;
-		this.stacktrace = self.stacktrace();
-	};
-
-	this.stacktrace = function() {
-		function st2(f) {
-			if (!f) {
-				return [];
-			}
-			var args = '';
-			if (f.arguments) {
-				var args_a = Array.prototype.slice.call(f.arguments);
-				args = args_a.join(',');
-			}
-			var v = [f.toString().split('(')[0].substring(9) + '(' + args + ')'];
-			return st2(f.caller).concat(v);
-		}
-		return st2(arguments.callee.caller);
-	}
 }
 
 var ocp = new OCP();

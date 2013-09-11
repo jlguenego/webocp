@@ -20,21 +20,21 @@
 	ocp.validation.check_checked = function(obj, error_msg) {
 		if (!obj.is(':checked')) {
 			obj.focus();
-			throw new ocp.Exception('check_checked: ' + error_msg);
+			throw new Error('check_checked: ' + error_msg);
 		}
 	};
 
 	ocp.validation.check_empty = function(obj) {
 		if (obj.val() == 0) {
 			obj.focus();
-			throw new ocp.Exception(obj.attr('name') + ' is empty.');
+			throw new Error(obj.attr('name') + ' is empty.');
 		}
 	};
 
 	ocp.validation.check_mail = function(obj) {
 		if (!ocp.validation.is_valid_mail(obj.val())) {
 			obj.focus();
-			throw new ocp.Exception('Invalid email address.');
+			throw new Error('Invalid email address.');
 		}
 	};
 

@@ -129,7 +129,7 @@
 						//console.log(data);
 						var output = $.parseJSON(data);
 						if (output.error) {
-							throw new ocp.Exception('Server answered: ' + output.error);
+							throw new Error('Server answered: ' + output.error);
 						}
 						if (output.result) {
 							result = output.result;
@@ -174,7 +174,7 @@
 						console.log(data);
 						var output = $.parseJSON(data);
 						if (output.error) {
-							throw new ocp.Exception('Server answered: ' + output.error);
+							throw new Error('Server answered: ' + output.error);
 						}
 						if (output.result) {
 							result = output.result;

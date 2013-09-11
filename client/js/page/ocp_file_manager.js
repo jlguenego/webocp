@@ -25,13 +25,13 @@ var remove_dialog = null;
 		try {
 			var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
 			if (selected_rows.length == 0) {
-				throw new ocp.Exception('Please select a file/folder.');
+				throw new Error('Please select a file/folder.');
 			}
 			if (selected_rows.length == 1) {
 				var rowid = selected_rows.attr('data-rowid');
 				var row = grid.ocp_grid('option', 'data')[rowid];
 				if (!row) {
-					throw new ocp.Exception('Please select a file/folder.');
+					throw new Error('Please select a file/folder.');
 				}
 				$('#ocp_fm_remove_dialog span').html(row.meta_data.name);
 			}
@@ -235,7 +235,7 @@ var remove_dialog = null;
 		try {
 			var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
 			if (selected_rows.length != 1) {
-				throw new ocp.Exception('Please select only one file/folder.');
+				throw new Error('Please select only one file/folder.');
 			}
 
 			var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
