@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="_ext/sha1.js"></script>
+		<script src="_ext/aes.js"></script>
+
+		<script src="_ext/FileSaver.js"></script>
+		<script src="_ext/Blob.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_crypto.js"></script>
+		<script src="js/ocp_file.js"></script>
+	</head>
+
+	<body>
+		Serveur URL: <input type="text" id="server_uri" value="http://localhost" /><br/>
+		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
+		<input type="file" id="file" name="file" /><button id="start">Start</button><br/>
+
+		<script>
+$('#start').click(function() {
+	ocp.cfg.server_base_url = $('#server_uri').val();
+
+	var secret_key = $('#secret_key').val();
+	var file = $('#file').get(0).files[0];
+
+	var reader = new FileReader();
+	reader.onloadend = (function(my_file) {
+		return function(evt) {
+			if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+				ocp.file.send(file.name, evt.target.result);
+			}
+		}
+	})(file);
+
+	var blob = file.slice(0, file.size);
+	reader.readAsArrayBuffer(blob);
+});
+		</script>
+	</body>
+</html>

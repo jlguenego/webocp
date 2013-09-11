@@ -24,6 +24,7 @@
             if (!data.__endedMultipart) data.__append('--' + data.boundary + '--\r\n');
             data.__endedMultipart = true;
             this.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
+            //this.setRequestHeader('Content-Length', data.data.length); // does not work because of Chrome issue.
 
 			if (chrome) {
 				data = new Uint8Array(data.data);

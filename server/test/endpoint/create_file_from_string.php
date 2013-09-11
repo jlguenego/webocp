@@ -12,7 +12,7 @@
 
 	$_REQUEST = array_merge($_GET, $_POST);
 
-	$bad_mood = rand(0, 5) < 3;
+	$bad_mood = rand(0, 10) < 0;
 
 	if ($bad_mood) {
 		http_response_code(404);

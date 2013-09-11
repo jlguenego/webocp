@@ -15,6 +15,7 @@
 		b_success = true;
 
 		var xhr = new XMLHttpRequest();
+		xhr.upload.addEventListener('progress', onprogress, false);
 		xhr.onreadystatechange = function() {
 			console.log('xhr.readyState=' + xhr.readyState);
 			if (xhr.readyState != 4) {
@@ -35,7 +36,14 @@
 				var json_obj = JSON.parse(xhr.responseText);
 			}
 		}
-		xhr.open('POST', upload_server_uri, false); // sync
+
+		function onprogress(e) {
+			console.log('onprogress=' + e);
+			console.log(e);
+		};
+
+		xhr.open('POST', upload_server_uri, false); // async for progress access
+
 		try {
 			xhr.send(formData);
 		} catch (e) {
