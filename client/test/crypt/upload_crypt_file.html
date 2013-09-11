@@ -22,14 +22,17 @@
 		<script src="_ext/Blob.js"></script>
 
 		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_storage.js"></script>
+		<script src="js/ocp_crypto.js"></script>
 		<script src="js/ocp_profile.js"></script>
 		<script src="js/ocp_progress.js"></script>
-		<script src="upload_crypt_file.js"></script>
+		<script src="test/crypt/upload_crypt_file.js"></script>
 	</head>
 
 	<body>
-		<input type="text" id="server_uri" value="http://localhost" /><br/>
-		<input type="text" id="secret_key" /><br/>
+		<input type="text" id="server_uri" value="" /><br/>
+		<input type="text" id="secret_key" value="toto"/><br/>
 		<input type="file" id="file" name="file" /><button id="send">Send</button>
 		<div id="progress" style="position: relative; width: 200px; height: 50px;"></div>
 		<div id="upload_name"></div>
@@ -43,6 +46,8 @@
 				  alert('The File APIs are not fully supported in this browser.');
 				  return;
 				}
+
+				$('#server_uri').val(ocp.cfg.server_base_url);
 			});
 
 			$('#progress').ocp_progressbar();
@@ -93,12 +98,12 @@
 					update_progress();
 
 					ocp.profile.report('start encryption');
-					var crypted_content = ocp.pcrypt(secret_key, words);
+					var crypted_content = ocp.crypto.pcrypt(secret_key, words);
 					ocp.profile.report('end encryption');
 					update_progress();
 
 					ocp.profile.report('start Hash');
-					var filename = ocp.hash(crypted_content);
+					var filename = ocp.crypto.hash(crypted_content);
 					ocp.profile.report('end Hash');
 					update_progress();
 
@@ -231,7 +236,7 @@
 						var secret_key = $('#secret_key').val();
 
 						ocp.profile.report('start decryption');
-						var d_content = ocp.pdecrypt(secret_key, result.content);
+						var d_content = ocp.crypto.pdecrypt(secret_key, result.content);
 						ocp.profile.report('end decryption');
 
 						save_as(d_content, filename);

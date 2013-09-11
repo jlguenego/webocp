@@ -203,7 +203,7 @@
 		return result;
 	};
 
-	function ocp.utils.format_date(timestamp, format) {
+	ocp.utils.format_date = function(timestamp, format) {
 		format = format || '%Y-%m-%d %H:%M:%S';
 		var date = new Date(timestamp * 1000);
 
@@ -237,7 +237,7 @@
 		return result;
 	};
 
-	function ocp.utils.format_size(bytes, precision) {
+	ocp.utils.format_size = function(bytes, precision) {
 		precision = precision || 2;
 		var units = [ 'B', 'KB', 'MB', 'GB', 'TB' ];
 

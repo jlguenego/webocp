@@ -1,7 +1,7 @@
 (function(ocp, undefined) {
 	ocp.error_manage = function(e) {
 		console.log(e);
-		console.log(stacktrace());
+		console.log(ocp.stacktrace());
 		if (!e.msg) {
 			throw e;
 		}
