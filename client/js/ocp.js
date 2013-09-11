@@ -13,7 +13,10 @@ function OCP() {
 	    return result;
 	};
 
-
+	this.Exception = function(msg) {
+		this.msg = msg;
+		this.stacktrace = stacktrace();
+	};
 }
 
 var ocp = new OCP();

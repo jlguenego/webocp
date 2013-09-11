@@ -82,15 +82,19 @@ importScripts(base_url + '/_ext/WorkerFormData.js');
 	}
 
 	ocp.upload.process_block = function(block_ab, secret_key) {
-		// 1) crypt
-		var crypted_block_ab = ocp.crypto.pcrypt(secret_key, block_ab);
+		try {
+			// 1) crypt
+			var crypted_block_ab = ocp.crypto.pcrypt(secret_key, block_ab);
 
-		// 2) hash
-		var filename = ocp.crypto.hash(crypted_block_ab);
+			// 2) hash
+			var filename = ocp.crypto.hash(crypted_block_ab);
 
-		// 3) upload
-		console.log('about to send: ' + filename);
-		ocp.file.send(filename, crypted_block_ab);
+			// 3) upload
+			console.log('about to send: ' + filename);
+			ocp.file.send(filename, crypted_block_ab);
+		} catch (e) {
+			throw new OCP
+		}
 		return filename;
 	}
 })(ocp);

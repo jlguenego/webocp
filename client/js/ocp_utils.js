@@ -13,9 +13,7 @@
 			//console.log('hex_n=' + n.toString(16));
 		}
 		return hex;
-	}
-
-
+	};
 
 	ocp.utils.ab2str = function(buf) {
 		var a = [ 0x80, 0xe0, 0xf0, 0xf8, 0xfc, 0xfe ];
@@ -40,7 +38,7 @@
 			}
 		}
 		return result;
-	}
+	};
 
 	ocp.utils.ab2hex = function(buf) {
 		var bufView = new Uint8Array(buf);
@@ -49,7 +47,7 @@
 			result += bufView[i].toString(16);
 		}
 		return result;
-	}
+	};
 
 	ocp.utils.hex2ab = function(hex) {
 	    var buf = new ArrayBuffer(hex.length / 2);
@@ -60,7 +58,7 @@
 	    }
 
 	    return buf;
-	}
+	};
 
 	ocp.utils.str2ab = function(str) {
 		var array = [];
@@ -77,7 +75,7 @@
 			bufView[i] = array[i];
 		}
 		return buf;
-	}
+	};
 
 	ocp.utils.unicode2utf8b = function(code) {
 		var a = [ 1 << 7, 1 << (6+5), 1 << (2*6 + 4), 1 << (3*6 + 3), 1 << (4*6 + 2), 1 << (5*6 + 1) ];
@@ -96,7 +94,7 @@
 			var b3 = (code & 0x3f) + 0x80;
 			return [ b1, b2, b3 ];
 		}
-	}
+	};
 
 	ocp.utils.utf8b2unicode = function(array) {
 		if (array.length == 1) {
@@ -121,7 +119,7 @@
 		}
 		//console.log('unicode=' + unicode.toString(2));
 		return unicode;
-	}
+	};
 
 	ocp.utils.ab2wa = function(ab) {
 	    // Shortcut
@@ -132,7 +130,7 @@
 	        words[i >>> 2] |= bufView[i] << (24 - (i % 4) * 8);
 	    }
 	    return CryptoJS.lib.WordArray.create(words, bufView.length);
-	}
+	};
 
 	ocp.utils.wa2ab = function(wa) {
 	    // Shortcut
@@ -144,7 +142,7 @@
 	    }
 
 	    return buf;
-	}
+	};
 
 	ocp.utils.hex2wa = function(hexStr) {
 	    // Shortcut
@@ -157,17 +155,17 @@
 	    }
 
 	    return CryptoJS.lib.WordArray.create(words, hexStrLength / 2);
-	}
+	};
 
 	ocp.utils.b642ab = function(b64) {
 		var wa = CryptoJS.enc.Base64.parse(b64);
 		return ocp.utils.wa2ab(wa);
-	}
+	};
 
 	ocp.utils.ab2b64 = function(ab) {
 		var wa = ocp.utils.ab2wa(ab);
 		return CryptoJS.enc.Base64.stringify(wa);
-	}
+	};
 
 
 	ocp.utils.format_size = function(bytes, precision) {
@@ -184,7 +182,7 @@
 	    bytes /= Math.pow(1024, pow);
 		bytes = Math.round(bytes * Math.pow(10, precision)) / Math.pow(10, precision);
 	    return bytes + ' ' + units[pow];
-	}
+	};
 
 	ocp.utils.getMethods = function(obj) {
 		var func = [];
@@ -194,7 +192,7 @@
 			}
 		}
 		return func.sort();
-	}
+	};
 
 	ocp.utils.toBinString = function(n) {
 		var result = '';
@@ -203,5 +201,55 @@
 			result = x + result;
 		}
 		return result;
-	}
+	};
+
+	function ocp.utils.format_date(timestamp, format) {
+		format = format || '%Y-%m-%d %H:%M:%S';
+		var date = new Date(timestamp * 1000);
+
+		var month = date.getMonth() + 1;
+		if (month < 10) {
+			month = '0' + month;
+		}
+		var day = date.getDate();
+		if (day < 10) {
+			day = '0' + day;
+		}
+		var hour = date.getHours();
+		if (hour < 10) {
+			hour = '0' + hour;
+		}
+		var minute = date.getMinutes();
+		if (minute < 10) {
+			minute = '0' + minute;
+		}
+		var second = date.getSeconds();
+		if (second < 10) {
+			second = '0' + second;
+		}
+
+		var result = format.replace('%Y', date.getFullYear());
+		result = result.replace('%m', month);
+		result = result.replace('%d', day);
+		result = result.replace('%H', hour);
+		result = result.replace('%M', minute);
+		result = result.replace('%S', second);
+		return result;
+	};
+
+	function ocp.utils.format_size(bytes, precision) {
+		precision = precision || 2;
+		var units = [ 'B', 'KB', 'MB', 'GB', 'TB' ];
+
+	    bytes = Math.max(bytes, 0);
+	    var pow = 0;
+	    if (bytes > 0) {
+	    	pow = Math.floor(Math.log(bytes) / Math.log(1024));
+	    }
+
+	    pow = Math.min(pow, units.length - 1);
+	    bytes /= Math.pow(1024, pow);
+		bytes = Math.round(bytes * Math.pow(10, precision)) / Math.pow(10, precision);
+	    return bytes + ' ' + units[pow];
+	};
 })(ocp);

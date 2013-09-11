@@ -25,13 +25,13 @@ var remove_dialog = null;
 		try {
 			var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
 			if (selected_rows.length == 0) {
-				throw new OCPException('Please select a file/folder.');
+				throw new ocp.Exception('Please select a file/folder.');
 			}
 			if (selected_rows.length == 1) {
 				var rowid = selected_rows.attr('data-rowid');
 				var row = grid.ocp_grid('option', 'data')[rowid];
 				if (!row) {
-					throw new OCPException('Please select a file/folder.');
+					throw new ocp.Exception('Please select a file/folder.');
 				}
 				$('#ocp_fm_remove_dialog span').html(row.meta_data.name);
 			}
@@ -53,13 +53,13 @@ var remove_dialog = null;
 			row.filename = ls_data[i].label;
 
 			if (ls_data[i].type != 'dir') {
-				row.size = ocp_format_size(ls_data[i].size);
+				row.size = ocp.utils.format_size(ls_data[i].size);
 			} else {
 				row.size = "&nbsp;";
 			}
 
 			if (ls_data[i].type != 'dir') {
-				row.last_modified = ocp_format_date(ls_data[i].last_modified, '%Y-%m-%d %H:%M');
+				row.last_modified = ocp.utils.format_date(ls_data[i].last_modified, '%Y-%m-%d %H:%M');
 			} else {
 				row.last_modified = "&nbsp;";
 			}
@@ -193,7 +193,7 @@ var remove_dialog = null;
 		if (row.length == 0 && loaded < total) {
 			var data = {
 				"name": name,
-				"size": ocp_format_size(total),
+				"size": ocp.utils.format_size(total),
 				"transfer_type": 'Upload',
 				"status": percent + '%',
 				"speed": '0 KB/s',
@@ -221,7 +221,7 @@ var remove_dialog = null;
 		row.attr('data-md-timestamp', timestamp);
 		row.find('.widget_grid_cell[data-colname=file_transfer_elapsed_time]').html(elapsed_t + ' s');
 		row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_t + ' s');
-		row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html(ocp_format_size(speed * 1000, 1) + '/s');
+		row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html(ocp.utils.format_size(speed * 1000, 1) + '/s');
 		row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', percent);
 
 		if (loaded >= total) {
@@ -235,7 +235,7 @@ var remove_dialog = null;
 		try {
 			var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
 			if (selected_rows.length != 1) {
-				throw new OCPException('Please select only one file/folder.');
+				throw new ocp.Exception('Please select only one file/folder.');
 			}
 
 			var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');

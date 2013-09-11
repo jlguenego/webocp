@@ -106,7 +106,7 @@ var g_request = {};
 				.parent().removeClass('checkboxOn').addClass('checkboxOff');
 
 			if (!ocp.action.user_is_logged()) {
-				throw new OCPException('Login failed: bad login/password.');
+				throw new ocp.Exception('Login failed: bad login/password.');
 			}
 
 			console.log('ocp.session.user_id=' + ocp.session.user_id);

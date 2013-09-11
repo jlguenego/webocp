@@ -66,67 +66,12 @@ function stacktrace() {
 	return st2(arguments.callee.caller);
 }
 
-function OCPException(msg) {
-	this.msg = msg;
-	this.stacktrace = stacktrace();
-}
-
 function is_file_protocol() {
 	return /^file:\/\//i.test(window.location.href);
 }
 
 function ocp_now() {
 	return new Date().getTime();
-}
-
-function ocp_format_size(bytes, precision) {
-	precision = precision || 2;
-	var units = [ 'B', 'KB', 'MB', 'GB', 'TB' ];
-
-    bytes = Math.max(bytes, 0);
-    var pow = 0;
-    if (bytes > 0) {
-    	pow = Math.floor(Math.log(bytes) / Math.log(1024));
-    }
-
-    pow = Math.min(pow, units.length - 1);
-    bytes /= Math.pow(1024, pow);
-	bytes = Math.round(bytes * Math.pow(10, precision)) / Math.pow(10, precision);
-    return bytes + ' ' + units[pow];
-}
-
-function ocp_format_date(timestamp, format) {
-	format = format || '%Y-%m-%d %H:%M:%S';
-	var date = new Date(timestamp * 1000);
-
-	var month = date.getMonth() + 1;
-	if (month < 10) {
-		month = '0' + month;
-	}
-	var day = date.getDate();
-	if (day < 10) {
-		day = '0' + day;
-	}
-	var hour = date.getHours();
-	if (hour < 10) {
-		hour = '0' + hour;
-	}
-	var minute = date.getMinutes();
-	if (minute < 10) {
-		minute = '0' + minute;
-	}
-	var second = date.getSeconds();
-	if (second < 10) {
-		second = '0' + second;
-	}
-
-	var result = format.replace('%Y', date.getFullYear());
-	result = result.replace('%m', month);
-	result = result.replace('%d', day);
-	result = result.replace('%H', hour);
-	result = result.replace('%M', minute);
-	result = result.replace('%S', second);
-	return result;
 }
 
 (function($) {
