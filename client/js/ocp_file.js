@@ -1,7 +1,7 @@
 (function(ocp, undefined) {
 	ocp.file = {};
 
-	ocp.file.max_retry = 0;
+	ocp.file.max_retry = 5;
 
 	ocp.file.send = function(filename, content, retry) {
 		retry = retry || 0;

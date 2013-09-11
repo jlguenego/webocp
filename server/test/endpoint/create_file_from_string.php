@@ -12,8 +12,12 @@
 
 	$_REQUEST = array_merge($_GET, $_POST);
 
-	http_response_code(404);
-	exit;
+	$bad_mood = rand(0, 5) < 3;
+
+	if ($bad_mood) {
+		http_response_code(404);
+		exit;
+	}
 
 	debug_r('_FILES', $_FILES);
 	debug_r('_REQUEST', $_REQUEST);
