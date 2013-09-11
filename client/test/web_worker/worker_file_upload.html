@@ -153,7 +153,13 @@ function file_upload(args) {
 		if (!data.exception) {
 			return;
 		}
-		throw new Error(data.exception);
+		var e = new Error(data.exception);
+		console.log('e=');
+		console.log(e);
+		console.log(e.stack);
+		console.log(e.toString());
+		throw e;
+		pool.terminate(true);
 	}
 }
 		</script>

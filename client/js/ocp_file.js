@@ -40,6 +40,7 @@
 			xhr.send(formData);
 		} catch (e) {
 			console.log('error=' + e);
+		} finally {
 			if (!b_success) {
 				throw 'Cannot send the file.';
 			}
