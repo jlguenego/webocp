@@ -23,7 +23,7 @@
 		ocp.cfg = {
 			server_base_url: 'http://www.ocpforum.org',
 			session: null,
-			scenario: null
+			scenario: 0
 		};
 	}
 })(ocp);
