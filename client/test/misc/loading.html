@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<style>
+.loading-block {
+	width: 263px;
+	height: 138px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -90px;
+	margin-left: -131px;
+}
+
+.loading-bg {
+	width: 120px;
+	height: 129px;
+	position: absolute;
+	background: url('https://eu.static.mega.co.nz/images/background_cog.png');
+	bottom: 0;
+	left: 149px;
+}
+
+.loading-animated-cogs {
+	width: 99px;
+	height: 104px;
+	position: absolute;
+	background: url('https://eu.static.mega.co.nz/images/animated_cogs.gif') no-repeat;
+	top: 26px;
+	left: 160px;
+}
+
+.loading-cloud {
+	width: 193px;
+	height: 138px;
+	position: absolute;
+	background: url('https://eu.static.mega.co.nz/images/cloud.png');
+}
+
+.loading-progressbar {
+	position: absolute;
+	left: 5px;
+	top: 135px;
+}
+
+.slprogress-block {
+	margin: 13px 10px 3px 0;
+	width: 291px;
+}
+
+.slprogressbar {
+	border: 0 !important;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	-ms-border-radius: 15px;
+	-o-border-radius: 15px;
+	border-radius: 15px;
+	height: 16px;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 4px;
+	overflow: hidden;
+	margin: 0 30px 0 0;
+	background-image: url('https://eu.static.mega.co.nz/images/loader_bg.png');
+}
+
+.slprogressbarfill {
+	height: 8px;
+	background-color: white;
+	margin: 0;
+	-moz-border-radius: 15px;
+	-ms-border-radius: 15px;
+	-o-border-radius: 15px;
+	border-radius: 15px;
+	line-height: none;
+	width: 0px;
+}
+
+.clear {
+	clear: both;
+	margin: 0px;
+	padding: 0px;
+	display: block;
+}
+		</style>
+
+	</head>
+
+	<body>
+
+
+		<div id="loading" style="z-index: 999; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; background-image: url(https://eu.static.mega.co.nz/images/background.png);">
+			<div class="loading-block">
+				<div class="loading-bg"></div>
+				<div class="loading-animated-cogs"></div>
+				<div class="loading-cloud"></div>
+				<div class="loading-progressbar">
+					<div class="slprogress-block" id="loading_progress">
+						<div class="slprogressbar">
+							<div class="slprogressbarfill" id="loading_progress_fill" style="width: 100%;"></div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="loaded"> COUCOU</div>
+
+
+		<script>
+console.log(window.location.href);
+var server_uri = window.location.href.replace(/\\/g,'/').replace(/\/[^\/]*$/, '') + '/../../';
+console.log(server_uri);
+
+var scripts = [
+	'_ext/jquery-1.10.2.min.js',
+	'js/ocp.js',
+	'js/ocp_storage.js',
+	'http://localhost/webocp/server/test/endpoint/slow_js.php'
+];
+var success_nbr = 0;
+function load_script_xhr(script_url) {
+	console.log('script_url=' + script_url);
+
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		//console.log('onreadystatechange');
+		console.log(xhr);
+		console.log(xhr.readyState);
+		//console.log('responseText=' + xhr.responseText);
+		if (xhr.readyState == 4) { // on success
+			console.log('success');
+			var blob = new Blob([ xhr.responseText ], { type: "text/javascript" });
+			var script = document.createElement('script');
+			script.type = "text/javascript";
+			document.getElementsByTagName('head')[0].appendChild(script);
+			var url = window.URL.createObjectURL(blob);
+			script.src = url;
+			success_nbr++;
+			script.onreadystatechange = callback;
+			script.onload = callback;
+
+			function callback() {
+				if (success_nbr == scripts.length) {
+					console.log('finished.');
+					$('#loading').hide();
+					hello();
+				}
+			}
+		}
+	}
+	xhr.open('GET', script_url, true); // true = async
+	xhr.send();
+}
+
+function load_script(script_url) {
+	console.log('script_url=' + script_url);
+
+	var head = document.getElementsByTagName('head')[0];
+	var script = document.createElement('script');
+	head.appendChild(script);
+	script.src = script_url;
+
+
+	script.onreadystatechange = callback;
+	script.onload = callback;
+
+	function callback() {
+		success_nbr++;
+		if (success_nbr == scripts.length) {
+			console.log('finished.');
+			$('#loading').hide();
+			hello();
+		}
+	}
+}
+load_script('_ext/jquery-1.10.2.min.js');
+load_script('js/ocp.js');
+load_script('js/ocp_storage.js');
+load_script('http://localhost/webocp/server/test/endpoint/slow_js.php');
+
+
+		</script>
+	</body>
+</html>
