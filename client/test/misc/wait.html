@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_storage.js"></script>
+		<script src="js/ocp_ui.js"></script>
+		<script src="js/ocp_test.js"></script>
+	</head>
+
+	<body>
+		<button id="wait">Wait</button>
+		<button class="log">Hello</button>
+		<button class="log">World</button>
+		<script>
+$('#wait').click(function() {
+	ocp.ui.cursor_wait_start();
+	hello(function() {
+		ocp.ui.cursor_wait_end();
+	});
+});
+
+$('.log').click(function() {
+	console.log($(this).html());
+});
+
+function hello(callback) {
+	console.log('waiting...');
+	setTimeout(callback, 3000);
+}
+		</script>
+	</body>
+</html>
