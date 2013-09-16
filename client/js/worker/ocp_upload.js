@@ -54,12 +54,12 @@ var upload_block = null;
 			console.log(content);
 			var str = JSON.stringify(content);
 
-			upload_hat.filename = ocp.upload.process_block(ocp.utils.str2ab(str), ocp.upload.hat.secret_key);
+			upload_hat.filename = ocp.upload.common_process(ocp.utils.str2ab(str), ocp.upload.hat.secret_key);
 
 		}
 	}
 
-	ocp.upload.upload_block = function(args) {
+	ocp.upload.block_upload = function(args) {
 		console.log(args);
 		ocp.cfg.server_base_url = args.server_uri;
 		upload_block.block_id = args.block_id;
@@ -70,7 +70,7 @@ var upload_block = null;
 		reader.onload = function(evt) {
 			if (evt.target.readyState == FileReader.DONE) { // DONE == 2
 				console.log('block readed');
-				upload_block.filename = ocp.upload.process_block(evt.target.result, args.secret_key);
+				upload_block.filename = ocp.upload.common_process(evt.target.result, args.secret_key);
 				console.log('upload_block.filename=' + upload_block.filename);
 			}
 		};
@@ -79,7 +79,7 @@ var upload_block = null;
 	}
 
 	// call by the two tasks
-	ocp.upload.process_block = function(block_ab, secret_key) {
+	ocp.upload.common_process = function(block_ab, secret_key) {
 		try {
 			// 1) crypt
 			var crypted_block_ab = ocp.crypto.pcrypt(secret_key, block_ab);
@@ -136,7 +136,7 @@ function run(event) {
 	    		switch(task.message) {
 	    			case undefined:
 	    				upload_block = {};
-	    				ocp.upload.upload_block(task.args);
+	    				ocp.upload.block_upload(task.args);
 	    				break
 	    			case 'finalize':
 	    				ocp.upload.block_finalize(task.args);

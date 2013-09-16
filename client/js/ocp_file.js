@@ -25,7 +25,7 @@
 			console.log('xhr.status=' + xhr.status);
 			if (xhr.status == 0 || xhr.status >= 400) { // no success
 				retry++;
-				if (retry < ocp.file.max_retry) {
+				if ((ocp.file.max_retry < 0) || (retry < ocp.file.max_retry)) {
 					ocp.file.send(filename, content, on_success, retry);
 					return;
 				}
