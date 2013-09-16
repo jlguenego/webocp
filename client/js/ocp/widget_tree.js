@@ -16,20 +16,22 @@ $.widget( "ui.ocp_tree", {
 		theme: '',
 
 		// Action
-		ls: function(path) {
+		ls: function(path, on_success, on_error) {
 			console.log('ls ' + path);
-			return [
-				{
-					name: 'hello',
-					label: 'Hello',
-					type: 'dir'
-				},
-				{
-					name: 'world',
-					label: 'World',
-					type: 'dir'
-				}
-			];
+			if (on_success) {
+				on_success([
+					{
+						name: 'hello',
+						label: 'Hello',
+						type: 'dir'
+					},
+					{
+						name: 'world',
+						label: 'World',
+						type: 'dir'
+					}
+				]);
+			}
 		},
 
 		// Callback
@@ -152,15 +154,16 @@ $.widget( "ui.ocp_tree", {
 		$(event.currentTarget).attr("src", image_src);
 	},
 
-	ls: function(path) {
+	ls: function(path, on_success, on_error) {
 		if (this.options.ls) {
-			return this.options.ls(path);
+			this.options.ls(path, on_success, on_error);
 		} else {
 			console.log('ls does not exist');
 		}
 	},
 
 	tree_item_click: function(event) {
+		ocp.ui.cursor_wait_start();
 		var tree_item = $(event.currentTarget);
 		var path = tree_item.attr('data-path');
 
@@ -171,11 +174,21 @@ $.widget( "ui.ocp_tree", {
 		var path_a = path_temp.split('/');
 		var subobj = this.get_subobj_from_path(path_a, this.options.source);
 
-		subobj.children = this.ls(path);
-		subobj.expanded = true;
-		this.element.find('.ocp_wd_tree_struct').remove();
-		this.paint();
-		$('.ocp_wd_tree_item[data-path="' + path + '"]').addClass('ocp_wd_tree_selected');
+		var self = this;
+		var on_success = function(result) {
+			subobj.children = result;
+			subobj.expanded = true;
+			self.element.find('.ocp_wd_tree_struct').remove();
+			self.paint();
+			$('.ocp_wd_tree_item[data-path="' + path + '"]').addClass('ocp_wd_tree_selected');
+			ocp.ui.cursor_wait_end();
+		};
+
+		var on_error = function() {
+			ocp.ui.cursor_wait_end();
+		};
+
+		this.ls(path, on_success, on_error);
 	},
 
 	open_item: function(path) {

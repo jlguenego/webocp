@@ -64,12 +64,11 @@
 			ocp.session.user_id = public_address;
 		};
 
-		this.ls = function(path) {
-			var result = ocp.client.command({
+		this.ls = function(path, on_success, on_error) {
+			ocp.client.async_command({
 				action: 'ls',
 				path: '/' + ocp.session.user_id + path
-			}, this.endpoint);
-			return result;
+			}, this.endpoint, on_success, on_error);
 		};
 
 		this.mkdir = function(path, name) {

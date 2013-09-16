@@ -30,12 +30,11 @@
 			ocp.session.user_id = args.email;
 		};
 
-		this.ls = function(path) {
-			var result = ocp.client.command({
+		this.ls = function(path, on_success, on_error) {
+			ocp.client.async_command({
 				action: 'ls',
 				path: '/shared_storage' + path
-			}, this.endpoint);
-			return result;
+			}, this.endpoint, on_success, on_error);
 		};
 
 		this.mkdir = function(path, name) {
