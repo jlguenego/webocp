@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+	</head>
+
+	<body>
+		<script>
+			var onprogress = function(i) {
+				return function(str) {
+					console.log(str + ' i=' + i);
+				};
+			};
+
+			function test(str) {
+				onprogress(i);
+			}
+
+			for (var i = 0; i < 3; i++) {
+				setTimeout(test('coucou'), 500);
+			}
+			console.log('end');
+		</script>
+	</body>
+</html>

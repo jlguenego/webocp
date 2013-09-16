@@ -3,7 +3,7 @@
 
 	ocp.file.max_retry = 4;
 
-	ocp.file.send = function(filename, content, on_success, retry) {
+	ocp.file.send = function(filename, content, on_success, onprogress, retry) {
 		retry = retry || 0;
 		on_success = on_success || function() {};
 
@@ -16,6 +16,9 @@
 
 		var xhr = new XMLHttpRequest();
 		xhr.timeout = 10000;
+		if (!onprogress) {
+			progress = function(e) {};
+		}
 		xhr.upload.addEventListener('progress', onprogress, false);
 		xhr.onreadystatechange = function() {
 			console.log('xhr.readyState=' + xhr.readyState);
@@ -26,7 +29,7 @@
 			if (xhr.status == 0 || xhr.status >= 400) { // no success
 				retry++;
 				if ((ocp.file.max_retry < 0) || (retry < ocp.file.max_retry)) {
-					ocp.file.send(filename, content, on_success, retry);
+					ocp.file.send(filename, content, on_success, onprogress, retry);
 					return;
 				}
 				throw 'After ' + retry + ' times, cannot send the file: ' + filename;
@@ -34,11 +37,6 @@
 			// success
 			on_success();
 		}
-
-		function onprogress(e) {
-			console.log('onprogress=' + e);
-			console.log(e);
-		};
 
 		xhr.open('POST', upload_server_uri, true); // async for progress access.
 
