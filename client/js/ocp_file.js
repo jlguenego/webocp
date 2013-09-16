@@ -47,22 +47,25 @@
 		}
 	}
 
-	ocp.file.retrieve = function(filename) {
+	ocp.file.retrieve = function(filename, on_success, onprogress) {
 		var download_server_uri = ocp.cfg.server_base_url + '/webocp/server/test/endpoint/retrieve_file.php';
 
 		var formData = new FormData();
 		formData.append('filename', filename);
 
 		var xhr = new XMLHttpRequest();
-		var content = '';
+		if (!onprogress) {
+			progress = function(e) {};
+		}
+		xhr.upload.addEventListener('progress', onprogress, false);
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
 				var json_obj = JSON.parse(xhr.responseText);
-				content = ocp.utils.b642ab(json_obj.result.content);
+				var content = ocp.utils.b642ab(json_obj.result.content);
+				on_success(content);
 			}
 		}
-		xhr.open('POST', download_server_uri, false); // Wait before processing file => Synchronous request
+		xhr.open('POST', download_server_uri, true);
 		xhr.send(formData);
-		return content;
 	}
 })(ocp)

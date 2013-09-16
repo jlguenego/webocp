@@ -19,33 +19,37 @@ importScripts(base_url + '/js/ocp_worker_file.js');
 		worker.fs = worker.requestFileSystemSync(TEMPORARY, 1024 * 1024 * 1024);
 	}
 
-	ocp.download.download_hat = function(args) {
-		ocp.cfg.server_base_url = args.server_uri;
-		var hat_ab = this.retrieve_block(args.block_name, args.secret_key);
+	ocp.download.download = function(args) {
+		report({
+			action: 'retrieve',
+			task_id: ocp.worker.worker.task_id,
+			filename: args.block_name,
+			block_id: args.block_id
+		});
+	};
+
+	ocp.download.hat_finalize = function(args) {
+		var hat_ab = this.retrieve_block(args.block_name, args.content, args.secret_key);
 		var hat_str = ocp.utils.ab2str(hat_ab);
 		var hat = JSON.parse(hat_str);
 		console.log('hat=');
 		console.log(hat);
 		this.create_empty_file(args.block_name, hat.size);
 		report({
+			action: 'finalize',
 			hat: hat,
 			finish: true
 		});
 	};
 
-	ocp.download.download_block = function(args) {
-		ocp.cfg.server_base_url = args.server_uri;
-		var content_ab = this.retrieve_block(args.block_name, args.secret_key);
+	ocp.download.block_finalize = function(args) {
+		var content_ab = this.retrieve_block(args.block_name, args.content, args.secret_key);
 		var offset = args.block_id * args.block_size;
 		//console.log(args);
 
 		ocp.worker_file.write_block(args.hat_name, offset, content_ab);
-		console.log({
-			block_written: true,
-			block_id: args.block_id,
-			finish: true
-		});
 		report({
+			action: 'finalize',
 			block_written: true,
 			block_id: args.block_id,
 			finish: true
@@ -57,17 +61,17 @@ importScripts(base_url + '/js/ocp_worker_file.js');
 		ocp.worker_file.create(filename, content_ab);
 	};
 
-	ocp.download.retrieve_block = function(block_name, secret_key) {
-		// 1) download
-		console.log('download file: ' + block_name);
-		var crypted_content = ocp.file.retrieve(block_name)
-
-		// 2) verify
+	ocp.download.retrieve_block = function(block_name, crypted_content, secret_key) {
+		console.log('block_name=' + block_name);
+		console.log('crypted_content=' + crypted_content);
+		console.log('secret_key=' + secret_key);
+		// 1) verify
 		if (this.verify_file_integrity(block_name, crypted_content)) {
 			console.log('integrity ok');
 		} else {
 			console.log('integrity error');
-			return;
+			// TODO: manage error
+			return null;
 		}
 
 		// 2) decrypt
@@ -79,8 +83,10 @@ importScripts(base_url + '/js/ocp_worker_file.js');
 
 	ocp.download.verify_file_integrity = function(block_name, crypted_content) {
 		var crypted_content_hash = ocp.crypto.hash(crypted_content);
+		console.log('block_name=' + block_name);
+		console.log('crypted_content_hash=' + crypted_content_hash);
 		return block_name == crypted_content_hash;
-	}
+	};
 })(ocp);
 
 ocp.worker.init(this, true);
@@ -89,13 +95,26 @@ function run(event) {
     var task = event.data;
     switch(task.name) {
     	case 'download_hat':
-    		ocp.download.download_hat(task.args);
-    		return false;
+    		switch(task.message) {
+    			case undefined:
+    				ocp.download.download(task.args);
+    				break
+    			case 'finalize':
+    				ocp.download.hat_finalize(task.args);
+    				break
+    		}
+    		break;
     	case 'download_block':
-    		ocp.download.download_block(task.args);
-    		return false;
+    		switch(task.message) {
+    			case undefined:
+    				ocp.download.download(task.args);
+    				break
+    			case 'finalize':
+    				ocp.download.block_finalize(task.args);
+    				break
+    		}
+    		break;
     }
-    return true;
 }
 
 function init() {
