@@ -1,0 +1,82 @@
+.loading-block {
+	width: 263px;
+	height: 138px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -90px;
+	margin-left: -131px;
+}
+
+.loading-bg {
+	width: 120px;
+	height: 129px;
+	position: absolute;
+	background: url('https://eu.static.mega.co.nz/images/background_cog.png');
+	bottom: 0;
+	left: 149px;
+}
+
+.loading-animated-cogs {
+	width: 99px;
+	height: 104px;
+	position: absolute;
+	background: url('https://eu.static.mega.co.nz/images/animated_cogs.gif') no-repeat;
+	top: 26px;
+	left: 160px;
+}
+
+.loading-cloud {
+	width: 193px;
+	height: 138px;
+	position: absolute;
+	background: url('https://eu.static.mega.co.nz/images/cloud.png');
+}
+
+.loading-progressbar {
+	position: absolute;
+	left: 5px;
+	top: 135px;
+}
+
+.slprogress-block {
+	margin: 13px 10px 3px 0;
+	width: 291px;
+}
+
+.slprogressbar {
+	border: 0 !important;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	-ms-border-radius: 15px;
+	-o-border-radius: 15px;
+	border-radius: 15px;
+	height: 16px;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 4px;
+	overflow: hidden;
+	margin: 0 30px 0 0;
+	background-image: url('https://eu.static.mega.co.nz/images/loader_bg.png');
+}
+
+.slprogressbarfill {
+	height: 8px;
+	background-color: white;
+	margin: 0;
+	-moz-border-radius: 15px;
+	-ms-border-radius: 15px;
+	-o-border-radius: 15px;
+	border-radius: 15px;
+	line-height: none;
+	width: 0px;
+}
+
+.clear {
+	clear: both;
+	margin: 0px;
+	padding: 0px;
+	display: block;
+}

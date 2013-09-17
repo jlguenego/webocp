@@ -57,6 +57,7 @@
 		if (!onprogress) {
 			progress = function(e) {};
 		}
+		console.log(xhr);
 		xhr.upload.addEventListener('progress', onprogress, false);
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
