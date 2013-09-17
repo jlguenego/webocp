@@ -59,11 +59,13 @@
 				console.log(data);
 				var output = $.parseJSON(data);
 				if (output.error) {
-					on_error();
+					if (on_error) {
+						on_error();
+					}
 					ocp.error_manage(new Error('Server answered: ' + output.error));
 					return;
 				}
-				if (output.result) {
+				if (on_success) {
 					on_success(output.result);
 				}
 			},
@@ -71,7 +73,9 @@
 				console.log('ocp.client error');
 				console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
 				console.log(jqXHR);
-				on_error();
+				if (on_error) {
+					on_error();
+				}
 				if (jqXHR.status == 0) {
 					ocp.error_manage(new Error('URL ' + url + ' not reachable.'));
 				} else {
@@ -102,9 +106,9 @@
 		scenario.ls(path, my_on_success, on_error);
 	}
 
-	ocp.client.mkdir = function(path, name) {
+	ocp.client.mkdir = function(path, name, on_success, on_error) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
-		var result = scenario.mkdir(path, name);
+		var result = scenario.mkdir(path, name, on_success, on_error);
 	}
 
 	ocp.client.mv = function(old_path, new_path) {

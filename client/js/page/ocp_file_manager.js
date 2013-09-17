@@ -398,17 +398,21 @@ $(document).ready(function() {
 	var new_folder_dialog = $('#ocp_fm_new_folder_dialog').ocp_dialog({
 		buttons: {
 			Create: function() {
+				ocp.ui.cursor_wait_start();
 				var path = grid.ocp_grid('option', 'state').path;
 				var folder_name = $('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val();
-				ocp.client.mkdir(path, folder_name);
-				tree.ocp_tree('open_item', path);
-
-				new_folder_dialog.ocp_dialog('close');
-				$('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val('');
+				ocp.client.mkdir(path, folder_name, function() {
+					ocp.ui.cursor_wait_end();
+					tree.ocp_tree('open_item', path);
+					new_folder_dialog.ocp_dialog('close');
+				}, function() {
+					ocp.ui.cursor_wait_end();
+					new_folder_dialog.ocp_dialog('close');
+				});
 			},
 			Cancel: function() {
+				ocp.ui.cursor_wait_end();
 				new_folder_dialog.ocp_dialog('close');
-				$('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val('');
 			}
 		}
 	});

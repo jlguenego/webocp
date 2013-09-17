@@ -149,6 +149,9 @@ $.widget( "ui.ocp_dialog", {
 		this.element.unbind('keydown');
 		this.button_div.unbind('keydown');
 		this.options.close();
+
+		// Try to reset the content
+		this.element.find('input').val('');
 	},
 
 	_on_keydown: function(e, self) {

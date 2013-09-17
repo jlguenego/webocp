@@ -37,12 +37,12 @@
 			}, this.endpoint, on_success, on_error);
 		};
 
-		this.mkdir = function(path, name) {
-			ocp.client.command({
+		this.mkdir = function(path, name, on_success, on_error) {
+			ocp.client.async_command({
 				action: 'mkdir',
 				path: '/shared_storage' + path,
 				name: name
-			}, this.endpoint);
+			}, this.endpoint, on_success, on_error);
 		};
 
 		this.rm = function(path) {

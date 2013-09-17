@@ -104,7 +104,7 @@ body {
 	cursor: pointer;
 }
 
-.widget_dialog_button:hover, .widget_dialog_button:focus {
+.widget_dialog_frame .widget_dialog_button:hover, .widget_dialog_frame .widget_dialog_button:focus {
 	color: #FFFFFF;
 	background-color: #D8290A;
 }

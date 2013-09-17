@@ -13,7 +13,7 @@
 	$_REQUEST = array_merge($_GET, $_POST);
 	debug_r('_GET', $_GET);
 
-	//sleep(2);
+
 	try {
 		$action = $_REQUEST['action'];
 		switch($action) {
@@ -157,9 +157,9 @@
 			if (file_exists($filename)) {
 				unlink($filename);
 			}
+			mkdir_p(ROOT . $path);
 			rename($tmp_filename, $filename);
 		}
-
 		echo json_encode(array($_REQUEST, $_FILES));
 	}
 
