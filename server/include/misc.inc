@@ -53,17 +53,20 @@
 	}
 
 	function debug_on($switch = true) {
+		global $g_debug;
 		$g_debug = $switch;
 	}
 
 	function debug($msg) {
+		global $g_debug;
 		if ($g_debug) {
 			file_put_contents(LOG_FILE_PATH, $msg . PHP_EOL, FILE_APPEND);
 		}
 	}
 
 	function debug_r($msg, $array) {
-		if (!g_debug) {
+		global $g_debug;
+		if (!$g_debug) {
 			return;
 		}
 		debug($msg);
