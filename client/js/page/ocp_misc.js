@@ -35,12 +35,13 @@ $(document).ready(function() {
 			Save: function() {
 				console.log('ocp=' + ocp);
 				var old_scenario = ocp.cfg.scenario;
+				var old_server_url = ocp.cfg.server_base_url;
 				ocp.cfg.server_base_url = strip_slash($('#ocp_st_server_base_url').val());
 				ocp.cfg.scenario = $('#ocp_st_scenario').val();
 				ocp.storage.saveLocal();
 				general_settings_dialog.ocp_dialog('close');
 
-				if (old_scenario != ocp.cfg.scenario) {
+				if ((old_scenario != ocp.cfg.scenario) || (old_server_url != ocp.cfg.server_base_url)) {
 					console.log('logout');
 					ocp.action.logout();
 				}

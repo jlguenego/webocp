@@ -145,20 +145,22 @@ var remove_dialog = null;
 			return;
 		}
 
+
+
 		if (item.isFile) {
 			// Get file
 			item.file(function(file) {
 				console.log("File: " + path + file.name);
 				var current_path = ocp.file_manager.get_current_path();
 				ocp.client.upload_file(normalize_path(current_path + '/' + path), file, function() {
-					tree.ocp_tree('open_item', current_path);
+					ocp.file_manager.refresh();
 				}, function(e, filename) {
 					ocp.file_manager.upload_file_progress(e, normalize_path(path), filename);
 				});
 			}, ocp.file_manager.dnd.error);
 		} else if (item.isDirectory) {
 			var current_path = ocp.file_manager.get_current_path();
-			ocp.client.mkdir(normalize_path(current_path + '/' + path), item.name);
+			ocp.client.mkdir(normalize_path(current_path + '/' + path), item.name, ocp.file_manager.refresh);
 			// Get folder contents
 			var dirReader = item.createReader();
 			dirReader.readEntries(function(entries) {
