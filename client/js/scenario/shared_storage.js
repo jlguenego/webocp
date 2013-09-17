@@ -45,11 +45,11 @@
 			}, this.endpoint, on_success, on_error);
 		};
 
-		this.rm = function(path) {
-			ocp.client.command({
+		this.rm = function(path, on_success, on_error) {
+			ocp.client.async_command({
 				action: 'rm',
 				path: '/shared_storage' + path
-			}, this.endpoint);
+			}, this.endpoint, on_success, on_error);
 		};
 
 		this.mv = function(old_path, new_path) {

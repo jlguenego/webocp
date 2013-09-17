@@ -468,7 +468,18 @@ $(document).ready(function() {
 	remove_dialog = $('#ocp_fm_remove_dialog').ocp_dialog({
 		buttons: {
 			'Delete permanantly': function() {
+				ocp.ui.cursor_wait_start();
 				var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
+				var counter = 0;
+				var total = selected_rows.length;
+				function finalize() {
+					counter++;
+					ocp.file_manager.refresh();
+					if (counter == total) {
+						ocp.ui.cursor_wait_end();
+						remove_dialog.ocp_dialog('close');
+					}
+				}
 				selected_rows.each(function() {
 					try {
 						var name = $(this).attr('data-md-name');
@@ -476,15 +487,11 @@ $(document).ready(function() {
 						var p = normalize_path(path + '/' + name);
 						console.log('rm ' + p);
 
-						ocp.client.rm(p);
+						ocp.client.rm(p, finalize, finalize);
 					} catch (e) {
 						ocp.error_manage(e);
 					}
 				});
-
-				ocp.file_manager.refresh();
-
-				remove_dialog.ocp_dialog('close');
 			},
 			Cancel: function() {
 				remove_dialog.ocp_dialog('close');

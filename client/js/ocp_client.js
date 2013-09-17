@@ -116,9 +116,9 @@
 		var result = scenario.mv(old_path, new_path);
 	}
 
-	ocp.client.rm = function(path) {
+	ocp.client.rm = function(path, on_success, on_error) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
-		var result = scenario.rm(path);
+		var result = scenario.rm(path, on_success, on_error);
 	}
 
 	ocp.client.upload_dir = function(path, files, after_success_func, on_progress_func) {
