@@ -31,6 +31,7 @@
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('ocp.client error');
 				console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
+				throw new Error('Server answered: ' + errorThrown);
 			},
 			statusCode: {
 				404: function() {
