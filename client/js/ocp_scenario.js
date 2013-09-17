@@ -14,6 +14,8 @@
 				return new ocp.scenario.UserStorage();
 			case '3':
 				return new ocp.scenario.CryptBlob();
+			default:
+				throw new Error('scenario id not found: ' + name);
 		}
 	};
 })(ocp);
