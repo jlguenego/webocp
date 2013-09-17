@@ -46,6 +46,7 @@
 	padding: 0px;
 	margin: 0px;
 	height: 30px;
+	z-index: 1;
 }
 
 .widget_grid_body_row_even {
