@@ -129,10 +129,10 @@
 				console.log(file.webkitRelativePath + ' is dir');
 				var name = ocp.basename(file.webkitRelativePath);
 				console.log('name=' + name);
-				ocp.client.mkdir(path + ocp.dirname(file.webkitRelativePath), name);
+				ocp.client.mkdir(normalize_path(path + '/' + ocp.dirname(file.webkitRelativePath)), name);
 			} else {
 				console.log(file.webkitRelativePath + ' is file');
-				ocp.client.upload_file(path + ocp.dirname(file.webkitRelativePath), file, after_success_func, on_progress_func);
+				ocp.client.upload_file(normalize_path(path + '/' + ocp.dirname(file.webkitRelativePath)), file, after_success_func, on_progress_func);
 			}
 			console.log('file=');
 			console.log(file);
