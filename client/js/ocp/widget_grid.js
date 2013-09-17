@@ -154,7 +154,12 @@ $.widget( "ui.ocp_grid", {
 
 		var self = this;
 		row.click(function(e) {
+			e.stopPropagation();
 			self.row_toggle_select($(this));
+		});
+
+		this.body.click(function(e) {
+			$(this).find('.ocp_gd_selected').removeClass('ocp_gd_selected');
 		});
 
 		row.dblclick(function(e) {
