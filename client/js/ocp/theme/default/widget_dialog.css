@@ -82,7 +82,7 @@ body {
 	padding: 5px 0px;
 }
 
-a.widget_dialog_button {
+.widget_dialog_frame a.widget_dialog_button {
 	display: inline-block;
 	height: 30px;
 	margin: 5px 10px;
