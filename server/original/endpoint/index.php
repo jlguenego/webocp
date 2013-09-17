@@ -73,11 +73,13 @@
 		try {
 			$old_path = $_REQUEST['old_path'];
 			$new_path = $_REQUEST['new_path'];
-			if (file_exists(ROOT.$new_path)) {
-				throw new Exception("This file/folder already exists:\n\n" . '"' . $new_path . '"');
-			}
-			if (!rename(ROOT.$old_path, ROOT.$new_path)) {
-				throw new Exception('Cannot rename the file with path: ' . $path);
+			if ($old_path != $new_path) {
+				if (file_exists(ROOT.$new_path)) {
+					throw new Exception("This file/folder already exists:\n\n" . '"' . $new_path . '"');
+				}
+				if (!rename(ROOT.$old_path, ROOT.$new_path)) {
+					throw new Exception('Cannot rename the file with path: ' . $path);
+				}
 			}
 		} catch (Exception $e) {
 			$output['error'] = $e->getMessage();
