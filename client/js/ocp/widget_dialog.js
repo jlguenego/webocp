@@ -19,8 +19,6 @@ $.widget( "ui.ocp_dialog", {
 
 		buttons: {},
 
-		enter_key: null,
-
 		// Callback
 		close: function() {},
 		on_open: function() {}
@@ -160,18 +158,6 @@ $.widget( "ui.ocp_dialog", {
 		if ( e.keyCode === $.ui.keyCode.ESCAPE ) {
 			self.close();
 			return;
-		}
-		if ( e.keyCode === $.ui.keyCode.ENTER ) {
-			var focused = self.element.find(":focus");
-
-			// if focus is not on a button
-			if (!focused.eq(0).is('a.widget_dialog_button')) {
-				var button = self.options.enter_key;
-				if (self.options.buttons[button]) {
-					self.options.buttons[button]();
-				}
-				return;
-			}
 		}
 
 		if ( e.keyCode !== $.ui.keyCode.TAB ) {

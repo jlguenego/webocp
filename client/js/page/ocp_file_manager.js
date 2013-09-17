@@ -398,7 +398,6 @@ $(document).ready(function() {
 
 	// CREATE NEW FOLDER
 	var new_folder_dialog = $('#ocp_fm_new_folder_dialog').ocp_dialog({
-		enter_key: 'Create',
 		buttons: {
 			Create: function() {
 				ocp.ui.cursor_wait_start();
@@ -428,7 +427,6 @@ $(document).ready(function() {
 
 	// RENAME
 	rename_dialog = $('#ocp_fm_rename_dialog').ocp_dialog({
-		enter_key: 'Rename',
 		buttons: {
 			Rename: function() {
 				var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
