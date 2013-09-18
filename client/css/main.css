@@ -54,7 +54,7 @@ html, body {
 }
 
 .header_menu_settings {
-	background-image: url(https://eu.static.mega.co.nz/images/mega/menu_sprite3.png);
+	background-image: url(image/menu_sprite3.png);
 	background-size: 32px 2102px;
 	background-position: 13px -1008px;
 }
@@ -67,7 +67,7 @@ html, body {
 
 .ocp_footer {
 	height: 160px;
-	background-image: url(https://eu.static.mega.co.nz/images/mega/register_sprite4.png);
+	background-image: url(image/register_sprite4.png);
 	background-size: 35px 650px;
 	background-position: left -350px;
 	background-repeat: repeat-x;

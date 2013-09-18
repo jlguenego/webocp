@@ -143,7 +143,7 @@
 	height: 15px;
 	cursor: pointer;
 
-	background-image: url('https://eu.static.mega.co.nz/images/mega/transfer-arrows.png');
+	background-image: url(image/transfer-arrows.png);
 	background-size: 30px 30px;
 	background-position: 0% 0%;
 }
