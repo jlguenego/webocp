@@ -42,6 +42,7 @@
 			args.pool_view.ocp_pool_view('attach', pool);
 		}
 
+		pool.send_update_event = false;
 		while (cursor < file.size) {
 			var cursor_next = cursor + block_size;
 
@@ -80,6 +81,7 @@
 			cursor = cursor_next;
 			block_id++;
 		}
+		pool.send_update_event = true;
 
 		function Hat() {
 			var hat_callback = function(event) {

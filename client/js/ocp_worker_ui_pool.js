@@ -13,8 +13,20 @@
 	    this.taskQueue = []; // tasks waiting for execution
 	    this.activeTaskQueue = {}; // tasks being executed
 	    this.size = size; // number of thread
+	    this.last_call = 0;
+	    this.send_update_event = true;
 
 	    this.sendUpdateEvent = function() {
+	    	if (!this.send_update_event) {
+	    		return;
+	    	}
+
+	    	var now = new Date().getTime();
+	    	if (now - this.last_call < 200) {
+	    		return;
+	    	}
+	    	this.last_call = now;
+
 	    	var event = new CustomEvent('ocp.worker_ui.pool.Pool.update', { 'detail': { pool: this } });
 			window.dispatchEvent(event);
 			//console.log('sent ocp.worker_ui.pool.Pool.update ' + c_i);
