@@ -163,22 +163,23 @@
 		this.callback_func = callback_func; // function to call when a message is received
 		this.thread = null; // the thread used to execute this task.
 
-		this.sendMessage = function(message, args) {
-			args = args || {};
-			this.thread.worker.postMessage({
-				id: self.id,
-				name: self.name,
-				message: message,
-				args: args
-			});
-		}
+	};
 
-		this.getObject = function() {
-			return {
-				id: self.id,
-				name: self.name,
-				args: self.args
-			}
+	ocp.worker_ui.pool.Task.prototype.sendMessage = function(message, args) {
+		args = args || {};
+		this.thread.worker.postMessage({
+			id: this.id,
+			name: this.name,
+			message: message,
+			args: args
+		});
+	};
+
+	ocp.worker_ui.pool.Task.prototype.getObject = function() {
+		return {
+			id: this.id,
+			name: this.name,
+			args: this.args
 		};
-	}
+	};
 })(ocp)
