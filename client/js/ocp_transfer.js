@@ -1,4 +1,8 @@
 (function(ocp, undefined) {
+	if (console) {
+		console.log = function() {};
+	}
+
 	ocp.transfer = {};
 
 	ocp.transfer.onprogress = function(task_id, task_array, progress_bar) {
@@ -58,7 +62,6 @@
 			var callback_func;
 			(function(block_id) {
 				callback_func = function(event) {
-					console.log(event.data);
 					check_error(event.data);
 					if (event.data.action == 'send') {
 						ocp.transfer.send_worker_block(event.data, function() {
@@ -85,7 +88,6 @@
 
 		function Hat() {
 			var hat_callback = function(event) {
-				console.log(event.data);
 				check_error(event.data);
 				if (event.data.action == 'send') {
 					ocp.transfer.send_worker_block(event.data, function() {
@@ -155,7 +157,6 @@
 		};
 
 		var hat_callback = function() {
-			console.log(event.data);
 			if (event.data.action == 'retrieve') {
 				var args = event.data;
 				ocp.transfer.retrieve_worker_block(event.data, function(content) {
@@ -196,7 +197,6 @@
 				hat_name: filename
 			};
 			var task_callback = function(event) {
-				console.log(event.data);
 				if (event.data.action == 'retrieve') {
 					var args = event.data;
 					ocp.transfer.retrieve_worker_block(event.data, function(content) {
@@ -225,7 +225,6 @@
 			window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 			window.requestFileSystem(window.TEMPORARY, 1024 * 1024 * 1024, function(filesystem) {
 				filesystem.root.getFile(filename, {create: false}, function(fileEntry) {
-					console.log(fileEntry);
 					var url = fileEntry.toURL();
 					console.log(url);
 					var link = $('<a/>');

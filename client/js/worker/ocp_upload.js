@@ -50,8 +50,6 @@ var upload_block = null;
 			console.log('ready to send the summary');
 
 			var content = ocp.upload.hat_get_object();
-			console.log('content=');
-			console.log(content);
 			var str = JSON.stringify(content);
 
 			upload_hat.filename = ocp.upload.common_process(ocp.utils.str2ab(str), ocp.upload.hat.secret_key);
@@ -60,7 +58,6 @@ var upload_block = null;
 	}
 
 	ocp.upload.block_upload = function(args) {
-		console.log(args);
 		ocp.cfg.server_base_url = args.server_uri;
 		upload_block.block_id = args.block_id;
 

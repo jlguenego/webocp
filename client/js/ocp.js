@@ -45,3 +45,4 @@ Error = Error || function (msg) {
 		return 'Error: ' + str;
 	};
 };
+

@@ -16,17 +16,17 @@
 	    this.last_call = 0;
 	    this.send_update_event = true;
 
-	    this.sendUpdateEvent = function() {
-	    	if (!this.send_update_event) {
-	    		return;
-	    	}
-
+	    this.sendUpdateEvent = function(force) {
 	    	var now = new Date().getTime();
-	    	if (now - this.last_call < 200) {
-	    		return;
-	    	}
+	    	if (!force) {
+		    	if (!this.send_update_event) {
+		    		return;
+		    	}
+		    	if (now - this.last_call < 200) {
+		    		return;
+		    	}
+		    }
 	    	this.last_call = now;
-
 	    	var event = new CustomEvent('ocp.worker_ui.pool.Pool.update', { 'detail': { pool: this } });
 			window.dispatchEvent(event);
 			//console.log('sent ocp.worker_ui.pool.Pool.update ' + c_i);
@@ -86,7 +86,6 @@
 					}
 				}
 	    	}
-	    	this.sendUpdateEvent();
 	    }
 
 		for (var i = 0 ; i < this.size ; i++) {
@@ -94,7 +93,7 @@
             self.threadQueue.push(thread);
             self.threadList.push(thread);
         }
-	    this.sendUpdateEvent();
+	    this.sendUpdateEvent(true);
 	}
 
 	ocp.worker_ui.pool.Thread = function(pool, url, name) {
@@ -151,7 +150,7 @@
 		        	this.pool.threadQueue.push(this);
 		        }
 	        }
-	        this.pool.sendUpdateEvent();
+	        this.pool.sendUpdateEvent(true);
 	    }
 	}
 
