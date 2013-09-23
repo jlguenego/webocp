@@ -8,13 +8,21 @@ var report = null;
 		this.worker = worker;
 		if (console == null) {
 			console = {};
-			console.log = function(msg) {
-				worker.postMessage({
-					console: msg,
-					thread: worker.thread_name,
-					task_id: worker.task_id,
-					task_name: worker.task_name
-				});
+			if (used_in_pool) {
+				console.log = function(msg) {
+					worker.postMessage({
+						console: msg,
+						thread: worker.thread_name,
+						task_id: worker.task_id,
+						task_name: worker.task_name
+					});
+				};
+			} else {
+				console.log = function(msg) {
+					worker.postMessage({
+						console: msg
+					});
+				};
 			}
 		}
 		if (report == null) {
@@ -23,9 +31,9 @@ var report = null;
 			}
 		}
 		if (used_in_pool) {
-			worker.addEventListener('message', ocp.worker.run(worker), false);
+			worker.onmessage = ocp.worker.run(worker);
 		} else {
-			worker.addEventListener('message', worker.run, false);
+			worker.onmessage = worker.run;
 		}
 
 		if (worker.init) {

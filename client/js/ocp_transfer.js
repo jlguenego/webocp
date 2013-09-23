@@ -32,7 +32,9 @@
 		var pool_nbr = ocp.cfg.upload_connection_nbr || 5;
 		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, url);
 		var cursor = 0;
-		var block_size = ocp.cfg.block_size || 1 << 16;
+		var block_size = ocp.cfg.block_size || 1 << 19;
+		console.log('block_size=' + block_size);
+		console.log('ocp.cfg.block_size=' + ocp.cfg.block_size);
 		var hat_worker = new Hat();
 		var block_id = 0;
 

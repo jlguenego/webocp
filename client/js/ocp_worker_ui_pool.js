@@ -98,7 +98,7 @@
 
 		this.task = null;
 
-		function callback(event) {
+		this.worker.onmessage = function(event) {
 			if (event.data.console) {
 				console.log('Thread[' + event.data.thread + ']-Task[' + event.data.task_name + '-' + event.data.task_id + ']: ');
 				console.log(event.data.console);
@@ -110,9 +110,7 @@
         	if (event.data.finish) {
 		        self.free();
 		    }
-	    }
-
-		this.worker.addEventListener('message', callback, false);
+	    };
 
 		this.run = function(task) {
 			this.task = task;

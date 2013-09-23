@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_worker_ui.js"></script>
+	</head>
+
+	<body>
+		<button>Start</button>
+
+
+		<script id="worker_1" type="text/js-worker">
+importScripts(base_url + '/js/ocp.js');
+importScripts(base_url + '/js/ocp_utils.js');
+importScripts(base_url + '/js/ocp_worker.js');
+
+ocp.worker.init(this);
+
+function run(event) {
+	console.log(event.data.url);
+	var subworker = new Worker(event.data.url);
+	subworker.onmessage = function(event) {
+		console.log(event.data);
+	};
+	subworker.postMessage({
+		action: 'start'
+	});
+	postMessage('Hello World');
+}
+		</script>
+
+		<script id="subworker_1" type="text/js-worker">
+importScripts(base_url + '/js/ocp.js');
+importScripts(base_url + '/js/ocp_utils.js');
+importScripts(base_url + '/js/ocp_worker.js');
+
+ocp.worker.init(this);
+
+function run(event) {
+	postMessage('I am a subworker');
+}
+		</script>
+
+		<script>
+$('button').click(function() {
+	var url = ocp.worker_ui.getEmbeddedURL('worker_1');
+	var subworker_url = ocp.worker_ui.getEmbeddedURL('subworker_1');
+	console.log(url);
+	var worker = new Worker(url);
+	worker.onmessage = function(event) {
+		if (event.data.console) {
+			console.log('response=' + event.data.console);
+		} else {
+			console.log(event.data);
+		}
+	};
+	worker.postMessage({
+		action: 'start',
+		url: subworker_url
+	});
+});
+		</script>
+	</body>
+</html>
