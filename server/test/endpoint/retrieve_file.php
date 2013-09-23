@@ -7,11 +7,15 @@
 	require_once(BASE_DIR . '/include/misc.inc');
 	require_once(BASE_DIR . '/include/constant.inc');
 	require_once(BASE_DIR . '/include/format.inc');
+	require_once(BASE_DIR . '/include/storage.inc');
+
+	$g_debug = true;
+	storage_set_root(ROOT . '/test');
 
 	$_REQUEST = array_merge($_GET, $_POST);
 	$output = array();
 	try {
-		$file = ROOT . '/test/' . $_REQUEST['filename'];
+		$file = storage_retrieve_path($_REQUEST['filename']);
 		debug('path='.$file);
 		if (!file_exists($file)) {
 			throw new Exception('This file does not exists.');
