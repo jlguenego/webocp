@@ -1,0 +1,4 @@
+# Activate URL rewriting
+RewriteEngine on
+
+RewriteRule ^node[\d]+(.*)  		test/$1 [L]
