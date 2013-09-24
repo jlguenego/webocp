@@ -9,8 +9,10 @@
 	require_once(BASE_DIR . '/include/misc.inc');
 	require_once(BASE_DIR . '/include/format.inc');
 	require_once(BASE_DIR . '/include/storage.inc');
+	require_once(BASE_DIR . '/include/ocp.inc');
 
-	storage_set_root(ROOT . '/test');
+	$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
+	storage_set_root(ROOT . '/test/' . $name);
 
 	$_REQUEST = array_merge($_GET, $_POST);
 
@@ -31,11 +33,8 @@
 	$output['_FILES'] = $_FILES;
 	try {
 		$root_dir = storage_get_root();
-		if (!is_dir($root_dir)) {
-			if (!@mkdir($root_dir)) {
-				throw new Exception('Cannot create the test folder.');
-			}
-		}
+		mkdir_p($root_dir);
+
 		$file = storage_generate_path($_REQUEST['filename']);
 		debug('path='.$file);
 		if (file_exists($file)) {

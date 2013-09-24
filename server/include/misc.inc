@@ -59,8 +59,9 @@
 
 	function debug($msg) {
 		global $g_debug;
+		global $g_script_name;
 		if ($g_debug) {
-			file_put_contents(LOG_FILE_PATH, $msg . PHP_EOL, FILE_APPEND);
+			file_put_contents(LOG_FILE_PATH, $g_script_name . ": " . $msg . PHP_EOL, FILE_APPEND);
 		}
 	}
 

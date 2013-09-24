@@ -7,7 +7,8 @@
 		retry = retry || 0;
 		on_success = on_success || function() {};
 
-		var upload_server_uri = ocp.cfg.server_base_url + '/webocp/server/test/endpoint/create_file_from_string.php';
+		var contact = ocp.dht.find(filename);
+		var upload_server_uri = contact.url + '/endpoint/create_file_from_string.php';
 
 		var formData = new FormData();
 		formData.append('filename', filename);
@@ -48,7 +49,8 @@
 	}
 
 	ocp.file.retrieve = function(filename, on_success, onprogress) {
-		var download_server_uri = ocp.cfg.server_base_url + '/webocp/server/test/endpoint/retrieve_file.php';
+		var contact = ocp.dht.find(filename);
+		var download_server_uri = contact.url + '/endpoint/retrieve_file.php';
 
 		var formData = new FormData();
 		formData.append('filename', filename);

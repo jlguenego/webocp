@@ -5,6 +5,7 @@
 
 	ocp.dht.find = function(address) {
 		if (!ocp.dht.ring) {
+			console.log('new ring');
 			ocp.dht.ring = new ocp.dht.Ring();
 		}
 		var contact = ocp.dht.ring.find(address);

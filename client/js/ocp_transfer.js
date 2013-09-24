@@ -1,6 +1,6 @@
 (function(ocp, undefined) {
 	if (console) {
-		console.log = function() {};
+		//console.log = function() {};
 	}
 
 	ocp.transfer = {};

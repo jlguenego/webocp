@@ -8,9 +8,11 @@
 	require_once(BASE_DIR . '/include/constant.inc');
 	require_once(BASE_DIR . '/include/format.inc');
 	require_once(BASE_DIR . '/include/storage.inc');
+	require_once(BASE_DIR . '/include/ocp.inc');
 
 	$g_debug = true;
-	storage_set_root(ROOT . '/test');
+	$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
+	storage_set_root(ROOT . '/test/' . $name);
 
 	$_REQUEST = array_merge($_GET, $_POST);
 	$output = array();
