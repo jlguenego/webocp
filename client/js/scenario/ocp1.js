@@ -23,6 +23,7 @@
 			ocp.file.send(public_address, public_content);
 			ocp.file.send(private_address, private_content);
 			ocp.session = {};
+			ocp.session.ocp1 = obj;
 			ocp.session.user_id = public_address;
 		};
 
