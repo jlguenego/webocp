@@ -47,7 +47,6 @@ $(document).ready(function() {
 	$('#pool_view').ocp_pool_view();
 
 	$('#retrieve').click(function() {
-		blocks = [];
 		ocp.cfg.server_base_url = $('#server_uri').val();
 		var filename = $('#upload_name').val();
 		if (!filename) {
