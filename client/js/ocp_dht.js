@@ -47,4 +47,8 @@
 			return this.ring[this.address_list[index - 1]];
 		};
 	};
+
+	ocp.dht.get_address = function(ab) {
+		return ocp.crypto.hash(ab);
+	};
 })(ocp);

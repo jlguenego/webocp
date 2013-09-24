@@ -27,7 +27,12 @@
 
 		public function load($name) {
 			$this->name = $name;
-			$content = file_get_contents($this->get_file($this->name));
+			$file = $this->get_file($this->name);
+			debug('file=' . $file);
+			if (!is_file($file)) {
+				throw new Exception('File not found: ' . $file);
+			}
+			$content = file_get_contents($file);
 			$object = json_decode($content);
 			$this->hydrate($object);
 		}

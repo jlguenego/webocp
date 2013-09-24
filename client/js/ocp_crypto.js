@@ -2,7 +2,7 @@
 	ocp.crypto = {};
 
 	ocp.crypto.hash = function(ab) {
-		if (typeof ab == 'string') {
+		if (typeof ab === 'string') {
 			ab = ocp.utils.str2ab(ab);
 		}
 		var wa = ocp.utils.ab2wa(ab);
@@ -43,6 +43,14 @@
 	};
 
 	ocp.crypto.serialize = function(obj) {
-	    return $.param(obj);
+	    return ocp.utils.str2ab(JSON.stringify(obj, null, " "));
+	};
+
+	ocp.crypto.generate_secret_key = function() {
+		return ocp.utils.str2ab('toto');
+	};
+
+	ocp.crypto.combine = function(email, password) {
+		return email + password;
 	};
 })(ocp);

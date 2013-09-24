@@ -11,7 +11,7 @@
 			case '1':
 				return new ocp.scenario.SharedStorage();
 			case '2':
-				return new ocp.scenario.UserStorage();
+				return new ocp.scenario.OCP1();
 			case '3':
 				return new ocp.scenario.CryptBlob();
 			default:
