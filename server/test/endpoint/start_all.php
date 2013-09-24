@@ -57,7 +57,7 @@
 
 	<body>
 		<form method="GET" action="">
-			Node quantity: <input type="text" name="node_qty" value="10"/><br />
+			Node quantity: <input type="number" name="node_qty" value="10"/><br />
 			<input type="submit" value="Submit" />
 		</form>
 	</body>

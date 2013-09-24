@@ -14,9 +14,7 @@ importScripts(base_url + '/js/ocp_worker_file.js');
 	ocp.download = {};
 
 	ocp.download.init = function() {
-		var worker = ocp.worker.worker;
-		worker.requestFileSystemSync = worker.webkitRequestFileSystemSync || worker.requestFileSystemSync;
-		worker.fs = worker.requestFileSystemSync(TEMPORARY, 1024 * 1024 * 1024);
+		ocp.worker_file.init();
 	}
 
 	ocp.download.download = function(args) {
@@ -57,8 +55,7 @@ importScripts(base_url + '/js/ocp_worker_file.js');
 	};
 
 	ocp.download.create_empty_file = function(filename, file_length) {
-		var content_ab = new ArrayBuffer(file_length);
-		ocp.worker_file.create(filename, content_ab);
+		ocp.worker_file.create(filename, file_length);
 	};
 
 	ocp.download.retrieve_block = function(block_name, crypted_content, secret_key) {

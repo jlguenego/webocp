@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_profile.js"></script>
+	</head>
+
+	<body>
+		file size (MB): <input type="number" id="size" value="" size="100"/><br />
+		<button>Create</button>
+
+		<script id="worker" type="text/js-worker">
+importScripts(base_url + '/js/ocp.js');
+importScripts(base_url + '/js/ocp_utils.js');
+importScripts(base_url + '/js/ocp_worker.js');
+importScripts(base_url + '/js/ocp_worker_file.js');
+
+ocp.worker.init(this);
+
+function run(event) {
+    var task = event.data;
+    switch(task.name) {
+    	case 'work':
+    		work(task.args);
+    		break;
+    }
+}
+
+function init() {
+	ocp.worker_file.init();
+}
+
+function work(args) {
+	ocp.worker_file.create(args.filename, args.size);
+
+	report({
+		file_size: ocp.utils.format_size(args.size),
+		finish: true
+	});
+}
+		</script>
+
+		<script>
+$('button').click(function() {
+	ocp.debug = true;
+	ocp.profile.start();
+	var url = ocp.worker_ui.getEmbeddedURL('worker');
+
+	var worker = new Worker(url);
+	worker.onmessage = function(e) {
+		console.log(e.data);
+
+		ocp.profile.report('finished');
+	}
+	worker.postMessage({
+		name: 'work',
+		args: {
+			filename: 'test.txt',
+			size: $('#size').val() * 1024 *1024
+		}
+	});
+});
+		</script>
+	</body>
+</html>

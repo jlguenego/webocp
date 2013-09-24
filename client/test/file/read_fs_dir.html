@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
 
 		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
 		<script src="js/ocp/core.js"></script>
 	</head>
 
@@ -19,18 +20,16 @@ function toArray(list) {
 }
 
 function listResults(entries) {
-	// Document fragments can improve performance since they're only appended
-	// to the DOM once. Only one browser reflow occurs.
-	var fragment = document.createDocumentFragment();
-
 	entries.forEach(function(entry, i) {
 		var li = document.createElement('li');
 		console.log(entry);
-		li.innerHTML = entry.name;
-		fragment.appendChild(li);
+		(function(entry) {
+			entry.file(function(f) {
+				li.innerHTML = entry.name + ': ' + ocp.utils.format_size(f.size);
+				$('#filelist').append(li);
+			});
+		})(entry);
 	});
-
-	document.querySelector('#filelist').appendChild(fragment);
 }
 
 function onInitFs(fs) {
