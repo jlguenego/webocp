@@ -6,6 +6,7 @@
 
 	require_once(BASE_DIR . '/include/misc.inc');
 	require_once(BASE_DIR . '/include/constant.inc');
+	require_once(BASE_DIR . '/include/global.inc');
 	require_once(BASE_DIR . '/include/format.inc');
 	require_once(BASE_DIR . '/include/storage.inc');
 	require_once(BASE_DIR . '/include/ocp.inc');
@@ -23,11 +24,9 @@
 			throw new Exception('This file does not exists.');
 		}
 		$output['result']['content'] = base64_encode(file_get_contents($file));
-		debug("File content:\n" . $output['result']['content']);
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
 	}
 	$result = json_encode($output);
-	debug('$result=' . $result);
 	echo $result;
 ?>
