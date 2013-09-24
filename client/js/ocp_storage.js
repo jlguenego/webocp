@@ -25,7 +25,7 @@
 			session: null,
 			scenario: '0',
 			upload_connection_nbr: 5,
-			block_size: 1 << 19
+			block_size: 1 << 20
 		};
 	}
 })(ocp);
