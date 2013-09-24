@@ -25,8 +25,8 @@
 	ocp.dht.Ring = function() {
 		this.ring = {};
 		this.address_list = [];
-
-		var url = ocp.cfg.server_base_url + '/webocp/server/' + ocp.cfg.sponsor_name + '/endpoint/get_contact_list.php';
+		var sponsor_name = ocp.cfg.sponsor_name || 'node0';
+		var url = ocp.cfg.server_base_url + '/webocp/server/' + sponsor_name + '/endpoint/get_contact_list.php';
 		var contact_list = ocp.client.command({}, url);
 
 		for (var name in contact_list) {
