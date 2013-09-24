@@ -22,6 +22,7 @@
 		}
 		ocp.cfg = {
 			server_base_url: 'http://www.ocpforum.org',
+			sponsor_name: 'node0',
 			session: null,
 			scenario: '0',
 			upload_connection_nbr: 5,

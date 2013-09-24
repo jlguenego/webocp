@@ -18,7 +18,7 @@
 		}
 
 		public function generate_start_address() {
-			$this->start_address = sha1(rand(0, 1000000));
+			$this->start_address = sha1($this->name);//sha1(rand(0, 1000000));
 		}
 
 		public function get_file() {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_client.js"></script>
+		<script src="js/ocp_storage.js"></script>
+		<script src="js/ocp_dht.js"></script>
+	</head>
+
+	<body>
+		Sponsor: <span id="sponsor"></span><br/>
+		Object hash: <input type="text" id="address" value="" size="100"/><br />
+		<button>Find contact</button><br/>
+		<span id="result"></span>
+
+		<script>
+$('#sponsor').html(ocp.cfg.server_base_url);
+
+$('button').click(function() {
+	var contact = ocp.dht.find($('#address').val());
+	$('#result').html(contact.toString());
+});
+		</script>
+	</body>
+</html>
