@@ -7,8 +7,6 @@ importScripts(base_url + '/js/ocp_worker.js');
 importScripts(base_url + '/js/ocp_crypto.js');
 importScripts(base_url + '/js/ocp_file.js');
 
-importScripts(base_url + '/_ext/WorkerFormData.js');
-
 var upload_hat = null;
 var upload_block = null;
 
