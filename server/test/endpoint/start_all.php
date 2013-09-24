@@ -16,9 +16,10 @@
 	if (isset($_REQUEST['node_qty'])) {
 		$output = array();
 		try {
+			$node_qty = intval($_REQUEST['node_qty']);
 			$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
 			$url = 'http://' . $_SERVER['HTTP_HOST'] . preg_replace('#(.*)/' . $name . '/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
-			for ($i = 0; $i < 10; $i++) {
+			for ($i = 0; $i < $node_qty; $i++) {
 				$name = 'node' . $i;
 				$node_url = $url . '/' . $name;
 				if ($i == 0) {
