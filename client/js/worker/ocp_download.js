@@ -1,6 +1,5 @@
 importScripts(base_url + '/_ext/sha1.js');
 importScripts(base_url + '/_ext/aes.js');
-importScripts(base_url + '/_ext/WorkerFormData.js');
 
 importScripts(base_url + '/js/ocp.js');
 importScripts(base_url + '/js/ocp_utils.js');

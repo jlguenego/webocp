@@ -37,7 +37,6 @@
 			// success
 			on_success();
 		}
-
 		xhr.open('POST', upload_server_uri, true); // async for progress access.
 
 		try {

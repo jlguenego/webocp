@@ -25,7 +25,8 @@
 	}
 
 	$g_debug = true;
-
+	debug('start');
+	debug('URI=' . $_SERVER['REQUEST_URI']);
 	debug_r('_FILES', $_FILES);
 	debug_r('_REQUEST', $_REQUEST);
 	$output = array();
