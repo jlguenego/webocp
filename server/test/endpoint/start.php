@@ -37,7 +37,7 @@
 	header("Content-Type:text/html; charset=UTF-8;");
 	//print_r($_SERVER);
 	$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
-	$url = 'http://' . $_SERVER['HTTP_HOST'] . preg_replace('#(.*node[\d]+).*#', "$1", $_SERVER['REQUEST_URI']);
+	$url = 'http://' . $_SERVER['HTTP_HOST'] . preg_replace('#(.*' . $name . ')/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
 ?>
 
 <!DOCTYPE html>

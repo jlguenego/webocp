@@ -21,24 +21,11 @@
 		$new_contact = json_decode($_REQUEST['contact']);
 		$ocp = new OCP();
 		$ocp->load(OCP::get_name_from_url($_SERVER['REQUEST_URI']));
-
 		$name = $new_contact->name;
-		if ($ocp->contact_list == null) {
-			$ocp->contact_list = array();
-			$ocp->contact_list[$name] = $new_contact;
-		} else {
-			$ocp->contact_list->$name = $new_contact;
-		}
+		$ocp->contact_list->$name = $new_contact;
 		$ocp->store();
-		$ocp->inform_all($new_contact);
 
-		$output['result']['contact_list'] = array();
-		foreach ($ocp->contact_list as $name => $contact) {
-		 	 if ($name != $new_contact->name) {
-		 	 	$output['result']['contact_list'][$name] = $contact;
-		 	}
-		}
-		$output['result']['contact_list'][$ocp->name] = $ocp->to_contact();
+		$output['result'] = 'OK';
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
 	}

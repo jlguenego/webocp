@@ -22,7 +22,7 @@
 		}
 
 		public function get_file() {
-			return ROOT . '/' . $this->name . '.json';
+			return ROOT . '/conf/' . $this->name . '.json';
 		}
 
 		public function load($name) {
@@ -51,6 +51,7 @@
 		}
 
 		public function store() {
+			mkdir_p(dirname($this->get_file($this->name)));
 			file_put_contents($this->get_file($this->name), $this->get_json());
 	    }
 
@@ -73,6 +74,24 @@
 			}
 			$this->contact_list = $response->result->contact_list;
 			debug_r('Contact_list', $this->contact_list);
+	    }
+
+	    public function inform_all($new_contact) {
+			$postdata = http_build_query(array('contact' => json_encode($new_contact)));
+
+			$opts = array(
+				'http' => array(
+					'method' => "POST",
+					'content' => $postdata
+				)
+			);
+			$context = stream_context_create($opts);
+			foreach ($this->contact_list as $name => $contact) {
+				if ($name == $new_contact->name) {
+					continue;
+				}
+				$response = file_get_contents($contact->url . '/endpoint/add_contact.php', false, $context);
+			}
 	    }
 	}
 ?>
