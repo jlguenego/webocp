@@ -21,11 +21,11 @@
 
 		xhr.upload.addEventListener('progress', onprogress, false);
 		xhr.onreadystatechange = function() {
-			console.log('xhr.readyState=' + xhr.readyState);
+			//console.log('xhr.readyState=' + xhr.readyState);
 			if (xhr.readyState != 4) {
 				return;
 			}
-			console.log('xhr.status=' + xhr.status);
+			//console.log('xhr.status=' + xhr.status);
 			if (xhr.status == 0 || xhr.status >= 400) { // no success
 				retry++;
 				if ((ocp.file.max_retry < 0) || (retry < ocp.file.max_retry)) {
@@ -83,11 +83,16 @@
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
 				var json_obj = JSON.parse(xhr.responseText);
-				content = ocp.utils.b642ab(json_obj.result.content);
+				if (json_obj.result) {
+					content = ocp.utils.b642ab(json_obj.result.content);
+				}
 			}
 		}
 		xhr.open('POST', download_server_uri, false);
 		xhr.send(formData);
+		if (!content) {
+			throw new Error('File not found (on contact ' + contact.name + '): ' + filename);
+		}
 		return content;
 	}
 })(ocp)

@@ -18,42 +18,68 @@
 				name: name,
 				secret_key: ocp.crypto.generate_secret_key()
 			};
-			var private_content = ocp.crypto.pcrypt(password, ocp.crypto.serialize(obj));
 
-			ocp.file.send(public_address, public_content);
-			ocp.file.send(private_address, private_content);
 			ocp.session = {};
-			ocp.session.ocp1 = obj;
+			ocp.session.ocp1 = {};
+			ocp.session.ocp1.password = password;
+			ocp.session.ocp1.public_address = public_address;
+			ocp.session.ocp1.public_content = public_content;
+			ocp.session.ocp1.private_address = private_address;
+			ocp.session.ocp1.private_content = obj;
 			ocp.session.user_id = public_address;
+
+			this.sync_connection_objects();
 		};
 
-		this.login= function(args) {
-			var email = args.email;
-			var password = args.password;
+		this.login = function(args) {
+			try {
+				var email = args.email;
+				var password = args.password;
 
-			var public_address = ocp.dht.get_address(email);
-			var private_address = ocp.dht.get_address(email + password);
-			ocp.session = {};
+				var public_address = ocp.dht.get_address(email);
+				var private_address = ocp.dht.get_address(email + password);
+				ocp.session = {};
 
-			ocp.file.retrieve_sync(public_address);
-			var content = ocp.file.retrieve_sync(private_address);
-			var json = ocp.utils.ab2str(ocp.crypto.pdecrypt(password, content));
-			console.log('json=' + json);
-			ocp.session.ocp1 = JSON.parse(json);
-			ocp.session.user_id = ocp.session.ocp1.email;
-			ocp.session.user_name = ocp.session.ocp1.name;
+				var public_content = ocp.file.retrieve_sync(public_address);
+				var content = ocp.file.retrieve_sync(private_address);
+				var obj = JSON.parse(ocp.utils.ab2str(ocp.crypto.pdecrypt(password, content)));
+
+				ocp.session = {};
+				ocp.session.ocp1 = {};
+				ocp.session.ocp1.password = password;
+				ocp.session.ocp1.public_address = public_address;
+				ocp.session.ocp1.public_content = public_content;
+				ocp.session.ocp1.private_address = private_address;
+				ocp.session.ocp1.private_content = obj;
+				ocp.session.user_id = public_address;
+			} catch (e) {
+				ocp.session = {};
+			}
 		};
 
 		this.ls = function(path, on_success, on_error) {
-			on_success(ocp.session.ocp1.root_dir);
+			on_success(ocp.session.ocp1.private_content.root_dir);
 		};
 
 		this.mkdir = function(path, name, on_success, on_error) {
-			ocp.client.async_command({
-				action: 'mkdir',
-				path: '/' + ocp.session.user_id + path,
-				name: name
-			}, this.endpoint, on_success, on_error);
+			ocp.session.ocp1.private_content.root_dir.push({
+				name: name,
+				label: name,
+				type: 'dir'
+			});
+			this.sync_connection_objects();
+
+			on_success();
+		};
+
+		this.sync_connection_objects = function() {
+			console.log('ocp.session.ocp1.private_content=');
+			console.log(ocp.session.ocp1.private_content);
+
+			var private_content = ocp.crypto.pcrypt(
+				ocp.session.ocp1.password, ocp.crypto.serialize(ocp.session.ocp1.private_content));
+			ocp.file.send(ocp.session.ocp1.private_address, private_content);
+			ocp.file.send(ocp.session.ocp1.public_address, ocp.session.ocp1.public_content);
 		};
 
 		this.rm = function(path, on_success, on_error) {

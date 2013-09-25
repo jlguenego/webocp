@@ -38,9 +38,6 @@
 
 		$file = storage_generate_path($_REQUEST['filename']);
 		debug('path='.$file);
-		if (file_exists($file)) {
-			throw new Exception('This file already exists.');
-		}
 		mkdir_p(dirname($file));
 		$tmp_file = $_FILES['content']['tmp_name'];
 
