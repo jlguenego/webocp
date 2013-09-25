@@ -72,30 +72,34 @@
 		};
 
 		this.ls = function(path, on_success, on_error) {
-			console.log('ls');
-			console.log(ocp.session);
-			var path_a = [];
-			if (path != '/') {
-				path_a = path.split('/');
-				path_a.shift();
-			}
+			try {
+				console.log('ls');
+				console.log(ocp.session);
+				var path_a = [];
+				if (path != '/') {
+					path_a = path.split('/');
+					path_a.shift();
+				}
 
-			var dir = ocp.session.ocp1.private.content.root_dir;
-			console.log('path_a=');
-			console.log(path_a);
-			for (var i = 0; i < path_a.length; i++) {
-				dir = dir[path_a[i]].children;
+				var dir = ocp.session.ocp1.private.content.root_dir;
+				console.log('path_a=');
+				console.log(path_a);
+				for (var i = 0; i < path_a.length; i++) {
+					dir = dir[path_a[i]].children;
+				}
+				console.log(dir);
+				var result = [];
+				for (var name in dir) {
+					var file = JSON.parse(JSON.stringify(dir[name]));
+					file.name = name;
+					result.push(file);
+				}
+				console.log(result);
+				this.sync_connection_objects();
+				on_success(result);
+			} catch (e) {
+				on_error(e);
 			}
-			console.log(dir);
-			var result = [];
-			for (var name in dir) {
-				var file = JSON.parse(JSON.stringify(dir[name]));
-				file.name = name;
-				result.push(file);
-			}
-			console.log(result);
-			this.sync_connection_objects();
-			on_success(result);
 		};
 
 		this.mkdir = function(path, name, on_success, on_error) {
