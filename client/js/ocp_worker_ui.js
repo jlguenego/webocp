@@ -9,7 +9,7 @@
 		$('body').append(worker);
 
 		var base_url = ocp.dirname(window.location.href);
-		var base_href = $('base').attr('href');
+		var base_href = $('base').attr('href') || '';
 		if (!/^http:\/\//.test(base_href)) { // Is base_href relative?
 			base_url += '/' + base_href;
 		}

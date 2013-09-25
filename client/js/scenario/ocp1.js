@@ -94,6 +94,7 @@
 				result.push(file);
 			}
 			console.log(result);
+			this.sync_connection_objects();
 			on_success(result);
 		};
 
@@ -123,6 +124,26 @@
 			this.sync_connection_objects();
 
 			on_success();
+		};
+
+		this.mkfile = function(path, name, file_descr) {
+			console.log('mkfile');
+			console.log(ocp.session);
+			var path_a = [];
+			if (path != '/') {
+				path_a = path.split('/');
+				path_a.shift();
+			}
+
+			var dir = ocp.session.ocp1.private.content.root_dir;
+			console.log('path_a=');
+			console.log(path_a);
+			for (var i = 0; i < path_a.length; i++) {
+				dir = dir[path_a[i]].children;
+			}
+			console.log(dir);
+			dir[name] = file_descr;
+			this.sync_connection_objects();
 		};
 
 		this.sync_connection_objects = function() {
@@ -218,12 +239,32 @@
 		};
 
 		this.upload_file = function(path, file, after_success_func, on_progress_func) {
+			var onprogress = function(performed) {
+				var e = {
+					loaded: performed,
+					total: 100
+				};
+				on_progress_func(e, path, file.name);
+			};
 			var args = {
 				file: file,
-				secret_key: $('#secret_key').val(),
-				progress_bar: $('#progress')
+				secret_key: ocp.session.ocp1.private.content.secret_key,
+				onprogress: onprogress
 			};
-			ocp.transfer.upload(args);
+			console.log('args=');
+			console.log(args);
+			var self = this;
+			console.log('file.lastModifiedDate=' + file.lastModifiedDate);
+			ocp.transfer.upload(args, function(address) {
+				self.mkfile(path, file.name, {
+					label: file.name,
+					type: 'file',
+					size: file.size,
+					last_modified: file.lastModifiedDate,
+					address: address
+				});
+				after_success_func();
+			});
 		};
 
 		this.upload_dir = function(path, relative_path, form, after_success) {

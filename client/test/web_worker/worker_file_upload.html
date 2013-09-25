@@ -44,6 +44,10 @@ $(document).ready(function() {
 	$('.progress').ocp_progressbar();
 	$('#pool_view').ocp_pool_view();
 
+	function onprogress(performed) {
+		$('.progress').ocp_progressbar('set_progress', performed);
+	}
+
 	$('#send').click(function() {
 		ocp.cfg.server_base_url = $('#server_uri').val();
 		var file = $('#file').get(0).files[0];
@@ -54,10 +58,12 @@ $(document).ready(function() {
 		var args = {
 			file: file,
 			secret_key: $('#secret_key').val(),
-			progress_bar: $('#progress'),
-			pool_view: $('#pool_view')
+			onprogress: onprogress
+			//pool_view: $('#pool_view')
 		};
-		ocp.transfer.upload(args);
+		ocp.transfer.upload(args, function(filename) {
+			$('#upload_name').html(filename);
+		});
 	});
 });
 		</script>

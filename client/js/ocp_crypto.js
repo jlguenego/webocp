@@ -47,7 +47,8 @@
 	};
 
 	ocp.crypto.generate_secret_key = function() {
-		return ocp.utils.str2ab('toto');
+		//return ocp.utils.str2ab('toto');
+		return 'toto';
 	};
 
 	ocp.crypto.combine = function(email, password) {
