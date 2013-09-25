@@ -96,6 +96,7 @@ var g_request = {};
 			scenario.login(args);
 
 			if ($('#ocp_lg_remember_me').is(':checked')) {
+				ocp.session.remember_me = true;
 				ocp.cfg.session = ocp.session;
 				ocp.storage.saveLocal();
 			}

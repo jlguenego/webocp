@@ -12,21 +12,27 @@
 				name: name
 			});
 			var private_address = ocp.dht.get_address(ocp.crypto.combine(email, password));
-			var obj = {
-				root_dir: [],
+			var private_content = {
+				root_dir: {},
 				email: email,
 				name: name,
 				secret_key: ocp.crypto.generate_secret_key()
 			};
 
-			ocp.session = {};
-			ocp.session.ocp1 = {};
-			ocp.session.ocp1.password = password;
-			ocp.session.ocp1.public_address = public_address;
-			ocp.session.ocp1.public_content = public_content;
-			ocp.session.ocp1.private_address = private_address;
-			ocp.session.ocp1.private_content = obj;
-			ocp.session.user_id = public_address;
+			ocp.session = {
+				ocp1: {
+					password: password,
+					public: {
+						address: public_address,
+						content: public_content
+					},
+					private: {
+						address: private_address,
+						content: private_content
+					}
+				},
+				user_id: public_address
+			};
 
 			this.sync_connection_objects();
 		};
@@ -42,44 +48,106 @@
 
 				var public_content = ocp.file.retrieve_sync(public_address);
 				var content = ocp.file.retrieve_sync(private_address);
-				var obj = JSON.parse(ocp.utils.ab2str(ocp.crypto.pdecrypt(password, content)));
+				var private_content = JSON.parse(ocp.utils.ab2str(this.decrypt(password, content)));
+				console.log('private_content=');
+				console.log(private_content);
 
-				ocp.session = {};
-				ocp.session.ocp1 = {};
-				ocp.session.ocp1.password = password;
-				ocp.session.ocp1.public_address = public_address;
-				ocp.session.ocp1.public_content = public_content;
-				ocp.session.ocp1.private_address = private_address;
-				ocp.session.ocp1.private_content = obj;
-				ocp.session.user_id = public_address;
+				ocp.session = {
+					ocp1: {
+						password: password,
+						public: {
+							address: public_address,
+							content: public_content
+						},
+						private: {
+							address: private_address,
+							content: private_content
+						}
+					},
+					user_id: public_address
+				};
 			} catch (e) {
 				ocp.session = {};
 			}
 		};
 
 		this.ls = function(path, on_success, on_error) {
-			on_success(ocp.session.ocp1.private_content.root_dir);
+			console.log('ls');
+			console.log(ocp.session);
+			var path_a = [];
+			if (path != '/') {
+				path_a = path.split('/');
+				path_a.shift();
+			}
+
+			var dir = ocp.session.ocp1.private.content.root_dir;
+			console.log('path_a=');
+			console.log(path_a);
+			for (var i = 0; i < path_a.length; i++) {
+				dir = dir[path_a[i]].children;
+			}
+			console.log(dir);
+			var result = [];
+			for (var name in dir) {
+				var file = JSON.parse(JSON.stringify(dir[name]));
+				file.name = name;
+				result.push(file);
+			}
+			console.log(result);
+			on_success(result);
 		};
 
 		this.mkdir = function(path, name, on_success, on_error) {
-			ocp.session.ocp1.private_content.root_dir.push({
-				name: name,
+			console.log('mkdir');
+			console.log(ocp.session);
+			var path_a = [];
+			if (path != '/') {
+				path_a = path.split('/');
+				path_a.shift();
+			}
+
+			var dir = ocp.session.ocp1.private.content.root_dir;
+			console.log('path_a=');
+			console.log(path_a);
+			for (var i = 0; i < path_a.length; i++) {
+				dir = dir[path_a[i]].children;
+			}
+			console.log(dir);
+			dir[name] = {
 				label: name,
-				type: 'dir'
-			});
+				type: 'dir',
+				size: 0,
+				last_modified: 0,
+				children: {}
+			};
 			this.sync_connection_objects();
 
 			on_success();
 		};
 
 		this.sync_connection_objects = function() {
-			console.log('ocp.session.ocp1.private_content=');
-			console.log(ocp.session.ocp1.private_content);
+			console.log('ocp.session.ocp1.private.content=');
+			console.log(ocp.session.ocp1.private.content);
 
-			var private_content = ocp.crypto.pcrypt(
-				ocp.session.ocp1.password, ocp.crypto.serialize(ocp.session.ocp1.private_content));
-			ocp.file.send(ocp.session.ocp1.private_address, private_content);
-			ocp.file.send(ocp.session.ocp1.public_address, ocp.session.ocp1.public_content);
+			var private_content = this.crypt(
+				ocp.session.ocp1.password, ocp.crypto.serialize(ocp.session.ocp1.private.content));
+			ocp.file.send(ocp.session.ocp1.private.address, private_content);
+			ocp.file.send(ocp.session.ocp1.public.address, ocp.session.ocp1.public.content);
+
+			if (ocp.session.remember_me) {
+				ocp.cfg.session = ocp.session;
+				ocp.storage.saveLocal();
+			}
+		};
+
+		this.crypt = function(password, content) {
+			return content;
+			//return ocp.crypto.pcrypt(password, content);
+		};
+
+		this.decrypt = function(password, content) {
+			return content;
+			//return ocp.crypto.pdecrypt(password, content);
 		};
 
 		this.rm = function(path, on_success, on_error) {
