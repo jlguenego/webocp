@@ -175,66 +175,55 @@
 		};
 
 		this.mv = function(old_path, new_path) {
+			console.log('mv');
+			console.log(ocp.session);
+			if (old_path == '/') {
+				return;
+			}
+			if (new_path == '/') {
+				return;
+			}
 
+			var path_a = old_path.split('/');
+			path_a.shift();
+			var name = path_a.pop();
+
+			var dir = ocp.session.ocp1.private.content.root_dir;
+			console.log('path_a=');
+			console.log(path_a);
+			for (var i = 0; i < path_a.length; i++) {
+				dir = dir[path_a[i]].children;
+			}
+			console.log(dir);
+			var old_file = JSON.parse(JSON.stringify(dir[name]));
+			delete dir[name];
+
+			// Going to replace the object
+
+			path_a = new_path.split('/');
+			path_a.shift();
+			var name = path_a.pop();
+			old_file.label = name;
+
+			dir = ocp.session.ocp1.private.content.root_dir;
+			console.log('path_a=');
+			console.log(path_a);
+			for (var i = 0; i < path_a.length; i++) {
+				dir = dir[path_a[i]].children;
+			}
+			console.log(dir);
+			dir[name] = old_file;
+
+			this.sync_connection_objects();
 		};
 
 		this.upload_file = function(path, file, after_success_func, on_progress_func) {
-			var formData = new FormData();
-			formData.append('input_name', 'file');
-			formData.append('path', '/' + ocp.session.user_id + path);
-			formData.append('file[]', file);
-			var result = null;
-		    $.ajax({
-		        url: this.endpoint + '?action=upload_file&file_size=' + file.size,  //server script to process data
-		        type: 'POST',
-		        data: formData,
-		        async: true,
-		        xhr: function() {  // custom xhr
-		            var myXhr = $.ajaxSettings.xhr();
-		            if(myXhr.upload){ // check if upload property exists
-		                myXhr.upload.addEventListener('progress', function(e) {
-		                	if (on_progress_func) {
-			                	on_progress_func(e, file.name);
-			                }
-		                }, false); // for handling the progress of the upload
-		            }
-		            return myXhr;
-		        },
-		        beforeSend: function() {},
-		        success: function(data) {
-					try {
-						var e = $.Event('progress');
-						e.total = 1;
-						e.loaded = 1;
-						if (on_progress_func) {
-							on_progress_func(e, file.name);
-						}
-						//console.log(data);
-						var output = $.parseJSON(data);
-						if (output.error) {
-							throw new Error('Server answered: ' + output.error);
-						}
-						if (output.result) {
-							result = output.result;
-						}
-					} catch (e) {
-						ocp.error_manage(e);
-						return;
-					}
-					if (after_success_func) {
-						after_success_func();
-					}
-				},
-		        error: function(jqXHR, textStatus, errorThrown) {
-					console.log('ocp.client.ls error');
-					console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
-				},
-		        //Options to tell JQuery not to process data or worry about content-type
-		        cache: false,
-		        contentType: false,
-		        processData: false
-		    });
-		    return result;
+			var args = {
+				file: file,
+				secret_key: $('#secret_key').val(),
+				progress_bar: $('#progress')
+			};
+			ocp.transfer.upload(args);
 		};
 
 		this.upload_dir = function(path, relative_path, form, after_success) {
