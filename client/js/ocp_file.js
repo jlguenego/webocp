@@ -95,4 +95,28 @@
 		}
 		return content;
 	}
+
+	ocp.file.remove = function(filename, on_success, onprogress) {
+		on_success = on_success || function() {};
+		onprogress = onprogress || function() {};
+
+		var contact = ocp.dht.find(filename);
+		var download_server_uri = contact.url + '/endpoint/remove_file.php';
+
+		var formData = new FormData();
+		formData.append('filename', filename);
+
+		var xhr = new XMLHttpRequest();
+		console.log(xhr);
+		xhr.upload.addEventListener('progress', onprogress, false);
+		xhr.onreadystatechange = function(){
+			if (xhr.readyState == 4 && xhr.status == 200) { // on success
+				var json_obj = JSON.parse(xhr.responseText);
+				var content = ocp.utils.b642ab(json_obj.result.content);
+				on_success(content);
+			}
+		}
+		xhr.open('POST', download_server_uri, true);
+		xhr.send(formData);
+	}
 })(ocp)

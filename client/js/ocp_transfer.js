@@ -244,6 +244,114 @@
 		}
 	};
 
+	ocp.transfer.remove = function(args) {
+		var worker_url = ocp.worker_ui.getURL('js/worker/ocp_download.js');
+		var pool_nbr = ocp.cfg.download_connection_nbr || 5;
+		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, worker_url);
+		var filename = args.filename;
+		var secret_key = args.secret_key;
+		var progress_bar = args.progress_bar;
+		var task_array = null;
+		var written_block = 0;
+		var hat = null;
+
+		if (args.pool_view) {
+			args.pool_view.ocp_pool_view('attach', pool);
+		}
+
+		var hat_args = {
+			block_name: filename,
+			server_uri: ocp.cfg.server_base_url,
+			secret_key: secret_key
+		};
+
+		var hat_callback = function() {
+			if (event.data.action == 'retrieve') {
+				var args = event.data;
+				ocp.transfer.retrieve_worker_block(event.data, function(content) {
+					var task = pool.getTask(args.task_id);
+					task.sendMessage('finalize', {
+						content: content,
+						block_name: args.filename,
+						secret_key: secret_key
+					});
+				});
+			} else if (event.data.action == 'finalize') {
+				hat = event.data.hat;
+
+				task_array = [];
+				for (var i = 0; i < event.data.hat.block_nbr; i++) {
+					task_array.push(0);
+				}
+				task_array.push(1);
+
+				(ocp.transfer.onprogress(0, task_array, progress_bar))(null);
+				for (var i = 0; i < event.data.hat.block_nbr; i++) {
+					create_task(event.data.hat, i);
+				}
+				pool.terminate(); // Nice
+			}
+		};
+
+		var task = new ocp.worker_ui.pool.Task('hat', 'download_hat', hat_args, hat_callback);
+		pool.addTask(task);
+
+		function create_task(hat, i) {
+			var task_args = {
+				block_id: i,
+				block_name: hat.summary[i],
+				secret_key: secret_key,
+				server_uri: ocp.cfg.server_base_url,
+				block_size: hat.block_size,
+				hat_name: filename
+			};
+			var task_callback = function(event) {
+				if (event.data.action == 'retrieve') {
+					var args = event.data;
+					ocp.transfer.remove_worker_block(event.data, function(content) {
+						var task = pool.getTask(args.task_id);
+						task.sendMessage('finalize', {
+							block_name: args.filename,
+							content: content,
+							secret_key: secret_key,
+							hat_name: filename,
+							block_id: args.block_id,
+							block_size: hat.block_size
+						});
+					}, ocp.transfer.onprogress(args.block_id, task_array, progress_bar));
+				} else if (event.data.action == 'finalize') {
+					written_block++;
+					if (written_block == hat.block_nbr) {
+						finalize();
+					}
+				}
+			}
+			var task = new ocp.worker_ui.pool.Task(i, 'download_block', task_args, task_callback);
+			pool.addTask(task);
+		}
+
+		function finalize() {
+			window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+			window.requestFileSystem(window.TEMPORARY, 1024 * 1024 * 1024, function(filesystem) {
+				filesystem.root.getFile(filename, {create: false}, function(fileEntry) {
+					var url = fileEntry.toURL();
+					console.log(url);
+					var link = $('<a/>');
+					link.attr('href', url).attr('download', filename);
+					console.log(link[0]);
+					link[0].click();
+				}, errorHandler('getFile'));
+			}, errorHandler('requestFileSystem'));
+		}
+
+		function errorHandler(tag) {
+			return function(e) {
+				console.log(tag + ' Error=');
+				console.log(e);
+			}
+		}
+	};
+
 	ocp.transfer.send_worker_block = function(args, on_success, onprogress) {
 		ocp.file.send(args.filename, args.content, on_success, onprogress);
 	};
@@ -252,4 +360,7 @@
 		ocp.file.retrieve(args.filename, on_success, onprogress);
 	};
 
+	ocp.transfer.remove_worker_block = function(args, on_success, onprogress) {
+		ocp.file.remove(args.filename, on_success, onprogress);
+	};
 })(ocp);

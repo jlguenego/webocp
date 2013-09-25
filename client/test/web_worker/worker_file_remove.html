@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<!-- PROGRESSBAR -->
+		<script src="js/ocp/widget_progressbar.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_progressbar.css" />
+		<!-- END PROGRESSBAR -->
+
+		<!-- POOL VIEW -->
+		<script src="js/ocp/widget_pool_view.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_pool_view.css" />
+		<!-- END POOL VIEW -->
+
+		<script src="_ext/sha1.js"></script>
+		<script src="_ext/aes.js"></script>
+
+		<script src="_ext/FileSaver.js"></script>
+		<script src="_ext/Blob.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_storage.js"></script>
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_worker_ui_pool.js"></script>
+		<script src="js/ocp_file.js"></script>
+		<script src="js/ocp_transfer.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_dht.js"></script>
+		<script src="js/ocp_client.js"></script>
+	</head>
+
+	<body>
+		<div id="pool_view"></div>
+		Serveur URL: <input type="text" id="server_uri" /><br/>
+		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
+		Upload name: <input type="text" id="upload_name" style="width: 300px;"/><br/>
+		<button id="remove">Remove</button>
+		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
+
+		<script>
+$(document).ready(function() {
+	$('#server_uri').val(ocp.cfg.server_base_url);
+	$('.progress').ocp_progressbar();
+	$('#pool_view').ocp_pool_view();
+
+	$('#remove').click(function() {
+		ocp.cfg.server_base_url = $('#server_uri').val();
+		var filename = $('#upload_name').val();
+		if (!filename) {
+			alert('no file');
+			return;
+		}
+
+		var args = {
+			filename: filename,
+			secret_key: $('#secret_key').val(),
+			progress_bar: $('#progress'),
+			pool_view: $('#pool_view')
+		};
+		ocp.transfer.remove(args);
+	});
+});
+		</script>
+	</body>
+</html>
