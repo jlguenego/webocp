@@ -48,6 +48,65 @@
 		};
 
 		this.toCanvas = function(canvas) {
+			console.log('toCanvas');
+			canvas.width = 400;
+			canvas.height = 400;
+			var ring_radius = 150;
+			var node_radius = 10;
+
+			var ring_x = canvas.width / 2;
+			var ring_y = canvas.height / 2;
+
+			var context = canvas.getContext("2d");
+			context.beginPath();
+			context.arc(ring_x, ring_y, ring_radius, 0, 2 * Math.PI); // (x, y, radius, start_angle, end_angle)
+			context.stroke();
+
+			var ocp_canvas = new ocp.canvas.Canvas();
+
+			for (var i = 0; i < this.address_list.length; i++) {
+				var address = this.address_list[i];
+				var n = parseInt(address.substr(0, 4), 16) / 0xffff;
+				var angle = -n * (2 * Math.PI);
+
+				var node_x = ring_x + ring_radius * Math.cos(angle);
+				var node_y = ring_y + ring_radius * Math.sin(angle);
+
+				context.beginPath();
+				context.arc(node_x, node_y, node_radius, 0, 2 * Math.PI); // (x, y, radius, start_angle, end_angle)
+				context.fill();
+
+				ocp_canvas.zone_list.push(new ocp.canvas.Zone({
+					type: 'circle',
+					center: {
+						x: node_x,
+						y: node_y,
+					},
+					radius: node_radius,
+					data: {
+						address: address
+					}
+				}, function(e) {
+					console.log('address=' + this.space.data.address)
+				}));
+			}
+
+			canvas.addEventListener('click', on_click, false);
+
+			function on_click(e) {
+				var rect = canvas.getBoundingClientRect()
+				var p = {
+					x: e.clientX - rect.left,
+					y: e.clientY - rect.top
+				};
+				var zone_a = ocp_canvas.get_zones(p);
+				console.log(zone_a);
+				for (var i = 0; i < zone_a.length; i++) {
+					var zone = zone_a[i];
+					zone.onmouse(p);
+				}
+			}
+
 
 		};
 	};
