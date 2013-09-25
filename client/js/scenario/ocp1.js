@@ -151,18 +151,31 @@
 		};
 
 		this.rm = function(path, on_success, on_error) {
-			ocp.client.async_command({
-				action: 'rm',
-				path: '/' + ocp.session.user_id + path
-			}, this.endpoint, on_success, on_error);
+			console.log('rm');
+			console.log(ocp.session);
+			if (path == '/') {
+				return;
+			}
+
+			var path_a = path.split('/');
+			path_a.shift();
+			var name = path_a.pop();
+
+			var dir = ocp.session.ocp1.private.content.root_dir;
+			console.log('path_a=');
+			console.log(path_a);
+			for (var i = 0; i < path_a.length; i++) {
+				dir = dir[path_a[i]].children;
+			}
+			console.log(dir);
+			delete dir[name];
+			this.sync_connection_objects();
+
+			on_success();
 		};
 
 		this.mv = function(old_path, new_path) {
-			ocp.client.command({
-				action: 'mv',
-				old_path: '/' + ocp.session.user_id + old_path,
-				new_path: '/' + ocp.session.user_id + new_path
-			}, this.endpoint);
+
 		};
 
 		this.upload_file = function(path, file, after_success_func, on_progress_func) {
