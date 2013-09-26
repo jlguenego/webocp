@@ -112,8 +112,7 @@
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
 				var json_obj = JSON.parse(xhr.responseText);
-				var content = ocp.utils.b642ab(json_obj.result.content);
-				on_success(content);
+				on_success();
 			}
 		}
 		xhr.open('POST', download_server_uri, true);

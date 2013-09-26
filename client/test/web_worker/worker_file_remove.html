@@ -38,7 +38,7 @@
 		<div id="pool_view"></div>
 		Serveur URL: <input type="text" id="server_uri" /><br/>
 		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
-		Upload name: <input type="text" id="upload_name" style="width: 300px;"/><br/>
+		Remove name: <input type="text" id="remove_name" style="width: 300px;"/><br/>
 		<button id="remove">Remove</button>
 		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
 
@@ -48,9 +48,13 @@ $(document).ready(function() {
 	$('.progress').ocp_progressbar();
 	$('#pool_view').ocp_pool_view();
 
+	function onprogress(performed) {
+		$('.progress').ocp_progressbar('set_progress', performed);
+	}
+
 	$('#remove').click(function() {
 		ocp.cfg.server_base_url = $('#server_uri').val();
-		var filename = $('#upload_name').val();
+		var filename = $('#remove_name').val();
 		if (!filename) {
 			alert('no file');
 			return;
@@ -59,7 +63,7 @@ $(document).ready(function() {
 		var args = {
 			filename: filename,
 			secret_key: $('#secret_key').val(),
-			progress_bar: $('#progress'),
+			onprogress: onprogress,
 			pool_view: $('#pool_view')
 		};
 		ocp.transfer.remove(args);
