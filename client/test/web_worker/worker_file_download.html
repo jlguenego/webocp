@@ -48,6 +48,10 @@ $(document).ready(function() {
 	$('.progress').ocp_progressbar();
 	$('#pool_view').ocp_pool_view();
 
+	function onprogress(performed) {
+		$('.progress').ocp_progressbar('set_progress', performed);
+	}
+
 	$('#retrieve').click(function() {
 		ocp.cfg.server_base_url = $('#server_uri').val();
 		var filename = $('#upload_name').val();
@@ -59,7 +63,7 @@ $(document).ready(function() {
 		var args = {
 			filename: filename,
 			secret_key: $('#secret_key').val(),
-			progress_bar: $('#progress'),
+			onprogress: onprogress,
 			pool_view: $('#pool_view')
 		};
 		ocp.transfer.download(args);

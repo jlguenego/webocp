@@ -58,8 +58,8 @@ $(document).ready(function() {
 		var args = {
 			file: file,
 			secret_key: $('#secret_key').val(),
-			onprogress: onprogress
-			//pool_view: $('#pool_view')
+			onprogress: onprogress,
+			pool_view: $('#pool_view')
 		};
 		ocp.transfer.upload(args, function(filename) {
 			$('#upload_name').html(filename);

@@ -142,7 +142,7 @@
 		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, worker_url);
 		var filename = args.filename;
 		var secret_key = args.secret_key;
-		var progress_bar = args.progress_bar;
+		var onprogress = args.onprogress;
 		var task_array = null;
 		var written_block = 0;
 		var hat = null;
@@ -177,7 +177,7 @@
 				}
 				task_array.push(1);
 
-				(ocp.transfer.onprogress(0, task_array, progress_bar))(null);
+				(ocp.transfer.onprogress(0, task_array, onprogress))(null);
 				for (var i = 0; i < event.data.hat.block_nbr; i++) {
 					create_task(event.data.hat, i);
 				}
@@ -210,7 +210,7 @@
 							block_id: args.block_id,
 							block_size: hat.block_size
 						});
-					}, ocp.transfer.onprogress(args.block_id, task_array, progress_bar));
+					}, ocp.transfer.onprogress(args.block_id, task_array, onprogress));
 				} else if (event.data.action == 'finalize') {
 					written_block++;
 					if (written_block == hat.block_nbr) {
