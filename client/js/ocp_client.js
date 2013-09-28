@@ -147,9 +147,9 @@
 		return result;
 	};
 
-	ocp.client.download_file = function(path) {
+	ocp.client.download_file = function(path, onsuccess, onprogress, onerror) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
-		scenario.download_file(path);
+		scenario.download_file(path, onsuccess, onprogress, onerror);
 		console.log('ocp.client.download_file, path=' + path);
 	}
 })(ocp);

@@ -67,7 +67,8 @@ var remove_dialog = null;
 			row.meta_data = {
 				type: ls_data[i].type,
 				mime_type: ls_data[i].mime_type,
-				name: ls_data[i].label
+				name: ls_data[i].label,
+				size: ls_data[i].size
 			};
 			rows.push(row);
 		}
@@ -230,6 +231,55 @@ var remove_dialog = null;
 			row.remove();
 		}
 	}
+
+
+	ocp.file_manager.onprogress = function(e, args) {
+		var id = ocp.crypto.hash(normalize_path(args.path + '/' + args.name));
+		var total = e.total;
+		var loaded = e.loaded;
+		var percent = Math.round((loaded * 100) / total);
+		var row = $('[data-rowid=' + id + ']');
+
+		var timestamp = ocp_now();
+
+		if (row.length == 0 && loaded < total) {
+			var data = {
+				"name": args.name,
+				"size": ocp.utils.format_size(args.size),
+				"transfer_type": args.transfer_type,
+				"status": percent + '%',
+				"speed": '0 KB/s',
+				"elapsed_time": '0 s',
+				"remaining_time": 'N/A',
+				meta_data: {
+					loaded: loaded,
+					timestamp: timestamp,
+					start_t: timestamp
+				}
+			};
+
+			$('#ocp_fm_file_transfer').ocp_grid('add_row', data, id);
+			row = $('[data-rowid=' + id + ']');
+			row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar();
+		}
+		var prev_loaded = row.attr('data-md-loaded');
+		var prev_timestamp = row.attr('data-md-timestamp');
+		var speed = (loaded - prev_loaded) / (timestamp - prev_timestamp);
+		var start_t = row.attr('data-md-start_t');
+		var elapsed_t = ((timestamp - start_t) / 1000).toFixed(0);
+		var remaining_t = (((total - loaded) / speed) / 1000).toFixed(0);
+
+		row.attr('data-md-loaded', loaded);
+		row.attr('data-md-timestamp', timestamp);
+		row.find('.widget_grid_cell[data-colname=file_transfer_elapsed_time]').html(elapsed_t + ' s');
+		row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_t + ' s');
+		row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html(ocp.utils.format_size(speed * 1000, 1) + '/s');
+		row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', percent);
+
+		if (loaded >= total) {
+			row.remove();
+		}
+	}
 	// PROGRESS BAR END
 
 	// RENAME
@@ -337,12 +387,27 @@ $(document).ready(function() {
 			var path = ocp.file_manager.get_current_path();
 			var name = row.attr('data-md-name');
 			var type = row.attr('data-md-type');
+			var size = row.attr('data-md-size');
 
 
 			if (type == 'dir') {
 				tree.ocp_tree('open_item', normalize_path(path + '/' + name));
 			} else {
-				ocp.client.download_file(normalize_path(path + '/' + name));
+				ocp.client.download_file(
+					normalize_path(path + '/' + name),
+					undefined,
+					function (e) {
+						var args = {
+							name: name,
+							path: path,
+							size: size
+						};
+						ocp.file_manager.onprogress(e, args);
+					},
+					function(error_msg) {
+						ocp.error_manage(new Error(error_msg));
+					}
+				);
 			}
 		}
 	});

@@ -175,11 +175,11 @@
 	    bytes = Math.max(bytes, 0);
 	    var pow = 0;
 	    if (bytes > 0) {
-	    	pow = Math.floor(Math.log(bytes) / Math.log(1024));
+	    	pow = Math.floor(Math.log(bytes) / Math.log(1000));
 	    }
 
 	    pow = Math.min(pow, units.length - 1);
-	    bytes /= Math.pow(1024, pow);
+	    bytes /= Math.pow(1000, pow);
 		bytes = Math.round(bytes * Math.pow(10, precision)) / Math.pow(10, precision);
 	    return bytes + ' ' + units[pow];
 	};
@@ -235,21 +235,5 @@
 		result = result.replace('%M', minute);
 		result = result.replace('%S', second);
 		return result;
-	};
-
-	ocp.utils.format_size = function(bytes, precision) {
-		precision = precision || 2;
-		var units = [ 'B', 'KB', 'MB', 'GB', 'TB' ];
-
-	    bytes = Math.max(bytes, 0);
-	    var pow = 0;
-	    if (bytes > 0) {
-	    	pow = Math.floor(Math.log(bytes) / Math.log(1024));
-	    }
-
-	    pow = Math.min(pow, units.length - 1);
-	    bytes /= Math.pow(1024, pow);
-		bytes = Math.round(bytes * Math.pow(10, precision)) / Math.pow(10, precision);
-	    return bytes + ' ' + units[pow];
 	};
 })(ocp);

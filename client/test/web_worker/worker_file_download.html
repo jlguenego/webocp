@@ -38,7 +38,8 @@
 		<div id="pool_view"></div>
 		Serveur URL: <input type="text" id="server_uri" /><br/>
 		Secret key: <input type="text" id="secret_key" value="toto" /><br/>
-		Upload name: <input type="text" id="upload_name" style="width: 300px;"/><br/>
+		Download name: <input type="text" id="download_name" style="width: 300px;"/><br/>
+		Download address: <input type="text" id="address" style="width: 300px;"/><br/>
 		<button id="retrieve">Retrieve</button>
 		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
 		<div id="message"></div>
@@ -54,14 +55,21 @@ $(document).ready(function() {
 
 	$('#retrieve').click(function() {
 		ocp.cfg.server_base_url = $('#server_uri').val();
-		var filename = $('#upload_name').val();
+		var filename = $('#download_name').val();
 		if (!filename) {
-			alert('no file');
+			alert('no filename');
+			return;
+		}
+
+		var address = $('#address').val();
+		if (!address) {
+			alert('no address');
 			return;
 		}
 
 		var args = {
-			filename: filename,
+			saveasname: filename,
+			filename: address,
 			secret_key: $('#secret_key').val(),
 			onprogress: onprogress,
 			pool_view: $('#pool_view')

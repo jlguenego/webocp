@@ -177,10 +177,8 @@
 
 		this.rm = function(path, on_success, on_error) {
 			var self = this;
-			console.log('rm');
-			console.log(ocp.session);
 			if (path == '/') {
-				return;
+				throw new Error('Cannot get address for path root');
 			}
 
 			var path_a = path.split('/');
@@ -328,8 +326,42 @@
 			return result;
 		};
 
-		this.download_file = function(path) {
-			window.location = this.endpoint + 'download.php?path=' + '/' + ocp.session.user_id + path;
+		this.download_file = function(path, onsuccess, onprogress, onerror) {
+			onsuccess = onsuccess || function() {};
+			onprogress = onprogress || function() {};
+			onerror = onerror || function() {};
+			console.log('downloading file ' + path);
+			var address = this.get_address_from_path(path);
+			var args = {
+				filename: address,
+				secret_key: ocp.session.ocp1.private.content.secret_key,
+				onprogress: onprogress,
+				saveasname: ocp.basename(path)
+			};
+
+			ocp.transfer.download(args, onsuccess, onerror);
 		};
+
+		// private function
+		this.get_address_from_path = function(path) {
+			var self = this;
+			if (path == '/') {
+				throw new Error('Cannot get address for path root');
+			}
+
+			var path_a = path.split('/');
+			path_a.shift();
+			var name = path_a.pop();
+
+			var dir = ocp.session.ocp1.private.content.root_dir;
+			console.log('path_a=');
+			console.log(path_a);
+			for (var i = 0; i < path_a.length; i++) {
+				dir = dir[path_a[i]].children;
+			}
+			console.log(dir);
+			var address = dir[name].address;
+			return address;
+		}
 	};
 })(ocp);

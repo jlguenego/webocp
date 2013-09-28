@@ -142,6 +142,7 @@
 		var worker_url = ocp.worker_ui.getURL('js/worker/ocp_download.js');
 		var pool_nbr = ocp.cfg.download_connection_nbr || 5;
 		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, worker_url);
+		var saveasname = args.saveasname;
 		var filename = args.filename;
 		var secret_key = args.secret_key;
 		var onprogress = args.onprogress;
@@ -253,7 +254,7 @@
 					var url = fileEntry.toURL();
 					console.log(url);
 					var link = $('<a/>');
-					link.attr('href', url).attr('download', filename);
+					link.attr('href', url).attr('download', saveasname);
 					console.log(link[0]);
 					link[0].click();
 				}, errorHandler('getFile'));
