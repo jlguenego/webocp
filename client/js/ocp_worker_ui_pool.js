@@ -72,7 +72,9 @@
 				}
 				while (this.threadList.length > 0) {
 					var thread = this.threadList.shift();
-					delete this.activeTaskQueue[thread.task.id];
+					if (thread.task) {
+						delete this.activeTaskQueue[thread.task.id];
+					}
 					thread.worker.terminate();
 				}
 				while (this.taskQueue.length > 0) {
@@ -86,6 +88,7 @@
 					}
 				}
 	    	}
+	    	this.sendUpdateEvent(true);
 	    }
 
 		for (var i = 0 ; i < this.size ; i++) {

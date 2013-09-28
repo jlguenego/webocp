@@ -46,9 +46,10 @@
 		}
 	}
 
-	ocp.file.retrieve = function(filename, on_success, onprogress) {
+	ocp.file.retrieve = function(filename, on_success, onprogress, on_error) {
 		on_success = on_success || function() {};
 		onprogress = onprogress || function() {};
+		on_error = on_error || function() {};
 
 		var contact = ocp.dht.find(filename);
 		var download_server_uri = contact.url + '/endpoint/retrieve_file.php';
@@ -62,6 +63,18 @@
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
 				var json_obj = JSON.parse(xhr.responseText);
+				if (!json_obj) {
+					on_error('Cannot retrieve file ' + filename + '. Cannot parse the endpoint output.');
+					return;
+				}
+				if (json_obj.error) {
+					on_error('Cannot retrieve file ' + filename + '. Error = ' + json_obj.error);
+					return;
+				}
+				if (!json_obj.result.content) {
+					on_error('Cannot retrieve file ' + filename + '. The endpoint did not send content.');
+					return;
+				}
 				var content = ocp.utils.b642ab(json_obj.result.content);
 				on_success(content);
 			}

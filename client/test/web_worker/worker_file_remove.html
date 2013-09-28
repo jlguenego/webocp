@@ -66,7 +66,9 @@ $(document).ready(function() {
 			onprogress: onprogress,
 			pool_view: $('#pool_view')
 		};
-		ocp.transfer.remove(args);
+		ocp.transfer.remove(args, function() {
+			console.log('successfully removed: ' + filename);
+		});
 	});
 });
 		</script>

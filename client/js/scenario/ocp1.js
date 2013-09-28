@@ -176,6 +176,7 @@
 		};
 
 		this.rm = function(path, on_success, on_error) {
+			var self = this;
 			console.log('rm');
 			console.log(ocp.session);
 			if (path == '/') {
@@ -193,10 +194,21 @@
 				dir = dir[path_a[i]].children;
 			}
 			console.log(dir);
-			delete dir[name];
-			this.sync_connection_objects();
+			var address = dir[name].address;
+			var args = {
+				filename: address,
+				secret_key: ocp.session.ocp1.private.content.secret_key,
+			};
+			var remove_onsuccess = function() {
+				delete dir[name];
+				self.sync_connection_objects();
+				on_success();
+			};
 
-			on_success();
+			ocp.transfer.remove(args, remove_onsuccess, function(error_msg) {
+				console.log('warning: the file blocks was not removed successfully. Error: ' + error_msg);
+				remove_onsuccess();
+			});
 		};
 
 		this.mv = function(old_path, new_path) {

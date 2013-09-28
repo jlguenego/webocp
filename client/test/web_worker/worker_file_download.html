@@ -41,7 +41,7 @@
 		Upload name: <input type="text" id="upload_name" style="width: 300px;"/><br/>
 		<button id="retrieve">Retrieve</button>
 		<div id="progress" class="progress" style="position: relative; width: 200px; height: 50px;"></div>
-
+		<div id="message"></div>
 		<script>
 $(document).ready(function() {
 	$('#server_uri').val(ocp.cfg.server_base_url);
@@ -66,7 +66,9 @@ $(document).ready(function() {
 			onprogress: onprogress,
 			pool_view: $('#pool_view')
 		};
-		ocp.transfer.download(args);
+		ocp.transfer.download(args, undefined, function(error_msg) {
+			$('#message').html('Error: ' + error_msg);
+		});
 	});
 });
 		</script>

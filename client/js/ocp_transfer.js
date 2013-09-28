@@ -136,7 +136,9 @@
 		}
 	};
 
-	ocp.transfer.download = function(args) {
+	ocp.transfer.download = function(args, onsuccess, onerror) {
+		onsuccess = onsuccess || function() {};
+		onerror = onerror || function() {};
 		var worker_url = ocp.worker_ui.getURL('js/worker/ocp_download.js');
 		var pool_nbr = ocp.cfg.download_connection_nbr || 5;
 		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, worker_url);
@@ -146,6 +148,13 @@
 		var task_array = null;
 		var written_block = 0;
 		var hat = null;
+
+		function clean() {
+			if (pool) {
+				pool.terminate(true);
+				pool = null;
+			}
+		}
 
 		if (args.pool_view) {
 			args.pool_view.ocp_pool_view('attach', pool);
@@ -160,14 +169,21 @@
 		var hat_callback = function() {
 			if (event.data.action == 'retrieve') {
 				var args = event.data;
-				ocp.transfer.retrieve_worker_block(event.data, function(content) {
-					var task = pool.getTask(args.task_id);
-					task.sendMessage('finalize', {
-						content: content,
-						block_name: args.filename,
-						secret_key: secret_key
+				ocp.transfer.retrieve_worker_block(
+					event.data,
+					function(content) {
+						var task = pool.getTask(args.task_id);
+						task.sendMessage('finalize', {
+							content: content,
+							block_name: args.filename,
+							secret_key: secret_key
+						});
+					},
+					null,
+					function(error_msg) {
+						clean();
+						onerror(error_msg);
 					});
-				});
 			} else if (event.data.action == 'finalize') {
 				hat = event.data.hat;
 
@@ -200,17 +216,25 @@
 			var task_callback = function(event) {
 				if (event.data.action == 'retrieve') {
 					var args = event.data;
-					ocp.transfer.retrieve_worker_block(event.data, function(content) {
-						var task = pool.getTask(args.task_id);
-						task.sendMessage('finalize', {
-							block_name: args.filename,
-							content: content,
-							secret_key: secret_key,
-							hat_name: filename,
-							block_id: args.block_id,
-							block_size: hat.block_size
-						});
-					}, ocp.transfer.onprogress(args.block_id, task_array, onprogress));
+					ocp.transfer.retrieve_worker_block(
+						event.data,
+						function(content) {
+							var task = pool.getTask(args.task_id);
+							task.sendMessage('finalize', {
+								block_name: args.filename,
+								content: content,
+								secret_key: secret_key,
+								hat_name: filename,
+								block_id: args.block_id,
+								block_size: hat.block_size
+							});
+						},
+						ocp.transfer.onprogress(args.block_id, task_array, onprogress),
+						function(error_msg) {
+							clean();
+							onerror(error_msg);
+						}
+					);
 				} else if (event.data.action == 'finalize') {
 					written_block++;
 					if (written_block == hat.block_nbr) {
@@ -244,17 +268,25 @@
 		}
 	};
 
-	ocp.transfer.remove = function(args, onsuccess) {
+	ocp.transfer.remove = function(args, onsuccess, onerror) {
 		onsuccess = onsuccess || function() {};
+		onerror = onerror || function() {};
 		var worker_url = ocp.worker_ui.getURL('js/worker/ocp_remove.js');
 		var pool_nbr = ocp.cfg.download_connection_nbr || 5;
 		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, worker_url);
 		var filename = args.filename;
 		var secret_key = args.secret_key;
-		var onprogress = args.onprogress;
+		var onprogress = args.onprogress || function() {};
 		var task_array = null;
 		var removed_block = 0;
 		var hat = null;
+
+		function clean() {
+			if (pool) {
+				pool.terminate(true);
+				pool = null;
+			}
+		}
 
 		if (args.pool_view) {
 			args.pool_view.ocp_pool_view('attach', pool);
@@ -269,14 +301,23 @@
 		var hat_callback = function() {
 			if (event.data.action == 'retrieve') {
 				var args = event.data;
-				ocp.transfer.retrieve_worker_block(event.data, function(content) {
-					var task = pool.getTask(args.task_id);
-					task.sendMessage('finalize', {
-						content: content,
-						block_name: args.filename,
-						secret_key: secret_key
-					});
-				});
+				ocp.transfer.retrieve_worker_block(
+					event.data,
+					function(content) {
+						var task = pool.getTask(args.task_id);
+						task.sendMessage('finalize', {
+							content: content,
+							block_name: args.filename,
+							secret_key: secret_key
+						});
+					},
+					null,
+					function(error_msg) {
+						console.log('error_msg = ' + error_msg);
+						clean();
+						onerror(error_msg);
+					}
+				);
 			} else if (event.data.action == 'finalize') {
 				hat = event.data.hat;
 
@@ -347,8 +388,8 @@
 		ocp.file.send(args.filename, args.content, on_success, onprogress);
 	};
 
-	ocp.transfer.retrieve_worker_block = function(args, on_success, onprogress) {
-		ocp.file.retrieve(args.filename, on_success, onprogress);
+	ocp.transfer.retrieve_worker_block = function(args, on_success, onprogress, on_error) {
+		ocp.file.retrieve(args.filename, on_success, onprogress, on_error);
 	};
 
 	ocp.transfer.remove_worker_block = function(args, on_success, onprogress) {
