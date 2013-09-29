@@ -6,16 +6,90 @@ function OCP() {
 	this.debug = false;
 
 	this.basename = function(path) {
-	    return path.replace(/\\/g,'/').replace( /.*\//, '' );
+		path = this.normalize_path(path);
+		if (path == '/' || path == '') {
+			return path;
+		}
+		var path_a = path.split('/');
+		return path_a.pop();
 	};
 
 	this.dirname = function(path) {
-	    var result = path.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
-	    if (result == '') {
-	    	result = '/';
-	    }
-	    return result;
+		path = this.normalize_path(path);
+		if (path == '/') {
+			return '/';
+		}
+		if (path == '') {
+			return '.';
+		}
+
+		var b_absolute = false;
+		var path_a = path.split('/');
+		if (path_a[0] == '') {
+			b_absolute = true;
+			path_a.shift();
+		}
+		path_a.pop();
+		if (path_a.length == 0) {
+			return '.';
+		}
+		var result = path_a.join('/');
+		if (b_absolute) {
+			result = '/' + result;
+		}
+		return result;
 	};
+
+	this.normalize_path = function(path) {
+		if (!path) {
+			throw new Error('normalize_path: path is not defined or null');
+		}
+		if (path == '') {
+			throw new Error('normalize_path: path is empty');
+		}
+		path = path.replace(/\\/g,'/');
+		var b_absolute = false;
+		var path_a = path.split('/');
+		if (path_a[0] == '') {
+			b_absolute = true;
+			path_a.shift();
+		}
+		var new_path = [];
+		var j = 0;
+		for (var i = 0; i < path_a.length; i++) {
+			var node = path_a[i];
+			switch (node) {
+				case '':
+					break;
+				case '.':
+					break;
+				case '..':
+					if (j == 0) {
+						if (b_absolute == true) {
+							throw new Error('normalize_path: path cannot start with /..');
+						}
+						new_path[j] = node;
+						j++;
+					} else {
+						new_path.pop();
+						j--;
+					}
+					break;
+				default:
+					new_path[j] = node;
+					j++;
+			}
+		}
+
+
+		var result = '';
+		if (b_absolute) {
+			result = '/';
+		}
+		result += new_path.join('/');
+		return result;
+	}
+
 }
 
 var ocp = new OCP();

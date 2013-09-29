@@ -33,7 +33,7 @@
 		var onprogress = args.onprogress;
 		var task_array = [ 0 ];
 		var url = ocp.worker_ui.getURL('js/worker/ocp_upload.js');
-		var pool_nbr = ocp.cfg.upload_connection_nbr || 5;
+		var pool_nbr = ocp.cfg.pool.thread_nbr.upload_file || 5;
 		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, url);
 		var cursor = 0;
 		var block_size = ocp.cfg.block_size || 1 << 19;
@@ -140,7 +140,7 @@
 		onsuccess = onsuccess || function() {};
 		onerror = onerror || function() {};
 		var worker_url = ocp.worker_ui.getURL('js/worker/ocp_download.js');
-		var pool_nbr = ocp.cfg.download_connection_nbr || 5;
+		var pool_nbr = ocp.cfg.pool.thread_nbr.download_file || 6;
 		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, worker_url);
 		var saveasname = args.saveasname;
 		var filename = args.filename;
@@ -273,7 +273,7 @@
 		onsuccess = onsuccess || function() {};
 		onerror = onerror || function() {};
 		var worker_url = ocp.worker_ui.getURL('js/worker/ocp_remove.js');
-		var pool_nbr = ocp.cfg.download_connection_nbr || 5;
+		var pool_nbr = ocp.cfg.pool.thread_nbr.download || 6;
 		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, worker_url);
 		var filename = args.filename;
 		var secret_key = args.secret_key;

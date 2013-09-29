@@ -73,7 +73,7 @@
 
 		this.ls = function(path, on_success, on_error) {
 			try {
-				console.log('ls');
+				console.log('ls with path=' + path);
 				console.log(ocp.session);
 				var path_a = [];
 				if (path != '/') {
@@ -94,6 +94,7 @@
 					file.name = name;
 					result.push(file);
 				}
+				console.log('ocp1 ls result=');
 				console.log(result);
 				this.sync_connection_objects();
 				on_success(result);
@@ -102,8 +103,12 @@
 			}
 		};
 
-		this.mkdir = function(path, name, on_success, on_error) {
+		this.mkdir = function(path, name, onsuccess, onerror) {
+			onsuccess = onsuccess || function() {};
+			onerror = onerror || function() {};
 			console.log('mkdir');
+			console.log('path=' + path);
+			console.log('name=' + name);
 			console.log(ocp.session);
 			var path_a = [];
 			if (path != '/') {
@@ -115,6 +120,15 @@
 			console.log('path_a=');
 			console.log(path_a);
 			for (var i = 0; i < path_a.length; i++) {
+				if (!dir[path_a[i]]) {
+					dir[path_a[i]] = {
+						label: path_a[i],
+						type: 'dir',
+						size: 0,
+						last_modified: 0,
+						children: {}
+					};
+				}
 				dir = dir[path_a[i]].children;
 			}
 			console.log(dir);
@@ -127,7 +141,7 @@
 			};
 			this.sync_connection_objects();
 
-			on_success();
+			onsuccess();
 		};
 
 		this.mkfile = function(path, name, file_descr) {

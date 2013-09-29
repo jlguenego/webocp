@@ -153,15 +153,15 @@ var remove_dialog = null;
 			item.file(function(file) {
 				console.log("File: " + path + file.name);
 				var current_path = ocp.file_manager.get_current_path();
-				ocp.client.upload_file(normalize_path(current_path + '/' + path), file, function() {
+				ocp.client.upload_file(ocp.normalize_path(current_path + '/' + path), file, function() {
 					ocp.file_manager.refresh();
 				}, function(e, filename) {
-					ocp.file_manager.upload_file_progress(e, normalize_path(path), filename);
+					ocp.file_manager.upload_file_progress(e, ocp.normalize_path(path), filename);
 				});
 			}, ocp.file_manager.dnd.error);
 		} else if (item.isDirectory) {
 			var current_path = ocp.file_manager.get_current_path();
-			ocp.client.mkdir(normalize_path(current_path + '/' + path), item.name, ocp.file_manager.refresh);
+			ocp.client.mkdir(ocp.normalize_path(current_path + '/' + path), item.name, ocp.file_manager.refresh);
 			// Get folder contents
 			var dirReader = item.createReader();
 			dirReader.readEntries(function(entries) {
@@ -185,7 +185,7 @@ var remove_dialog = null;
 
 	// PROGRESS BAR
 	ocp.file_manager.upload_file_progress = function(e, path, name) {
-		var id = ocp.crypto.hash(normalize_path(path + '/' + name));
+		var id = ocp.crypto.hash(ocp.normalize_path(path + '/' + name));
 		var total = e.total;
 		var loaded = e.loaded;
 		var percent = Math.round((loaded * 100) / total);
@@ -234,7 +234,7 @@ var remove_dialog = null;
 
 
 	ocp.file_manager.onprogress = function(e, args) {
-		var id = ocp.crypto.hash(normalize_path(args.path + '/' + args.name));
+		var id = ocp.crypto.hash(ocp.normalize_path(args.path + '/' + args.name));
 		var total = e.total;
 		var loaded = e.loaded;
 		var percent = Math.round((loaded * 100) / total);
@@ -391,10 +391,10 @@ $(document).ready(function() {
 
 
 			if (type == 'dir') {
-				tree.ocp_tree('open_item', normalize_path(path + '/' + name));
+				tree.ocp_tree('open_item', ocp.normalize_path(path + '/' + name));
 			} else {
 				ocp.client.download_file(
-					normalize_path(path + '/' + name),
+					ocp.normalize_path(path + '/' + name),
 					undefined,
 					function (e) {
 						var args = {
@@ -450,7 +450,7 @@ $(document).ready(function() {
 	// Sync path
 	$('#ocp_fm_breadcrumbs input').keypress(function(e) {
 	    if(e.which == 13) {
-	        var path = normalize_path($(this).val());
+	        var path = ocp.normalize_path($(this).val());
 	        tree.ocp_tree('open_item', path);
 	    }
 	});
@@ -504,7 +504,7 @@ $(document).ready(function() {
 				var new_name = $('#ocp_fm_rename_dialog #ocp_fm_new_name').val();
 
 				try {
-					ocp.client.mv(normalize_path(path + '/' + old_name), normalize_path(path + '/' + new_name));
+					ocp.client.mv(ocp.normalize_path(path + '/' + old_name), ocp.normalize_path(path + '/' + new_name));
 				} catch (e) {
 					ocp.error_manage(e);
 					$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
@@ -547,7 +547,7 @@ $(document).ready(function() {
 					try {
 						var name = $(this).attr('data-md-name');
 						var path = ocp.file_manager.get_current_path();
-						var p = normalize_path(path + '/' + name);
+						var p = ocp.normalize_path(path + '/' + name);
 						console.log('rm ' + p);
 
 						ocp.client.rm(p, finalize, finalize);
@@ -587,10 +587,10 @@ $(document).ready(function() {
 		try {
 			for (var i = 0; i < files.length; i++) {
 				var file = files[i];
-				ocp.client.upload_file(normalize_path(path), file, function() {
+				ocp.client.upload_file(ocp.normalize_path(path), file, function() {
 					tree.ocp_tree('open_item', path);
 				}, function(e, filename) {
-					ocp.file_manager.upload_file_progress(e, normalize_path(path), filename);
+					ocp.file_manager.upload_file_progress(e, ocp.normalize_path(path), filename);
 				});
 			}
 		} catch (e) {
@@ -618,10 +618,10 @@ $(document).ready(function() {
 		var files = $('#ocp_fm_dir').get(0).files;
 
 		try {
-			ocp.client.upload_dir(normalize_path(path), files, function() {
+			ocp.client.upload_dir(ocp.normalize_path(path), files, function() {
 				tree.ocp_tree('open_item', path);
 			}, function(e, filename) {
-				ocp.file_manager.upload_file_progress(e, normalize_path(path), filename);
+				ocp.file_manager.upload_file_progress(e, ocp.normalize_path(path), filename);
 			});
 		} catch (e) {
 			ocp.error_manage(e);

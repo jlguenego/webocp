@@ -24,6 +24,7 @@ var upload_block = null;
 		ocp.upload.hat.block_size = args.block_size;
 		ocp.upload.hat.file = args.file;
 		console.log('block_nbr=' + ocp.upload.hat.block_nbr);
+		ocp.upload.check_completion();
 	}
 
 	ocp.upload.hat_get_object = function() {
@@ -38,12 +39,16 @@ var upload_block = null;
 			result.summary[obj.block_id] = obj.filename;
 		}
 		return result;
-	}
+	};
 
 	ocp.upload.hat_push = function(args) {
 		console.log('upload hat push');
 		ocp.upload.hat.summary.push(args);
 
+		ocp.upload.check_completion();
+	};
+
+	ocp.upload.check_completion = function() {
 		if (ocp.upload.hat.summary.length == ocp.upload.hat.block_nbr) {
 			console.log('ready to send the summary');
 
@@ -51,9 +56,8 @@ var upload_block = null;
 			var str = JSON.stringify(content);
 
 			upload_hat.filename = ocp.upload.common_process(ocp.utils.str2ab(str), ocp.upload.hat.secret_key);
-
 		}
-	}
+	};
 
 	ocp.upload.block_upload = function(args) {
 		ocp.cfg.server_base_url = args.server_uri;

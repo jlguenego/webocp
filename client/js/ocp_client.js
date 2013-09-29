@@ -124,22 +124,63 @@
 		var result = scenario.rm(path, on_success, on_error);
 	}
 
-	ocp.client.upload_dir = function(path, files, after_success_func, on_progress_func) {
+	ocp.client.upload_dir = function(path, files, onsuccess, onprogress) {
+		console.log('upload_dir');
+		console.log(files);
+		var url = ocp.worker_ui.getURL('js/worker/ocp_upload_dir.js');
+		var pool_nbr = ocp.cfg.pool.thread_nbr.upload_dir || 3;
+		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, url);
+
+		var task_callback = function(event) {
+			switch (event.data.action) {
+				case 'mkdir':
+					ocp.client.mkdir(
+						event.data.path,
+						event.data.name, onsuccess);
+					break;
+				case 'upload_file':
+					ocp.client.upload_file(
+						args.filename,
+						args.file,
+						onsuccess,
+						onprogress);
+					break;
+				case 'finalize':
+					break;
+			}
+		};
+
 		for (var i = 0; i < files.length; i++) {
 			var file = files[i];
-			if (/\/\.$/.test(file.webkitRelativePath)) { // end with '/.'
-				console.log(file.webkitRelativePath + ' is dir');
-				var name = ocp.basename(file.webkitRelativePath);
-				console.log('name=' + name);
-				ocp.client.mkdir(normalize_path(path + '/' + ocp.dirname(file.webkitRelativePath)), name);
-			} else {
-				console.log(file.webkitRelativePath + ' is file');
-				ocp.client.upload_file(normalize_path(path + '/' + ocp.dirname(file.webkitRelativePath)), file, after_success_func, on_progress_func);
-			}
 			console.log('file=');
 			console.log(file);
+			if (/\/\.$/.test(file.webkitRelativePath)) { // end with '/.'
+				console.log(file.webkitRelativePath + ' is dir');
+				var relative_path = file.webkitRelativePath.substr(0, file.webkitRelativePath.length - 2);
+				console.log('relative_path=' + relative_path);
+				var mypath = ocp.normalize_path(path + '/' + ocp.dirname(relative_path));
+				console.log('mypath=' + mypath);
+				var name = ocp.basename(relative_path);
+				console.log('name=' + name);
+				var task_args = {
+					path: mypath,
+					name: name
+				};
+				var task = new ocp.worker_ui.pool.Task(i, 'mkdir', task_args, task_callback);
+			} else {
+				console.log(file.webkitRelativePath + ' is file');
+				var task_args = {
+					filename: ocp.normalize_path(path + '/' + ocp.dirname(file.webkitRelativePath)),
+					file: file
+				};
+				var task = new ocp.worker_ui.pool.Task(i, 'upload_file', task_args, task_callback);
+			}
+			pool.addTask(task);
+
+
 		}
-	}
+		pool.terminate();
+	};
 
 	ocp.client.upload_file = function(path, file, after_success, on_progress) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);

@@ -25,7 +25,13 @@
 			sponsor_name: 'node0',
 			session: null,
 			scenario: '0',
-			upload_connection_nbr: 5,
+			pool: {
+				thread_nbr: {
+					upload_dir: 3,
+					upload_file: 5,
+					download_file: 6
+				}
+			},
 			block_size: 1 << 19
 		};
 	}
