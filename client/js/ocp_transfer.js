@@ -198,6 +198,10 @@
 				for (var i = 0; i < event.data.hat.block_nbr; i++) {
 					create_task(event.data.hat, i);
 				}
+				// case empty file
+				if (event.data.hat.block_nbr == 0) {
+					finalize();
+				}
 				pool.terminate(); // Nice
 			}
 		};
