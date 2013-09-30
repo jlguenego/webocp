@@ -74,7 +74,9 @@ var remove_dialog = null;
 		};
 
 		this.delete = function() {
-			this.row.remove();
+			if (this.row) {
+				this.row.remove();
+			}
 		};
 
 		this.start = function() {
@@ -648,7 +650,7 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_file').change(function() {
-		var path = grid.ocp_grid('option', 'state').path;
+		var path = ocp.file_manager.get_current_path();
 		var form = $('#ocp_fm_file_form')[0];
 
 		var files = $('#ocp_fm_file').get(0).files;
