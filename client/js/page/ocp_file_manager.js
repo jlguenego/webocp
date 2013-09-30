@@ -267,10 +267,10 @@ var remove_dialog = null;
 		}
 		var prev_loaded = row.attr('data-md-loaded');
 		var prev_timestamp = row.attr('data-md-timestamp');
-		var speed = (loaded - prev_loaded) / (timestamp - prev_timestamp);
+		var speed = (loaded - prev_loaded) * (args.size / 100) / (timestamp - prev_timestamp);
 		var start_t = row.attr('data-md-start_t');
 		var elapsed_t = ((timestamp - start_t) / 1000).toFixed(0);
-		var remaining_t = (((total - loaded) / speed) / 1000).toFixed(0);
+		var remaining_t = (((total - loaded) * (args.size / 100) / speed) / 1000).toFixed(0);
 
 		row.attr('data-md-loaded', loaded);
 		row.attr('data-md-timestamp', timestamp);
@@ -398,12 +398,16 @@ $(document).ready(function() {
 			} else {
 				ocp.client.download_file(
 					ocp.normalize_path(path + '/' + name),
-					undefined,
-					function (e) {
+					null,
+					function (performed) {
 						var args = {
 							name: name,
 							path: path,
 							size: size
+						};
+						var e = {
+							total: 100,
+							loaded: performed
 						};
 						ocp.file_manager.onprogress(e, args);
 					},
