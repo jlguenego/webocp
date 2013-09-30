@@ -654,10 +654,24 @@ $(document).ready(function() {
 		var form = $('#ocp_fm_file_form')[0];
 
 		var files = $('#ocp_fm_file').get(0).files;
+		var file_descr_list = [];
+		for (var i = 0; i < files.length; i++) {
+			var type = 'file';
+			var relative_path = files[i].webkitRelativePath;
+			if (/\/\.$/.test(relative_path)) {
+				type = 'dir';
+			}
+
+			file_descr_list.push({
+				file: files[i],
+				type: type,
+				relative_path: relative_path
+			});
+		}
 		try {
-			ocp.client.upload_dir(
+			ocp.client.upload_files(
 				path,
-				files,
+				file_descr_list,
 				ocp.file_manager.refresh,
 				function(args) {
 					var pr = new ocp.file_manager.ProgressRow(args);
