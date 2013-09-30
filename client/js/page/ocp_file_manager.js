@@ -46,6 +46,7 @@ var remove_dialog = null;
 	// DELETE ALL END
 
 	ocp.file_manager.build_grid_data_from_ls_enpoint = function(ls_data, path) {
+		ls_data.sort(ocp.file_manager.sort);
 		var result = {};
 		var rows = [];
 		for (var i = 0; i < ls_data.length; i++) {
@@ -92,20 +93,22 @@ var remove_dialog = null;
 		return tree.widget('options', 'source');
 	};
 
-	ocp.file_manager.reorder_grid_result = function reorder_grid_result(array) {
-		var result = [];
+	ocp.file_manager.sort = function(a, b) {
+		if (a.type == 'dir' && b.type != 'dir') {
+			return -1;
+		}
+		if (a.type != 'dir' && b.type == 'dir') {
+			return 1;
+		}
 
-		for (var i = 0; i < array.length; i++) {
-			if (array[i].meta_data.type == 'dir') {
-				result.push(array[i]);
-			}
+		// a and b have the same type
+		if (a.label < b.label) {
+			return -1;
 		}
-		for (var i = 0; i < array.length; i++) {
-			if (array[i].meta_data.type != 'dir') {
-				result.push(array[i]);
-			}
+		if (a.label > b.label) {
+			return 1;
 		}
-		return result;
+		return 0;
 	};
 
 	ocp.file_manager.get_current_path = function() {
