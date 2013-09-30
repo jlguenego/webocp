@@ -164,7 +164,8 @@ var remove_dialog = null;
 						var args = {
 							name: file.name,
 							path: path,
-							size: file.size
+							size: file.size,
+							transfer_type: 'upload'
 						};
 						var e = {
 							total: 100,
@@ -208,10 +209,12 @@ var remove_dialog = null;
 		var timestamp = ocp_now();
 
 		if (row.length == 0 && loaded < total) {
+			var transfer_type = args.transfer_type.toLowerCase();
+			transfer_type = transfer_type.charAt(0).toUpperCase() + transfer_type.slice(1);
 			var data = {
 				"name": args.name,
 				"size": ocp.utils.format_size(args.size),
-				"transfer_type": args.transfer_type,
+				"transfer_type": transfer_type,
 				"status": percent + '%',
 				"speed": '0 KB/s',
 				"elapsed_time": '0 s',
@@ -225,6 +228,15 @@ var remove_dialog = null;
 
 			$('#ocp_fm_file_transfer').ocp_grid('add_row', data, id);
 			row = $('[data-rowid=' + id + ']');
+			var transfer_img = $('<img/>');
+			transfer_img.attr({
+				src: "https://eu.static.mega.co.nz/images/up2.png",
+				alt: "* ",
+				align: "absmiddle",
+				width: "25"
+			});
+			row.find('.widget_grid_cell[data-colname=file_transfer_transfer_type]')
+				.addClass('transfer_type_cell ' + args.transfer_type + '_cell');
 			row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar();
 		}
 		var prev_loaded = row.attr('data-md-loaded');
@@ -365,7 +377,8 @@ $(document).ready(function() {
 						var args = {
 							name: name,
 							path: path,
-							size: size
+							size: size,
+							transfer_type: 'download'
 						};
 						var e = {
 							total: 100,
@@ -566,7 +579,8 @@ $(document).ready(function() {
 						var args = {
 							name: file.name,
 							path: path,
-							size: file.size
+							size: file.size,
+							transfer_type: 'upload'
 						};
 						var e = {
 							total: 100,
