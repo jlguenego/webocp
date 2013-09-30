@@ -44,6 +44,7 @@
 	        } else {
 	            self.taskQueue.push(task);
 	        }
+	        console.log('Added task with id=' + task.id);
 	        this.sendUpdateEvent();
 	    }
 
@@ -141,6 +142,7 @@
 
 	    this.free = function() {
 	    	var taskID = this.task.id;
+	        console.log('Finished task with id=' + taskID);
 	    	this.pool.removeTask(taskID);
 	    	this.task = null;
 	        if (this.pool.taskQueue.length > 0) {

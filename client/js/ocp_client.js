@@ -136,13 +136,23 @@
 				case 'mkdir':
 					ocp.client.mkdir(
 						event.data.path,
-						event.data.name, onsuccess);
+						event.data.name,
+						function() {
+							var task = pool.getTask(event.data.task_id);
+							task.sendMessage('finalize');
+							onsuccess();
+						});
+
 					break;
 				case 'upload_file':
 					ocp.client.upload_file(
 						event.data.filename,
 						event.data.file,
-						onsuccess,
+						function() {
+							var task = pool.getTask(event.data.task_id);
+							task.sendMessage('finalize');
+							onsuccess();
+						},
 						onprogress);
 					break;
 				case 'finalize':
@@ -154,6 +164,7 @@
 			var file = files[i];
 			console.log('file=');
 			console.log(file);
+			var task = null;
 			if (/\/\.$/.test(file.webkitRelativePath)) { // end with '/.'
 				console.log(file.webkitRelativePath + ' is dir');
 				var relative_path = file.webkitRelativePath.substr(0, file.webkitRelativePath.length - 2);
@@ -166,14 +177,16 @@
 					path: mypath,
 					name: name
 				};
-				var task = new ocp.worker_ui.pool.Task(i, 'mkdir', task_args, task_callback);
+				var task_id = ocp.normalize_path(mypath + '/' + name);
+				task = new ocp.worker_ui.pool.Task(task_id, 'mkdir', task_args, task_callback);
 			} else {
 				console.log(file.webkitRelativePath + ' is file');
 				var task_args = {
 					filename: ocp.normalize_path(path + '/' + ocp.dirname(file.webkitRelativePath)),
 					file: file
 				};
-				var task = new ocp.worker_ui.pool.Task(i, 'upload_file', task_args, task_callback);
+				var task_id = ocp.normalize_path(task_args.filename + '/' + task_args.file.name);
+				task = new ocp.worker_ui.pool.Task(task_id, 'upload_file', task_args, task_callback);
 			}
 			pool.addTask(task);
 
@@ -182,9 +195,9 @@
 		pool.terminate();
 	};
 
-	ocp.client.upload_file = function(path, file, after_success, on_progress) {
+	ocp.client.upload_file = function(path, file, onsuccess, onprogress) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
-		var result = scenario.upload_file(path, file, after_success, on_progress);
+		var result = scenario.upload_file(path, file, onsuccess, onprogress);
 		return result;
 	};
 

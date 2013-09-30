@@ -8,6 +8,7 @@ importScripts(base_url + '/js/ocp_worker.js');
 	ocp.upload_dir.mkdir = function(args) {
 		report({
 			action: 'mkdir',
+			task_id: ocp.worker.worker.task_id,
 			path: args.path,
 			name: args.name
 		});
@@ -16,15 +17,17 @@ importScripts(base_url + '/js/ocp_worker.js');
 	ocp.upload_dir.upload_file = function(args) {
 		report({
 			action: 'upload_file',
+			task_id: ocp.worker.worker.task_id,
 			filename: args.filename,
 			file: args.file
 		});
 	};
 
 	ocp.upload_dir.finalize = function(args) {
+		console.log('About to finish');
 		report({
 			action: 'finalize',
-			finished: true
+			finish: true
 		});
 	};
 

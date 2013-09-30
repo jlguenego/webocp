@@ -132,20 +132,22 @@
 				dir = dir[path_a[i]].children;
 			}
 			console.log(dir);
-			dir[name] = {
-				label: name,
-				type: 'dir',
-				size: 0,
-				last_modified: 0,
-				children: {}
-			};
-			this.sync_connection_objects();
+			if (!dir[name]) {
+				dir[name] = {
+					label: name,
+					type: 'dir',
+					size: 0,
+					last_modified: 0,
+					children: {}
+				};
+				this.sync_connection_objects();
+			}
 
 			onsuccess();
 		};
 
 		this.mkfile = function(path, name, file_descr) {
-			console.log('mkfile');
+			console.log('mkfile with path=' + path + ' and name=' + name);
 			console.log(ocp.session);
 			var path_a = [];
 			if (path != '/') {
@@ -157,9 +159,20 @@
 			console.log('path_a=');
 			console.log(path_a);
 			for (var i = 0; i < path_a.length; i++) {
+				if (!dir[path_a[i]]) {
+					console.log('creating subdir ' + path_a[i]);
+					dir[path_a[i]] = {
+						label: path_a[i],
+						type: 'dir',
+						size: 0,
+						last_modified: 0,
+						children: {}
+					};
+				}
 				dir = dir[path_a[i]].children;
 			}
 			console.log(dir);
+			console.log('creating file ' + name);
 			dir[name] = file_descr;
 			this.sync_connection_objects();
 		};
