@@ -31,7 +31,11 @@ function OCP() {
 		}
 		path_a.pop();
 		if (path_a.length == 0) {
-			return '.';
+			if (b_absolute) {
+				return '/';
+			} else {
+				return '.';
+			}
 		}
 		var result = path_a.join('/');
 		if (b_absolute) {
