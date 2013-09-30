@@ -15,6 +15,9 @@ function OCP() {
 	};
 
 	this.dirname = function(path) {
+		if (!path) {
+			return '.';
+		}
 		path = this.normalize_path(path);
 		if (path == '/') {
 			return '/';

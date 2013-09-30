@@ -153,7 +153,12 @@
 							task.sendMessage('finalize');
 							onsuccess();
 						},
-						onprogress);
+						onprogress({
+							path: event.data.path,
+							name: event.data.file.name,
+							size: event.data.file.size,
+							transfer_type: 'upload'
+						}));
 					break;
 				case 'finalize':
 					break;

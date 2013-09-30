@@ -653,26 +653,17 @@ $(document).ready(function() {
 
 		var files = $('#ocp_fm_file').get(0).files;
 		try {
-			for (var i = 0; i < files.length; i++) {
-				var file = files[i];
-				var pr = new ocp.file_manager.ProgressRow({
-					name: file.name,
-					path: path,
-					size: file.size,
-					transfer_type: 'upload'
-				});
-
-				(function(pr) {
-					ocp.client.upload_file(
-						ocp.normalize_path(path),
-						file,
-						ocp.file_manager.refresh,
-						function (performed) {
-							pr.update(performed);
-						}
-					);
-				})(pr);
-			}
+			ocp.client.upload_dir(
+				path,
+				files,
+				ocp.file_manager.refresh,
+				function(args) {
+					var pr = new ocp.file_manager.ProgressRow(args);
+					return function(performed) {
+						pr.update(performed);
+					}
+				}
+			);
 		} catch (e) {
 			ocp.error_manage(e);
 		} finally {
