@@ -132,6 +132,7 @@
 		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, url);
 
 		var task_callback = function(event) {
+			console.log(event.data);
 			switch (event.data.action) {
 				case 'mkdir':
 					ocp.client.mkdir(
@@ -140,8 +141,8 @@
 					break;
 				case 'upload_file':
 					ocp.client.upload_file(
-						args.filename,
-						args.file,
+						event.data.filename,
+						event.data.file,
 						onsuccess,
 						onprogress);
 					break;
