@@ -18,7 +18,6 @@
 		$new_contact = json_decode($_REQUEST['contact']);
 		$ocp = new OCP();
 		$ocp->load(OCP::get_name_from_url($_SERVER['REQUEST_URI']));
-		print_r($contact_list);
 		$name = $ocp->name;
 		$ocp->contact_list->$name = $ocp->to_contact();
 		$output['result'] = $ocp->contact_list;

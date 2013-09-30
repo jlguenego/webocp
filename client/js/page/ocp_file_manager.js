@@ -6,6 +6,97 @@ var remove_dialog = null;
 (function(ocp, undefined) {
 	ocp.file_manager = {};
 
+	ocp.file_manager.ProgressRow = function(args) {
+		this.name = args.name;
+		this.path = args.path;
+		this.size = args.size;
+		this.transfer_type = args.transfer_type;
+		this.speed = 'N/A';
+		this.elapsed_time = '0 s';
+		this.remaining_time = 'N/A';
+		this.prev_performed = 0;
+		this.performed = 0;
+		this.start_t = null;
+		this.prev_t = 0;
+		this.visible = false;
+
+		this.id = ocp.crypto.hash(this.path + this.name + this.transfer_type);
+
+		this.row = null;
+
+		this.create = function() {
+			var data = {
+				"name": this.name,
+				"size": ocp.utils.format_size(this.size),
+				"status": this.performed + '%',
+				"speed": this.speed,
+				"elapsed_time": this.elapsed_time,
+				"remaining_time": this.remaining_time
+			};
+			if (this.transfer_type == 'upload') {
+				data.transfer_type = 'Upload';
+			} else if (this.transfer_type == 'download') {
+				data.transfer_type = 'Download';
+			}
+
+			$('#ocp_fm_file_transfer').ocp_grid('add_row', data, this.id);
+			this.row = $('[data-rowid=' + this.id + ']');
+			this.row.find('.widget_grid_cell[data-colname=file_transfer_transfer_type]')
+				.addClass('transfer_type_cell ' + this.transfer_type + '_cell');
+
+			this.row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar();
+			this.visible = true;
+		};
+
+		this.update = function(performed) {
+			this.performed = performed;
+		};
+
+		this.refresh = function() {
+			var now_t = ocp_now();
+
+			if (!this.start_t) {
+				this.start_t = now_t;
+			}
+
+			var speed = (this.performed - this.prev_performed) * (this.size / 100) / (now_t - this.prev_t);
+			var elapsed_t = ((now_t - this.start_t) / 1000).toFixed(0);
+			var remaining_t = (((100 - this.performed) * (this.size / 100) / speed) / 1000).toFixed(0);
+
+
+			this.row.find('.widget_grid_cell[data-colname=file_transfer_elapsed_time]').html(elapsed_t + ' s');
+			this.row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_t + ' s');
+			this.row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html(ocp.utils.format_size(speed * 1000, 1) + '/s');
+			this.row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', this.performed);
+
+			this.prev_t = now_t;
+			this.prev_performed = this.performed;
+		};
+
+		this.delete = function() {
+			this.row.remove();
+		};
+
+		this.start = function() {
+			var self = this;
+			setTimeout(function() {
+				if (self.performed >= 100) {
+					self.delete();
+					return;
+				}
+
+				if (!self.visible) {
+					self.create();
+				}
+				self.refresh();
+				self.start();
+				return;
+			}, 1000);
+		};
+
+		this.start();
+	}
+
 	ocp.file_manager.refresh = function() {
 		if (tree) {
 			tree.ocp_tree('open_item', ocp.file_manager.get_current_path());
@@ -228,13 +319,6 @@ var remove_dialog = null;
 
 			$('#ocp_fm_file_transfer').ocp_grid('add_row', data, id);
 			row = $('[data-rowid=' + id + ']');
-			var transfer_img = $('<img/>');
-			transfer_img.attr({
-				src: "https://eu.static.mega.co.nz/images/up2.png",
-				alt: "* ",
-				align: "absmiddle",
-				width: "25"
-			});
 			row.find('.widget_grid_cell[data-colname=file_transfer_transfer_type]')
 				.addClass('transfer_type_cell ' + args.transfer_type + '_cell');
 			row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar();
@@ -571,24 +655,23 @@ $(document).ready(function() {
 		try {
 			for (var i = 0; i < files.length; i++) {
 				var file = files[i];
-				ocp.client.upload_file(
-					ocp.normalize_path(path),
-					file,
-					ocp.file_manager.refresh,
-					function (performed) {
-						var args = {
-							name: file.name,
-							path: path,
-							size: file.size,
-							transfer_type: 'upload'
-						};
-						var e = {
-							total: 100,
-							loaded: performed
-						};
-						ocp.file_manager.onprogress(e, args);
-					}
-				);
+				var pr = new ocp.file_manager.ProgressRow({
+					name: file.name,
+					path: path,
+					size: file.size,
+					transfer_type: 'upload'
+				});
+
+				(function(pr) {
+					ocp.client.upload_file(
+						ocp.normalize_path(path),
+						file,
+						ocp.file_manager.refresh,
+						function (performed) {
+							pr.update(performed);
+						}
+					);
+				})(pr);
 			}
 		} catch (e) {
 			ocp.error_manage(e);

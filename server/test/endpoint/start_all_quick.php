@@ -45,6 +45,10 @@
 					);
 				}
 
+				if (count($contact_list) == 0) {
+					$contact_list = null;
+				}
+
 				$ocp->hydrate(array(
 					'name' => 'node' . $i,
 					'url' => 'http://' . $_SERVER['HTTP_HOST'] . preg_replace('#(.*/)' . $name . '/endpoint.*#', "$1node" . $i, $_SERVER['REQUEST_URI']),
