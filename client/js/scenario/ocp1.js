@@ -279,14 +279,7 @@
 			this.sync_connection_objects();
 		};
 
-		this.upload_file = function(path, file, after_success_func, on_progress_func) {
-			var onprogress = function(performed) {
-				var e = {
-					loaded: performed,
-					total: 100
-				};
-				on_progress_func(e, path, file.name);
-			};
+		this.upload_file = function(path, file, after_success_func, onprogress) {
 			var args = {
 				file: file,
 				secret_key: ocp.session.ocp1.private.content.secret_key,
@@ -295,7 +288,6 @@
 			console.log('args=');
 			console.log(args);
 			var self = this;
-			console.log('file.lastModifiedDate=' + file.lastModifiedDate);
 			ocp.transfer.upload(args, function(address) {
 				self.mkfile(path, file.name, {
 					label: file.name,

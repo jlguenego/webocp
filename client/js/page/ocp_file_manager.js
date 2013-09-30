@@ -156,11 +156,22 @@ var remove_dialog = null;
 			item.file(function(file) {
 				console.log("File: " + path + file.name);
 				var current_path = ocp.file_manager.get_current_path();
-				ocp.client.upload_file(ocp.normalize_path(current_path + '/' + path), file, function() {
-					ocp.file_manager.refresh();
-				}, function(e, filename) {
-					ocp.file_manager.upload_file_progress(e, ocp.normalize_path(path), filename);
-				});
+				ocp.client.upload_file(
+					ocp.normalize_path(current_path + '/' + path),
+					file,
+					ocp.file_manager.refresh,
+					function (performed) {
+						var args = {
+							name: file.name,
+							path: path,
+							size: file.size
+						};
+						var e = {
+							total: 100,
+							loaded: performed
+						};
+						ocp.file_manager.onprogress(e, args);
+					});
 			}, ocp.file_manager.dnd.error);
 		} else if (item.isDirectory) {
 			var current_path = ocp.file_manager.get_current_path();
@@ -187,55 +198,6 @@ var remove_dialog = null;
 	// DRAG AND DROP END
 
 	// PROGRESS BAR
-	ocp.file_manager.upload_file_progress = function(e, path, name) {
-		var id = ocp.crypto.hash(ocp.normalize_path(path + '/' + name));
-		var total = e.total;
-		var loaded = e.loaded;
-		var percent = Math.round((loaded * 100) / total);
-		var row = $('[data-rowid=' + id + ']');
-
-		var timestamp = ocp_now();
-
-		if (row.length == 0 && loaded < total) {
-			var data = {
-				"name": name,
-				"size": ocp.utils.format_size(total),
-				"transfer_type": 'Upload',
-				"status": percent + '%',
-				"speed": '0 KB/s',
-				"elapsed_time": '0 s',
-				"remaining_time": 'N/A',
-				meta_data: {
-					loaded: loaded,
-					timestamp: timestamp,
-					start_t: timestamp
-				}
-			};
-
-			$('#ocp_fm_file_transfer').ocp_grid('add_row', data, id);
-			row = $('[data-rowid=' + id + ']');
-			row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar();
-		}
-		var prev_loaded = row.attr('data-md-loaded');
-		var prev_timestamp = row.attr('data-md-timestamp');
-		var speed = (loaded - prev_loaded) / (timestamp - prev_timestamp);
-		var start_t = row.attr('data-md-start_t');
-		var elapsed_t = ((timestamp - start_t) / 1000).toFixed(0);
-		var remaining_t = (((total - loaded) / speed) / 1000).toFixed(0);
-
-		row.attr('data-md-loaded', loaded);
-		row.attr('data-md-timestamp', timestamp);
-		row.find('.widget_grid_cell[data-colname=file_transfer_elapsed_time]').html(elapsed_t + ' s');
-		row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_t + ' s');
-		row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html(ocp.utils.format_size(speed * 1000, 1) + '/s');
-		row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', percent);
-
-		if (loaded >= total) {
-			row.remove();
-		}
-	}
-
-
 	ocp.file_manager.onprogress = function(e, args) {
 		var id = ocp.crypto.hash(ocp.normalize_path(args.path + '/' + args.name));
 		var total = e.total;
@@ -596,11 +558,23 @@ $(document).ready(function() {
 		try {
 			for (var i = 0; i < files.length; i++) {
 				var file = files[i];
-				ocp.client.upload_file(ocp.normalize_path(path), file, function() {
-					tree.ocp_tree('open_item', path);
-				}, function(e, filename) {
-					ocp.file_manager.upload_file_progress(e, ocp.normalize_path(path), filename);
-				});
+				ocp.client.upload_file(
+					ocp.normalize_path(path),
+					file,
+					ocp.file_manager.refresh,
+					function (performed) {
+						var args = {
+							name: file.name,
+							path: path,
+							size: file.size
+						};
+						var e = {
+							total: 100,
+							loaded: performed
+						};
+						ocp.file_manager.onprogress(e, args);
+					}
+				);
 			}
 		} catch (e) {
 			ocp.error_manage(e);
