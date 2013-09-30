@@ -617,17 +617,19 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_dir').change(function() {
-		var path = grid.ocp_grid('option', 'state').path;
+		var path = ocp.normalize_path(grid.ocp_grid('option', 'state').path);
 		var form = $('#ocp_fm_dir_form')[0];
 
 		var files = $('#ocp_fm_dir').get(0).files;
 
 		try {
-			ocp.client.upload_dir(ocp.normalize_path(path), files, function() {
-				tree.ocp_tree('open_item', path);
-			}, function(e, filename) {
-				ocp.file_manager.upload_file_progress(e, ocp.normalize_path(path), filename);
-			});
+			ocp.client.upload_dir(
+				path,
+				files,
+				function() {
+					tree.ocp_tree('open_item', path);
+				},
+				ocp.file_manager.upload_file_progress);
 		} catch (e) {
 			ocp.error_manage(e);
 		} finally {
