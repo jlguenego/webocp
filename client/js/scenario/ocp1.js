@@ -301,7 +301,7 @@
 					label: file.name,
 					type: 'file',
 					size: file.size,
-					last_modified: file.lastModifiedDate,
+					last_modified: file.lastModifiedDate.getTime() / 1000,
 					address: address
 				});
 				after_success_func();

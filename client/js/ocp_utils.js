@@ -204,6 +204,8 @@
 	};
 
 	ocp.utils.format_date = function(timestamp, format) {
+		console.log('timestamp=' + timestamp);
+
 		format = format || '%Y-%m-%d %H:%M:%S';
 		var date = new Date(timestamp * 1000);
 

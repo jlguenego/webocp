@@ -27,7 +27,7 @@
 			scenario: '2',
 			pool: {
 				thread_nbr: {
-					upload_dir: 1,
+					upload_dir: 3,
 					upload_file: 5,
 					download_file: 6
 				}
