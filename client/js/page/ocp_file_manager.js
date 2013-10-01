@@ -145,9 +145,6 @@ var remove_dialog = null;
 			);
 		} catch (e) {
 			ocp.error_manage(e);
-		} finally {
-			$('#ocp_fm_file').val('');
-			dir_list_a = [];
 		}
 	};
 
@@ -704,8 +701,12 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_file').change(function() {
-		var files = $('#ocp_fm_file').get(0).files;
-		ocp.file_manager.upload_files(files);
+		try {
+			var files = $('#ocp_fm_file').get(0).files;
+			ocp.file_manager.upload_files(files);
+		} finally {
+			$('#ocp_fm_file').val('');
+		}
 	});
 	// UPLOAD FILE END
 
@@ -719,38 +720,9 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_dir').change(function() {
-		var path = ocp.normalize_path(grid.ocp_grid('option', 'state').path);
-		var form = $('#ocp_fm_dir_form')[0];
-
-		var files = $('#ocp_fm_dir').get(0).files;
-		var file_descr_list = [];
-		for (var i = 0; i < files.length; i++) {
-			var type = 'file';
-			var relative_path = files[i].webkitRelativePath;
-			if (/\/\.$/.test(relative_path)) {
-				type = 'dir';
-			}
-
-			file_descr_list.push({
-				file: files[i],
-				type: type,
-				relative_path: relative_path
-			});
-		}
 		try {
-			ocp.client.upload_files(
-				path,
-				file_descr_list,
-				ocp.file_manager.refresh,
-				function(args) {
-					var pr = new ocp.file_manager.ProgressRow(args);
-					return function(performed) {
-						pr.update(performed);
-					}
-				}
-			);
-		} catch (e) {
-			ocp.error_manage(e);
+			var files = $('#ocp_fm_dir').get(0).files;
+			ocp.file_manager.upload_files(files);
 		} finally {
 			$('#ocp_fm_dir').val('');
 		}
