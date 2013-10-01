@@ -51,7 +51,7 @@
 		return result;
 	};
 
-	ocp.client.async_command = function(data, url, on_success, on_error) {
+	ocp.client.async_command = function(data, url, onsuccess, onerror) {
 		$.ajaxSetup({
 			cache: false,
 			scriptCharset: "utf-8"
@@ -68,22 +68,22 @@
 				console.log(data);
 				var output = $.parseJSON(data);
 				if (output.error) {
-					if (on_error) {
-						on_error();
+					if (onerror) {
+						onerror();
 					}
 					ocp.error_manage(new Error('Server answered: ' + output.error));
 					return;
 				}
-				if (on_success) {
-					on_success(output.result);
+				if (onsuccess) {
+					onsuccess(output.result);
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('ocp.client error');
 				console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
 				console.log(jqXHR);
-				if (on_error) {
-					on_error();
+				if (onerror) {
+					onerror();
 				}
 				if (jqXHR.status == 0) {
 					ocp.error_manage(new Error('URL ' + url + ' not reachable.'));
@@ -99,10 +99,10 @@
 		});
 	};
 
-	ocp.client.ls = function(path, on_success, on_error) {
+	ocp.client.ls = function(path, onsuccess, onerror) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
 
-		var my_on_success = function(result) {
+		var my_onsuccess = function(result) {
 			console.log('ls result=');
 			console.log(result);
 			var grid_result = ocp.file_manager.build_grid_data_from_ls_enpoint(result, path);
@@ -110,15 +110,15 @@
 			$("#ocp_fm_grid").ocp_grid('reload', grid_result);
 			$('#ocp_fm_breadcrumbs input').val(path);
 			var dir_result = ocp.file_manager.filter_dir(result);
-			on_success(dir_result);
+			onsuccess(dir_result);
 		};
 
-		scenario.ls(path, my_on_success, on_error);
+		scenario.ls(path, my_onsuccess, onerror);
 	}
 
-	ocp.client.mkdir = function(path, name, on_success, on_error) {
+	ocp.client.mkdir = function(path, name, onsuccess, onerror) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
-		var result = scenario.mkdir(path, name, on_success, on_error);
+		var result = scenario.mkdir(path, name, onsuccess, onerror);
 	}
 
 	ocp.client.mv = function(old_path, new_path) {
@@ -126,9 +126,9 @@
 		var result = scenario.mv(old_path, new_path);
 	}
 
-	ocp.client.rm = function(path, on_success, on_error) {
+	ocp.client.rm = function(path, onsuccess, onerror) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
-		var result = scenario.rm(path, on_success, on_error);
+		var result = scenario.rm(path, onsuccess, onerror);
 	}
 
 	ocp.client.upload_files = function(path, file_descr_list, onsuccess, onprogress) {

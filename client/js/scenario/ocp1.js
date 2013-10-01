@@ -76,7 +76,7 @@
 			}
 		};
 
-		this.ls = function(path, on_success, on_error) {
+		this.ls = function(path, onsucess, onerror) {
 			try {
 				console.log('ls with path=' + path);
 				console.log(ocp.session);
@@ -102,9 +102,9 @@
 				console.log('ocp1 ls result=');
 				console.log(result);
 				this.sync_connection_objects();
-				on_success(result);
+				onsucess(result);
 			} catch (e) {
-				on_error(e);
+				onerror(e);
 			}
 		};
 
@@ -208,7 +208,7 @@
 			//return ocp.crypto.pdecrypt(password, content);
 		};
 
-		this.rm = function(path, on_success, on_error) {
+		this.rm = function(path, onsucess, onerror) {
 			var self = this;
 			if (path == '/') {
 				throw new Error('Cannot get address for path root');
@@ -233,7 +233,7 @@
 			var remove_onsuccess = function() {
 				delete dir[name];
 				self.sync_connection_objects();
-				on_success();
+				onsucess();
 			};
 
 			ocp.transfer.remove(args, remove_onsuccess, function(error_msg) {

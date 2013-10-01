@@ -16,10 +16,10 @@ $.widget( "ui.ocp_tree", {
 		theme: '',
 
 		// Action
-		ls: function(path, on_success, on_error) {
+		ls: function(path, onsuccess, onerror) {
 			console.log('ls ' + path);
-			if (on_success) {
-				on_success([
+			if (onsuccess) {
+				onsuccess([
 					{
 						name: 'hello',
 						label: 'Hello',
@@ -154,9 +154,9 @@ $.widget( "ui.ocp_tree", {
 		$(event.currentTarget).attr("src", image_src);
 	},
 
-	ls: function(path, on_success, on_error) {
+	ls: function(path, onsuccess, onerror) {
 		if (this.options.ls) {
-			this.options.ls(path, on_success, on_error);
+			this.options.ls(path, onsuccess, onerror);
 		} else {
 			console.log('ls does not exist');
 		}
@@ -175,7 +175,7 @@ $.widget( "ui.ocp_tree", {
 		var subobj = this.get_subobj_from_path(path_a, this.options.source);
 
 		var self = this;
-		var on_success = function(result) {
+		var onsuccess = function(result) {
 			subobj.children = result;
 			subobj.expanded = true;
 			self.element.find('.ocp_wd_tree_struct').remove();
@@ -184,11 +184,11 @@ $.widget( "ui.ocp_tree", {
 			ocp.ui.cursor_wait_end();
 		};
 
-		var on_error = function() {
+		var onerror = function() {
 			ocp.ui.cursor_wait_end();
 		};
 
-		this.ls(path, on_success, on_error);
+		this.ls(path, onsuccess, onerror);
 	},
 
 	open_item: function(path) {

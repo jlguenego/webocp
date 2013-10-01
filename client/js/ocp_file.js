@@ -3,9 +3,9 @@
 
 	ocp.file.max_retry = 4;
 
-	ocp.file.send = function(filename, content, on_success, onprogress, retry) {
+	ocp.file.send = function(filename, content, onsuccess, onprogress, retry) {
 		retry = retry || 0;
-		on_success = on_success || function() {};
+		onsuccess = onsuccess || function() {};
 		onprogress = onprogress || function() {};
 
 		var contact = ocp.dht.find(filename);
@@ -29,13 +29,13 @@
 			if (xhr.status == 0 || xhr.status >= 400) { // no success
 				retry++;
 				if ((ocp.file.max_retry < 0) || (retry < ocp.file.max_retry)) {
-					ocp.file.send(filename, content, on_success, onprogress, retry);
+					ocp.file.send(filename, content, onsuccess, onprogress, retry);
 					return;
 				}
 				throw 'After ' + retry + ' times, cannot send the file: ' + filename;
 			}
 			// success
-			on_success();
+			onsuccess();
 		}
 		xhr.open('POST', upload_server_uri, true); // async for progress access.
 
@@ -46,10 +46,10 @@
 		}
 	}
 
-	ocp.file.retrieve = function(filename, on_success, onprogress, on_error) {
-		on_success = on_success || function() {};
+	ocp.file.retrieve = function(filename, onsuccess, onprogress, onerror) {
+		onsuccess = onsuccess || function() {};
 		onprogress = onprogress || function() {};
-		on_error = on_error || function() {};
+		onerror = onerror || function() {};
 
 		var contact = ocp.dht.find(filename);
 		var download_server_uri = contact.url + '/endpoint/retrieve_file.php';
@@ -72,20 +72,20 @@
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
 				var json_obj = JSON.parse(xhr.responseText);
 				if (!json_obj) {
-					on_error('Cannot retrieve file ' + filename + '. Cannot parse the endpoint output.');
+					onerror('Cannot retrieve file ' + filename + '. Cannot parse the endpoint output.');
 					return;
 				}
 				if (json_obj.error) {
-					on_error('Cannot retrieve file ' + filename + '. Error = ' + json_obj.error);
+					onerror('Cannot retrieve file ' + filename + '. Error = ' + json_obj.error);
 					return;
 				}
 				if (!json_obj.result.content) {
-					on_error('Cannot retrieve file ' + filename + '. The endpoint did not send content.');
+					onerror('Cannot retrieve file ' + filename + '. The endpoint did not send content.');
 					return;
 				}
 				var content = ocp.utils.b642ab(json_obj.result.content);
 				console.log('content found');
-				on_success(content);
+				onsuccess(content);
 			}
 		}
 		console.log('about to open');
@@ -127,8 +127,8 @@
 		return content;
 	}
 
-	ocp.file.remove = function(filename, on_success, onprogress) {
-		on_success = on_success || function() {};
+	ocp.file.remove = function(filename, onsuccess, onprogress) {
+		onsuccess = onsuccess || function() {};
 		onprogress = onprogress || function() {};
 
 		var contact = ocp.dht.find(filename);
@@ -149,7 +149,7 @@
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
 				var json_obj = JSON.parse(xhr.responseText);
-				on_success();
+				onsuccess();
 			}
 		}
 		xhr.open('POST', download_server_uri, true);

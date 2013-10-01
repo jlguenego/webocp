@@ -1,12 +1,12 @@
 (function(ocp, undefined) {
 	ocp.block = {};
 
-	ocp.block.send = function(address, content, attributes, on_success, onprogress) {
+	ocp.block.send = function(address, content, attributes, onsuccess, onprogress) {
 		var new_content = ocp.block.set_content(attributes, content);
-		ocp.file.send(address, new_content, on_success, onprogress);
+		ocp.file.send(address, new_content, onsuccess, onprogress);
 	};
 
-	ocp.block.retrieve = function(filename, on_success, onprogress, on_error) {
+	ocp.block.retrieve = function(filename, onsuccess, onprogress, onerror) {
 		var args = {
 			filename: filename
 		};
@@ -24,7 +24,7 @@
 			}
 		}
 
-		ocp.file.retrieve(args, my_onsuccess(on_success), onprogress, on_error);
+		ocp.file.retrieve(args, my_onsuccess(onsuccess), onprogress, onerror);
 	};
 
 	ocp.block.retrieve_sync = function(filename) {
@@ -37,14 +37,14 @@
 		return ocp.block.get_content(ocp.file.retrieve_sync(args));
 	};
 
-	ocp.block.remove = function(filename, on_success, onprogress) {
+	ocp.block.remove = function(filename, onsuccess, onprogress) {
 		var args = {
 			filename: filename
 		};
 		if (ocp.session.rsa) {
 			args.signature = ocp.crypto.sign(filename, ocp.session.rsa.private_key);
 		}
-		return ocp.file.remove(args, on_success, onprogress);
+		return ocp.file.remove(args, onsuccess, onprogress);
 	};
 
 	ocp.block.get_content = function(block_content) {

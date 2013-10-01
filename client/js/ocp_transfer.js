@@ -27,7 +27,7 @@
 		return sum * 100 / task_array.length;
 	};
 
-	ocp.transfer.upload = function(args, on_success) {
+	ocp.transfer.upload = function(args, onsuccess) {
 		var file = args.file;
 		var secret_key = args.secret_key;
 		var onprogress = args.onprogress;
@@ -95,7 +95,7 @@
 						task.sendMessage('finalize');
 					}, ocp.transfer.onprogress(task_array.length - 1, task_array, onprogress));
 				} else if (event.data.action == 'finalize') {
-					on_success(event.data.filename);
+					onsuccess(event.data.filename);
 				}
 				pool.terminate();
 			};
@@ -393,18 +393,18 @@
 		}
 	};
 
-	ocp.transfer.send_block = function(args, on_success, onprogress) {
+	ocp.transfer.send_block = function(args, onsuccess, onprogress) {
 		var attributes = {
 		};
 		var ab = ocp.utils.str2ab(JSON.stringify(attributes));
-		ocp.block.send(args.filename, args.content, ab, on_success, onprogress);
+		ocp.block.send(args.filename, args.content, ab, onsuccess, onprogress);
 	};
 
-	ocp.transfer.retrieve_block = function(args, on_success, onprogress, on_error) {
-		ocp.block.retrieve(args.filename, on_success, onprogress, on_error);
+	ocp.transfer.retrieve_block = function(args, onsuccess, onprogress, onerror) {
+		ocp.block.retrieve(args.filename, onsuccess, onprogress, onerror);
 	};
 
-	ocp.transfer.remove_block = function(args, on_success, onprogress) {
-		ocp.block.remove(args.filename, on_success, onprogress);
+	ocp.transfer.remove_block = function(args, onsuccess, onprogress) {
+		ocp.block.remove(args.filename, onsuccess, onprogress);
 	};
 })(ocp);
