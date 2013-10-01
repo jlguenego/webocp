@@ -94,7 +94,7 @@
 			}, this.endpoint);
 		};
 
-		this.upload_file = function(path, file, after_success_func, on_progress_func) {
+		this.upload_file = function(path, file, after_success_func, onprogress) {
 			var formData = new FormData();
 			formData.append('input_name', 'file');
 			formData.append('path', '/' + ocp.session.user_id + path);
@@ -109,8 +109,9 @@
 		            var myXhr = $.ajaxSettings.xhr();
 		            if(myXhr.upload){ // check if upload property exists
 		                myXhr.upload.addEventListener('progress', function(e) {
-		                	if (on_progress_func) {
-			                	on_progress_func(e, file.name);
+		                	if (onprogress) {
+		                		var performed = e.loaded * 100 / e.total;
+			                	onprogress(performed);
 			                }
 		                }, false); // for handling the progress of the upload
 		            }
@@ -119,11 +120,8 @@
 		        beforeSend: function() {},
 		        success: function(data) {
 					try {
-						var e = $.Event('progress');
-						e.total = 1;
-						e.loaded = 1;
-						if (on_progress_func) {
-							on_progress_func(e, file.name);
+						if (onprogress) {
+							onprogress(100);
 						}
 						//console.log(data);
 						var output = $.parseJSON(data);
