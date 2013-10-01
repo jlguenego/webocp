@@ -471,18 +471,24 @@ $(document).ready(function() {
 			if (type == 'dir') {
 				tree.ocp_tree('open_item', ocp.normalize_path(path + '/' + name));
 			} else {
-				var pr = new ocp.file_manager.ProgressRow({
-					name: name,
-					path: path,
-					size: size,
-					transfer_type: 'download'
-				});
+				var scenario = ocp.scenario.get(ocp.cfg.scenario);
+				var onprogress;
+				if (!scenario.use_direct_download) {
+					var pr = new ocp.file_manager.ProgressRow({
+						name: name,
+						path: path,
+						size: size,
+						transfer_type: 'download'
+					});
+					onprogress = function(performed) {
+						pr.update(performed);
+					};
+				}
+
 				ocp.client.download_file(
 					ocp.normalize_path(path + '/' + name),
 					null,
-					function(performed) {
-						pr.update(performed);
-					},
+					onprogress,
 					function(error_msg) {
 						ocp.error_manage(new Error(error_msg));
 					}

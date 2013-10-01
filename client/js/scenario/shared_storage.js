@@ -165,6 +165,8 @@
 			return result;
 		};
 
+		this.use_direct_download = true;
+
 		this.download_file = function(path) {
 			window.location = this.endpoint + 'download.php?path=' + '/shared_storage' + path;
 		};
