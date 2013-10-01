@@ -224,57 +224,63 @@ var remove_dialog = null;
 		e.stopPropagation();
 		e.preventDefault();
 
-		var items = e.originalEvent.dataTransfer.items;
-		for (var i = 0; i < items.length; i++) {
-			var item = items[i].webkitGetAsEntry();
-			if (item) {
-				ocp.file_manager.dnd.traverse_file_tree(item);
-			}
-		}
-	}
-
-	ocp.file_manager.dnd.traverse_file_tree = function(item, path) {
-		path = path || "";
-		console.log("item.name=" + item.name);
-
 		if (is_file_protocol()) {
 			console.log('file protocol: dnd disabled');
 			return;
 		}
 
+		var path = ocp.file_manager.get_current_path();
+		var items = e.originalEvent.dataTransfer.items;
+		for (var i = 0; i < items.length; i++) {
+			var entry = items[i].webkitGetAsEntry();
+			if (entry) {
+				ocp.file_manager.dnd.traverse_file_tree(path, entry);
+			}
+		}
+	}
 
+	ocp.file_manager.dnd.traverse_file_tree = function(path, entry, relative_path) {
+		relative_path = relative_path || '.';
+		console.log('item.name=' + entry.name);
 
-		if (item.isFile) {
+		if (entry.isFile) {
 			// Get file
-			item.file(function(file) {
+			entry.file(function(file) {
 				console.log("File: " + path + file.name);
-				var current_path = ocp.file_manager.get_current_path();
-				ocp.client.upload_file(
-					ocp.normalize_path(current_path + '/' + path),
-					file,
+				var file_descr = {
+					file: file,
+					type: 'file',
+					relative_path: ocp.normalize_path(relative_path + '/' + file.name)
+				};
+				ocp.client.add_upload_task(
+					path,
+					file_descr,
 					ocp.file_manager.refresh,
-					function (performed) {
-						var args = {
-							name: file.name,
-							path: path,
-							size: file.size,
-							transfer_type: 'upload'
-						};
-						var e = {
-							total: 100,
-							loaded: performed
-						};
-						ocp.file_manager.onprogress(e, args);
-					});
-			}, ocp.file_manager.dnd.error);
-		} else if (item.isDirectory) {
-			var current_path = ocp.file_manager.get_current_path();
-			ocp.client.mkdir(ocp.normalize_path(current_path + '/' + path), item.name, ocp.file_manager.refresh);
+					function(args) {
+						var pr = new ocp.file_manager.ProgressRow(args);
+						return function(performed) {
+							pr.update(performed);
+						}
+					}
+				);
+			});
+		} else if (entry.isDirectory) {
+			var file_descr = {
+				file: null,
+				type: 'dir',
+				relative_path: ocp.normalize_path(relative_path + '/' + entry.name)
+			};
+			ocp.client.add_upload_task(
+				path,
+				file_descr,
+				ocp.file_manager.refresh
+			);
+
 			// Get folder contents
-			var dirReader = item.createReader();
+			var dirReader = entry.createReader();
 			dirReader.readEntries(function(entries) {
 				for (var i = 0; i < entries.length; i++) {
-					ocp.file_manager.dnd.traverse_file_tree(entries[i], path + item.name + "/");
+					ocp.file_manager.dnd.traverse_file_tree(path, entries[i], file_descr.relative_path);
 				}
 			}, ocp.file_manager.dnd.error_from_readentries);
 		}
