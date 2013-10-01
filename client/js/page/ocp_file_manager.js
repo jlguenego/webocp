@@ -114,6 +114,43 @@ var remove_dialog = null;
 		}
 	};
 
+	ocp.file_manager.upload_files = function(files) {
+		var path = ocp.file_manager.get_current_path();
+
+		var file_descr_list = [];
+		for (var i = 0; i < files.length; i++) {
+			var type = 'file';
+			var relative_path = files[i].webkitRelativePath;
+			if (/\/\.$/.test(relative_path)) {
+				type = 'dir';
+			}
+
+			file_descr_list.push({
+				file: files[i],
+				type: type,
+				relative_path: relative_path
+			});
+		}
+		try {
+			ocp.client.upload_files(
+				path,
+				file_descr_list,
+				ocp.file_manager.refresh,
+				function(args) {
+					var pr = new ocp.file_manager.ProgressRow(args);
+					return function(performed) {
+						pr.update(performed);
+					}
+				}
+			);
+		} catch (e) {
+			ocp.error_manage(e);
+		} finally {
+			$('#ocp_fm_file').val('');
+			dir_list_a = [];
+		}
+	};
+
 	// SELECT ALL
 	ocp.file_manager.select_all = function() {
 		if (grid) {
@@ -667,42 +704,8 @@ $(document).ready(function() {
 	});
 
 	$('#ocp_fm_file').change(function() {
-		var path = ocp.file_manager.get_current_path();
-		var form = $('#ocp_fm_file_form')[0];
-
 		var files = $('#ocp_fm_file').get(0).files;
-		var file_descr_list = [];
-		for (var i = 0; i < files.length; i++) {
-			var type = 'file';
-			var relative_path = files[i].webkitRelativePath;
-			if (/\/\.$/.test(relative_path)) {
-				type = 'dir';
-			}
-
-			file_descr_list.push({
-				file: files[i],
-				type: type,
-				relative_path: relative_path
-			});
-		}
-		try {
-			ocp.client.upload_files(
-				path,
-				file_descr_list,
-				ocp.file_manager.refresh,
-				function(args) {
-					var pr = new ocp.file_manager.ProgressRow(args);
-					return function(performed) {
-						pr.update(performed);
-					}
-				}
-			);
-		} catch (e) {
-			ocp.error_manage(e);
-		} finally {
-			$('#ocp_fm_file').val('');
-			dir_list_a = [];
-		}
+		ocp.file_manager.upload_files(files);
 	});
 	// UPLOAD FILE END
 
