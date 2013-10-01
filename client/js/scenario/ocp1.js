@@ -285,7 +285,7 @@
 			this.sync_connection_objects();
 		};
 
-		this.upload_file = function(path, file, after_success_func, onprogress) {
+		this.upload_file = function(path, file, onsuccess, onprogress) {
 			var args = {
 				file: file,
 				secret_key: ocp.session.ocp1.private.content.secret_key,
@@ -302,7 +302,7 @@
 					last_modified: file.lastModifiedDate.getTime() / 1000,
 					address: address
 				});
-				after_success_func();
+				onsuccess();
 			});
 		};
 

@@ -60,7 +60,7 @@
 			}, this.endpoint);
 		};
 
-		this.upload_file = function(path, file, after_success_func, onprogress) {
+		this.upload_file = function(path, file, onsuccess, onprogress) {
 			var formData = new FormData();
 			formData.append('input_name', 'file');
 			formData.append('path', '/shared_storage' + path);
@@ -101,8 +101,8 @@
 						ocp.error_manage(e);
 						return;
 					}
-					if (after_success_func) {
-						after_success_func();
+					if (onsuccess) {
+						onsuccess();
 					}
 				},
 		        error: function(jqXHR, textStatus, errorThrown) {
@@ -117,7 +117,7 @@
 		    return result;
 		};
 
-		this.upload_dir = function(path, relative_path, form, after_success_func, on_progress_func) {
+		this.upload_dir = function(path, relative_path, form, onsuccess, on_progress_func) {
 			var formData = new FormData(form);
 			console.log(form);
 			formData.append('action', 'upload_dir');
@@ -147,8 +147,8 @@
 						ocp.error_manage(e);
 						return;
 					}
-					if (after_success) {
-						after_success();
+					if (onsuccess) {
+						onsuccess();
 					}
 				},
 		        error: function(jqXHR, textStatus, errorThrown) {

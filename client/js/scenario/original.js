@@ -94,7 +94,7 @@
 			}, this.endpoint);
 		};
 
-		this.upload_file = function(path, file, after_success_func, onprogress) {
+		this.upload_file = function(path, file, onsuccess, onprogress) {
 			var formData = new FormData();
 			formData.append('input_name', 'file');
 			formData.append('path', '/' + ocp.session.user_id + path);
@@ -135,8 +135,8 @@
 						ocp.error_manage(e);
 						return;
 					}
-					if (after_success_func) {
-						after_success_func();
+					if (onsuccess) {
+						onsuccess();
 					}
 				},
 		        error: function(jqXHR, textStatus, errorThrown) {
