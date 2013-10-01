@@ -24,7 +24,7 @@
 		for (var i = 0; i < task_array.length; i++) {
 			sum += task_array[i];
 		}
-		return Math.floor(sum * 100 / task_array.length);
+		return sum * 100 / task_array.length;
 	};
 
 	ocp.transfer.upload = function(args, on_success) {

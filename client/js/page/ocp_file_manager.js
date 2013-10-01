@@ -55,19 +55,25 @@ var remove_dialog = null;
 		this.refresh = function() {
 			var now_t = ocp_now();
 
-			if (!this.start_t) {
-				this.start_t = now_t;
+			var instantaneous_speed = (this.performed - this.prev_performed) * (this.size / 100) / (now_t - this.prev_t);
+			var elapsed_t = ((now_t - this.start_t) / 1000);
+			var average_speed = this.performed * (this.size / 100) / elapsed_t;
+			var remaining_t = ((100 - this.performed) * (this.size / 100) / average_speed);
+
+
+			this.row.find('.widget_grid_cell[data-colname=file_transfer_elapsed_time]').html(elapsed_t.toFixed(0) + ' s');
+
+			var remaining_str = remaining_t.toFixed(0) + ' s';
+			if (average_speed == 0) {
+				remaining_str = 'N/A';
 			}
+			this.row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_str);
 
-			var speed = (this.performed - this.prev_performed) * (this.size / 100) / (now_t - this.prev_t);
-			var elapsed_t = ((now_t - this.start_t) / 1000).toFixed(0);
-			var remaining_t = (((100 - this.performed) * (this.size / 100) / speed) / 1000).toFixed(0);
+			this.row.find('.widget_grid_cell[data-colname=file_transfer_speed]')
+				.html(ocp.utils.format_size(instantaneous_speed * 1000, 1) + '/s');
 
-
-			this.row.find('.widget_grid_cell[data-colname=file_transfer_elapsed_time]').html(elapsed_t + ' s');
-			this.row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_t + ' s');
-			this.row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html(ocp.utils.format_size(speed * 1000, 1) + '/s');
-			this.row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', this.performed);
+			this.row.find('.widget_grid_cell[data-colname=file_transfer_status]')
+				.ocp_progressbar('set_progress', Math.floor(this.performed));
 
 			this.prev_t = now_t;
 			this.prev_performed = this.performed;
@@ -80,6 +86,9 @@ var remove_dialog = null;
 		};
 
 		this.start = function() {
+			if (!this.start_t) {
+				this.start_t = ocp_now();
+			}
 			var self = this;
 			setTimeout(function() {
 				if (self.performed >= 100) {
@@ -343,7 +352,7 @@ var remove_dialog = null;
 		row.find('.widget_grid_cell[data-colname=file_transfer_elapsed_time]').html(elapsed_t + ' s');
 		row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_t + ' s');
 		row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html(ocp.utils.format_size(speed * 1000, 1) + '/s');
-		row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', percent);
+		row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', Math.floor(percent));
 
 		if (loaded >= total) {
 			row.remove();
