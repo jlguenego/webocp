@@ -64,7 +64,7 @@
 				callback_func = function(event) {
 					check_error(event.data);
 					if (event.data.action == 'send') {
-						ocp.transfer.send_worker_block(event.data, function() {
+						ocp.transfer.send_block(event.data, function() {
 							var task = pool.getTask(event.data.task_id);
 							task.sendMessage('finalize');
 						}, ocp.transfer.onprogress(block_id, task_array, onprogress));
@@ -90,7 +90,7 @@
 			var hat_callback = function(event) {
 				check_error(event.data);
 				if (event.data.action == 'send') {
-					ocp.transfer.send_worker_block(event.data, function() {
+					ocp.transfer.send_block(event.data, function() {
 						var task = pool.getTask(event.data.task_id);
 						task.sendMessage('finalize');
 					}, ocp.transfer.onprogress(task_array.length - 1, task_array, onprogress));
@@ -170,7 +170,7 @@
 		var hat_callback = function() {
 			if (event.data.action == 'retrieve') {
 				var args = event.data;
-				ocp.transfer.retrieve_worker_block(
+				ocp.transfer.retrieve_block(
 					event.data,
 					function(content) {
 						var task = pool.getTask(args.task_id);
@@ -221,7 +221,7 @@
 			var task_callback = function(event) {
 				if (event.data.action == 'retrieve') {
 					var args = event.data;
-					ocp.transfer.retrieve_worker_block(
+					ocp.transfer.retrieve_block(
 						event.data,
 						function(content) {
 							var task = pool.getTask(args.task_id);
@@ -306,7 +306,7 @@
 		var hat_callback = function() {
 			if (event.data.action == 'retrieve') {
 				var args = event.data;
-				ocp.transfer.retrieve_worker_block(
+				ocp.transfer.retrieve_block(
 					event.data,
 					function(content) {
 						var task = pool.getTask(args.task_id);
@@ -359,7 +359,7 @@
 			var task_callback = function(event) {
 				if (event.data.action == 'remove') {
 					var args = event.data;
-					ocp.transfer.remove_worker_block(event.data, function(content) {
+					ocp.transfer.remove_block(event.data, function(content) {
 						var task = pool.getTask(args.task_id);
 						task.sendMessage('finalize', {
 							block_id: args.block_id,
@@ -378,7 +378,7 @@
 
 		function finalize() {
 			// remove the hat as well.
-			ocp.transfer.remove_worker_block(
+			ocp.transfer.remove_block(
 				{ filename: filename },
 				null,
 				ocp.transfer.onprogress(hat.block_nbr, task_array, onprogress));
@@ -393,15 +393,15 @@
 		}
 	};
 
-	ocp.transfer.send_worker_block = function(args, on_success, onprogress) {
-		ocp.file.send(args.filename, args.content, on_success, onprogress);
+	ocp.transfer.send_block = function(args, on_success, onprogress) {
+		ocp.block.send(args.filename, args.content, on_success, onprogress);
 	};
 
-	ocp.transfer.retrieve_worker_block = function(args, on_success, onprogress, on_error) {
-		ocp.file.retrieve(args.filename, on_success, onprogress, on_error);
+	ocp.transfer.retrieve_block = function(args, on_success, onprogress, on_error) {
+		ocp.block.retrieve(args.filename, on_success, onprogress, on_error);
 	};
 
-	ocp.transfer.remove_worker_block = function(args, on_success, onprogress) {
-		ocp.file.remove(args.filename, on_success, onprogress);
+	ocp.transfer.remove_block = function(args, on_success, onprogress) {
+		ocp.block.remove(args.filename, on_success, onprogress);
 	};
 })(ocp);

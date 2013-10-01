@@ -51,8 +51,8 @@
 				var private_address = ocp.dht.get_address(email + password);
 				ocp.session = {};
 
-				var public_content = ocp.file.retrieve_sync(public_address);
-				var content = ocp.file.retrieve_sync(private_address);
+				var public_content = ocp.block.retrieve_sync(public_address);
+				var content = ocp.block.retrieve_sync(private_address);
 				var private_content = JSON.parse(ocp.utils.ab2str(this.decrypt(password, content)));
 				console.log('private_content=');
 				console.log(private_content);
@@ -188,8 +188,9 @@
 
 			var private_content = this.crypt(
 				ocp.session.ocp1.password, ocp.crypto.serialize(ocp.session.ocp1.private.content));
-			ocp.file.send(ocp.session.ocp1.private.address, private_content);
-			ocp.file.send(ocp.session.ocp1.public.address, ocp.session.ocp1.public.content);
+			var ab = new ArrayBuffer(0);
+			ocp.block.send(ocp.session.ocp1.private.address, private_content, ab);
+			ocp.block.send(ocp.session.ocp1.public.address, ocp.session.ocp1.public.content, ab);
 
 			if (ocp.session.remember_me) {
 				ocp.cfg.session = ocp.session;

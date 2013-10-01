@@ -7,6 +7,7 @@
 
 		<script src="js/ocp.js"></script>
 		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_block.js"></script>
 	</head>
 
 	<body>
@@ -29,6 +30,12 @@ $('#concat').click(function() {
 	console.log('result_ab=');
 	console.log(result_ab);
 	console.log('result=' + ocp.utils.ab2str(result_ab));
+
+	var s_content_ab = ocp.block.get_content(result_ab);
+
+	console.log('s_content_ab=');
+	console.log(s_content_ab);
+	console.log('result=' + ocp.utils.ab2str(s_content_ab));
 });
 		</script>
 	</body>
