@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+	</head>
+
+	<body>
+		<script>
+function Animal() {
+	this.a = function () {
+		console.log('Execute a');
+	};
+};
+Animal.prototype.hello = function () {
+	console.log('Animal says: ????');
+};
+
+function Bird() {
+	this.a = function () {
+		console.log('Execute a from Bird');
+	};
+};
+Bird.prototype = new Animal();
+Bird.prototype.hello = function () {
+    console.log('Bird says: Tweet');
+};
+
+function Dog() {};
+Dog.prototype = new Animal();
+Dog.prototype.hello = function () {
+    console.log('Dog says: Ouaf!');
+};
+
+var animal = new Animal();
+var bird = new Bird();
+var dog = new Dog();
+
+animal.hello();
+bird.hello();
+dog.hello();
+animal.a();
+bird.a();
+dog.a();
+		</script>
+	</body>
+</html>

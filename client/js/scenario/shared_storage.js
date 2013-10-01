@@ -1,6 +1,9 @@
 (function(ocp, undefined) {
 	ocp.scenario.SharedStorage = function() {
 		this.endpoint = ocp.cfg.server_base_url + '/webocp/server/shared_storage/endpoint/';
+		this.get_prefix_path = function() {
+			return '/shared_storage';
+		}
 
 		this.register = function(args) {
 			console.log('Shared Storage args: ');
@@ -33,14 +36,14 @@
 		this.ls = function(path, onsuccess, onerror) {
 			ocp.client.async_command({
 				action: 'ls',
-				path: '/shared_storage' + path
+				path: this.get_prefix_path() + path
 			}, this.endpoint, onsuccess, onerror);
 		};
 
 		this.mkdir = function(path, name, onsuccess, onerror) {
 			ocp.client.async_command({
 				action: 'mkdir',
-				path: '/shared_storage' + path,
+				path: this.get_prefix_path() + path,
 				name: name
 			}, this.endpoint, onsuccess, onerror);
 		};
@@ -48,22 +51,22 @@
 		this.rm = function(path, onsuccess, onerror) {
 			ocp.client.async_command({
 				action: 'rm',
-				path: '/shared_storage' + path
+				path: this.get_prefix_path() + path
 			}, this.endpoint, onsuccess, onerror);
 		};
 
 		this.mv = function(old_path, new_path) {
 			ocp.client.command({
 				action: 'mv',
-				old_path: '/shared_storage' + old_path,
-				new_path: '/shared_storage' + new_path
+				old_path: this.get_prefix_path() + old_path,
+				new_path: this.get_prefix_path() + new_path
 			}, this.endpoint);
 		};
 
 		this.upload_file = function(path, file, onsuccess, onprogress) {
 			var formData = new FormData();
 			formData.append('input_name', 'file');
-			formData.append('path', '/shared_storage' + path);
+			formData.append('path', this.get_prefix_path() + path);
 			formData.append('file[]', file);
 			var result = null;
 		    $.ajax({
@@ -127,7 +130,7 @@
 			// Remove the ending []
 			fieldname = fieldname.substr(0, fieldname.length - 2);
 			formData.append('input_name', fieldname);
-			formData.append('path', '/shared_storage' + path);
+			formData.append('path', this.get_prefix_path() + path);
 			var result = null;
 		    $.ajax({
 		        url: this.endpoint,  //server script to process data
@@ -166,7 +169,7 @@
 		this.use_direct_download = true;
 
 		this.download_file = function(path) {
-			window.location = this.endpoint + 'download.php?path=' + '/shared_storage' + path;
+			window.location = this.endpoint + 'download.php?path=' + this.get_prefix_path() + path;
 		};
 	};
 })(ocp);

@@ -1,6 +1,9 @@
 (function(ocp, undefined) {
 	ocp.scenario.Original = function() {
 		this.endpoint = ocp.cfg.server_base_url + '/webocp/server/original/endpoint/';
+		this.get_prefix_path = function() {
+			return '/' + ocp.session.user_id;
+		}
 
 		this.register = function(args) {
 			var name = args.name;
@@ -63,143 +66,7 @@
 			ocp.session = {};
 			ocp.session.user_id = public_address;
 		};
-
-		this.ls = function(path, onsuccess, onerror) {
-			ocp.client.async_command({
-				action: 'ls',
-				path: '/' + ocp.session.user_id + path
-			}, this.endpoint, onsuccess, onerror);
-		};
-
-		this.mkdir = function(path, name, onsuccess, onerror) {
-			ocp.client.async_command({
-				action: 'mkdir',
-				path: '/' + ocp.session.user_id + path,
-				name: name
-			}, this.endpoint, onsuccess, onerror);
-		};
-
-		this.rm = function(path, onsuccess, onerror) {
-			ocp.client.async_command({
-				action: 'rm',
-				path: '/' + ocp.session.user_id + path
-			}, this.endpoint, onsuccess, onerror);
-		};
-
-		this.mv = function(old_path, new_path) {
-			ocp.client.command({
-				action: 'mv',
-				old_path: '/' + ocp.session.user_id + old_path,
-				new_path: '/' + ocp.session.user_id + new_path
-			}, this.endpoint);
-		};
-
-		this.upload_file = function(path, file, onsuccess, onprogress) {
-			var formData = new FormData();
-			formData.append('input_name', 'file');
-			formData.append('path', '/' + ocp.session.user_id + path);
-			formData.append('file[]', file);
-			var result = null;
-		    $.ajax({
-		        url: this.endpoint + '?action=upload_file&file_size=' + file.size,  //server script to process data
-		        type: 'POST',
-		        data: formData,
-		        async: true,
-		        xhr: function() {  // custom xhr
-		            var myXhr = $.ajaxSettings.xhr();
-		            if(myXhr.upload){ // check if upload property exists
-		                myXhr.upload.addEventListener('progress', function(e) {
-		                	if (onprogress) {
-		                		var performed = e.loaded * 100 / e.total;
-			                	onprogress(performed);
-			                }
-		                }, false); // for handling the progress of the upload
-		            }
-		            return myXhr;
-		        },
-		        beforeSend: function() {},
-		        success: function(data) {
-					try {
-						if (onprogress) {
-							onprogress(100);
-						}
-						//console.log(data);
-						var output = $.parseJSON(data);
-						if (output.error) {
-							throw new Error('Server answered: ' + output.error);
-						}
-						if (output.result) {
-							result = output.result;
-						}
-					} catch (e) {
-						ocp.error_manage(e);
-						return;
-					}
-					if (onsuccess) {
-						onsuccess();
-					}
-				},
-		        error: function(jqXHR, textStatus, errorThrown) {
-					console.log('ocp.client.ls error');
-					console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
-				},
-		        //Options to tell JQuery not to process data or worry about content-type
-		        cache: false,
-		        contentType: false,
-		        processData: false
-		    });
-		    return result;
-		};
-
-		this.upload_dir = function(path, relative_path, form, after_success) {
-			var formData = new FormData(form);
-			formData.append('action', 'upload_dir');
-			formData.append('relative_path', relative_path);
-
-			var fieldname = $(form).find('input').attr('name');
-			// Remove the ending []
-			fieldname = fieldname.substr(0, fieldname.length - 2);
-			formData.append('input_name', fieldname);
-			formData.append('path', '/' + ocp.session.user_id + path);
-			var result = null;
-		    $.ajax({
-		        url: this.endpoint,  //server script to process data
-		        type: 'POST',
-		        data: formData,
-		        success: function(data) {
-					try {
-						console.log(data);
-						var output = $.parseJSON(data);
-						if (output.error) {
-							throw new Error('Server answered: ' + output.error);
-						}
-						if (output.result) {
-							result = output.result;
-						}
-					} catch (e) {
-						ocp.error_manage(e);
-						return;
-					}
-					if (after_success) {
-						after_success();
-					}
-				},
-		        error: function(jqXHR, textStatus, errorThrown) {
-					console.log('ocp.client.ls error');
-					console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
-				},
-		        //Options to tell JQuery not to process data or worry about content-type
-		        cache: false,
-		        contentType: false,
-		        processData: false
-		    });
-			return result;
-		};
-
-		this.use_direct_download = true;
-
-		this.download_file = function(path) {
-			window.location = this.endpoint + 'download.php?path=' + '/' + ocp.session.user_id + path;
-		};
 	};
+
+	ocp.scenario.Original.prototype = new ocp.scenario.SharedStorage();
 })(ocp);
