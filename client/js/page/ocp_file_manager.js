@@ -471,21 +471,17 @@ $(document).ready(function() {
 			if (type == 'dir') {
 				tree.ocp_tree('open_item', ocp.normalize_path(path + '/' + name));
 			} else {
+				var pr = new ocp.file_manager.ProgressRow({
+					name: name,
+					path: path,
+					size: size,
+					transfer_type: 'download'
+				});
 				ocp.client.download_file(
 					ocp.normalize_path(path + '/' + name),
 					null,
-					function (performed) {
-						var args = {
-							name: name,
-							path: path,
-							size: size,
-							transfer_type: 'download'
-						};
-						var e = {
-							total: 100,
-							loaded: performed
-						};
-						ocp.file_manager.onprogress(e, args);
+					function(performed) {
+						pr.update(performed);
 					},
 					function(error_msg) {
 						ocp.error_manage(new Error(error_msg));
