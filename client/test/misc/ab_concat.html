@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
+	</head>
+
+	<body>
+		<button id="concat">Concat</button>
+		<script>
+$('#concat').click(function() {
+	var content_ab = ocp.utils.str2ab('000');
+
+	var attribute_ab = ocp.utils.str2ab('XXXX');
+	var length_str = attribute_ab.byteLength.toString().padleft(4, '0');
+	var length_ab = ocp.utils.str2ab(length_str);
+	var result_ab = ocp.utils.ab_concat(length_ab, attribute_ab, content_ab);
+
+	console.log('content_ab=');
+	console.log(content_ab);
+	console.log('attribute_ab=');
+	console.log(attribute_ab);
+	console.log('length_ab=');
+	console.log(length_ab);
+	console.log('result_ab=');
+	console.log(result_ab);
+	console.log('result=' + ocp.utils.ab2str(result_ab));
+});
+		</script>
+	</body>
+</html>

@@ -238,4 +238,18 @@
 		result = result.replace('%S', second);
 		return result;
 	};
+
+	ocp.utils.ab_concat = function() {
+		var size = 0;
+		for (var i = 0; i < arguments.length; i++) {
+			size += arguments[i].byteLength;
+		}
+		var result = new Uint8Array(size);
+		var offset = 0;
+		for (var i = 0; i < arguments.length; i++) {
+			result.set(new Uint8Array(arguments[i]), offset);
+			offset += arguments[i].byteLength;
+		}
+		return result.buffer;
+	};
 })(ocp);

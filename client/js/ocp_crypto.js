@@ -54,4 +54,15 @@
 	ocp.crypto.combine = function(email, password) {
 		return email + password;
 	};
+
+	ocp.crypto.sign = function(content, private_key) {
+		var hash = ocp.crypto.hash(content);
+		return ocp.crypto.rsacrypt(private_key, hash);
+	};
+
+	ocp.crypto.verify = function(content, signature, public_key) {
+		var my_hash = ocp.crypto.hash(content);
+		var given_hash = ocp.crypto.rsadecrypt(public_key, signature);
+		return my_hash == given_hash;
+	};
 })(ocp);

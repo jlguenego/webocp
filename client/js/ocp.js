@@ -127,3 +127,7 @@ Error = Error || function (msg) {
 	};
 };
 
+
+String.prototype.padleft = function(length, character) {
+	 return new Array(length - this.length + 1).join(character || '0') + this;
+};

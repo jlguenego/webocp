@@ -55,7 +55,13 @@
 		var download_server_uri = contact.url + '/endpoint/retrieve_file.php';
 
 		var formData = new FormData();
-		formData.append('filename', filename);
+		if (typeof filename == 'string') {
+			formData.append('filename', filename);
+		} else if (typeof filename == 'object') {
+			for (var prop in filename) {
+				formData.append(prop, filename[prop]);
+			}
+		}
 
 		var xhr = new XMLHttpRequest();
 		console.log(xhr);
@@ -89,7 +95,13 @@
 		var download_server_uri = contact.url + '/endpoint/retrieve_file.php';
 
 		var formData = new FormData();
-		formData.append('filename', filename);
+		if (typeof filename == 'string') {
+			formData.append('filename', filename);
+		} else if (typeof filename == 'object') {
+			for (var prop in filename) {
+				formData.append(prop, filename[prop]);
+			}
+		}
 
 		var xhr = new XMLHttpRequest();
 		console.log(xhr);
@@ -117,7 +129,13 @@
 		var download_server_uri = contact.url + '/endpoint/remove_file.php';
 
 		var formData = new FormData();
-		formData.append('filename', filename);
+		if (typeof filename == 'string') {
+			formData.append('filename', filename);
+		} else if (typeof filename == 'object') {
+			for (var prop in filename) {
+				formData.append(prop, filename[prop]);
+			}
+		}
 
 		var xhr = new XMLHttpRequest();
 		console.log(xhr);
