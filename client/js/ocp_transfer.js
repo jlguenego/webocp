@@ -394,7 +394,10 @@
 	};
 
 	ocp.transfer.send_block = function(args, on_success, onprogress) {
-		ocp.block.send(args.filename, args.content, on_success, onprogress);
+		var attributes = {
+		};
+		var ab = ocp.utils.str2ab(JSON.stringify(attributes));
+		ocp.block.send(args.filename, args.content, ab, on_success, onprogress);
 	};
 
 	ocp.transfer.retrieve_block = function(args, on_success, onprogress, on_error) {

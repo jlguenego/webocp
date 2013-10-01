@@ -66,7 +66,9 @@
 		var xhr = new XMLHttpRequest();
 		console.log(xhr);
 		xhr.upload.addEventListener('progress', onprogress, false);
-		xhr.onreadystatechange = function(){
+		console.log('addEventListener');
+		xhr.onreadystatechange = function() {
+			console.log('onreadystatechange');
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
 				var json_obj = JSON.parse(xhr.responseText);
 				if (!json_obj) {
@@ -82,11 +84,15 @@
 					return;
 				}
 				var content = ocp.utils.b642ab(json_obj.result.content);
+				console.log('content found');
 				on_success(content);
 			}
 		}
+		console.log('about to open');
 		xhr.open('POST', download_server_uri, true);
+		console.log('xhr opened');
 		xhr.send(formData);
+		console.log('xhr sent');
 	}
 
 	ocp.file.retrieve_sync = function(filename) {

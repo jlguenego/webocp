@@ -2,10 +2,7 @@
 	ocp.block = {};
 
 	ocp.block.send = function(address, content, attributes, on_success, onprogress) {
-		var length_str = attributes.byteLength.toString().padleft(4, '0');
-		var length_ab = ocp.utils.str2ab(length_str);
-
-		var new_content = ocp.utils.ab_concat(length_ab, attributes, content);
+		var new_content = ocp.block.set_content(attributes, content);
 		ocp.file.send(address, new_content, on_success, onprogress);
 	};
 
@@ -19,11 +16,15 @@
 
 		function my_onsuccess(onsuccess) {
 			return function(content) {
-				onsuccess(ocp.block.get_content(content));
+				console.log('my_onsuccess');
+				console.log('content.length=' + content.byteLength);
+				var my_content = ocp.block.get_content(content);
+				console.log('my_content.length=' + my_content.byteLength);
+				onsuccess(my_content);
 			}
 		}
 
-		ocp.file.retrieve(args, my_onsuccess(onsuccess), onprogress, on_error);
+		ocp.file.retrieve(args, my_onsuccess(on_success), onprogress, on_error);
 	};
 
 	ocp.block.retrieve_sync = function(filename) {
@@ -48,7 +49,11 @@
 
 	ocp.block.get_content = function(block_content) {
 		var content_dv = new Uint8Array(block_content);
-		var length_ab = content_dv.subarray(0, 4).buffer;
+
+		var length_ab = new ArrayBuffer(4);
+		var length_dv = new Uint8Array(length_ab);
+
+		length_dv.set(content_dv.subarray(0, 4));
 		var length = parseInt(ocp.utils.ab2str(length_ab));
 
 		var offset = 4 + length;
@@ -56,6 +61,15 @@
 		var result_dv = new Uint8Array(result);
 		result_dv.set(content_dv.subarray(offset));
 		console.log(result);
+		return result;
+	};
+
+	ocp.block.set_content = function(attributes, content) {
+
+		var length_str = attributes.byteLength.toString().padleft(4, '0');
+		var length_ab = ocp.utils.str2ab(length_str);
+
+		var result = ocp.utils.ab_concat(length_ab, attributes, content);
 		return result;
 	};
 })(ocp)
