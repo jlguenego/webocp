@@ -5,9 +5,9 @@
 	header("Content-Type:text/plain; charset=UTF-8;");
 	define("BASE_DIR", dirname(dirname(dirname(__FILE__))));
 
+	require_once(BASE_DIR . '/include/constant.inc');
 	require_once(BASE_DIR . '/include/global.inc');
 	require_once(BASE_DIR . '/include/misc.inc');
-	require_once(BASE_DIR . '/include/constant.inc');
 	require_once(BASE_DIR . '/include/format.inc');
 
 	$_REQUEST = array_merge($_GET, $_POST);
