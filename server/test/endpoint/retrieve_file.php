@@ -19,7 +19,7 @@
 	debug_r('_REQUEST', $_REQUEST);
 	$output = array();
 	try {
-		if (!isset($_REQUEST['public_key'])) {
+		if (!isset($_REQUEST['crypted_filename'])) {
 			throw new Exception('No identification given.');
 		}
 		$file = storage_retrieve_path($_REQUEST['filename']);
@@ -33,7 +33,10 @@
 
 		debug_r('json', $json);
 
-		if ($json->public_key != $_REQUEST['public_key']) {
+//		openssl_public_decrypt($_REQUEST['crypted_filename'], $decrypted_filename, $json->public_key);
+		$decrypted_filename = $_REQUEST['filename'];
+
+		if ($decrypted_filename != $_REQUEST['filename']) {
 			throw new Exception('You do not own this file.');
 		}
 
