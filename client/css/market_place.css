@@ -1,0 +1,67 @@
+#market_place_page {
+	position: relative;
+	background-image: url(image/background_image.jpg);
+	background-repeat: no-repeat;
+	background-position: center 0px;
+	min-height: 700px;
+	font-size: 13px;
+}
+
+#market_place_page .widget_grid_container {
+	overflow: hidden;
+}
+
+#ocp_mp_body {
+	position: relative;
+	top: 25px;
+	width: 960px;
+	padding: 1px;
+	margin: 0 auto 25px;
+
+	height: 500px;
+
+	background: #FBFBFB;
+	border: 1px solid #dedede;
+}
+
+#ocp_mp_anounce {
+	padding: 20px;
+	padding-top: 0px;
+}
+
+.ocp_mp_anounce_title {
+	display: block;
+	padding: 5px;
+	font-size: 26px;
+	line-height: 60px;
+}
+
+.ocp_mp_anounce_list {
+	width: 450px;
+}
+
+.ocp_mp_anounce_list .widget_grid_container {
+	background: #FFFFFF;
+}
+
+.ocp_mp_anounce_list .widget_grid_body_row:last-child {
+	border-bottom: none;
+}
+
+#ocp_mp_buy_list {
+	float: left;
+}
+
+#ocp_mp_sell_list {
+	float: right;
+}
+
+.ocp_mp_anounce_other {
+	height: 30px;
+	width: 450px;
+	border: 1px solid #dedede;
+	border-top: none;
+	line-height: 29px;
+	text-align: center;
+	background: #FFFFFF;
+}

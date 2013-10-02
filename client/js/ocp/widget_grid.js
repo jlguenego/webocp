@@ -20,6 +20,8 @@ $.widget( "ui.ocp_grid", {
 		column_width: 50,
 		prevent_dblclick: false,
 		state: {},
+		can_swap: false,
+		can_resize: false,
 
 		// Callback
 		row_dblclick: function(e) { console.log('row_dblclick'); }
@@ -36,6 +38,7 @@ $.widget( "ui.ocp_grid", {
 
 	_create: function() {
 		this.scrollbar_width = $().getScrollbarWidth();
+		console.log(this.element);
 
 		this.container = $('<div class="widget_grid_container"/>').appendTo(this.element);
 		this._header();
@@ -59,7 +62,6 @@ $.widget( "ui.ocp_grid", {
 	_header: function() {
 		this.header = $('<ul/>').appendTo(this.container);
 		this.header.addClass('widget_grid_header_row');
-		this.header.addClass('widget_grid_sortable');
 
 		for (var name in this.options.column) {
 			var column = this.options.column[name]
@@ -75,10 +77,14 @@ $.widget( "ui.ocp_grid", {
 			var width = column.width || this.options.column_width;
 			cell.width(width);
 
-			this._set_resizable_row(cell);
+			if (this.options.can_resize) {
+				this._set_resizable_row(cell);
+			}
 		}
-
-		this._swap_column(this.header);
+		if (this.options.can_swap) {
+			this.header.addClass('widget_grid_sortable');
+			this._swap_column(this.header);
+		}
 
 		// Make header snap to top.
 		var self = this;

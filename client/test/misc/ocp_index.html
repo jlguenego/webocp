@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<base href="../.." />
 		<meta charset="utf-8" />
 		<title>Web OCP</title>
 
@@ -75,6 +76,7 @@
 		<link rel="stylesheet" href="css/login.css" />
 		<link rel="stylesheet" href="css/register.css" />
 		<link rel="stylesheet" href="css/register_success.css" />
+		<link rel="stylesheet" href="css/market_place.css" />
 		<link rel="stylesheet" href="css/not_found.css" />
 		<!-- END CSS -->
 
@@ -83,6 +85,7 @@
 		<script src="js/page/ocp_action.js"></script>
 		<script src="js/page/ocp_register.js"></script>
 		<script src="js/page/ocp_file_manager.js"></script>
+		<script src="js/page/ocp_market_place.js"></script>
 		<!-- END PAGE -->
 
 		<!-- END OCP -->
@@ -93,15 +96,34 @@
 		<!-- PAGE -->
 		<div id="page">
 			<div id="page_header">
-				<a id="ocp_logo" href="#"></a>
+				<a id="ocp_logo" href="test/misc/ocp_index.html#"></a>
 
 				<div id="header_menu" class="header_button">Menu</div>
-				<a id="file_manager_button" href="#file_manager" class="ocp_state_logged header_button">File Manager</a>
-				<a id="register_page_button" href="#register" class="ocp_state_not_logged header_button">Register</a>
-				<a id="logout_button" href="#logout" class="ocp_state_logged header_button">Logout</a>
-				<a id="login_page_button" href="#login" class="ocp_state_not_logged header_button">Login</a>
-				<a id="market_place_button" href="#market_place" class="header_button">Market Place</a>
+				<a id="market_place_button" href="test/misc/ocp_index.html#market_place" class="header_button">Market Place</a>
+				<a id="file_manager_button" href="test/misc/ocp_index.html#file_manager" class="ocp_state_logged header_button">File Manager</a>
+				<a id="register_page_button" href="test/misc/ocp_index.html#register" class="ocp_state_not_logged header_button">Register</a>
+				<a id="logout_button" href="test/misc/ocp_index.html#logout" class="ocp_state_logged header_button">Logout</a>
+				<a id="login_page_button" href="test/misc/ocp_index.html#login" class="ocp_state_not_logged header_button">Login</a>
 			</div>
+
+			<!-- MARKET PLACE -->
+			<div id="market_place_page" class="page_content">
+				<div id="ocp_mp_body">
+					<div id="ocp_mp_anounce">
+						<div id="ocp_mp_buy_list" class="ocp_mp_anounce_list">
+							<a href="" class="ocp_mp_anounce_title">Buy »</a>
+							<div id="ocp_mp_buy"></div>
+							<div class="ocp_mp_anounce_other"><a href="">Other sales offer »</a></div>
+						</div>
+						<div id="ocp_mp_sell_list" class="ocp_mp_anounce_list">
+							<a href="" class="ocp_mp_anounce_title">Sell »</a>
+							<div id="ocp_mp_sell"></div>
+							<div class="ocp_mp_anounce_other"><a href="">Other results »</a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- MARKET PLACE END -->
 
 			<!-- FILE MANAGER -->
 			<div id="file_manager" class="page_content">
@@ -149,7 +171,7 @@
 
 				<div class="ocp_cv_top">
 					<div class="ocp_cv_top_block">
-						<a href="#privacycompany" class="ocp_cv_title">THE P2P STORAGE CLIENT</a>
+						<a href="test/misc/ocp_index.html#privacycompany" class="ocp_cv_title">THE P2P STORAGE CLIENT</a>
 						<h2 class="ocp_cv_subtitle">SIMPLE - SECURE - FAST - OPEN - STANDARD - FREE</h2>
 					</div>
 				</div>
@@ -157,7 +179,7 @@
 				<div class="ocp_cv_middle">
 				    <div class="ocp_cv_bottom-bg"></div>
 				    <div class="ocp_cv_animation">
-				    	<a href="#file_manager"></a>
+				    	<a href="test/misc/ocp_index.html#file_manager"></a>
 				    </div>
 				    <div class="ocp_cv_common ocp_cv_button"></div>
 				    <div class="ocp_cv_common ocp_cv_ocp">OCP</div>
@@ -180,7 +202,7 @@
 				<div class="ocp_lg_block">
 					<div class="ocp_lg_left_block">
 						<div class="ocp_lg_title" id="login_title"> Login </div>
-						<div class="ocp_lg_txt"> or <a href="#register">create an account</a> </div>
+						<div class="ocp_lg_txt"> or <a href="test/misc/ocp_index.html#register">create an account</a> </div>
 						<div class="ocp_clear"></div>
 						<div class="ocp_lg_input email">
 							<input placeholder="Your Email" id="ocp_lg_email" name="Email">
@@ -195,9 +217,9 @@
 							</div>
 							<div class="ocp_lg_remember_text"> Remember me </div>
 						</div>
-						<a href="#perform_login" class="ocp_button" id="ocp_lg_login_button">Login</a>
+						<a href="test/misc/ocp_index.html#perform_login" class="ocp_button" id="ocp_lg_login_button">Login</a>
 						<div class="ocp_clear"></div>
-						<div class="ocp_lg_txt ocp_lg_fogot"> <a href="#forgotpassword">forgot your password?</a> </div>
+						<div class="ocp_lg_txt ocp_lg_fogot"> <a href="test/misc/ocp_index.html#forgotpassword">forgot your password?</a> </div>
 					</div>
 					<div class="ocp_lg_map"></div>
 					<div class="ocp_clear"></div>
@@ -213,7 +235,7 @@
 				<div class="ocp_reg_block">
 					<div class="ocp_reg_left_block">
 						<div class="ocp_reg_title"> Create a new account </div>
-						<div class="ocp_reg_txt" id="ocp_reg_login"> or <a href="#login">login</a> </div>
+						<div class="ocp_reg_txt" id="ocp_reg_login"> or <a href="test/misc/ocp_index.html#login">login</a> </div>
 						<div class="ocp_clear"></div>
 						<div class="ocp_reg_input_block login first">
 							<input placeholder="Your name" id="ocp_reg_name" name="Name">
@@ -228,10 +250,10 @@
 						<div id="ocp_checkbox_div" class="checkboxOff">
 							<input type="checkbox" id="register_checkbox" class="checkboxOff" name="Terms">
 						</div>
-						<div class="ocp_reg_terms_text" id="terms_agree">I agree with the OCP <a href="#terms">Terms of Service</a></div>
+						<div class="ocp_reg_terms_text" id="terms_agree">I agree with the OCP <a href="test/misc/ocp_index.html#terms">Terms of Service</a></div>
 
 						<div class="ocp_clear"></div>
-						<a href="#perform_register" class="ocp_button">Register</a>
+						<a href="test/misc/ocp_index.html#perform_register" class="ocp_button">Register</a>
 					</div>
 					<div class="ocp_reg_right_block">
 						<div class="ocp_reg_bg"></div>
@@ -255,7 +277,7 @@
 					<div class="ocp_rs_logo"></div>
 					<div class="ocp_rs_right_block">
 						<div class="ocp_rs_title" id="done_text1">Awesome</div>
-						<div class="ocp_rs_txt" id="done_text2">You can now start to use your OCP <a href="#file_manager">file manager</a>.</div>
+						<div class="ocp_rs_txt" id="done_text2">You can now start to use your OCP <a href="test/misc/ocp_index.html#file_manager">file manager</a>.</div>
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -293,7 +315,7 @@
 
 		<!-- FILE MANAGER OTHERS -->
 		<div id="header_menu_body">
-			<a href="#general_settings" class="header_menu_settings">Settings</a>
+			<a href="test/misc/ocp_index.html#general_settings" class="header_menu_settings">Settings</a>
 		</div>
 		<div id="ocp_fm_new_folder_dialog" title="Create new folder">
 			New folder name <input type="text" id="ocp_fm_new_folder_name" />
@@ -324,31 +346,31 @@
 			<div class="ocp_footer_bottom_block">
 				<div class="ocp_footer_links_block last">
 					<p>Support</p>
-					<a href="#help">Help Center</a>
-					<a href="#terms">Terms of Service</a>
-					<a href="#privacy">Privacy Policy</a>
-					<a href="#copyright">Copyright</a>
+					<a href="test/misc/ocp_index.html#help">Help Center</a>
+					<a href="test/misc/ocp_index.html#terms">Terms of Service</a>
+					<a href="test/misc/ocp_index.html#privacy">Privacy Policy</a>
+					<a href="test/misc/ocp_index.html#copyright">Copyright</a>
 				</div>
 				<div class="ocp_footer_links_block">
 					<p>Community</p>
-					<a href="#contact">Contact Us</a>
-					<a href="#blog">Blog</a>
-					<a href="http://www.twitter.com/jlguenego" target="_blank">Twitter</a>
-					<a href="http://www.facebook.com/jlguenego" target="_blank">Facebook</a>
+					<a href="test/misc/ocp_index.html#contact">Contact Us</a>
+					<a href="test/misc/ocp_index.html#blog">Blog</a>
+					<a href="test/misc/ocp_index.htmlhttp://www.twitter.com/jlguenego" target="_blank">Twitter</a>
+					<a href="test/misc/ocp_index.htmlhttp://www.facebook.com/jlguenego" target="_blank">Facebook</a>
 				</div>
 				<div class="ocp_footer_links_block">
 					<p>Partnerships</p>
-					<a href="#developers">Developers</a>
-					<a href="#hosting">Providers</a>
-					<a href="#resellers">Resellers</a>
-					<a href="#marketplace">Market Place</a>
+					<a href="test/misc/ocp_index.html#developers">Developers</a>
+					<a href="test/misc/ocp_index.html#hosting">Providers</a>
+					<a href="test/misc/ocp_index.html#resellers">Resellers</a>
+					<a href="test/misc/ocp_index.html#marketplace">Market Place</a>
 				</div>
 				<div class="ocp_footer_links_block">
 					<p>OCP</p>
-					<a href="#about">About us</a>
-					<a href="#privacycompany">The OCP Project</a>
-					<a href="#register">Free Membership</a>
-					<a href="#pro">Pro Membership</a>
+					<a href="test/misc/ocp_index.html#about">About us</a>
+					<a href="test/misc/ocp_index.html#privacycompany">The OCP Project</a>
+					<a href="test/misc/ocp_index.html#register">Free Membership</a>
+					<a href="test/misc/ocp_index.html#pro">Pro Membership</a>
 				</div>
 				<div class="ocp_footer_copyrights">OCP ©2013 <span style="color:#7F7E7F">All rights reserved</span> </div>
 				<div class="ocp_footer_made_in">made in France</div>

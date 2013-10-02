@@ -49,6 +49,9 @@ var g_request = {};
 			case 'perform_register':
 				ocp.action.register();
 				break;
+			case 'market_place':
+				ocp.action.display('market_place_page');
+				break;
 			default:
 				ocp.action.display('not_found_page');
 		}

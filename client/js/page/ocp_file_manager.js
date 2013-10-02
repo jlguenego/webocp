@@ -492,6 +492,8 @@ $(document).ready(function() {
 			}
 		},
 		data: [],
+		can_swap: true,
+		can_resize: true,
 		prevent_dblclick: true,
 
 		row_dblclick: function(e) {
@@ -563,7 +565,9 @@ $(document).ready(function() {
 				width: 90
 			}
 		},
-		data: []
+		data: [],
+		can_swap: true,
+		can_resize: true
 	});
 
 	// Sync path

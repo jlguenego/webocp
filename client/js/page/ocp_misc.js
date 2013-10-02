@@ -21,6 +21,7 @@ $(document).ready(function() {
 	$('#cover_page_button').ocp_menu();
 	$('#logout_button').ocp_menu();
 	$('#register_page_button').ocp_menu();
+	$('#market_place_button').ocp_menu();
 
 	console.log('ocp.cfg.server_base_url=' + ocp.cfg.server_base_url);
 
