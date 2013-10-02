@@ -63,15 +63,37 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	opacity: 0.3;
 }
 
-.ocp_cv_button {
+.ocp_cv_animation {
+	z-index: 2;
 	position: absolute;
-	z-index: 1;
-	width: 600px;
-	height: 150px;
 	top: 0;
-	overflow: hidden;
-	margin: -75px 0 0 -300px;
 	left: 50%;
+	width: 700px;
+	height: 200px;
+	margin: -100px 0 0 -350px;
+	cursor: pointer;
+}
+
+.ocp_cv_animation a {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.ocp_cv_common {
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 710px;
+	height: 150px;
+	margin: -75px 0 0 -355px;
+
+	overflow: hidden;
+	transition: width 0.5s, height 0.5s, margin 0.5s
+}
+
+.ocp_cv_button {
 	background-color: #ED2C1F;
 	border-radius: 3px;
 	box-shadow: inset 0 -1px 0 0 #C90101, 0 0 0 1px rgba(140,1,1,.6), 0 0 0 5px #F9F9FA;
@@ -82,17 +104,16 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	background-image: -ms-linear-gradient(top, #FF3B2B 0, #EA3124 50%, #E4231A 50%, #B60A07 85%, #AF0605 100%);
 }
 
+.ocp_cv_animation:hover ~ .ocp_cv_button {
+	width: 760px;
+	height: 160px;
+	margin: -80px 0 0 -370px;
+	transition: width 0.5s, height 0.5s, margin 0.5s
+}
+
 .ocp_cv_ocp {
-	position: absolute;
-	top: 0;
-	left: 50%;
 	text-align: center;
-	z-index: 1;
-	width: 600px;
-	height: 150px;
 	line-height: 150px;
-	overflow: hidden;
-	margin: -75px 0 0 -300px;
 
 	font-family: 'Archivo Black';
 	font-style: italic;
@@ -100,44 +121,72 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	color: #FFE6E6;
 	text-shadow: 1px 1px 2px #FFFFFF;
 	letter-spacing: 15px;
+
+	opacity: 1;
+	transition: opacity 0.2s linear 0.3s;
+}
+
+.ocp_cv_animation:hover ~ .ocp_cv_ocp {
+	opacity: 0;
+	transition: opacity 0.2s;
 }
 
 .ocp_cv_txt {
-	position: absolute;
-	z-index: 1;
 	width: 760px;
 	height: 160px;
-	top: 0;
-	overflow: hidden;
-	left: 50%;
-	background-image: url(image/start_sprite.png);
-	background-position: center -541px;
-	margin: -80px 0 0 -370px;
-	background-repeat: no-repeat;
+	margin: -50px 0 0 -370px;
+
+	text-align: center;
+	font-size: 40px;
+	font-weight: 100;
+	line-height: 50px;
+	color: #FFFFFF;
+	text-shadow: 1px 1px 2px #550000;
+	text-transform: uppercase;
+
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+.ocp_cv_animation:hover ~ .ocp_cv_txt {
+	opacity: 1;
+	transition: opacity 0.2s linear 0.3s;
 }
 
 .ocp_cv_cursor {
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	right: 50%;
 	width: 208px;
 	height: 111px;
-	right: 50%;
-	top: 0;
+	margin: 51px -492px 0 0;
+	transition: margin 0.5s;
+
 	background-image: url(image/start_sprite.png);
 	background-position: -4px -88px;
 	background-repeat: no-repeat;
-	position: absolute;
-	z-index: 1;
-	margin: 51px -430px 0 0;
+}
+
+.ocp_cv_animation:hover ~ .ocp_cv_cursor {
+	margin: 51px -457px 0 0;
+	transition: margin 0.5s;
 }
 
 .ocp_cv_shadow {
 	width: 900px;
 	height: 41px;
-	right: 50%;
-	top: 0;
+	margin: 95px 0 0 -450px;
+
+	transition: margin 0.5s;
+
 	background-image: url(image/start_sprite.png);
 	background-position: left top;
 	background-repeat: no-repeat;
-	position: absolute;
-	z-index: 1;
-	margin: 95px -450px 0 0;
+
+}
+
+.ocp_cv_animation:hover ~ .ocp_cv_shadow {
+	margin: 100px 0 0 -450px;
+	transition: margin 0.5s;
 }
