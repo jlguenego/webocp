@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+
+		<style>
+div.bar {
+    display: inline-block;
+    width: 20px;
+    height: 75px;   /* We'll override this later */
+    background-color: teal;
+    margin-right: 2px;
+}
+		</style>
+	</head>
+
+	<body>
+		<script>
+var dataset = [ 5, 10, 15, 20, 25 ];
+d3.select("body").selectAll("div")
+    .data(dataset)
+    .enter()
+    .append("div")
+    .attr("class", "bar")
+    .style("height", function(d) {
+    	var bar_height = d * 5;
+	    return bar_height + "px";
+	});
+		</script>
+	</body>
+</html>

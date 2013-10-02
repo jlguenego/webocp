@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+	</head>
+
+	<body>
+		<script>
+var dataset = [ 5, 10, 15, 20, 25 ];
+
+d3.select("body").selectAll("p")
+	.data(dataset)
+	.enter()
+	.append("p")
+	.text(function(n) {
+		return "n=" + n;
+	})
+	.style("color", function(d) {
+		if (d > 10) {   //Threshold of 15
+			return "red";
+		} else {
+			return "black";
+		}
+	});
+		</script>
+	</body>
+</html>
