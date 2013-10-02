@@ -5,6 +5,8 @@
 	background-position: center 0px;
 	min-height: 700px;
 	font-size: 13px;
+	background-color: #DDDDDD;
+	padding: 25px 0 25px 0;
 }
 
 #market_place_page .widget_grid_container {
@@ -12,28 +14,40 @@
 }
 
 #ocp_mp_body {
-	position: relative;
-	top: 25px;
 	width: 960px;
 	padding: 1px;
 	margin: 0 auto 25px;
-
-	height: 500px;
+	margin-bottom: 25px;
 
 	background: #FBFBFB;
 	border: 1px solid #dedede;
 }
 
 #ocp_mp_anounce {
+	height: 340px;
 	padding: 20px;
 	padding-top: 0px;
 }
 
 .ocp_mp_anounce_title {
 	display: block;
+	height: 45px;
 	padding: 5px;
+	padding-left: 50px;
 	font-size: 26px;
-	line-height: 60px;
+	line-height: 55px;
+	margin-left: 10px;
+	background-repeat: no-repeat;
+	background-size: 30px;
+	background-position: 10px 15px;
+}
+
+.ocp_mp_anounce_title.buy {
+	background-image: url(image/buy.png);
+}
+
+.ocp_mp_anounce_title.sell {
+	background-image: url(image/sell.png);
 }
 
 .ocp_mp_anounce_list {
@@ -64,4 +78,8 @@
 	line-height: 29px;
 	text-align: center;
 	background: #FFFFFF;
+}
+
+#market_place_page .ocp_footer {
+	position: relative;
 }
