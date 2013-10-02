@@ -183,6 +183,7 @@
 					null,
 					function(error_msg) {
 						clean();
+						console.log(error_msg);
 						onerror(error_msg);
 					});
 			} else if (event.data.action == 'finalize') {

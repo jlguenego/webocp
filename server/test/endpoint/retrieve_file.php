@@ -16,14 +16,28 @@
 	storage_set_root(ROOT . '/test/' . $name);
 
 	$_REQUEST = array_merge($_GET, $_POST);
+	debug_r('_REQUEST', $_REQUEST);
 	$output = array();
 	try {
+		if (!isset($_REQUEST['public_key'])) {
+			throw new Exception('No identification given.');
+		}
 		$file = storage_retrieve_path($_REQUEST['filename']);
 		debug('path='.$file);
 		if (!file_exists($file)) {
 			throw new Exception('This file does not exists.');
 		}
-		$output['result']['content'] = base64_encode(file_get_contents($file));
+		$content = file_get_contents($file);
+		$length = intval(substr($content , 0, 4));
+		$json = json_decode(substr($content , 4, $length));
+
+		debug_r('json', $json);
+
+		if ($json->public_key != $_REQUEST['public_key']) {
+			throw new Exception('You do not own this file.');
+		}
+
+		$output['result']['content'] = base64_encode($content);
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
 	}

@@ -8,7 +8,8 @@
 
 	ocp.block.retrieve = function(filename, onsuccess, onprogress, onerror) {
 		var args = {
-			filename: filename
+			filename: filename,
+			public_key: ocp.session.rsa.public_key
 		};
 		if (ocp.session.rsa) {
 			args.signature = ocp.crypto.sign(filename, ocp.session.rsa.private_key);

@@ -64,13 +64,13 @@
 		}
 
 		var xhr = new XMLHttpRequest();
-		console.log(xhr);
 		xhr.upload.addEventListener('progress', onprogress, false);
-		console.log('addEventListener');
 		xhr.onreadystatechange = function() {
-			console.log('onreadystatechange');
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
 				var json_obj = JSON.parse(xhr.responseText);
+				if (typeof filename == 'object') {
+					filename = filename.filename;
+				}
 				if (!json_obj) {
 					onerror('Cannot retrieve file ' + filename + '. Cannot parse the endpoint output.');
 					return;
@@ -84,15 +84,11 @@
 					return;
 				}
 				var content = ocp.utils.b642ab(json_obj.result.content);
-				console.log('content found');
 				onsuccess(content);
 			}
 		}
-		console.log('about to open');
 		xhr.open('POST', download_server_uri, true);
-		console.log('xhr opened');
 		xhr.send(formData);
-		console.log('xhr sent');
 	}
 
 	ocp.file.retrieve_sync = function(filename) {
