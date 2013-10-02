@@ -19,28 +19,12 @@
 	debug_r('_REQUEST', $_REQUEST);
 	$output = array();
 	try {
-		if (!isset($_REQUEST['crypted_filename'])) {
-			throw new Exception('No identification given.');
-		}
 		$file = storage_retrieve_path($_REQUEST['filename']);
 		debug('path='.$file);
 		if (!file_exists($file)) {
 			throw new Exception('This file does not exists.');
 		}
-		$content = file_get_contents($file);
-		$length = intval(substr($content , 0, 4));
-		$json = json_decode(substr($content , 4, $length));
-
-		debug_r('json', $json);
-
-//		openssl_public_decrypt($_REQUEST['crypted_filename'], $decrypted_filename, $json->public_key);
-		$decrypted_filename = $_REQUEST['filename'];
-
-		if ($decrypted_filename != $_REQUEST['filename']) {
-			throw new Exception('You do not own this file.');
-		}
-
-		$output['result']['content'] = base64_encode($content);
+		$output['result']['content'] = base64_encode(file_get_contents($file));
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
 	}
