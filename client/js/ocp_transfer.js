@@ -395,8 +395,9 @@
 
 	ocp.transfer.send_block = function(args, onsuccess, onprogress) {
 		var attributes = {
+			public_key: ocp.session.rsa.public_key
 		};
-		var ab = ocp.utils.str2ab(JSON.stringify(attributes));
+		var ab = ocp.utils.str2ab(JSON.stringify(attributes, undefined, 2));
 		ocp.block.send(args.filename, args.content, ab, onsuccess, onprogress);
 	};
 

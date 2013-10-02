@@ -69,7 +69,12 @@
 							content: private_content
 						}
 					},
-					user_id: public_address
+					user_id: public_address,
+					rsa: {
+						// TODO: Define key pair
+						public_key: 'titi',
+						private_key: 'toto'
+					}
 				};
 			} catch (e) {
 				ocp.session = {};
