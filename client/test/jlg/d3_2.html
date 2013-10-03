@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<style>
+div.bar {
+	display: inline-block;
+	width: 20px;
+	height: 10px;
+	margin: 1px;
+	background-color: teal;
+}
+		</style>
+	</head>
+	<body>
+		<script>
+var dataset = [];
+for (var i = 0; i < 25; i++) {
+	var newNumber = Math.random() * 30;
+	dataset.push(newNumber);
+}
+
+var data = d3.select("body").selectAll("div")
+	.data(dataset);
+data.enter().append("div").attr("class", "bar")
+	.style("height", function(d) { return 10 * d + "px"; });
+data.exit().remove();
+
+		</script>
+	</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<style>
+circle.point {
+	stroke: gray;
+	stroke-width: 5;
+}
+		</style>
+	</head>
+	<body>
+		<script>
+
+String.prototype.padLeft = function(l, c) {
+	return Array(l - this.length + 1).join(c||' ') + this
+};
+
+var dataset = [];
+var n = 100;
+for (var i = 0; i < n; i++) {
+	var r = Math.random() * 50;
+	var c = '#' + Math.round(Math.random() * 0xffffff).toString(16).padLeft(6, 0);
+	console.log('color=' + c);
+	dataset.push({
+		radius: r,
+		color: c
+	});
+}
+
+
+function cx(d, i) {
+	return i * 10 + 50;
+}
+
+function radius(d, i) {
+	return d.radius;
+}
+
+function color(d, i) {
+	return d.color;
+}
+
+
+var svg = d3.select("body").append("svg");
+
+var data = svg.selectAll("circle")
+	.data(dataset);
+data.enter().append("circle").attr("class", "point")
+	.attr("cx", cx).attr("cy", 60).attr("r", radius).attr("fill", color);
+data.exit().remove();
+
+		</script>
+	</body>
+</html>
