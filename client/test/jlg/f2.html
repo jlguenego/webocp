@@ -35,8 +35,8 @@ function show(func, min, max, sampling_nbr) {
 	var f_max = d3.max(dataset, function(d) { return d.y; });
 
 
-	var x_scale = d3.scale.linear().domain([min , max]).range([padding, w - padding]);
-	var y_scale = d3.scale.linear().domain([f_min , f_max]).range([ h - padding, padding ]);
+	var x_scale = d3.scale.linear().domain([min , max]).range([padding, w - 2*padding]);
+	var y_scale = d3.scale.linear().domain([f_min , f_max]).range([ h - 2*padding, padding ]);
 
 	var point = svg.selectAll('circle').data(dataset);
 	point.enter()
