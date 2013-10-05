@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<style>
+circle.point {
+	stroke: black;
+	fill: black;
+}
+
+text.label {
+	text-anchor: left;
+	fill: red;
+	font-family: sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+		</style>
+	</head>
+	<body>
+		<script>
+
+var dataset = [];
+for (var i = 0; i < 20; i++) {
+	var x = Math.floor(Math.random() * 30);
+	var y = Math.floor(Math.random() * 40);
+	dataset.push([ x, y ]);
+}
+
+var max_x = d3.max(dataset, function(d) { return d[0]; });
+var max_y = d3.max(dataset, function(d) { return d[1]; });
+
+var w = 500;
+var h = 300;
+var padding = 30;
+
+var x_scale = d3.scale.linear()
+	.domain([ 0, max_x ])
+	.range([padding, w - 2*padding]);
+
+var y_scale = d3.scale.linear()
+	.domain([ 0, max_y ])
+	.range([h - 2*padding, padding]);
+
+var r_scale = d3.scale.linear()
+	.domain([0, max_y])
+	.range([5, 10]);
+
+
+var svg = d3.select("body").append("svg")
+	.attr("width", w)
+	.attr("height", h);
+
+var r = 10;
+
+function getX(d) {
+	return x_scale(d[0]);
+}
+
+function getY(d) {
+	return y_scale(d[1]);
+}
+
+function getR(d) {
+	return r_scale(d[1]);
+}
+
+var point_cloud = svg.selectAll("circle").data(dataset);
+point_cloud.enter().append("circle")
+	.attr("r", getR)
+	.attr('cx', getX)
+	.attr("cy", getY)
+
+	.attr("class", "point");
+point_cloud.exit().remove();
+
+function getTextX(d) {
+	return getX(d);
+}
+
+function getTextY(d) {
+	return getY(d);
+}
+
+function getText(d, i) {
+	return i + ': [' + d[0] + ', ' + d[1] + ' ]';
+}
+
+var label = svg.selectAll("text").data(dataset);
+label.enter().append("text")
+	.attr('x', getTextX)
+	.attr('y', getTextY)
+	.attr("class", "label")
+	.text(getText);
+label.exit().remove();
+
+svg.append("g").attr("class", "axis")
+	.attr("transform", "translate(0," + (h - 2 * padding) + ")")
+	.call(d3.svg.axis()
+		.scale(x_scale)
+		.orient("bottom")
+		.ticks(5));
+svg.append("g").attr("class", "axis")
+	.attr("transform", "translate(" + padding + ", 0)")
+	.call(d3.svg.axis()
+		.scale(y_scale)
+		.orient("left")
+		.ticks(5));
+
+		</script>
+	</body>
+</html>

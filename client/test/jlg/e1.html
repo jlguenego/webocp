@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<style>
+
+circle.normal {
+	fill: #EEEEEE;
+	stroke: #AAAAAA;
+	stroke-width: 3;
+}
+
+circle.selected {
+	fill: rgba(0, 0, 0, 0);
+	stroke: red;
+	stroke-width: 3;
+}
+		</style>
+	</head>
+	<body>
+		<button id="remove">Remove</button>
+		<button id="run1">Run 1!</button>
+		<button id="run2">Run 2!</button>
+		<button id="run3">Run 3!</button>
+		<script>
+
+Math.seedrandom('any string you like');
+
+var dataset = [];
+
+for (var i = 0; i < 10; i++) {
+	dataset.push({
+		x: Math.floor(Math.random() * 10),
+		y: Math.floor(Math.random() * 10),
+		r: Math.floor(Math.random() * 10),
+	});
+}
+
+console.log(dataset);
+
+var w = 400;
+var h = 200;
+
+var svg = d3.select('body').append('svg')
+	.attr('width', w)
+	.attr('height', h);
+
+var padding = 20;
+
+var x_scale = d3.scale.linear()
+	.domain([0, 10]).range([padding, w - padding]);
+var y_scale = d3.scale.linear()
+	.domain([0, 10]).range([padding, h - padding]);
+
+var cx = function(d) {
+	return x_scale(d.x);
+};
+
+var cy = function(d) {
+	return y_scale(d.y);
+};
+
+var r = function(d) {
+	return 10;
+};
+
+var circles = svg.selectAll('circle').data(dataset);
+circles.enter().append('circle')
+	.attr('cx', cx)
+	.attr('cy', cy)
+	.attr('r', r)
+	.classed('normal', true);
+
+circles.exit().remove();
+
+d3.select("#remove").on("click", function() {
+	svg.selectAll('circle.selected').remove();
+});
+
+d3.select("#run1").on("click", function() {
+
+
+	var r1 = function(d) {
+		return r(d) + 15;
+	};
+
+	var r2 = function(d) {
+		return r(d) + 3;
+	};
+
+
+	var circle = svg.selectAll('circle.selected').data(dataset);
+	circle.enter().append('circle')
+		.attr('cx', cx)
+		.attr('cy', cy)
+		.attr('r', r1)
+		.classed('selected', true)
+		.style("stroke-opacity", 1)
+		.transition()
+		.duration(750)
+		.attr('r', r2)
+		.style("stroke-opacity", 0);
+
+	circle.exit().remove();
+
+});
+
+d3.select("#run2").on("click", function() {
+
+	var circle = svg.selectAll('circle.normal');
+    circle.transition().duration(500).delay(0).style('fill', 'steelblue');
+    circle.transition().duration(500).delay(500).attr('cy', h/2);
+    circle.transition().duration(500).delay(1000).attr('r', 30);
+
+});
+
+d3.select("#run3").on("click", function() {
+
+	var cx = function() {
+		return x_scale(Math.floor(Math.random() * 10));
+	};
+
+	var circle = svg.selectAll('circle.normal');
+    circle.transition().duration(500).attr('cx', cx);
+
+});
+
+
+		</script>
+	</body>
+</html>

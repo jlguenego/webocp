@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<style>
+		</style>
+	</head>
+	<body>
+		<button id="run">Run!</button>
+		<script>
+function mylog(e, i, array) {
+	if (e == 1) {
+		throw new Error('ouch!');
+	}
+	console.log('array[' + i + '] = ' + e);
+}
+
+[ 0, 10, 13, 1, 4 ].forEach(mylog);
+
+		</script>
+	</body>
+</html>

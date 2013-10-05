@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<style>
+body {
+	background-color: white;
+}
+
+rect.bar {
+}
+
+text.label {
+	text-anchor: middle;
+	fill: black;
+	font-weight: bold;
+}
+		</style>
+	</head>
+	<body>
+		<script>
+
+Array.prototype.max = function() {
+  return Math.max.apply(null, this);
+};
+
+Array.prototype.min = function() {
+  return Math.min.apply(null, this);
+};
+
+var dataset = [];
+for (var i = 0; i < 20; i++) {
+	var newNumber = Math.random() * 30;
+	dataset.push(newNumber);
+}
+
+var max_dataset = dataset.max();
+
+var w = 500;
+var h = 100;
+
+var h_bar = h - 15;
+
+var padding = 3;
+
+var svg = d3.select("body").append("svg")
+	.attr("width", w)
+	.attr("height", h);
+
+function getX(d, i) {
+	return i * (w / dataset.length);
+}
+
+function getTextX(d, i) {
+	return getX(d, i) + getWidth(d, i) / 2;
+}
+
+function getY(d, i) {
+	return h_bar - getHeight(d, i);
+}
+
+function getWidth(d, i) {
+	return (w / dataset.length) - padding;
+}
+
+function getHeight(d, i) {
+	return d * (h_bar / max_dataset);
+}
+
+function getColor(d, i) {
+	var b = Math.ceil((d / max_dataset) * 255);
+	console.log('b=' + b);
+	return 'rgb(0, 0, '  + b + ')';
+}
+
+var bar = svg.selectAll("rect").data(dataset);
+bar.enter().append("rect").attr("class", "bar")
+	.attr("x", getX)
+	.attr("y", getY)
+	.attr("width", getWidth)
+	.attr("height", getHeight)
+	.style("fill", getColor)
+	.style("stroke", 'white');
+bar.exit().remove();
+
+var label = svg.selectAll("text").data(dataset);
+label.enter().append("text").attr("class", "label")
+	.attr("x", getTextX)
+	.attr("y", h)
+	.text(function(d, i) { return i; });
+label.exit().remove();
+
+		</script>
+	</body>
+</html>

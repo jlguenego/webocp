@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+circle.little {
+  fill: #aaa;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+.data rect {
+  fill: #eee;
+  stroke: #ccc;
+}
+
+		</style>
+	</head>
+	<body>
+		<button id="run">Run!</button>
+		<script>
+
+function loc(angle) {
+	return {
+		x: Math.cos(angle * 2*Math.PI/360),
+		y: Math.sin(angle * 2*Math.PI/360)
+	};
+}
+
+
+var w = 400;
+var h = 400;
+var padding = 20;
+
+var svg = d3.select('body').append('svg')
+	.attr('width', w)
+	.attr('height', h);
+
+var x = d3.scale.linear().domain([-1, 1]).range([ padding, w - padding ]);
+var y = d3.scale.linear().domain([-1, 1]).range([ padding, h - padding ]);
+
+var t = function(d, i) {
+	return 'translate(' + x(d.x) + ' ' + y(d.y) + ')';
+}
+
+var object = svg.selectAll('g').data([ loc(0), loc(30) ])
+object.enter().append('g');
+object.attr('transform', t);
+object.append('circle')
+	.attr('cx', 0)
+	.attr('cy', 0)
+	.attr('r', 12)
+	.classed('little', true);
+object.append('text')
+	.text('I')
+	.attr("dy", ".35em")
+	.style('text-anchor', 'middle');
+object.exit().remove();
+
+function update(angle, speed, i) {
+	var dataset = [ loc(angle), loc(angle + 30) ];
+	var object = svg.selectAll('g').data(dataset)
+	object.enter().append('g');
+
+	object.attr('transform', t);
+
+	object.append('circle')
+		.attr('cx', 0)
+		.attr('cy', 0)
+		.attr('r', 12)
+		.classed('little', true);
+
+	object.append('text')
+		.text('I')
+		.attr("dy", ".35em")
+		.style('text-anchor', 'middle')
+
+	// final state
+	object.transition().duration(speed).delay(speed*i)
+		.attr("transform", t)
+
+	object.exit().append('g');
+
+}
+
+
+d3.select("#run").on("click", function() {
+	var speed = 5;
+	for (var i = 0; i < 360; i++) {
+		update(i, speed, i);
+	}
+});
+
+
+		</script>
+	</body>
+</html>
