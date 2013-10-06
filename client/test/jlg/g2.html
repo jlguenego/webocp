@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<style>
+html, body {
+	background-color: #EEEEEE;
+}
+
+svg {
+	background-color: white;
+}
+
+.node {
+  fill: #aaa;
+  stroke: #666;
+  stroke-width: 1px;
+}
+
+		</style>
+	</head>
+	<body>
+		<script>
+
+var width = 800;
+var height = 600;
+
+var svg = d3.select('body').append('svg')
+	.attr('width', width)
+	.attr('height', height);
+
+var nodes = [];
+
+var force = d3.layout.force()
+	.size([ width, height ])
+	.charge(0)
+	.gravity(0.1)
+	//.linkDistance(30)
+	.nodes(nodes)
+	.alpha(0)
+	.start();
+
+var mouseon = false;
+var index = 0;
+
+d3.select("svg")
+	.on("mousedown", mousedown)
+	.on("mouseup", mouseup)
+	.on("mousemove", mousemove);
+
+
+function mousedown() {
+	mouseon = true;
+}
+
+function mouseup() {
+	mouseon = false;
+	console.log('mouseup');
+}
+
+
+
+function mousemove() {
+	if (!mouseon) {
+		return;
+	}
+
+	console.log('mousemove');
+	var coordinates = d3.mouse(this);
+	var node = {
+		x: coordinates[0],
+		y: coordinates[1]
+	};
+	console.log(node);
+	nodes.push({ index: index, node: node });
+	index++;
+	setTimeout(function() {
+		nodes.shift();
+	}, 3000);
+
+	var n = svg.selectAll('.node').data(nodes, function(d) { return d.index; });
+
+	var a = 0;
+
+	function update_cx(d) {
+		console.log(d);
+		d.node.x += (d.x - d.node.x)* a;
+		return d.node.x;
+	}
+
+	function update_cy(d) {
+		console.log(d);
+		d.node.y += (d.y - d.node.y) * a;
+		return d.node.y;
+	}
+
+	function tick(e) {
+		a = e.alpha / 10;
+		console.log('tick');
+	    n.attr("cx", update_cx)
+			.attr("cy", update_cy);
+	}
+
+	force.nodes(nodes)
+		.on("tick", tick)
+		.start();
+
+	n.enter().append('circle')
+		.classed('node', true)
+		.attr('cx', function(d) { return d.node.x; })
+		.attr('cy', function(d) { return d.node.y; })
+		.attr('r', 5)
+		.call(force.drag)
+		.transition()
+			.delay(3000)
+				.remove();
+	n.exit().remove();
+}
+
+
+
+		</script>
+	</body>
+</html>

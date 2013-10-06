@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<style>
+html, body {
+	background-color: #EEEEEE;
+}
+
+svg {
+	background-color: white;
+}
+
+.particle {
+  fill: #aaa;
+  stroke: #666;
+  stroke-width: 1px;
+}
+
+		</style>
+	</head>
+	<body>
+		<script>
+
+
+var width = 800;
+var height = 600;
+var padding = 20;
+var svg = d3.select('body').append('svg')
+	.attr('width', width + 2*padding)
+	.attr('height', height + 2*padding);
+
+var nodes = [
+	{
+		name: "earth",
+		radius: 10
+	},
+	{
+		name: "moon",
+		radius: 4
+	}
+];
+
+var force = d3.layout.force()
+	.size([ width, height ])
+	.charge(0)
+	.gravity(1)
+	.nodes(nodes)
+	.start();
+
+var node = svg.selectAll("circle").data(nodes)
+	.enter().append("circle")
+	.attr("class", "particle")
+	.attr("r", function(d) { return d.radius; })
+	.call(force.drag);
+
+force.on("tick", function() {
+	node.attr("cx", function(d) { return d.x; })
+	    .attr("cy", function(d) { return d.y; });
+});
+
+		</script>
+	</body>
+</html>
