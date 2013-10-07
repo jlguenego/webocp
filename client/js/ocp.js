@@ -131,3 +131,11 @@ Error = Error || function (msg) {
 String.prototype.padleft = function(length, character) {
 	 return new Array(length - this.length + 1).join(character || '0') + this;
 };
+
+Array.prototype.max = function() {
+  return Math.max.apply(null, this);
+};
+
+Array.prototype.min = function() {
+  return Math.min.apply(null, this);
+};
