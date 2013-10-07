@@ -45,8 +45,17 @@ svg {
 	display: none;
 }
 
-.point:hover .text {
-	display: block;
+.tooltip text {
+	font-family: sans-serif;
+    font-size: 11px;
+    fill: #555555;
+	text-anchor: start;
+}
+
+.tooltip rect {
+	fill: rgba(167, 167, 167, 0.3);
+	stroke-width: 0.1px;
+	stroke: #000000;
 }
 
 .axis path {
@@ -104,6 +113,29 @@ var svg = d3.select('body').append('svg')
 	.attr('width', width + margin.left + margin.right)
 	.attr('height', height + margin.top + margin.bottom);
 
+function tooltip(g, msg, x, y, margin) {
+	margin = margin || {top: 0, right: 3, bottom: 0, left: 3};
+	g.classed('tooltip', true);
+
+	var rect = g.append('rect')
+
+
+	var text = g.append('text')
+		.text(msg)
+		.classed('label', true);
+	text.attr('x', x + margin.left)
+		.attr('y', y + margin.bottom);
+
+	var r = text.node().getBBox();
+
+	rect.attr('x', 	r.x - margin.left)
+		.attr('y', r.y - margin.bottom)
+		.attr('width', r.width + margin.left + margin.right)
+		.attr('height', r.height + margin.top + margin.bottom);
+
+
+}
+
 var x_scale = d3.time.scale()
 	.domain([ new Date(yesterday_t * 1000), new Date(now_t * 1000) ])
 	.range([margin.left, margin.left + width ]);
@@ -151,10 +183,6 @@ point.enter()
 		.attr('transform', translate)
 		.classed('point', true);
 
-point.append('text')
-	.text(label)
-	.classed('text', true);
-
 point.append('circle')
 		.attr('r', 2.5)
 		.attr('cx', 1)
@@ -170,6 +198,30 @@ point
 	.attr('cy', function(d) { return y_scale(d.rate); });
 
 point.exit().remove();
+
+point.on('mouseover', function(e) {
+	console.log(svg.node());
+	var mouse = d3.mouse(svg.node());
+
+	var p = d3.select(this);
+	var transaction = p.datum();
+	console.log(transaction);
+	console.log(p);
+	var info_dataset = [ transaction ];
+	var info = svg.selectAll('.tooltip').data(info_dataset);
+	info.enter().append('g');
+
+	var msg = time_format(new Date(transaction.timestamp * 1000)) + ' ' + eur_format(transaction.rate);
+
+	tooltip(info, msg, mouse[0] + 5, mouse[1] - 5);
+
+	info.exit().remove();
+});
+
+point.on('mouseout', function(e) {
+	var info = svg.selectAll('.tooltip').data([]);
+	info.exit().remove();
+});
 		</script>
 	</body>
 </html>
