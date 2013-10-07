@@ -24,7 +24,7 @@
 			var result = [];
 			var sampling_nbr = 50;
 
-			for (var i = 0; i < sampling_nbr; i++) {
+			for (var i = 0; i <= sampling_nbr; i++) {
 				var timestamp = start_t + i * (end_t - start_t) / sampling_nbr;
 				var samples = filter_transaction(dataset, timestamp - seconds, timestamp);
 				var avg = ocp.math.mean(samples, 'rate', 'quantity');
@@ -104,7 +104,7 @@
 		var time_format = d3.time.format("%H:%M");
 		var x_axis = d3.svg.axis()
 			.scale(x_scale)
-			.orient("top")
+			.orient("bottom")
 			.tickSize(height)
 			.ticks(d3.time.hour, 3)
 			.tickFormat(time_format);
@@ -122,7 +122,7 @@
 
 		svg.append("g")
 			.classed('axis', true)
-			.attr("transform", 'translate(0, ' + (margin.top + height) + ')')
+			.attr("transform", 'translate(0, ' + (margin.top) + ')')
 			.call(x_axis);
 
 		svg.append("g")
