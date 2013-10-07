@@ -1,7 +1,9 @@
 (function(ocp, undefined) {
 	ocp.graphic = {};
 
-	ocp.graphic.draw_chart = function(svg_elem, transaction_obj) {
+	ocp.graphic.draw_chart = function(svg_elem, transaction_obj, margin) {
+		margin = margin || { top: 50, right: 50, bottom: 50, left: 50 };
+
 		var start_t = transaction_obj.query.end_t - 86400;
 		var end_t = transaction_obj.query.end_t;
 		var transaction_list = transaction_obj.transaction_list;
@@ -88,12 +90,12 @@
 		var svg = d3.select(svg_elem);
 		var point_dataset = filter_transaction(transaction_list, start_t, end_t);
 
+
 		// Calculate min and max scale
 		var y_a = transaction_list.map(function(d) { return d.rate; });
 		var y_max = y_a.max() + 1;
 		var y_min = y_a.min() - 1;
 
-		var margin = { top: 50, right: 50, bottom: 50, left: 50 };
 		var width = svg.attr('width') - margin.left - margin.right;
 		var height = svg.attr('height') - margin.top - margin.bottom;
 
