@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_storage.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_client.js"></script>
+
+		<script src="js/ocp_graphic.js"></script>
+		<link rel="stylesheet" href="css/ocp_graphic.css" />
+
+
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_worker_ui_pool.js"></script>
+
+		<style>
+
+body, html {
+	margin: 0;
+	padding: 0;
+	background-color: #EEEEEE;
+	font-family: sans-serif;
+}
+
+#graph {
+	position: relative;
+	width: 80%;
+	background-color: #FFFFFF;
+}
+
+#buttons {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	display: inline-block;
+
+	padding: 0px;
+	padding-top: 30px;
+	margin: auto 0px auto 0px;
+
+	list-style: none;
+}
+
+#buttons li {
+	margin: 10px;
+	padding: 5px 20px;
+
+	border: 1px solid #CCCCCC;
+	cursor: pointer;
+	display: block;
+	font-size: 14px;
+	padding-left: 35px;
+	color: #555555;
+}
+
+#buttons li:last-child {
+	margin-top: 50px;
+}
+
+#buttons li:hover {
+	background-color: #EEEEEE;
+}
+		</style>
+	</head>
+	<body>
+		<div id="graph">
+			<svg width="800" height="300"></svg>
+			<ul id="buttons">
+				<li id="48h">48 hours</li>
+				<li id="1m">1 month</li>
+				<li id="6m">6 months</li>
+				<li id="1y">1 year</li>
+				<li id="reset">Reset zoom</li>
+			</ul>
+		</div>
+		<script>
+var now_t = (new Date()).getTime() / 1000 - (86400 / 2);
+var data = {
+	start_t: now_t - 3 * 86400,
+	end_t: now_t
+};
+var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
+var svg_elem = $('svg').get(0);
+ocp.graphic.draw_chart(svg_elem, result);
+		</script>
+	</body>
+</html>
