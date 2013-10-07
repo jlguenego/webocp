@@ -27,7 +27,7 @@
 			for (var i = 0; i < sampling_nbr; i++) {
 				var timestamp = start_t + i * (end_t - start_t) / sampling_nbr;
 				var samples = filter_transaction(dataset, timestamp - seconds, timestamp);
-				var avg = d3.mean(samples, function(d) { return d.rate; });
+				var avg = ocp.math.mean(samples, 'rate', 'quantity');
 
 				result.push({
 					timestamp: timestamp,
@@ -155,13 +155,10 @@
 
 		// Draw tooltip when mouse on point
 		point.on('mouseover', function(e) {
-			console.log(svg.node());
 			var mouse = d3.mouse(svg.node());
 
 			var p = d3.select(this);
 			var transaction = p.datum();
-			console.log(transaction);
-			console.log(p);
 			var info_dataset = [ transaction ];
 			var info = svg.selectAll('.tooltip').data(info_dataset);
 			info.enter().append('g');

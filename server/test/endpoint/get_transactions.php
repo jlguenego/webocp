@@ -47,6 +47,7 @@
 			$transaction = array(
 				'timestamp' => $t,
 				'rate' => $floating_avg - 1 + rand(0, 1000) / 500,
+				'quantity' => (rand(0, 10) / 2) + 0.5,
 			);
 			$transaction_list[] = $transaction;
 		}
