@@ -5,13 +5,6 @@
 		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
 		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
 		<style>
-
-point {
-  fill: #aaa;
-  stroke: #666;
-  stroke-width: 1px;
-}
-
 		</style>
 	</head>
 	<body>
@@ -38,17 +31,17 @@ function show(func, min, max, sampling_nbr) {
 	var x_scale = d3.scale.linear().domain([min , max]).range([padding, w - 2*padding]);
 	var y_scale = d3.scale.linear().domain([f_min , f_max]).range([ h - 2*padding, padding ]);
 
-	var lineFunction = d3.svg.line()
-		.x(function(d) { return x_scale(d.x); })
-		.y(function(d) { return y_scale(d.y); })
-		.interpolate("linear");
+		var lineFunction = d3.svg.line()
+			.x(function(d) { return x_scale(d.x); })
+			.y(function(d) { return y_scale(d.y); })
+			.interpolate("linear");
 
 
-	var lineGraph = svg.append("path")
-		.attr("d", lineFunction(dataset))
-		.attr("stroke", "blue")
-		.attr("stroke-width", 2)
-		.attr("fill", "none");
+		var lineGraph = svg.append("path")
+			.attr("d", lineFunction(dataset))
+			.attr("stroke", "blue")
+			.attr("stroke-width", 2)
+			.attr("fill", "none");
 
 }
 

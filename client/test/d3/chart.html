@@ -84,23 +84,41 @@ svg {
 var now_t = (new Date()).getTime() / 1000;
 var yesterday_t = now_t - 86400;
 
-function filter_transaction(dataset) {
+function filter_transaction(dataset, start_t, end_t) {
 	var result = [];
 	for (var i = 0; i < dataset.length; i++) {
 		var data = dataset[i];
-		if (data.timestamp > yesterday_t && data.timestamp < now_t) {
+		if (data.timestamp > start_t && data.timestamp < end_t) {
 			result.push(data);
 		}
 	}
 	return result;
 }
 
+function make_average(dataset, seconds) {
+	var result = [];
+	var sampling_nbr = 50;
+	var start_t = yesterday_t;
+	var end_t = now_t;
+
+	for (var i = 0; i < sampling_nbr; i++) {
+		var timestamp = start_t + i * (end_t - start_t) / sampling_nbr;
+		var samples = filter_transaction(dataset, timestamp - seconds, timestamp)
+		var avg = d3.mean(samples, function(d) { return d.rate; })
+
+		result.push({
+			timestamp: timestamp,
+			rate: avg
+		});
+	}
+	return result;
+}
 
 var result = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
-var dataset = filter_transaction(result);
-console.log(dataset);
+var point_dataset = filter_transaction(result, yesterday_t, now_t);
+console.log(point_dataset);
 
-var y_a = dataset.map(function(d) { return d.rate; });
+var y_a = result.map(function(d) { return d.rate; });
 
 var y_max = y_a.max() + 1;
 var y_min = y_a.min() - 1;
@@ -112,6 +130,19 @@ var margin = { top: 50, right: 50, bottom: 50, left: 50 };
 var svg = d3.select('body').append('svg')
 	.attr('width', width + margin.left + margin.right)
 	.attr('height', height + margin.top + margin.bottom);
+
+function plot(dataset, color) {
+	var lineFunction = d3.svg.line()
+		.x(function(d) { return x_scale(new Date(d.timestamp * 1000)); })
+		.y(function(d) { return y_scale(d.rate); })
+		.interpolate("basis");
+
+	var lineGraph = svg.append("path")
+		.attr("d", lineFunction(dataset))
+		.attr("stroke", color)
+		.attr("stroke-width", 2)
+		.attr("fill", "none");
+}
 
 function tooltip(g, msg, x, y, margin) {
 	margin = margin || {top: 0, right: 3, bottom: 0, left: 3};
@@ -177,7 +208,7 @@ function label(d) {
 	return time_format(new Date(d.timestamp * 1000)) + ' ' + eur_format(d.rate);
 }
 
-var point = svg.selectAll('.point').data(dataset);
+var point = svg.selectAll('.point').data(point_dataset);
 point.enter()
 	.append('g')
 		.attr('transform', translate)
@@ -211,7 +242,7 @@ point.on('mouseover', function(e) {
 	var info = svg.selectAll('.tooltip').data(info_dataset);
 	info.enter().append('g');
 
-	var msg = time_format(new Date(transaction.timestamp * 1000)) + ' ' + eur_format(transaction.rate);
+	var msg = label(transaction);
 
 	tooltip(info, msg, mouse[0] + 5, mouse[1] - 5);
 
@@ -222,6 +253,15 @@ point.on('mouseout', function(e) {
 	var info = svg.selectAll('.tooltip').data([]);
 	info.exit().remove();
 });
+
+
+// Start drawing the average curve
+point_dataset = make_average(result, 3 * 3600);
+plot(point_dataset, 'blue');
+point_dataset = make_average(result, 12 * 3600);
+plot(point_dataset, 'red');
+
+
 		</script>
 	</body>
 </html>
