@@ -26,6 +26,7 @@ body, html {
 
 svg {
 	background-color: white;
+    cursor: crosshair;
 }
 
 .point .circle {
@@ -38,6 +39,14 @@ svg {
 	fill: none;
     stroke-width: 1.5px;
     stroke: #DDDDDD;
+}
+
+.point .text {
+	display: none;
+}
+
+.point:hover .text {
+	display: block;
 }
 
 .axis path {
@@ -98,24 +107,24 @@ var svg = d3.select('body').append('svg')
 var x_scale = d3.time.scale()
 	.domain([ new Date(yesterday_t * 1000), new Date(now_t * 1000) ])
 	.range([margin.left, margin.left + width ]);
-var x_format = d3.time.format("%H-%M");
+var time_format = d3.time.format("%H:%M");
 var x_axis = d3.svg.axis()
 	.scale(x_scale)
 	.orient("top")
 	.tickSize(height)
 	.ticks(d3.time.hour, 3)
-	.tickFormat(x_format);
+	.tickFormat(time_format);
 
 var y_scale = d3.scale.linear()
 	.domain([ y_max, y_min ])
 	.range([ margin.top, margin.top + height ]);
-var y_format = function(n) { return d3.format(".2f")(n) + ' €'; };
+var eur_format = function(n) { return d3.format(".2f")(n) + ' €'; };
 var y_axis = d3.svg.axis()
 	.scale(y_scale)
 	.orient("left")
 	.tickSize(width)
 	.ticks(5)
-	.tickFormat(y_format);
+	.tickFormat(eur_format);
 
 svg.append("g")
 	.classed('axis', true)
@@ -132,11 +141,19 @@ function translate(d) {
 		+ ', ' + y_scale(d.rate) + ')';
 }
 
+function label(d) {
+	return time_format(new Date(d.timestamp * 1000)) + ' ' + eur_format(d.rate);
+}
+
 var point = svg.selectAll('.point').data(dataset);
 point.enter()
 	.append('g')
 		.attr('transform', translate)
 		.classed('point', true);
+
+point.append('text')
+	.text(label)
+	.classed('text', true);
 
 point.append('circle')
 		.attr('r', 2.5)
