@@ -74,13 +74,36 @@ body, html {
 #legend {
 	position: absolute;
 	display: inline-block;
-	font-size: 14px;
+	font-size: 10px;
+
+	background-color: rgba(255, 255, 255, 0.7);
+}
+
+#legend tr {
+	height: 20px;
+}
+
+#legend td {
+	vertical-align: middle;
+}
+
+.legend_color_box > div {
+	width: 13px;
+	height: 10px;
+	padding: 2px;
+
+	border: 1px solid #CCCCCC;
+}
+
+.legend_color {
+	width: 100%;
+	height: 100%;
 }
 		</style>
 	</head>
 	<body>
 		<div id="graph">
-			<svg id="svg" width="800" height="300"></svg>
+			<svg id="svg" width="760" height="300"></svg>
 			<ul id="buttons">
 				<li id="48h">48 hours</li>
 				<li id="1m">1 month</li>
@@ -93,32 +116,32 @@ body, html {
 		<div id="legend">
 			<table>
 				<tr class="jqplot-table-legend">
-					<td class="jqplot-table-legend jqplot-seriesToggle" style="text-align:center;padding-top:0;">
+					<td class="legend_color_box">
 						<div>
-							<div class="jqplot-table-legend-swatch" style="background-color:#888;border-color:#888;"></div>
+							<div class="legend_color" style="background-color: #999999; border-color: #999999;"></div>
 						</div>
 					</td>
-					<td class="jqplot-table-legend jqplot-seriesToggle" style="padding-top:0;">
+					<td>
 						Transaction scatter plot
 					</td>
 				</tr>
 				<tr class="jqplot-table-legend">
-					<td class="jqplot-table-legend jqplot-seriesToggle" style="text-align:center;padding-top:0.5em;">
+					<td class="legend_color_box">
 						<div>
-							<div class="jqplot-table-legend-swatch" style="background-color:#DC3811;border-color:#DC3811;"></div>
+							<div class="legend_color" style="background-color: blue; border-color: blue;"></div>
 						</div>
 					</td>
-					<td class="jqplot-table-legend jqplot-seriesToggle" style="padding-top:0.5em;">
+					<td>
 						OCP Storage share (3 last hours avg.)
 					</td>
 				</tr>
-				<tr class="jqplot-table-legend">
-					<td class="jqplot-table-legend jqplot-seriesToggle" style="text-align:center;padding-top:0.5em;">
+				<tr>
+					<td class="legend_color_box">
 						<div>
-							<div class="jqplot-table-legend-swatch" style="background-color:#4684EE;border-color:#4684EE;"></div>
+							<div class="legend_color" style="background-color: red; border-color: red;"></div>
 						</div>
 					</td>
-					<td class="jqplot-table-legend jqplot-seriesToggle" style="padding-top:0.5em;">
+					<td>
 						OCP Storage share (12 last hours avg.)
 					</td>
 				</tr>
@@ -133,14 +156,14 @@ var data = {
 var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
 var svg_elem = $('svg').get(0);
 
-var margin = { top: 50, right: 50, bottom: 50, left: 50 };
+var margin = { top: 5, right: 5, bottom: 20, left: 50 };
 ocp.graphic.draw_chart(svg_elem, result, margin);
 
 function legend_on() {
 	var svg_offset = $('svg').offset();
 	var offset = {
-		top: 0 + $('svg').height() - $('#legend').outerHeight(true) - margin.bottom,
-		left: 0 + $('svg').width() - $('#legend').outerWidth(true) - margin.right
+		top: 0 + $('svg').height() - $('#legend').outerHeight(true) - margin.bottom - 1,
+		left: 0 + $('svg').width() - $('#legend').outerWidth(true) - margin.right - 1
 	};
 	$('#legend').offset(offset);
 }

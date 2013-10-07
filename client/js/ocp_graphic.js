@@ -92,9 +92,9 @@
 
 
 		// Calculate min and max scale
-		var y_a = transaction_list.map(function(d) { return d.rate; });
+		var y_a = point_dataset.map(function(d) { return d.rate; });
 		var y_max = y_a.max() + 1;
-		var y_min = y_a.min() - 1;
+		var y_min = y_a.min() - 4;
 
 		var width = svg.attr('width') - margin.left - margin.right;
 		var height = svg.attr('height') - margin.top - margin.bottom;
