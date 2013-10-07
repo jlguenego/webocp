@@ -1,0 +1,51 @@
+svg {
+	background-color: white;
+    cursor: crosshair;
+}
+
+.point .circle {
+	fill: none;
+    stroke-width: 1.5px;
+    stroke: #999999;
+}
+
+.point .shadow {
+	fill: none;
+    stroke-width: 1.5px;
+    stroke: #DDDDDD;
+}
+
+.point .text {
+	display: none;
+}
+
+.tooltip text {
+	font-family: sans-serif;
+    font-size: 11px;
+    fill: #555555;
+	text-anchor: start;
+}
+
+.tooltip rect {
+	fill: rgba(167, 167, 167, 0.3);
+	stroke-width: 0.1px;
+	stroke: #000000;
+}
+
+.axis path {
+    fill: none;
+    stroke-width: 2px;
+    stroke: #AAAAAA;
+    shape-rendering: crispEdges;
+}
+
+.axis line {
+    fill: none;
+    stroke: #EEEEEE;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}

@@ -27,7 +27,7 @@
 			async: false,
 			data: data,
 			success: function(data) {
-				console.log(data);
+				//console.log(data);
 				var output = $.parseJSON(data);
 				if (output.error) {
 					throw new Error('Server answered: ' + output.error);

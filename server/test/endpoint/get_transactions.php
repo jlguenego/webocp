@@ -15,15 +15,25 @@
 	$_REQUEST = array_merge($_GET, $_POST);
 	$output = array();
 	try {
-		$sampling_nbr = 200;
+		$now_t = time();
+
+		$sampling_density = 100 ; // sample nbr per day
 		$window_time = 86400 * 2;
+		$sampling_nbr = $sampling_density * ($window_time / 86400);
 		$event_delay = rand(0, 3600 * 6);
 		$floating_avg = rand(51, 59);
+		$start_t = $now_t - $window_time;
+		$end_t = $now_t;
 
-		$end_t = time();
-		$start_t = $end_t - $window_time;
 
-		$output['result'] = array();
+		if (isset($_REQUEST['start_t'])) {
+			$start_t = $_REQUEST['start_t'];
+		}
+		if (isset($_REQUEST['end_t'])) {
+			$end_t = $_REQUEST['end_t'];
+		}
+
+		$transaction_list = array();
 		$t = $start_t;
 		$event_t = $start_t;
 		while ($t < $end_t) {
@@ -38,8 +48,15 @@
 				'timestamp' => $t,
 				'rate' => $floating_avg - 1 + rand(0, 1000) / 500,
 			);
-			$output['result'][] = $transaction;
+			$transaction_list[] = $transaction;
 		}
+		$output['result'] = array(
+			'transaction_list' => $transaction_list,
+			'query' => array(
+				'start_t' => $start_t,
+				'end_t' => $end_t,
+			),
+		);
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
 	}
