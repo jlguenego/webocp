@@ -97,6 +97,14 @@
 		var width = svg.attr('width') - margin.left - margin.right;
 		var height = svg.attr('height') - margin.top - margin.bottom;
 
+		// Draw white rectangle
+		svg.append('rect')
+			.attr('x', margin.left)
+			.attr('y', margin.top)
+			.attr('width', width)
+			.attr('height', height)
+			.classed('graph_area', true);
+
 		// Draw scales
 		var x_scale = d3.time.scale()
 			.domain([ new Date(start_t * 1000), new Date(end_t * 1000) ])
