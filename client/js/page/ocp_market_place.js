@@ -122,6 +122,19 @@
 })(ocp);
 
 $(document).ready(function() {
+	var current_rate = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_current_rate.php');
+	console.log(current_rate);
+	$('#ocp_mp_current_price .eur').html(ocp.utils.curr(current_rate) + '€');
+	$('#ocp_mp_current_price .btc').html(ocp.utils.curr(current_rate) + 'BTC');
+
+	var today = new Date();
+	var day = today.getDate();
+	var month = today.getMonth() + 1; // January is 0!`
+	var year = today.getFullYear();
+	var hours = today.getHours();
+	var minutes = today.getMinutes();
+	$('#ocp_mp_current_price .date').html(day + '/' + month + '/' + year + ' at ' + hours + ':' + minutes);
+
 	$('#ocp_mp_buy').ocp_header_content();
 	$('#ocp_mp_sell').ocp_header_content();
 
