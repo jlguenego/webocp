@@ -163,36 +163,46 @@ function print_48h() {
 }
 
 function print_1m() {
-	var now_t = (new Date()).getTime() / 1000;
-	var data = {
-		start_t: now_t - 31 * 86400,
-		end_t: now_t
-	};
-	draw_graph(data, 31);
+	var now = new Date();
+	var start = new Date(now.getTime());
+	start.setMonth(start.getMonth() - 1);
+	start.setHours(0, 0, 0, 0);
+	var start_t = start.getTime() / 1000;
+	var end_t = now.setHours(0, 0, 0, 0) / 1000;
+
+	draw_graph(start_t, end_t);
 }
 
 function print_6m() {
-	var now_t = (new Date()).getTime() / 1000;
-	var data = {
-		start_t: now_t - 6 * 31 * 86400,
-		end_t: now_t
-	};
-	draw_graph(data, 6 * 31);
+	var now = new Date();
+	var start = new Date(now.getTime());
+	start.setMonth(start.getMonth() - 6);
+	start.setHours(0, 0, 0, 0);
+	var start_t = start.getTime() / 1000;
+	var end_t = now.setHours(0, 0, 0, 0) / 1000;
+
+	draw_graph(start_t, end_t);
 }
 
 function print_1y() {
-	var now_t = (new Date()).getTime() / 1000;
-	var data = {
-		start_t: now_t - 12 * 31 * 86400,
-		end_t: now_t
-	};
-	draw_graph(data, 12 * 31);
+	var now = new Date();
+	var start = new Date(now.getTime());
+	start.setMonth(start.getMonth() - 12);
+	start.setHours(0, 0, 0, 0);
+	var start_t = start.getTime() / 1000;
+	var end_t = now.setHours(0, 0, 0, 0) / 1000;
+
+	draw_graph(start_t, end_t);
 }
 
-function draw_graph(data, time_domain) {
+function draw_graph(start_t, end_t) {
+	var data = {
+		start_t: start_t,
+		end_t: end_t
+	};
 	var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_rate.php');
 	var svg_elem = $('svg').get(0);
-	ocp.graphic.draw_graph(svg_elem, result, time_domain, margin);
+	ocp.graphic.draw_graph(svg_elem, result, start_t, end_t, margin);
 }
 
 function manage_legend() {

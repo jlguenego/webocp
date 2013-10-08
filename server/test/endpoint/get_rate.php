@@ -37,8 +37,8 @@
 		$transaction_list = array();
 		$t = $start_t;
 		$event_t = $start_t;
-		while ($t < $end_t) {
-			$t += $window_time / $sampling_nbr;
+
+		for ($t = $start_t; $t <= $end_t; $t += 86400) {
 			if ($t - $event_t > $event_delay) {
 				$event_t = $t;
 				$floating_avg += rand(-3, 3);

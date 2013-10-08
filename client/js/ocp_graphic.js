@@ -6,7 +6,7 @@
 		var result = [];
 		for (var i = 0; i < dataset.length; i++) {
 			var data = dataset[i];
-			if (data.timestamp > start_t && data.timestamp < end_t) {
+			if (data.timestamp >= start_t && data.timestamp <= end_t) {
 				result.push(data);
 			}
 		}
@@ -74,12 +74,10 @@
 			.attr("fill", "none");
 	};
 
-	ocp.graphic.draw_graph = function(svg_elem, transaction_obj, time_domain, margin) {
+	ocp.graphic.draw_graph = function(svg_elem, transaction_obj, start_t, end_t, margin) {
 		margin = margin || { top: 50, right: 50, bottom: 50, left: 50 };
 		var svg = d3.select(svg_elem);
 
-		var start_t = transaction_obj.query.end_t - (86400 * time_domain);
-		var end_t = transaction_obj.query.end_t;
 		var transaction_list = transaction_obj.transaction_list;
 		var point_dataset = filter_transaction(transaction_list, start_t, end_t);
 
@@ -89,7 +87,7 @@
 
 		var time_format = d3.time.format("%d.%m");
 
-		if (time_domain > 90) {
+		if (end_t - start_t > 90 * 86400) {
 			time_format = d3.time.format("%b");
 		}
 
@@ -114,7 +112,7 @@
 			.tickSize(height)
 			.tickFormat(time_format);
 
-		if (time_domain > 90) {
+		if (end_t - start_t > 90 * 86400) {
 			x_axis.ticks(d3.time.month, 1);
 		} else {
 			x_axis.ticks(d3.time.day, 2);
@@ -142,7 +140,12 @@
 			.attr("transform", 'translate(' + (margin.left + width) + ', 0)')
 			.call(y_axis);
 
-		//ocp.graphic.curve(svg, scales, point_dataset, 'blue', 'linear');
+		var scales = {
+			x: x_scale,
+			y: y_scale
+		};
+
+		ocp.graphic.curve(svg, scales, point_dataset, 'blue', 'linear');
 		//ocp.graphic.scatter_plot(svg, scales, margin);
 	};
 
