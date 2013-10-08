@@ -27,7 +27,6 @@
 	height: 340px;
 	padding: 20px;
 	padding-top: 0px;
-	margin-top: -20px;
 }
 
 .ocp_mp_anounce_title {
@@ -164,4 +163,18 @@
 #ocp_mp_current_price {
 	text-align: right;
 	margin: 10px 10px 0px 0px;
+
+	font-size: 11px;
+	line-height: 11px;
+}
+
+#ocp_mp_current_price .arrow {
+	display: inline-block;
+	width: 5px;
+	height: 8px;
+	margin-right: 2px;
+
+	background-image: url(image/arrow.png);
+	background-size: 5px 8px;
+	background-repeat: no-repeat;
 }
