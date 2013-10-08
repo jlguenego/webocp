@@ -117,7 +117,7 @@
 			<div id="market_place_page" class="page_content">
 				<div id="ocp_mp_body">
 					<div id="ocp_mp_current_price">
-						Current OCP storage price:
+						Current <span class="ocp_tooltip" title="Unit price for renting 1TB of OCP storage per Year">OCP storage unit price</span>:
 						<div class="arrow"></div><span class="rate eur"></span>&nbsp;&nbsp;
 						<div class="arrow"></div><span class="rate btc"></span>&nbsp;&nbsp;
 						<span class="info">(as of <span class="date"></span>)</span>
@@ -136,13 +136,16 @@
 					</div>
 					<div id="ocp_mp_graph" class="ocp_graphic">
 						<svg id="ocp_mp_svg" width="760" height="300"></svg>
-						<ul id="ocp_mp_buttons">
-							<li id="ocp_mp_48h">48 hours</li>
-							<li id="ocp_mp_1m">1 month</li>
-							<li id="ocp_mp_6m">6 months</li>
-							<li id="ocp_mp_1y">1 year</li>
-							<li id="ocp_mp_reset">Reset zoom</li>
-						</ul>
+						<div id="ocp_mp_buttons">
+							<ul>
+								<li id="ocp_mp_48h">48 hours</li>
+								<li id="ocp_mp_1m">1 month</li>
+								<li id="ocp_mp_6m">6 months</li>
+								<li id="ocp_mp_1y">1 year</li>
+								<li id="ocp_mp_reset">Reset zoom</li>
+							</ul>
+							<a href="">Chart FAQ »</a>
+						</div>
 						<div id="ocp_mp_legend">
 							<table>
 								<tr>
@@ -174,6 +177,27 @@
 									<td>
 										OCP Storage share (12 last hours avg.)
 									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div id="ocp_mp_recap">
+						<div id="ocp_mp_eur_recap_list" class="ocp_mp_recap_list ocp_clearfix">
+							<div class="ocp_mp_recap_title">Latest trade deals</div>
+							<table id="ocp_mp_recap1" class="recap_table">
+								<tr>
+									<th class="date">Date</th>
+									<th class="rate">EUR/TB/Year</th>
+									<th class="amount">Amount</th>
+									<th class="volume">Volume&nbsp;(EUR)</th>
+								</tr>
+							</table>
+							<table id="ocp_mp_recap2" class="recap_table">
+								<tr>
+									<th class="date">Date</th>
+									<th class="rate">EUR/TB/Year</th>
+									<th class="amount">Amount</th>
+									<th class="volume">Volume&nbsp;(EUR)</th>
 								</tr>
 							</table>
 						</div>

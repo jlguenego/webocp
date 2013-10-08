@@ -181,6 +181,25 @@ $(document).ready(function() {
 		data: sell_offers_data
 	});
 
+	var last_transactions = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php').transaction_list;
+	var last_transactions_data = last_transactions.slice(0, 20);
+
+	for (var i = 0; i < last_transactions_data.length; i++) {
+		var data = last_transactions_data[i];
+		var table_no = 1;
+		if (i > 9) {
+			table_no = 2;
+		}
+		var table = $('#ocp_mp_recap' + table_no);
+		console.log(table);
+		var tr = $('<tr/>').appendTo(table);
+
+		$('<td>').appendTo(tr).html(ocp.utils.format_date(data.timestamp));
+		$('<td>').appendTo(tr).html(data.rate);
+		$('<td>').appendTo(tr).html(data.quantity.toFixed(2));
+		$('<td>').appendTo(tr).html((data.rate * data.quantity).toFixed(2));
+	}
+
 	$('#ocp_mp_buttons li').click(function() {
 		console.log('click');
 		$('#ocp_mp_buttons li.active').removeClass('active');

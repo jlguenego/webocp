@@ -171,9 +171,14 @@
 		return amount.toFixed(2);
 	};
 
+	var btc_rate = 0;
+	var btc_rate_last_call = new Date().getTime();
 	ocp.utils.eur2btc = function(amount) {
-		var btc_rate = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_current_btc_rate.php');
-		console.log('btc_rate=' + btc_rate);
+		var now_t = new Date().getTime();
+		if (btc_rate == 0 || now_t - btc_rate_last_call > 3600 * 1000) {
+			btc_rate = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_current_btc_rate.php');
+			btc_rate_last_call = now_t;
+		}
 		return amount / btc_rate;
 	}
 

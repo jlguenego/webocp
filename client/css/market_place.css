@@ -5,8 +5,7 @@
 	background-position: center 0px;
 	min-height: 700px;
 	font-size: 13px;
-	background-color: #DDDDDD;
-	padding: 25px 0 25px 0;
+	padding: 25px 0 0px 0;
 }
 
 #market_place_page .widget_grid_container {
@@ -99,13 +98,15 @@
 #ocp_mp_buttons {
 	display: inline-block;
 	width: 180px;
+	margin-top: 20px;
 
-	padding: 0px;
-	margin: 0px;
-	margin-top: 30px;
-
-	list-style: none;
+	text-align: center;
 	vertical-align: top;
+}
+#ocp_mp_buttons ul {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
 }
 
 #ocp_mp_buttons li {
@@ -122,6 +123,7 @@
 
 #ocp_mp_buttons li:last-child {
 	margin-top: 50px;
+	margin-bottom: 15px;
 }
 
 #ocp_mp_buttons li:hover {
@@ -186,4 +188,62 @@
 
 #ocp_mp_current_price .info {
 	color: #AAAAAA;
+}
+
+#ocp_mp_recap {
+	padding: 20px;
+	clear: both;
+}
+
+#ocp_mp_recap .ocp_mp_recap_title {
+	font-weight: normal;
+	color: #e84a02;
+	font-size: 1.2em;
+	margin-bottom: 0.4em;
+}
+
+#ocp_mp_recap .recap_table {
+	display: inline-block;
+	width: 450px;;
+	border-collapse: collapse;
+}
+
+#ocp_mp_recap .recap_table .date {
+	width: 157px;
+	text-align: left;
+}
+
+#ocp_mp_recap .recap_table .rate {
+	width: 90px;
+}
+
+#ocp_mp_recap .recap_table .amount {
+	width: 129px;
+}
+
+#ocp_mp_recap .recap_table .volume {
+	width: 74px;
+}
+
+#ocp_mp_recap .recap_table th {
+	font-size: 12px;
+	color: #BABABA;
+	font-weight: 400;
+	text-align: right;
+}
+
+#ocp_mp_recap .recap_table td {
+	border-bottom: 1px solid #EEEEEE;
+}
+
+#ocp_mp_recap .recap_table td {
+	width: 100%;
+}
+
+#ocp_mp_recap1 {
+	float: left;
+}
+
+#ocp_mp_recap2 {
+	float: right;
 }
