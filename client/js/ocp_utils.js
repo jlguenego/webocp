@@ -167,6 +167,9 @@
 		return CryptoJS.enc.Base64.stringify(wa);
 	};
 
+	ocp.utils.curr = function(amount) {
+		return amount.toFixed(2);
+	};
 
 	ocp.utils.format_size = function(bytes, precision) {
 		precision = precision || 2;
