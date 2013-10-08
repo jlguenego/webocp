@@ -170,7 +170,7 @@ function print_1m() {
 	var start_t = start.getTime() / 1000;
 	var end_t = now.setHours(0, 0, 0, 0) / 1000;
 
-	draw_graph(start_t, end_t);
+	draw_graph(start_t, end_t, 1);
 }
 
 function print_6m() {
@@ -181,7 +181,7 @@ function print_6m() {
 	var start_t = start.getTime() / 1000;
 	var end_t = now.setHours(0, 0, 0, 0) / 1000;
 
-	draw_graph(start_t, end_t);
+	draw_graph(start_t, end_t, 4);
 }
 
 function print_1y() {
@@ -192,16 +192,17 @@ function print_1y() {
 	var start_t = start.getTime() / 1000;
 	var end_t = now.setHours(0, 0, 0, 0) / 1000;
 
-	draw_graph(start_t, end_t);
+	draw_graph(start_t, end_t, 10);
 }
 
-function draw_graph(start_t, end_t) {
+function draw_graph(start_t, end_t, group_size) {
 	var data = {
 		start_t: start_t,
 		end_t: end_t
 	};
 	var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_rate.php');
 	var svg_elem = $('svg').get(0);
+	result.transaction_list = ocp.graphic.group_transaction(result.transaction_list, group_size);
 	ocp.graphic.draw_graph(svg_elem, result, start_t, end_t, margin);
 }
 

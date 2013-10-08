@@ -1,6 +1,28 @@
 (function(ocp, undefined) {
 	ocp.graphic = {};
 
+	// Draw a tooltip
+	function tooltip(g, msg, x, y, margin) {
+		margin = margin || {top: 0, right: 3, bottom: 0, left: 3};
+		g.classed('tooltip', true);
+
+		var rect = g.append('rect')
+
+
+		var text = g.append('text')
+			.text(msg)
+			.classed('label', true);
+		text.attr('x', x + margin.left)
+			.attr('y', y + margin.bottom);
+
+		var r = text.node().getBBox();
+
+		rect.attr('x', 	r.x - margin.left)
+			.attr('y', r.y - margin.bottom)
+			.attr('width', r.width + margin.left + margin.right)
+			.attr('height', r.height + margin.top + margin.bottom);
+	}
+
 	// Return transaction between two timestamps
 	function filter_transaction(dataset, start_t, end_t) {
 		var result = [];
@@ -13,11 +35,46 @@
 		return result;
 	}
 
-	ocp.graphic.scatter_plot = function(svg, scales, dataset) {
+	ocp.graphic.group_transaction = function(dataset, group_size) {
+		group_size = group_size || 3
+		var result = [dataset[0]];
+		var group = [];
+
+		for (var i = 0; i < dataset.length; i++) {
+			group.push(dataset[i]);
+
+			if (group.length < group_size && i < dataset.length - 1) {
+				continue;
+			}
+			var transaction = {
+				timestamp: group[group.length - 1].timestamp,
+				rate: ocp.math.mean(group, 'rate', 'quantity'),
+				quantity: 1
+			};
+			group = [];
+			result.push(transaction);
+		}
+		return result;
+	}
+
+	// Get lablel from transaction
+	function label(transaction, time_format, eur_format) {
+		return time_format(new Date(transaction.timestamp * 1000)) + ' ' + eur_format(transaction.rate);
+	}
+
+	function translate(scales) {
+		return function(d) {
+			return 'translate(' + scales.x(new Date(d.timestamp * 1000))
+				+ ', ' + scales.y(d.rate) + ')';
+		}
+	}
+
+	ocp.graphic.scatter_plot = function(svg, scales, dataset, time_format, eur_format) {
+		console.log(dataset);
 		var point = svg.selectAll('.point').data(dataset);
 		point.enter()
 			.append('g')
-				.attr('transform', translate)
+				.attr('transform', translate(scales))
 				.classed('point', true);
 
 		point.append('circle')
@@ -46,7 +103,7 @@
 			var info = svg.selectAll('.tooltip').data(info_dataset);
 			info.enter().append('g');
 
-			var msg = label(transaction);
+			var msg = label(transaction, time_format, eur_format);
 
 			tooltip(info, msg, mouse[0] + 5, mouse[1] - 5);
 
@@ -146,7 +203,7 @@
 		};
 
 		ocp.graphic.curve(svg, scales, point_dataset, 'blue', 'linear');
-		//ocp.graphic.scatter_plot(svg, scales, margin);
+		ocp.graphic.scatter_plot(svg, scales, point_dataset, time_format, eur_format);
 	};
 
 	ocp.graphic.draw_chart = function(svg_elem, transaction_obj, margin) {
@@ -174,28 +231,6 @@
 			return result;
 		}
 
-		// Draw a tooltip
-		function tooltip(g, msg, x, y, margin) {
-			margin = margin || {top: 0, right: 3, bottom: 0, left: 3};
-			g.classed('tooltip', true);
-
-			var rect = g.append('rect')
-
-
-			var text = g.append('text')
-				.text(msg)
-				.classed('label', true);
-			text.attr('x', x + margin.left)
-				.attr('y', y + margin.bottom);
-
-			var r = text.node().getBBox();
-
-			rect.attr('x', 	r.x - margin.left)
-				.attr('y', r.y - margin.bottom)
-				.attr('width', r.width + margin.left + margin.right)
-				.attr('height', r.height + margin.top + margin.bottom);
-		}
-
 		// Draw a curve
 		function plot(dataset, color) {
 			var lineFunction = d3.svg.line()
@@ -213,11 +248,6 @@
 		function translate(d) {
 			return 'translate(' + x_scale(new Date(d.timestamp * 1000))
 				+ ', ' + y_scale(d.rate) + ')';
-		}
-
-		// Get lablel from transaction
-		function label(d) {
-			return time_format(new Date(d.timestamp * 1000)) + ' ' + eur_format(d.rate);
 		}
 
 		var svg = d3.select(svg_elem);
@@ -306,7 +336,7 @@
 			var info = svg.selectAll('.tooltip').data(info_dataset);
 			info.enter().append('g');
 
-			var msg = label(transaction);
+			var msg = label(transaction, time_format, eur_format);
 
 			tooltip(info, msg, mouse[0] + 5, mouse[1] - 5);
 
