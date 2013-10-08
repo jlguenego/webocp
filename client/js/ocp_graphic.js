@@ -1,25 +1,157 @@
 (function(ocp, undefined) {
 	ocp.graphic = {};
 
+	// Return transaction between two timestamps
+	function filter_transaction(dataset, start_t, end_t) {
+		var result = [];
+		for (var i = 0; i < dataset.length; i++) {
+			var data = dataset[i];
+			if (data.timestamp > start_t && data.timestamp < end_t) {
+				result.push(data);
+			}
+		}
+		return result;
+	}
+
+	ocp.graphic.scatter_plot = function(svg, scales, dataset) {
+		var point = svg.selectAll('.point').data(dataset);
+		point.enter()
+			.append('g')
+				.attr('transform', translate)
+				.classed('point', true);
+
+		point.append('circle')
+				.attr('r', 2.5)
+				.attr('cx', 1)
+				.attr('cy', 1)
+				.classed('shadow', true);
+
+		point.append('circle')
+				.attr('r', 2.5)
+				.classed('circle', true);
+
+		point
+			.attr('cx', function(d) { return scales.x(new Date(d.timestamp * 1000)); })
+			.attr('cy', function(d) { return scales.y(d.rate); });
+
+		point.exit().remove();
+
+		// Draw tooltip when mouse on point
+		point.on('mouseover', function(e) {
+			var mouse = d3.mouse(svg.node());
+
+			var p = d3.select(this);
+			var transaction = p.datum();
+			var info_dataset = [ transaction ];
+			var info = svg.selectAll('.tooltip').data(info_dataset);
+			info.enter().append('g');
+
+			var msg = label(transaction);
+
+			tooltip(info, msg, mouse[0] + 5, mouse[1] - 5);
+
+			info.exit().remove();
+		});
+
+		point.on('mouseout', function(e) {
+			var info = svg.selectAll('.tooltip').data([]);
+			info.exit().remove();
+		});
+	};
+
+	// Draw a curve
+	ocp.graphic.curve = function(svg, scales, dataset, color, interpolate) {
+		interpolate = interpolate || "basis";
+		var lineFunction = d3.svg.line()
+			.x(function(d) { return scales.x(new Date(d.timestamp * 1000)); })
+			.y(function(d) { return scales.y(d.rate); })
+			.interpolate(interpolate);
+
+		var lineGraph = svg.append("path")
+			.attr("d", lineFunction(dataset))
+			.attr("stroke", color)
+			.attr("stroke-width", 2)
+			.attr("fill", "none");
+	};
+
+	ocp.graphic.draw_graph = function(svg_elem, transaction_obj, time_domain, margin) {
+		margin = margin || { top: 50, right: 50, bottom: 50, left: 50 };
+		var svg = d3.select(svg_elem);
+
+		var start_t = transaction_obj.query.end_t - (86400 * time_domain);
+		var end_t = transaction_obj.query.end_t;
+		var transaction_list = transaction_obj.transaction_list;
+		var point_dataset = filter_transaction(transaction_list, start_t, end_t);
+
+		var y_a = point_dataset.map(function(d) { return d.rate; });
+		var y_max = y_a.max() + 0.1 * (y_a.max() - y_a.min());
+		var y_min = y_a.min() - 0.1 * (y_a.max() - y_a.min());
+
+		var time_format = d3.time.format("%d.%m");
+
+		if (time_domain > 90) {
+			time_format = d3.time.format("%b");
+		}
+
+		var width = svg.attr('width') - margin.left - margin.right;
+		var height = svg.attr('height') - margin.top - margin.bottom;
+
+		// Draw white rectangle
+		svg.append('rect')
+			.attr('x', margin.left)
+			.attr('y', margin.top)
+			.attr('width', width)
+			.attr('height', height)
+			.classed('graph_area', true);
+
+		// Define scales and axis
+		var x_scale = d3.time.scale()
+			.domain([ new Date(start_t * 1000), new Date(end_t * 1000) ])
+			.range([margin.left, margin.left + width ]);
+		var x_axis = d3.svg.axis()
+			.scale(x_scale)
+			.orient("bottom")
+			.tickSize(height)
+			.tickFormat(time_format);
+
+		if (time_domain > 90) {
+			x_axis.ticks(d3.time.month, 1);
+		} else {
+			x_axis.ticks(d3.time.day, 2);
+		}
+
+		var y_scale = d3.scale.linear()
+			.domain([ y_max, y_min ])
+			.range([ margin.top, margin.top + height ]);
+		var eur_format = function(n) { return d3.format(".2f")(n) + ' €'; };
+		var y_axis = d3.svg.axis()
+			.scale(y_scale)
+			.orient("left")
+			.tickSize(width)
+			.ticks(5)
+			.tickFormat(eur_format);
+
+		// Draw axis
+		svg.append("g")
+			.classed('axis', true)
+			.attr("transform", 'translate(0, ' + (margin.top) + ')')
+			.call(x_axis);
+
+		svg.append("g")
+			.classed('axis', true)
+			.attr("transform", 'translate(' + (margin.left + width) + ', 0)')
+			.call(y_axis);
+
+		//ocp.graphic.curve(svg, scales, point_dataset, 'blue', 'linear');
+		//ocp.graphic.scatter_plot(svg, scales, margin);
+	};
+
 	ocp.graphic.draw_chart = function(svg_elem, transaction_obj, margin) {
 		margin = margin || { top: 50, right: 50, bottom: 50, left: 50 };
 
 		var start_t = transaction_obj.query.end_t - 86400;
 		var end_t = transaction_obj.query.end_t;
 		var transaction_list = transaction_obj.transaction_list;
-
-
-		// Return transaction between two timestamps
-		function filter_transaction(dataset, start_t, end_t) {
-			var result = [];
-			for (var i = 0; i < dataset.length; i++) {
-				var data = dataset[i];
-				if (data.timestamp > start_t && data.timestamp < end_t) {
-					result.push(data);
-				}
-			}
-			return result;
-		}
 
 		// Make rate average each {seconds}
 		function make_average(dataset, seconds) {
@@ -59,8 +191,6 @@
 				.attr('y', r.y - margin.bottom)
 				.attr('width', r.width + margin.left + margin.right)
 				.attr('height', r.height + margin.top + margin.bottom);
-
-
 		}
 
 		// Draw a curve

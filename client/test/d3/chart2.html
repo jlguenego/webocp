@@ -151,15 +151,48 @@ body, html {
 var margin = { top: 5, right: 5, bottom: 20, left: 50 };
 
 function print_48h() {
-	var now_t = (new Date()).getTime() / 1000 - (86400 / 2);
+	var now_t = (new Date()).getTime() / 1000;
 	var data = {
-		start_t: now_t - 3 * 86400,
+		start_t: now_t - 2 * 86400,
 		end_t: now_t
 	};
 	var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
 	var svg_elem = $('svg').get(0);
 
 	ocp.graphic.draw_chart(svg_elem, result, margin);
+}
+
+function print_1m() {
+	var now_t = (new Date()).getTime() / 1000;
+	var data = {
+		start_t: now_t - 31 * 86400,
+		end_t: now_t
+	};
+	draw_graph(data, 31);
+}
+
+function print_6m() {
+	var now_t = (new Date()).getTime() / 1000;
+	var data = {
+		start_t: now_t - 6 * 31 * 86400,
+		end_t: now_t
+	};
+	draw_graph(data, 6 * 31);
+}
+
+function print_1y() {
+	var now_t = (new Date()).getTime() / 1000;
+	var data = {
+		start_t: now_t - 12 * 31 * 86400,
+		end_t: now_t
+	};
+	draw_graph(data, 12 * 31);
+}
+
+function draw_graph(data, time_domain) {
+	var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_rate.php');
+	var svg_elem = $('svg').get(0);
+	ocp.graphic.draw_graph(svg_elem, result, time_domain, margin);
 }
 
 function manage_legend() {
@@ -192,6 +225,15 @@ $('#buttons li').click(function() {
 	switch($(this).attr('id')) {
 		case '48h':
 			print_48h();
+			break;
+		case '1m':
+			print_1m();
+			break;
+		case '6m':
+			print_6m();
+			break;
+		case '1y':
+			print_1y();
 			break;
 	}
 	manage_legend();
