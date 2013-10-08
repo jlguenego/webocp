@@ -89,49 +89,49 @@ $(document).ready(function() {
 				price: '0.10€',
 				health: 'good',
 				info: 'France',
-				buy: '<a href="">BUY</a>'
+				buy: '<a href="">SELL</a>'
 			},
 			{
 				amount: '250TB(10GB)',
 				price: '0.20€',
 				health: 'very good',
 				info: 'France',
-				buy: '<a href="">BUY</a>'
+				buy: '<a href="">SELL</a>'
 			},
 			{
 				amount: '20TB(1GB)',
 				price: '0.05€',
 				health: 'bad',
 				info: 'USA',
-				buy: '<a href="">BUY</a>'
+				buy: '<a href="">SELL</a>'
 			},
 			{
 				amount: '2TB(1GB)',
 				price: '0.10€',
 				health: 'not bad',
 				info: 'Germany',
-				buy: '<a href="">BUY</a>'
+				buy: '<a href="">SELL</a>'
 			},
 			{
 				amount: '250TB(10GB)',
 				price: '0.20€',
 				health: 'very good',
 				info: 'France',
-				buy: '<a href="">BUY</a>'
+				buy: '<a href="">SELL</a>'
 			},
 			{
 				amount: '20TB(1GB)',
 				price: '0.05€',
 				health: 'bad',
 				info: 'USA',
-				buy: '<a href="">BUY</a>'
+				buy: '<a href="">SELL</a>'
 			},
 			{
 				amount: '2TB(1GB)',
 				price: '0.10€',
 				health: 'not bad',
 				info: 'Germany',
-				buy: '<a href="">BUY</a>'
+				buy: '<a href="">SELL</a>'
 			}
 		]
 	});

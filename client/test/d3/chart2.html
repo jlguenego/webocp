@@ -30,6 +30,7 @@ body, html {
 }
 
 #graph {
+	width: 960px;
 	display: block;
 	overflow: hidden;
 }
@@ -40,6 +41,7 @@ body, html {
 }
 
 #buttons {
+	float: right;
 	display: inline-block;
 	width: 180px;
 
@@ -148,7 +150,7 @@ body, html {
 			</table>
 		</div>
 		<script>
-var margin = { top: 5, right: 5, bottom: 20, left: 50 };
+var margin = { top: 20, right: 5, bottom: 20, left: 50 };
 
 function print_48h() {
 	var now_t = (new Date()).getTime() / 1000;
@@ -206,20 +208,20 @@ function draw_graph(start_t, end_t, group_size) {
 	ocp.graphic.draw_graph(svg_elem, result, start_t, end_t, margin);
 }
 
-function manage_legend() {
-	var legend_on = $('#48h').hasClass('active');
-	if (!legend_on) {
-		$('#legend').hide();
-		return;
+	function manage_legend() {
+		var legend_on = $('#48h').hasClass('active');
+		if (!legend_on) {
+			$('#legend').hide();
+			return;
+		}
+		$('#legend').show();
+		var svg_offset = $('svg').offset();
+		var offset = {
+			top: 0 + $('svg').attr('height') - $('#legend').outerHeight(true) - margin.bottom - 1,
+			left: 0 + $('svg').attr('width') - $('#legend').outerWidth(true) - margin.right - 1
+		};
+		$('#legend').offset(offset);
 	}
-	$('#legend').show();
-	var svg_offset = $('svg').offset();
-	var offset = {
-		top: 0 + $('svg').attr('height') - $('#legend').outerHeight(true) - margin.bottom - 1,
-		left: 0 + $('svg').attr('width') - $('#legend').outerWidth(true) - margin.right - 1
-	};
-	$('#legend').offset(offset);
-}
 
 function svg_clean() {
 	$('svg').children().remove();

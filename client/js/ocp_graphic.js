@@ -69,7 +69,7 @@
 		}
 	}
 
-	ocp.graphic.scatter_plot = function(svg, scales, dataset, time_format, eur_format) {
+	function scatter_plot(svg, scales, dataset, time_format, eur_format) {
 		console.log(dataset);
 		var point = svg.selectAll('.point').data(dataset);
 		point.enter()
@@ -117,7 +117,7 @@
 	};
 
 	// Draw a curve
-	ocp.graphic.curve = function(svg, scales, dataset, color, interpolate) {
+	function curve(svg, scales, dataset, color, interpolate) {
 		interpolate = interpolate || "basis";
 		var lineFunction = d3.svg.line()
 			.x(function(d) { return scales.x(new Date(d.timestamp * 1000)); })
@@ -202,8 +202,8 @@
 			y: y_scale
 		};
 
-		ocp.graphic.curve(svg, scales, point_dataset, 'blue', 'linear');
-		ocp.graphic.scatter_plot(svg, scales, point_dataset, time_format, eur_format);
+		curve(svg, scales, point_dataset, 'blue', 'linear');
+		scatter_plot(svg, scales, point_dataset, time_format, eur_format);
 	};
 
 	ocp.graphic.draw_chart = function(svg_elem, transaction_obj, margin) {
@@ -231,31 +231,12 @@
 			return result;
 		}
 
-		// Draw a curve
-		function plot(dataset, color) {
-			var lineFunction = d3.svg.line()
-				.x(function(d) { return x_scale(new Date(d.timestamp * 1000)); })
-				.y(function(d) { return y_scale(d.rate); })
-				.interpolate("basis");
-
-			var lineGraph = svg.append("path")
-				.attr("d", lineFunction(dataset))
-				.attr("stroke", color)
-				.attr("stroke-width", 2)
-				.attr("fill", "none");
-		}
-
-		function translate(d) {
-			return 'translate(' + x_scale(new Date(d.timestamp * 1000))
-				+ ', ' + y_scale(d.rate) + ')';
-		}
-
 		var svg = d3.select(svg_elem);
 		var point_dataset = filter_transaction(transaction_list, start_t, end_t);
 
 
 		// Calculate min and max scale
-		var y_a = point_dataset.map(function(d) { return d.rate; });
+		var y_a = transaction_list.map(function(d) { return d.rate; });
 		var y_max = y_a.max() + 1;
 		var y_min = y_a.min() - 4;
 
@@ -303,56 +284,17 @@
 			.attr("transform", 'translate(' + (margin.left + width) + ', 0)')
 			.call(y_axis);
 
-		// Draw points
-		var point = svg.selectAll('.point').data(point_dataset);
-		point.enter()
-			.append('g')
-				.attr('transform', translate)
-				.classed('point', true);
+		var scales = {
+			x: x_scale,
+			y: y_scale
+		};
 
-		point.append('circle')
-				.attr('r', 2.5)
-				.attr('cx', 1)
-				.attr('cy', 1)
-				.classed('shadow', true);
-
-		point.append('circle')
-				.attr('r', 2.5)
-				.classed('circle', true);
-
-		point
-			.attr('cx', function(d) { return x_scale(new Date(d.timestamp * 1000)); })
-			.attr('cy', function(d) { return y_scale(d.rate); });
-
-		point.exit().remove();
-
-		// Draw tooltip when mouse on point
-		point.on('mouseover', function(e) {
-			var mouse = d3.mouse(svg.node());
-
-			var p = d3.select(this);
-			var transaction = p.datum();
-			var info_dataset = [ transaction ];
-			var info = svg.selectAll('.tooltip').data(info_dataset);
-			info.enter().append('g');
-
-			var msg = label(transaction, time_format, eur_format);
-
-			tooltip(info, msg, mouse[0] + 5, mouse[1] - 5);
-
-			info.exit().remove();
-		});
-
-		point.on('mouseout', function(e) {
-			var info = svg.selectAll('.tooltip').data([]);
-			info.exit().remove();
-		});
-
+		scatter_plot(svg, scales, point_dataset, time_format, eur_format);
 
 		// Start drawing the average curve
 		point_dataset = make_average(transaction_list, 3 * 3600);
-		plot(point_dataset, 'blue');
+		curve(svg, scales, point_dataset, 'blue');
 		point_dataset = make_average(transaction_list, 12 * 3600);
-		plot(point_dataset, 'red');
+		curve(svg, scales, point_dataset, 'red');
 	};
 })(ocp)
