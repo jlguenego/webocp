@@ -125,7 +125,7 @@ $(document).ready(function() {
 	var current_rate = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_current_rate.php');
 	console.log(current_rate);
 	$('#ocp_mp_current_price .eur').html(ocp.utils.curr(current_rate) + '€');
-	$('#ocp_mp_current_price .btc').html(ocp.utils.curr(current_rate) + 'BTC');
+	$('#ocp_mp_current_price .btc').html(ocp.utils.curr(ocp.utils.eur2btc(current_rate)) + 'BTC');
 
 	var today = new Date();
 	var day = today.getDate();

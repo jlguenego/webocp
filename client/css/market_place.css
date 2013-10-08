@@ -172,9 +172,18 @@
 	display: inline-block;
 	width: 5px;
 	height: 8px;
-	margin-right: 2px;
+	margin-right: 5px;
+	margin-left: 5px;
 
 	background-image: url(image/arrow.png);
 	background-size: 5px 8px;
 	background-repeat: no-repeat;
+}
+
+#ocp_mp_current_price .rate {
+	font-weight: bold;
+}
+
+#ocp_mp_current_price .info {
+	color: #AAAAAA;
 }

@@ -171,6 +171,12 @@
 		return amount.toFixed(2);
 	};
 
+	ocp.utils.eur2btc = function(amount) {
+		var btc_rate = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_current_btc_rate.php');
+		console.log('btc_rate=' + btc_rate);
+		return amount / btc_rate;
+	}
+
 	ocp.utils.format_size = function(bytes, precision) {
 		precision = precision || 2;
 		var units = [ 'B', 'KB', 'MB', 'GB', 'TB' ];
