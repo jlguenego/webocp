@@ -1,55 +1,55 @@
-svg {
+.ocp_graphic svg {
 	background-color: transparent;
     cursor: crosshair;
 }
 
-.graph_area {
+.ocp_graphic .graph_area {
 	fill: #FFFFFF;
 }
 
-.point .circle {
+.ocp_graphic .point .circle {
 	fill: none;
     stroke-width: 1.5px;
     stroke: #999999;
 }
 
-.point .shadow {
+.ocp_graphic .point .shadow {
 	fill: none;
     stroke-width: 1.5px;
     stroke: #DDDDDD;
 }
 
-.point .text {
+.ocp_graphic .point .text {
 	display: none;
 }
 
-.tooltip text {
+.ocp_graphic .tooltip text {
 	font-family: sans-serif;
     font-size: 11px;
     fill: #555555;
 	text-anchor: start;
 }
 
-.tooltip rect {
+.ocp_graphic .tooltip rect {
 	fill: rgba(167, 167, 167, 0.3);
 	stroke-width: 0.1px;
 	stroke: #000000;
 }
 
-.axis path {
+.ocp_graphic .axis path {
     fill: none;
     stroke-width: 2px;
     stroke: #AAAAAA;
     shape-rendering: crispEdges;
 }
 
-.axis line {
+.ocp_graphic .axis line {
     fill: none;
     stroke: #EEEEEE;
     shape-rendering: crispEdges;
 }
 
-.axis text {
+.ocp_graphic .axis text {
     font-family: sans-serif;
     font-size: 11px;
 }

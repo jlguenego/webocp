@@ -83,3 +83,79 @@
 #market_place_page .ocp_footer {
 	position: relative;
 }
+
+#ocp_mp_graph {
+	position: relative;
+	width: 100%;
+	display: block;
+	overflow: hidden;
+}
+
+#ocp_mp_svg {
+	display: inline-block;
+	vertical-align: top;
+}
+
+#ocp_mp_buttons {
+	display: inline-block;
+	width: 180px;
+
+	padding: 0px;
+	margin: 0px;
+	margin-top: 30px;
+
+	list-style: none;
+	vertical-align: top;
+}
+
+#ocp_mp_buttons li {
+	margin: 10px;
+	padding: 5px 20px;
+
+	border: 1px solid #CCCCCC;
+	cursor: pointer;
+	display: block;
+	font-size: 14px;
+	padding-left: 35px;
+	color: #555555;
+}
+
+#ocp_mp_buttons li:last-child {
+	margin-top: 50px;
+}
+
+#ocp_mp_buttons li:hover {
+	background-color: #EEEEEE;
+}
+
+#ocp_mp_legend {
+	position: absolute;
+	display: inline-block;
+	width: 212px;
+	height: 68px;
+
+	font-size: 10px;
+
+	background-color: rgba(255, 255, 255, 0.7);
+}
+
+#ocp_mp_legend tr {
+	height: 20px;
+}
+
+#ocp_mp_legend td {
+	vertical-align: middle;
+}
+
+#ocp_mp_legend .legend_color_box > div {
+	width: 13px;
+	height: 10px;
+	padding: 2px;
+
+	border: 1px solid #CCCCCC;
+}
+
+#ocp_mp_legend .legend_color {
+	width: 100%;
+	height: 100%;
+}
