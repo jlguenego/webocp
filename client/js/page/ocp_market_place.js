@@ -1,6 +1,5 @@
 (function(ocp, undefined) {
 	var margin = { top: 20, right: 5, bottom: 20, left: 50 };
-	var transaction_obj = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_transactions'));
 
 	ocp.mp = {};
 
@@ -44,7 +43,7 @@
 		return result;
 	};
 
-	ocp.mp.print_48h = function() {
+	ocp.mp.print_48h = function(transaction_obj) {
 		var now_t = (new Date()).getTime() / 1000;
 		var data = {
 			start_t: now_t - 2 * 86400,
@@ -121,6 +120,8 @@
 	};
 
 	ocp.mp.show_page = function() {
+		var transaction_obj = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_transactions'));
+
 		var obj = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_current_rate'));
 		var current_rate = obj.rate;
 		console.log(current_rate);
@@ -213,7 +214,7 @@
 			ocp.mp.svg_clean();
 			switch($(this).attr('id')) {
 				case 'ocp_mp_48h':
-					ocp.mp.print_48h();
+					ocp.mp.print_48h(transaction_obj);
 					break;
 				case 'ocp_mp_1m':
 					ocp.mp.print_1m();
