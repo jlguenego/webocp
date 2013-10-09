@@ -1,6 +1,15 @@
 ﻿(function(ocp, undefined) {
 	ocp.worker_ui = {};
 
+	ocp.worker_ui.getBaseURL = function() {
+		var base_url = window.location.href;
+		if (!/\/$/.test(base_url)) {
+			base_url = ocp.dirname(base_url)
+		}
+
+		return base_url;
+	};
+
 	ocp.worker_ui.getURL = function(filename) {
 		var worker = $('<script/>');
 		worker.attr('id', 'worker_1');
@@ -8,7 +17,7 @@
 		worker.html('importScripts(base_url + "/' + filename + '");');
 		$('body').append(worker);
 
-		var base_url = ocp.dirname(window.location.href);
+		var base_url = ocp.worker_ui.getBaseURL();
 		var base_href = $('base').attr('href') || '';
 		if (!/^http:\/\//.test(base_href)) { // Is base_href relative?
 			base_url += '/' + base_href;
@@ -20,7 +29,7 @@
 	};
 
 	ocp.worker_ui.getEmbeddedURL = function(id) {
-		var base_url = ocp.dirname(window.location.href);
+		var base_url = ocp.worker_ui.getBaseURL();
 		var base_href = $('base').attr('href');
 		if (!/^http:\/\//.test(base_href)) { // Is base_href relative?
 			base_url += '/' + base_href;

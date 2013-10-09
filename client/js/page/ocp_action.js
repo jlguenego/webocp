@@ -17,7 +17,8 @@ var g_request = {};
 		}
 	};
 
-	ocp.action.execute = function() {
+	ocp.action.execute = function(href) {
+		ocp.action.build_request_from_fi(href);
 		if (!g_request.action) {
 			ocp.action.display('cover_page');
 			return;
@@ -163,10 +164,18 @@ var g_request = {};
 
 $(document).ready(function() {
 	$(window).on('hashchange', function () {
-        ocp.action.build_request_from_fi(window.location.hash);
-        ocp.action.execute();
+		try {
+	        ocp.action.execute(window.location.hash);
+	    } catch(e) {
+	    	window.location.hash = "";
+			ocp.error_manage(e);
+	    }
     });
 
-	ocp.action.build_request_from_fi(window.location.hash);
-	ocp.action.execute();
+	try {
+        ocp.action.execute(window.location.hash);
+    } catch(e) {
+    	window.location.hash = "";
+		ocp.error_manage(e);
+    }
 });
