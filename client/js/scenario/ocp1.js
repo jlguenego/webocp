@@ -1,6 +1,8 @@
 (function(ocp, undefined) {
-	ocp.scenario.OCP1 = function() {
+	var console = {};
+	console.log = function() {};
 
+	ocp.scenario.OCP1 = function() {
 		this.register = function(args) {
 			var name = args.name;
 			var email = args.email;
