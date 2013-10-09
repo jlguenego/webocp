@@ -111,11 +111,6 @@ var g_request = {};
 			if (!ocp.action.user_is_logged()) {
 				throw new Error('Login failed: bad login/password.');
 			}
-
-			console.log('ocp.session.user_id=' + ocp.session.user_id);
-			if (ocp.cfg.server_base_url) {
-				$('#ocp_fm_tree').ocp_tree('open_item', '/');
-			}
 			window.location.hash = '#file_manager';
 		} catch (e) {
 			window.location.hash = '#login';

@@ -3,7 +3,9 @@
 
 	ocp.block.send = function(address, content, attributes, onsuccess, onprogress) {
 		var new_content = ocp.block.set_content(attributes, content);
+		console.log(ocp.utils.ab2str(new_content));
 		ocp.file.send(address, new_content, onsuccess, onprogress);
+		console.log('send successful');
 	};
 
 	ocp.block.retrieve = function(filename, onsuccess, onprogress, onerror) {
@@ -69,6 +71,8 @@
 		var length_str = attributes.byteLength.toString().padleft(4, '0');
 		var length_ab = ocp.utils.str2ab(length_str);
 
+		console.log(attributes);
+		console.log(content);
 		var result = ocp.utils.ab_concat(length_ab, attributes, content);
 		return result;
 	};

@@ -9,6 +9,7 @@
 			ocp.dht.ring = new ocp.dht.Ring();
 		}
 		var contact = ocp.dht.ring.find(address);
+		console.log(contact);
 		return contact;
 	};
 
@@ -122,6 +123,8 @@
 		}
 		endpoint = endpoint || 'index';
 		url_query = url_query || '';
-		return url + '/endpoint/' + endpoint + '.php' + url_query;
+		var result = url + '/endpoint/' + endpoint + '.php' + url_query;;
+		console.log(result);
+		return result;
 	};
 })(ocp);

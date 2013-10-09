@@ -3,6 +3,7 @@
 
 	ocp.worker_ui.getBaseURL = function() {
 		var base_url = window.location.href;
+		base_url = base_url.replace(/#.*$/, '');
 		if (!/\/$/.test(base_url)) {
 			base_url = ocp.dirname(base_url)
 		}

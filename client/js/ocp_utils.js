@@ -256,6 +256,8 @@
 	ocp.utils.ab_concat = function() {
 		var size = 0;
 		for (var i = 0; i < arguments.length; i++) {
+			console.log(arguments[i]);
+			console.log(arguments[i].byteLength);
 			size += arguments[i].byteLength;
 		}
 		var result = new Uint8Array(size);

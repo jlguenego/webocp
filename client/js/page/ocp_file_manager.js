@@ -414,13 +414,15 @@ var remove_dialog = null;
 	}
 	// RENAME END
 
-	ocp.file_manager.loaded = false;
+	ocp.session.file_manager_loaded = false;
 
 	ocp.file_manager.show_page = function() {
-		if (ocp.file_manager.loaded) {
+		if (ocp.session.file_manager_loaded) {
+			console.log('fm not reloaded');
 			return;
 		}
-		ocp.file_manager.loaded = true;
+		ocp.session.file_manager_loaded = true;
+
 		$('#file_manager').ocp_splitpane_v({
 			overflow: 'hidden',
 			size: { top: null, bottom: 150 },
@@ -590,6 +592,48 @@ var remove_dialog = null;
 			tree.ocp_tree('open_item', path);
 		});
 
+		//DRAG AND DROP FILES
+		$('#ocp_fm_grid').bind('dragover', ocp.file_manager.dnd.dragover);
+
+		$('#ocp_fm_grid').bind('drop', ocp.file_manager.dnd.drop);
+		//DRAG AND DROP FILES END
+
+		// UPLOAD FILE
+		$('#ocp_fm_file_button').click(function() {
+			$('#ocp_fm_file').trigger('click', true);
+		});
+
+		$('#ocp_fm_file').change(function() {
+			try {
+				var files = $('#ocp_fm_file').get(0).files;
+				ocp.file_manager.upload_files(files);
+			} finally {
+				$('#ocp_fm_file').val('');
+			}
+		});
+		// UPLOAD FILE END
+
+		// UPLOAD FOLDER
+		$('#ocp_fm_dir_button').click(function() {
+			if (!window.webkitURL) {
+				ocp.info('This action is only available on <a href="http://en.wikipedia.org/wiki/List_of_web_browsers#WebKit-based" target="_blank">Webkit browsers</a>. (Chrome, Safari, ...)');
+				return;
+			}
+			$('#ocp_fm_dir').trigger('click');
+		});
+
+		$('#ocp_fm_dir').change(function() {
+			try {
+				var files = $('#ocp_fm_dir').get(0).files;
+				ocp.file_manager.upload_files(files);
+			} finally {
+				$('#ocp_fm_dir').val('');
+			}
+		});
+		// UPLOAD DIR END
+
+
+
 		// CREATE NEW FOLDER
 		var new_folder_dialog = $('#ocp_fm_new_folder_dialog').ocp_dialog({
 			buttons: {
@@ -613,7 +657,10 @@ var remove_dialog = null;
 			}
 		});
 
+		console.log('ocp_fm_mkdir=' + $('#ocp_fm_mkdir').attr('title'));
+
 		$('#ocp_fm_mkdir').click(function(e) {
+			console.log('new folder dialog');
 			e.preventDefault();
 			new_folder_dialog.ocp_dialog('open');
 		});
@@ -697,50 +744,6 @@ var remove_dialog = null;
 		});
 		// REMOVE END
 
-		//DRAG AND DROP FILES
-		$('#ocp_fm_grid').bind('dragover', ocp.file_manager.dnd.dragover);
-
-		$('#ocp_fm_grid').bind('drop', ocp.file_manager.dnd.drop);
-		//DRAG AND DROP FILES END
-
-		// UPLOAD FILE
-		$('#ocp_fm_file_button').click(function() {
-			$('#ocp_fm_file').trigger('click', true);
-		});
-
-		$('#ocp_fm_file').change(function() {
-			try {
-				var files = $('#ocp_fm_file').get(0).files;
-				ocp.file_manager.upload_files(files);
-			} finally {
-				$('#ocp_fm_file').val('');
-			}
-		});
-		// UPLOAD FILE END
-
-		// UPLOAD FOLDER
-		$('#ocp_fm_dir_button').click(function() {
-			if (!window.webkitURL) {
-				ocp.info('This action is only available on <a href="http://en.wikipedia.org/wiki/List_of_web_browsers#WebKit-based" target="_blank">Webkit browsers</a>. (Chrome, Safari, ...)');
-				return;
-			}
-			$('#ocp_fm_dir').trigger('click');
-		});
-
-		$('#ocp_fm_dir').change(function() {
-			try {
-				var files = $('#ocp_fm_dir').get(0).files;
-				ocp.file_manager.upload_files(files);
-			} finally {
-				$('#ocp_fm_dir').val('');
-			}
-		});
-		// UPLOAD DIR END
-
-		if (ocp.cfg.server_base_url && ocp.session && ocp.session.user_id) {
-			tree.ocp_tree('open_item', '/');
-		}
-
 		$(window).keydown(function(e) {
 			console.log(e);
 			if ($(e.target).is('input') || ocp_dialog_is_open()) {
@@ -766,7 +769,8 @@ var remove_dialog = null;
 				default:
 			}
 		});
+
+		tree.ocp_tree('open_item', '/');
 	};
 
 })(ocp);
-
