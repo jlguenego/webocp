@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<base href="" />
 		<meta charset="utf-8" />
 		<title>Web OCP</title>
+		<link rel="icon" type="image/png" href="css/image/ocp_logo.png">
 
 		<!-- JQUERY / JQUERY UI -->
 		<script src="_ext/jquery-1.10.2.min.js"></script>
@@ -12,6 +14,8 @@
 
 		<script src="_ext/sha1.js"></script>
 		<script src="_ext/aes.js"></script>
+
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
 
 		<!-- OCP -->
 
@@ -31,6 +35,8 @@
 		<script src="js/ocp_transfer.js"></script>
 		<script src="js/ocp_dht.js"></script>
 		<script src="js/ocp_block.js"></script>
+		<script src="js/ocp_graphic.js"></script>
+		<script src="js/ocp_math.js"></script>
 
 		<script src="js/scenario/shared_storage.js"></script>
 		<script src="js/scenario/original.js"></script>
@@ -75,7 +81,10 @@
 		<link rel="stylesheet" href="css/login.css" />
 		<link rel="stylesheet" href="css/register.css" />
 		<link rel="stylesheet" href="css/register_success.css" />
+		<link rel="stylesheet" href="css/market_place.css" />
 		<link rel="stylesheet" href="css/not_found.css" />
+
+		<link rel="stylesheet" href="css/ocp_graphic.css" />
 		<!-- END CSS -->
 
 		<!-- PAGE -->
@@ -83,6 +92,7 @@
 		<script src="js/page/ocp_action.js"></script>
 		<script src="js/page/ocp_register.js"></script>
 		<script src="js/page/ocp_file_manager.js"></script>
+		<script src="js/page/ocp_market_place.js"></script>
 		<!-- END PAGE -->
 
 		<!-- END OCP -->
@@ -96,12 +106,106 @@
 				<a id="ocp_logo" href="#"></a>
 
 				<div id="header_menu" class="header_button">Menu</div>
+				<a id="market_place_button" href="test/misc/ocp_index.html#market_place" class="header_button">Market Place</a>
 				<a id="file_manager_button" href="#file_manager" class="ocp_state_logged header_button">File Manager</a>
 				<a id="register_page_button" href="#register" class="ocp_state_not_logged header_button">Register</a>
 				<a id="logout_button" href="#logout" class="ocp_state_logged header_button">Logout</a>
 				<a id="login_page_button" href="#login" class="ocp_state_not_logged header_button">Login</a>
-				<a id="market_place_button" href="#market_place" class="header_button">Market Place</a>
 			</div>
+
+			<!-- MARKET PLACE -->
+			<div id="market_place_page" class="page_content">
+				<div id="ocp_mp_body">
+					<div id="ocp_mp_current_price">
+						Current <span class="ocp_tooltip" title="Unit price for renting 1TB of OCP storage per Year">OCP storage unit price</span>:
+						<div class="arrow"></div><span class="rate eur"></span>&nbsp;&nbsp;
+						<div class="arrow"></div><span class="rate btc"></span>&nbsp;&nbsp;
+						<span class="info">(as of <span class="date"></span>)</span>
+					</div>
+					<div id="ocp_mp_anounce">
+						<div id="ocp_mp_buy_list" class="ocp_mp_anounce_list">
+							<a href="" class="ocp_mp_anounce_title buy">Buy »</a>
+							<div id="ocp_mp_buy"></div>
+							<div class="ocp_mp_anounce_other"><a href="">Other sales offer »</a></div>
+						</div>
+						<div id="ocp_mp_sell_list" class="ocp_mp_anounce_list">
+							<a href="" class="ocp_mp_anounce_title sell">Sell »</a>
+							<div id="ocp_mp_sell"></div>
+							<div class="ocp_mp_anounce_other"><a href="">Other results »</a></div>
+						</div>
+					</div>
+					<div id="ocp_mp_graph" class="ocp_graphic">
+						<svg id="ocp_mp_svg" width="760" height="300"></svg>
+						<div id="ocp_mp_buttons">
+							<ul>
+								<li id="ocp_mp_48h">48 hours</li>
+								<li id="ocp_mp_1m">1 month</li>
+								<li id="ocp_mp_6m">6 months</li>
+								<li id="ocp_mp_1y">1 year</li>
+								<li id="ocp_mp_reset">Reset zoom</li>
+							</ul>
+							<a href="">Chart FAQ »</a>
+						</div>
+						<div id="ocp_mp_legend">
+							<table>
+								<tr>
+									<td class="legend_color_box">
+										<div>
+											<div class="legend_color" style="background-color: #999999; border-color: #999999;"></div>
+										</div>
+									</td>
+									<td>
+										Transaction scatter plot
+									</td>
+								</tr>
+								<tr>
+									<td class="legend_color_box">
+										<div>
+											<div class="legend_color" style="background-color: blue; border-color: blue;"></div>
+										</div>
+									</td>
+									<td>
+										OCP Storage share (3 last hours avg.)
+									</td>
+								</tr>
+								<tr>
+									<td class="legend_color_box">
+										<div>
+											<div class="legend_color" style="background-color: red; border-color: red;"></div>
+										</div>
+									</td>
+									<td>
+										OCP Storage share (12 last hours avg.)
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div id="ocp_mp_recap">
+						<div id="ocp_mp_eur_recap_list" class="ocp_mp_recap_list ocp_clearfix">
+							<div class="ocp_mp_recap_title">Latest trade deals</div>
+							<table id="ocp_mp_recap1" class="recap_table">
+								<tr>
+									<th class="date">Date</th>
+									<th class="rate">EUR/TB/Year</th>
+									<th class="amount">Amount</th>
+									<th class="volume">Volume&nbsp;(EUR)</th>
+								</tr>
+							</table>
+							<table id="ocp_mp_recap2" class="recap_table">
+								<tr>
+									<th class="date">Date</th>
+									<th class="rate">EUR/TB/Year</th>
+									<th class="amount">Amount</th>
+									<th class="volume">Volume&nbsp;(EUR)</th>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="ocp_footer"></div>
+			</div>
+			<!-- MARKET PLACE END -->
 
 			<!-- FILE MANAGER -->
 			<div id="file_manager" class="page_content">
