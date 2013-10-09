@@ -182,6 +182,12 @@
 
 		var last_transactions = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_transactions')).transaction_list;
 		var last_transactions_data = last_transactions.slice(0, 20);
+		$('#ocp_mp_recap1').find('td').remove();
+		$('#ocp_mp_recap2').find('td').remove();
+		last_transactions_data.sort(function(a, b) {
+			return b.timestamp - a.timestamp;
+		});
+		console.log(last_transactions_data);
 
 		for (var i = 0; i < last_transactions_data.length; i++) {
 			var data = last_transactions_data[i];
