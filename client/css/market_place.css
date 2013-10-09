@@ -218,35 +218,35 @@
 }
 
 #ocp_mp_recap .recap_table .date {
-	width: 157px;
-	text-align: left;
+	width: 40%;
 }
 
 #ocp_mp_recap .recap_table .rate {
-	width: 90px;
+	width: 20%;
 }
 
 #ocp_mp_recap .recap_table .amount {
-	width: 129px;
+	width: 20%;
 }
 
 #ocp_mp_recap .recap_table .volume {
-	width: 74px;
+	width: 20%;
 }
 
 #ocp_mp_recap .recap_table th {
 	font-size: 12px;
 	color: #BABABA;
 	font-weight: 400;
-	text-align: right;
+	text-align: left;
 }
 
 #ocp_mp_recap .recap_table td {
 	border-bottom: 1px solid #EEEEEE;
 }
 
-#ocp_mp_recap .recap_table td {
-	width: 100%;
+#ocp_mp_recap .recap_table td.currency {
+	text-align: right;
+	padding-right: 10px;
 }
 
 #ocp_mp_recap1 {

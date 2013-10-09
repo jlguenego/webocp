@@ -289,9 +289,9 @@
 			var tr = $('<tr/>').appendTo(table);
 
 			$('<td>').appendTo(tr).html(ocp.utils.format_date(data.timestamp));
-			$('<td>').appendTo(tr).html(data.rate);
-			$('<td>').appendTo(tr).html(data.quantity.toFixed(2));
-			$('<td>').appendTo(tr).html((data.rate * data.quantity).toFixed(2));
+			$('<td>').appendTo(tr).html(ocp.utils.format_nbr(data.rate, 2) + '€').addClass('currency');
+			$('<td>').appendTo(tr).html(ocp.utils.format_nbr(data.quantity, 2));
+			$('<td>').appendTo(tr).html(ocp.utils.format_nbr(data.rate * data.quantity, 2) + '€').addClass('currency');
 		}
 
 		$('#ocp_mp_buttons li').click(function() {
