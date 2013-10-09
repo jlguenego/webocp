@@ -15,7 +15,10 @@
 	$_REQUEST = array_merge($_GET, $_POST);
 	$output = array();
 	try {
-		$output['result'] =  rand(51, 59);
+		$output['result'] = array(
+			'rate' =>rand(51, 59),
+			'timestamp' => time(),
+		);
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
 	}

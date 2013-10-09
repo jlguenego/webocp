@@ -36,8 +36,8 @@
 		$transaction_list = array();
 		$t = $start_t;
 		$event_t = $start_t;
+		$t += rand(0, $window_time * 2 / $sampling_nbr);
 		while ($t < $end_t) {
-			$t += rand(0, $window_time * 2 / $sampling_nbr);
 			if ($t - $event_t > $event_delay) {
 				$event_t = $t;
 				$floating_avg += rand(-3, 3);
@@ -50,6 +50,7 @@
 				'quantity' => (rand(0, 10) / 2) + 0.5,
 			);
 			$transaction_list[] = $transaction;
+			$t += rand(0, $window_time * 2 / $sampling_nbr);
 		}
 		$output['result'] = array(
 			'transaction_list' => $transaction_list,

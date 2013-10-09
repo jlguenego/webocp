@@ -1,5 +1,6 @@
 (function(ocp, undefined) {
 	var margin = { top: 20, right: 5, bottom: 20, left: 50 };
+	var transaction_obj = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_transactions'));
 
 	ocp.mp = {};
 
@@ -49,10 +50,9 @@
 			start_t: now_t - 2 * 86400,
 			end_t: now_t
 		};
-		var result = ocp.client.command(data, ocp.dht.get_endpoint_url(null, 'get_transactions'));
 		var svg_elem = $('#ocp_mp_svg').get(0);
 
-		ocp.graphic.draw_chart(svg_elem, result, margin);
+		ocp.graphic.draw_chart(svg_elem, transaction_obj, margin);
 	};
 
 	ocp.mp.print_1m = function() {
@@ -121,12 +121,13 @@
 	};
 
 	ocp.mp.show_page = function() {
-		var current_rate = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_current_rate'));
+		var obj = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_current_rate'));
+		var current_rate = obj.rate;
 		console.log(current_rate);
 		$('#ocp_mp_current_price .eur').html(ocp.utils.curr(current_rate) + '€');
 		$('#ocp_mp_current_price .btc').html(ocp.utils.curr(ocp.utils.eur2btc(current_rate)) + 'BTC');
 
-		var today = new Date();
+		var today = new Date(obj.timestamp * 1000);
 		var day = today.getDate();
 		var month = today.getMonth() + 1; // January is 0!`
 		var year = today.getFullYear();
@@ -180,13 +181,13 @@
 			data: sell_offers_data
 		});
 
-		var last_transactions = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_transactions')).transaction_list;
+		var last_transactions = transaction_obj.transaction_list;
+		last_transactions.sort(function(a, b) {
+			return b.timestamp - a.timestamp;
+		});
 		var last_transactions_data = last_transactions.slice(0, 20);
 		$('#ocp_mp_recap1').find('td').remove();
 		$('#ocp_mp_recap2').find('td').remove();
-		last_transactions_data.sort(function(a, b) {
-			return b.timestamp - a.timestamp;
-		});
 		console.log(last_transactions_data);
 
 		for (var i = 0; i < last_transactions_data.length; i++) {
