@@ -9,7 +9,7 @@
 		onprogress = onprogress || function() {};
 
 		var contact = ocp.dht.find(filename);
-		var upload_server_uri = contact.url + '/endpoint/create_file_from_string.php';
+		var upload_server_uri = ocp.dht.get_endpoint_url(contact, 'create_file_from_string');
 
 		var formData = new FormData();
 		formData.append('filename', filename);
@@ -52,7 +52,7 @@
 		onerror = onerror || function() {};
 
 		var contact = ocp.dht.find(filename);
-		var download_server_uri = contact.url + '/endpoint/retrieve_file.php';
+		var download_server_uri = ocp.dht.get_endpoint_url(contact, 'retrieve_file');
 
 		var formData = new FormData();
 		if (typeof filename == 'string') {
@@ -94,7 +94,7 @@
 	ocp.file.retrieve_sync = function(filename) {
 		var content = null;
 		var contact = ocp.dht.find(filename);
-		var download_server_uri = contact.url + '/endpoint/retrieve_file.php';
+		var download_server_uri = ocp.dht.get_endpoint_url(contact, 'retrieve_file');
 
 		var formData = new FormData();
 		if (typeof filename == 'string') {
@@ -128,7 +128,7 @@
 		onprogress = onprogress || function() {};
 
 		var contact = ocp.dht.find(filename);
-		var download_server_uri = contact.url + '/endpoint/remove_file.php';
+		var download_server_uri = ocp.dht.get_endpoint_url(contact, 'remove_file');
 
 		var formData = new FormData();
 		if (typeof filename == 'string') {

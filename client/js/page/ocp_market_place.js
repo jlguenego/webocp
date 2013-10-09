@@ -49,7 +49,7 @@
 			start_t: now_t - 2 * 86400,
 			end_t: now_t
 		};
-		var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
+		var result = ocp.client.command(data, ocp.dht.get_endpoint_url(null, 'get_transactions'));
 		var svg_elem = $('#ocp_mp_svg').get(0);
 
 		ocp.graphic.draw_chart(svg_elem, result, margin);
@@ -93,7 +93,7 @@
 			start_t: start_t,
 			end_t: end_t
 		};
-		var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_rate.php');
+		var result = ocp.client.command(data, ocp.dht.get_endpoint_url(null, 'get_rate'));
 		var svg_elem = $('#ocp_mp_svg').get(0);
 		result.transaction_list = ocp.graphic.group_transaction(result.transaction_list, group_size);
 		ocp.graphic.draw_graph(svg_elem, result, start_t, end_t, margin);
@@ -122,7 +122,7 @@
 })(ocp);
 
 $(document).ready(function() {
-	var current_rate = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_current_rate.php');
+	var current_rate = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_current_rate'));
 	console.log(current_rate);
 	$('#ocp_mp_current_price .eur').html(ocp.utils.curr(current_rate) + '€');
 	$('#ocp_mp_current_price .btc').html(ocp.utils.curr(ocp.utils.eur2btc(current_rate)) + 'BTC');
@@ -161,7 +161,7 @@ $(document).ready(function() {
 		}
 	};
 
-	var buy_offers = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_buy_offers.php');
+	var buy_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_buy_offers'));
 	var buy_offers_data = ocp.mp.build_buy_offers_data(buy_offers, 7);
 
 	$("#ocp_mp_buy").ocp_grid({
@@ -170,7 +170,7 @@ $(document).ready(function() {
 		data: buy_offers_data
 	});
 
-	var sell_offers = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_sell_offers.php');
+	var sell_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_sell_offers'));
 	var sell_offers_data = ocp.mp.build_sell_offers_data(sell_offers, 7);
 
 	column.health.label = 'Min. health';
@@ -181,7 +181,7 @@ $(document).ready(function() {
 		data: sell_offers_data
 	});
 
-	var last_transactions = ocp.client.command({}, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php').transaction_list;
+	var last_transactions = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_transactions')).transaction_list;
 	var last_transactions_data = last_transactions.slice(0, 20);
 
 	for (var i = 0; i < last_transactions_data.length; i++) {

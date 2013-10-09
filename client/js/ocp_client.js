@@ -11,7 +11,7 @@
 
 	ocp.client.command = function(data, url) {
 		if (!url) {
-			url = ocp.cfg.server_base_url + '/webocp/server/endpoint/';
+			throw new Error('No URL given.');
 		}
 		$.ajaxSetup({
 			cache: false,

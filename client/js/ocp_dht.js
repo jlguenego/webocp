@@ -25,8 +25,7 @@
 	ocp.dht.Ring = function() {
 		this.ring = {};
 		this.address_list = [];
-		var sponsor_name = ocp.cfg.sponsor_name || 'node0';
-		var url = ocp.cfg.server_base_url + '/webocp/server/' + sponsor_name + '/endpoint/get_contact_list.php';
+		var url = ocp.dht.get_endpoint_url(null, 'get_contact_list');
 		var contact_list = ocp.client.command({}, url);
 
 		for (var name in contact_list) {
@@ -113,5 +112,16 @@
 
 	ocp.dht.get_address = function(ab) {
 		return ocp.crypto.hash(ab);
+	};
+
+	ocp.dht.get_endpoint_url = function(contact, endpoint, url_query) {
+		var sponsor_name = ocp.cfg.sponsor_name || 'node0';
+		var url = ocp.cfg.server_base_url + '/webocp/server/' + sponsor_name;
+		if (contact) {
+			url = contact.url;
+		}
+		endpoint = endpoint || 'index';
+		url_query = url_query || '';
+		return url + '/endpoint/' + endpoint + '.php' + url_query;
 	};
 })(ocp);
