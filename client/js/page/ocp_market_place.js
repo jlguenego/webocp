@@ -118,111 +118,112 @@
 
 	ocp.mp.svg_clean = function() {
 		$('#ocp_mp_svg').children().remove();
-	}
-})(ocp);
-
-$(document).ready(function() {
-	var current_rate = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_current_rate'));
-	console.log(current_rate);
-	$('#ocp_mp_current_price .eur').html(ocp.utils.curr(current_rate) + '€');
-	$('#ocp_mp_current_price .btc').html(ocp.utils.curr(ocp.utils.eur2btc(current_rate)) + 'BTC');
-
-	var today = new Date();
-	var day = today.getDate();
-	var month = today.getMonth() + 1; // January is 0!`
-	var year = today.getFullYear();
-	var hours = today.getHours();
-	var minutes = today.getMinutes();
-	$('#ocp_mp_current_price .date').html(day + '/' + month + '/' + year + ' at ' + hours + ':' + minutes);
-
-	$('#ocp_mp_buy').ocp_header_content();
-	$('#ocp_mp_sell').ocp_header_content();
-
-	var column = {
-		amount: {
-			label: 'Amount (min.)',
-			width: 120
-		},
-		price: {
-			label: 'Price/GB',
-			width: 85
-		},
-		health: {
-			label: 'Health',
-			width: 70
-		},
-		info: {
-			label: 'addl. Info',
-			width: 65
-		},
-		buy: {
-			label: 'Buy',
-			width: 26
-		}
 	};
 
-	var buy_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_buy_offers'));
-	var buy_offers_data = ocp.mp.build_buy_offers_data(buy_offers, 7);
+	ocp.mp.show_page = function() {
+		var current_rate = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_current_rate'));
+		console.log(current_rate);
+		$('#ocp_mp_current_price .eur').html(ocp.utils.curr(current_rate) + '€');
+		$('#ocp_mp_current_price .btc').html(ocp.utils.curr(ocp.utils.eur2btc(current_rate)) + 'BTC');
 
-	$("#ocp_mp_buy").ocp_grid({
-		id: 'ocp_mp_buy',
-		column: column,
-		data: buy_offers_data
-	});
+		var today = new Date();
+		var day = today.getDate();
+		var month = today.getMonth() + 1; // January is 0!`
+		var year = today.getFullYear();
+		var hours = today.getHours();
+		var minutes = today.getMinutes();
+		$('#ocp_mp_current_price .date').html(day + '/' + month + '/' + year + ' at ' + hours + ':' + minutes);
 
-	var sell_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_sell_offers'));
-	var sell_offers_data = ocp.mp.build_sell_offers_data(sell_offers, 7);
+		$('#ocp_mp_buy').ocp_header_content();
+		$('#ocp_mp_sell').ocp_header_content();
 
-	column.health.label = 'Min. health';
+		var column = {
+			amount: {
+				label: 'Amount (min.)',
+				width: 120
+			},
+			price: {
+				label: 'Price/GB',
+				width: 85
+			},
+			health: {
+				label: 'Health',
+				width: 70
+			},
+			info: {
+				label: 'addl. Info',
+				width: 65
+			},
+			buy: {
+				label: 'Buy',
+				width: 26
+			}
+		};
 
-	$("#ocp_mp_sell").ocp_grid({
-		id: 'ocp_mp_sell',
-		column: column,
-		data: sell_offers_data
-	});
+		var buy_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_buy_offers'));
+		var buy_offers_data = ocp.mp.build_buy_offers_data(buy_offers, 7);
 
-	var last_transactions = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_transactions')).transaction_list;
-	var last_transactions_data = last_transactions.slice(0, 20);
+		$("#ocp_mp_buy").ocp_grid({
+			id: 'ocp_mp_buy',
+			column: column,
+			data: buy_offers_data
+		});
 
-	for (var i = 0; i < last_transactions_data.length; i++) {
-		var data = last_transactions_data[i];
-		var table_no = 1;
-		if (i > 9) {
-			table_no = 2;
+		var sell_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_sell_offers'));
+		var sell_offers_data = ocp.mp.build_sell_offers_data(sell_offers, 7);
+
+		column.health.label = 'Min. health';
+
+		$("#ocp_mp_sell").ocp_grid({
+			id: 'ocp_mp_sell',
+			column: column,
+			data: sell_offers_data
+		});
+
+		var last_transactions = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_transactions')).transaction_list;
+		var last_transactions_data = last_transactions.slice(0, 20);
+
+		for (var i = 0; i < last_transactions_data.length; i++) {
+			var data = last_transactions_data[i];
+			var table_no = 1;
+			if (i > 9) {
+				table_no = 2;
+			}
+			var table = $('#ocp_mp_recap' + table_no);
+			console.log(table);
+			var tr = $('<tr/>').appendTo(table);
+
+			$('<td>').appendTo(tr).html(ocp.utils.format_date(data.timestamp));
+			$('<td>').appendTo(tr).html(data.rate);
+			$('<td>').appendTo(tr).html(data.quantity.toFixed(2));
+			$('<td>').appendTo(tr).html((data.rate * data.quantity).toFixed(2));
 		}
-		var table = $('#ocp_mp_recap' + table_no);
-		console.log(table);
-		var tr = $('<tr/>').appendTo(table);
 
-		$('<td>').appendTo(tr).html(ocp.utils.format_date(data.timestamp));
-		$('<td>').appendTo(tr).html(data.rate);
-		$('<td>').appendTo(tr).html(data.quantity.toFixed(2));
-		$('<td>').appendTo(tr).html((data.rate * data.quantity).toFixed(2));
-	}
+		$('#ocp_mp_buttons li').click(function() {
+			console.log('click');
+			$('#ocp_mp_buttons li.active').removeClass('active');
+			$(this).addClass('active');
+			ocp.mp.svg_clean();
+			switch($(this).attr('id')) {
+				case 'ocp_mp_48h':
+					ocp.mp.print_48h();
+					break;
+				case 'ocp_mp_1m':
+					ocp.mp.print_1m();
+					break;
+				case 'ocp_mp_6m':
+					ocp.mp.print_6m();
+					break;
+				case 'ocp_mp_1y':
+					ocp.mp.print_1y();
+					break;
+			}
+			ocp.mp.manage_legend();
+		});
 
-	$('#ocp_mp_buttons li').click(function() {
-		console.log('click');
-		$('#ocp_mp_buttons li.active').removeClass('active');
-		$(this).addClass('active');
-		ocp.mp.svg_clean();
-		switch($(this).attr('id')) {
-			case 'ocp_mp_48h':
-				ocp.mp.print_48h();
-				break;
-			case 'ocp_mp_1m':
-				ocp.mp.print_1m();
-				break;
-			case 'ocp_mp_6m':
-				ocp.mp.print_6m();
-				break;
-			case 'ocp_mp_1y':
-				ocp.mp.print_1y();
-				break;
-		}
-		ocp.mp.manage_legend();
-	});
+		$('#ocp_mp_legend').ready(function() {
+			$('#ocp_mp_48h').click();
+		});
+	};
+})(ocp);
 
-	$('#ocp_mp_legend').ready(function() {
-		$('#ocp_mp_48h').click();
-	});
-});

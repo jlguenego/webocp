@@ -414,352 +414,359 @@ var remove_dialog = null;
 	}
 	// RENAME END
 
-})(ocp);
+	ocp.file_manager.loaded = false;
 
-$(document).ready(function() {
-	$('#file_manager').ocp_splitpane_v({
-		overflow: 'hidden',
-		size: { top: null, bottom: 150 },
-		fixed: 'bottom'
-	});
-
-	var footer_restore_height = 150;
-	$('#ocp_fm_toggle_footer').click(function() {
-		var new_height = 0;
-		if ($(this).hasClass('ocp_fm_footer_maximize')) { //Maximize
-			new_height = footer_restore_height;
-			$(this).removeClass('ocp_fm_footer_maximize');
-		} else { // Minimize
-			footer_restore_height = $('#ocp_fm_footer').outerHeight()
-			new_height = $('#ocp_fm_footer_header').outerHeight();
-			$(this).addClass('ocp_fm_footer_maximize');
+	ocp.file_manager.show_page = function() {
+		if (ocp.file_manager.loaded) {
+			return;
 		}
-		var size = { bottom: new_height };
-		$('#file_manager').ocp_splitpane_v('resize', size);
-	});
+		ocp.file_manager.loaded = true;
+		$('#file_manager').ocp_splitpane_v({
+			overflow: 'hidden',
+			size: { top: null, bottom: 150 },
+			fixed: 'bottom'
+		});
 
-	// Set splitpane to the middle row
-	$("#ocp_fm_main").ocp_splitpane_h({
-		source: [
-			{ width: 400, }
-		],
-		overflow: 'hidden'
-	});
-
-
-	$('#ocp_fm_sidebar').ocp_header_content();
-	$('#ocp_fm_content').ocp_header_content();
-	$('#ocp_fm_footer').ocp_header_content();
-
-	// Put a tree on the left pane
-	var src = [
-		{
-			name: '',
-			label: 'Root',
-			image: 'image/clouddrive.png',
-			type: 'dir',
-			expanded: true,
-			children: []
-		}
-	];
-	tree = $('#ocp_fm_tree').ocp_tree({
-		source: src,
-		ls: ocp.client.ls,
-		open_item_error: function(path) {
-			$('#ocp_misc_error_dialog').find('span').html('Cannot go to directory ' + path);
-			$('#ocp_fm_breadcrumbs input').val(path);
-			$('#ocp_misc_error_dialog').ocp_dialog('open');
-		}
-	});
-
-	$('#ocp_fm_breadcrumbs').ocp_text_value();
-
-	// Put a grid on right pane
-	grid = $("#ocp_fm_grid").ocp_grid({
-		column: {
-			filename: {
-				label: 'File name',
-				width: 200,
-				use_thumbnail: true
-			},
-			size: {
-				label: 'Size',
-				width: 70
-			},
-			last_modified: {
-				label: 'Last modified',
-				width: 100
+		var footer_restore_height = 150;
+		$('#ocp_fm_toggle_footer').click(function() {
+			var new_height = 0;
+			if ($(this).hasClass('ocp_fm_footer_maximize')) { //Maximize
+				new_height = footer_restore_height;
+				$(this).removeClass('ocp_fm_footer_maximize');
+			} else { // Minimize
+				footer_restore_height = $('#ocp_fm_footer').outerHeight()
+				new_height = $('#ocp_fm_footer_header').outerHeight();
+				$(this).addClass('ocp_fm_footer_maximize');
 			}
-		},
-		data: [],
-		can_swap: true,
-		can_resize: true,
-		prevent_dblclick: true,
+			var size = { bottom: new_height };
+			$('#file_manager').ocp_splitpane_v('resize', size);
+		});
 
-		row_dblclick: function(e) {
-			var row = $(e.currentTarget);
-			var path = ocp.file_manager.get_current_path();
-			var name = row.attr('data-md-name');
-			var type = row.attr('data-md-type');
-			var size = row.attr('data-md-size');
+		// Set splitpane to the middle row
+		$("#ocp_fm_main").ocp_splitpane_h({
+			source: [
+				{ width: 400, }
+			],
+			overflow: 'hidden'
+		});
 
 
-			if (type == 'dir') {
-				tree.ocp_tree('open_item', ocp.normalize_path(path + '/' + name));
-			} else {
-				var scenario = ocp.scenario.get(ocp.cfg.scenario);
-				var onprogress;
-				if (!scenario.use_direct_download) {
-					var pr = new ocp.file_manager.ProgressRow({
-						name: name,
-						path: path,
-						size: size,
-						transfer_type: 'download'
-					});
-					onprogress = function(performed) {
-						pr.update(performed);
-					};
+		$('#ocp_fm_sidebar').ocp_header_content();
+		$('#ocp_fm_content').ocp_header_content();
+		$('#ocp_fm_footer').ocp_header_content();
+
+		// Put a tree on the left pane
+		var src = [
+			{
+				name: '',
+				label: 'Root',
+				image: 'image/clouddrive.png',
+				type: 'dir',
+				expanded: true,
+				children: []
+			}
+		];
+		tree = $('#ocp_fm_tree').ocp_tree({
+			source: src,
+			ls: ocp.client.ls,
+			open_item_error: function(path) {
+				$('#ocp_misc_error_dialog').find('span').html('Cannot go to directory ' + path);
+				$('#ocp_fm_breadcrumbs input').val(path);
+				$('#ocp_misc_error_dialog').ocp_dialog('open');
+			}
+		});
+
+		$('#ocp_fm_breadcrumbs').ocp_text_value();
+
+		// Put a grid on right pane
+		grid = $("#ocp_fm_grid").ocp_grid({
+			column: {
+				filename: {
+					label: 'File name',
+					width: 200,
+					use_thumbnail: true
+				},
+				size: {
+					label: 'Size',
+					width: 70
+				},
+				last_modified: {
+					label: 'Last modified',
+					width: 100
 				}
+			},
+			data: [],
+			can_swap: true,
+			can_resize: true,
+			prevent_dblclick: true,
 
-				ocp.client.download_file(
-					ocp.normalize_path(path + '/' + name),
-					null,
-					onprogress,
-					function(error_msg) {
-						ocp.error_manage(new Error(error_msg));
+			row_dblclick: function(e) {
+				var row = $(e.currentTarget);
+				var path = ocp.file_manager.get_current_path();
+				var name = row.attr('data-md-name');
+				var type = row.attr('data-md-type');
+				var size = row.attr('data-md-size');
+
+
+				if (type == 'dir') {
+					tree.ocp_tree('open_item', ocp.normalize_path(path + '/' + name));
+				} else {
+					var scenario = ocp.scenario.get(ocp.cfg.scenario);
+					var onprogress;
+					if (!scenario.use_direct_download) {
+						var pr = new ocp.file_manager.ProgressRow({
+							name: name,
+							path: path,
+							size: size,
+							transfer_type: 'download'
+						});
+						onprogress = function(performed) {
+							pr.update(performed);
+						};
 					}
-				);
-			}
-		}
-	});
 
-	$("#ocp_fm_file_transfer").ocp_grid({
-		id: 'file_transfer',
-		column: {
-			name: {
-				label: 'Name',
-				width: 500
-			},
-			size: {
-				label: 'Size',
-				width: 70
-			},
-			transfer_type: {
-				label: 'Transfer type',
-				width: 120
-			},
-			status: {
-				label: 'Status',
-				width: 250
-			},
-			speed: {
-				label: 'Speed',
-				width: 80
-			},
-			elapsed_time: {
-				label: 'Elapsed time',
-				width: 90
-			},
-			remaining_time: {
-				label: 'Remaining time',
-				width: 90
-			}
-		},
-		data: [],
-		can_swap: true,
-		can_resize: true
-	});
-
-	// Sync path
-	$('#ocp_fm_breadcrumbs input').keypress(function(e) {
-	    if(e.which == 13) {
-	        var path = ocp.normalize_path($(this).val());
-	        tree.ocp_tree('open_item', path);
-	    }
-	});
-
-	$('#ocp_fm_parent').click(function() {
-		var path = grid.ocp_grid('option', 'state').path;
-		console.log('path=' + path);
-		path = ocp.dirname(path);
-		console.log('dirname=' + path);
-		tree.ocp_tree('open_item', path);
-	});
-
-	// CREATE NEW FOLDER
-	var new_folder_dialog = $('#ocp_fm_new_folder_dialog').ocp_dialog({
-		buttons: {
-			Create: function() {
-				ocp.ui.cursor_wait_start();
-				var path = grid.ocp_grid('option', 'state').path;
-				var folder_name = $('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val();
-				ocp.client.mkdir(path, folder_name, function() {
-					ocp.ui.cursor_wait_end();
-					tree.ocp_tree('open_item', path);
-					new_folder_dialog.ocp_dialog('close');
-				}, function() {
-					ocp.ui.cursor_wait_end();
-					new_folder_dialog.ocp_dialog('close');
-				});
-			},
-			Cancel: function() {
-				ocp.ui.cursor_wait_end();
-				new_folder_dialog.ocp_dialog('close');
-			}
-		}
-	});
-
-	$('#ocp_fm_mkdir').click(function(e) {
-		e.preventDefault();
-		new_folder_dialog.ocp_dialog('open');
-	});
-	// CREATE NEW FOLDER END
-
-	// RENAME
-	rename_dialog = $('#ocp_fm_rename_dialog').ocp_dialog({
-		buttons: {
-			Rename: function() {
-				var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
-				var row = grid.ocp_grid('option', 'data')[rowid];
-				var meta_data = row.meta_data;
-
-				var path = grid.ocp_grid('option', 'state').path;
-
-				var old_name = meta_data.name;
-				var new_name = $('#ocp_fm_rename_dialog #ocp_fm_new_name').val();
-
-				try {
-					ocp.client.mv(ocp.normalize_path(path + '/' + old_name), ocp.normalize_path(path + '/' + new_name));
-				} catch (e) {
-					ocp.error_manage(e);
-					$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
-					return;
+					ocp.client.download_file(
+						ocp.normalize_path(path + '/' + name),
+						null,
+						onprogress,
+						function(error_msg) {
+							ocp.error_manage(new Error(error_msg));
+						}
+					);
 				}
-
-				tree.ocp_tree('open_item', path);
-
-				rename_dialog.ocp_dialog('close');
-			},
-			Cancel: function() {
-				rename_dialog.ocp_dialog('close');
 			}
-		}
-	});
+		});
 
-	$('#ocp_fm_rename').click(function(evt) {
-		evt.preventDefault();
-		ocp.file_manager.rename();
-	});
-	// RENAME END
+		$("#ocp_fm_file_transfer").ocp_grid({
+			id: 'file_transfer',
+			column: {
+				name: {
+					label: 'Name',
+					width: 500
+				},
+				size: {
+					label: 'Size',
+					width: 70
+				},
+				transfer_type: {
+					label: 'Transfer type',
+					width: 120
+				},
+				status: {
+					label: 'Status',
+					width: 250
+				},
+				speed: {
+					label: 'Speed',
+					width: 80
+				},
+				elapsed_time: {
+					label: 'Elapsed time',
+					width: 90
+				},
+				remaining_time: {
+					label: 'Remaining time',
+					width: 90
+				}
+			},
+			data: [],
+			can_swap: true,
+			can_resize: true
+		});
 
-	// REMOVE
-	remove_dialog = $('#ocp_fm_remove_dialog').ocp_dialog({
-		buttons: {
-			'Delete permanantly': function() {
-				ocp.ui.cursor_wait_start();
-				var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
-				var counter = 0;
-				var total = selected_rows.length;
-				function finalize() {
-					counter++;
-					ocp.file_manager.refresh();
-					if (counter == total) {
+		// Sync path
+		$('#ocp_fm_breadcrumbs input').keypress(function(e) {
+		    if(e.which == 13) {
+		        var path = ocp.normalize_path($(this).val());
+		        tree.ocp_tree('open_item', path);
+		    }
+		});
+
+		$('#ocp_fm_parent').click(function() {
+			var path = grid.ocp_grid('option', 'state').path;
+			console.log('path=' + path);
+			path = ocp.dirname(path);
+			console.log('dirname=' + path);
+			tree.ocp_tree('open_item', path);
+		});
+
+		// CREATE NEW FOLDER
+		var new_folder_dialog = $('#ocp_fm_new_folder_dialog').ocp_dialog({
+			buttons: {
+				Create: function() {
+					ocp.ui.cursor_wait_start();
+					var path = grid.ocp_grid('option', 'state').path;
+					var folder_name = $('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val();
+					ocp.client.mkdir(path, folder_name, function() {
 						ocp.ui.cursor_wait_end();
-						remove_dialog.ocp_dialog('close');
-					}
+						tree.ocp_tree('open_item', path);
+						new_folder_dialog.ocp_dialog('close');
+					}, function() {
+						ocp.ui.cursor_wait_end();
+						new_folder_dialog.ocp_dialog('close');
+					});
+				},
+				Cancel: function() {
+					ocp.ui.cursor_wait_end();
+					new_folder_dialog.ocp_dialog('close');
 				}
-				selected_rows.each(function() {
-					try {
-						var name = $(this).attr('data-md-name');
-						var path = ocp.file_manager.get_current_path();
-						var p = ocp.normalize_path(path + '/' + name);
-						console.log('rm ' + p);
+			}
+		});
 
-						ocp.client.rm(p, finalize, finalize);
+		$('#ocp_fm_mkdir').click(function(e) {
+			e.preventDefault();
+			new_folder_dialog.ocp_dialog('open');
+		});
+		// CREATE NEW FOLDER END
+
+		// RENAME
+		rename_dialog = $('#ocp_fm_rename_dialog').ocp_dialog({
+			buttons: {
+				Rename: function() {
+					var rowid = $('#ocp_fm_grid .ocp_gd_selected').attr('data-rowid');
+					var row = grid.ocp_grid('option', 'data')[rowid];
+					var meta_data = row.meta_data;
+
+					var path = grid.ocp_grid('option', 'state').path;
+
+					var old_name = meta_data.name;
+					var new_name = $('#ocp_fm_rename_dialog #ocp_fm_new_name').val();
+
+					try {
+						ocp.client.mv(ocp.normalize_path(path + '/' + old_name), ocp.normalize_path(path + '/' + new_name));
 					} catch (e) {
 						ocp.error_manage(e);
+						$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
+						return;
 					}
-				});
-			},
-			Cancel: function() {
-				remove_dialog.ocp_dialog('close');
-			}
-		}
-	});
 
-	$('#ocp_fm_remove').click(function(evt) {
-		evt.preventDefault();
-		ocp.file_manager.delete();
-	});
-	// REMOVE END
+					tree.ocp_tree('open_item', path);
 
-	//DRAG AND DROP FILES
-	$('#ocp_fm_grid').bind('dragover', ocp.file_manager.dnd.dragover);
-
-	$('#ocp_fm_grid').bind('drop', ocp.file_manager.dnd.drop);
-	//DRAG AND DROP FILES END
-
-	// UPLOAD FILE
-	$('#ocp_fm_file_button').click(function() {
-		$('#ocp_fm_file').trigger('click', true);
-	});
-
-	$('#ocp_fm_file').change(function() {
-		try {
-			var files = $('#ocp_fm_file').get(0).files;
-			ocp.file_manager.upload_files(files);
-		} finally {
-			$('#ocp_fm_file').val('');
-		}
-	});
-	// UPLOAD FILE END
-
-	// UPLOAD FOLDER
-	$('#ocp_fm_dir_button').click(function() {
-		if (!window.webkitURL) {
-			ocp.info('This action is only available on <a href="http://en.wikipedia.org/wiki/List_of_web_browsers#WebKit-based" target="_blank">Webkit browsers</a>. (Chrome, Safari, ...)');
-			return;
-		}
-		$('#ocp_fm_dir').trigger('click');
-	});
-
-	$('#ocp_fm_dir').change(function() {
-		try {
-			var files = $('#ocp_fm_dir').get(0).files;
-			ocp.file_manager.upload_files(files);
-		} finally {
-			$('#ocp_fm_dir').val('');
-		}
-	});
-	// UPLOAD DIR END
-
-	if (ocp.cfg.server_base_url && ocp.session && ocp.session.user_id) {
-		tree.ocp_tree('open_item', '/');
-	}
-
-	$(window).keydown(function(e) {
-		console.log(e);
-		if ($(e.target).is('input') || ocp_dialog_is_open()) {
-			console.log('Do nothing');
-			return;
-		}
-		switch(e.which) {
-			case 113: // F2
-				console.log('F2');
-				ocp.file_manager.rename();
-				break;
-			case 65: // A
-				if (e.ctrlKey) {
-					e.preventDefault();
-					e.stopPropagation();
-					ocp.file_manager.select_all();
+					rename_dialog.ocp_dialog('close');
+				},
+				Cancel: function() {
+					rename_dialog.ocp_dialog('close');
 				}
-				break;
-			case 46: // Del
-				console.log('Del');
-				ocp.file_manager.delete();
-				break;
-			default:
+			}
+		});
+
+		$('#ocp_fm_rename').click(function(evt) {
+			evt.preventDefault();
+			ocp.file_manager.rename();
+		});
+		// RENAME END
+
+		// REMOVE
+		remove_dialog = $('#ocp_fm_remove_dialog').ocp_dialog({
+			buttons: {
+				'Delete permanantly': function() {
+					ocp.ui.cursor_wait_start();
+					var selected_rows = $('#ocp_fm_grid .ocp_gd_selected');
+					var counter = 0;
+					var total = selected_rows.length;
+					function finalize() {
+						counter++;
+						ocp.file_manager.refresh();
+						if (counter == total) {
+							ocp.ui.cursor_wait_end();
+							remove_dialog.ocp_dialog('close');
+						}
+					}
+					selected_rows.each(function() {
+						try {
+							var name = $(this).attr('data-md-name');
+							var path = ocp.file_manager.get_current_path();
+							var p = ocp.normalize_path(path + '/' + name);
+							console.log('rm ' + p);
+
+							ocp.client.rm(p, finalize, finalize);
+						} catch (e) {
+							ocp.error_manage(e);
+						}
+					});
+				},
+				Cancel: function() {
+					remove_dialog.ocp_dialog('close');
+				}
+			}
+		});
+
+		$('#ocp_fm_remove').click(function(evt) {
+			evt.preventDefault();
+			ocp.file_manager.delete();
+		});
+		// REMOVE END
+
+		//DRAG AND DROP FILES
+		$('#ocp_fm_grid').bind('dragover', ocp.file_manager.dnd.dragover);
+
+		$('#ocp_fm_grid').bind('drop', ocp.file_manager.dnd.drop);
+		//DRAG AND DROP FILES END
+
+		// UPLOAD FILE
+		$('#ocp_fm_file_button').click(function() {
+			$('#ocp_fm_file').trigger('click', true);
+		});
+
+		$('#ocp_fm_file').change(function() {
+			try {
+				var files = $('#ocp_fm_file').get(0).files;
+				ocp.file_manager.upload_files(files);
+			} finally {
+				$('#ocp_fm_file').val('');
+			}
+		});
+		// UPLOAD FILE END
+
+		// UPLOAD FOLDER
+		$('#ocp_fm_dir_button').click(function() {
+			if (!window.webkitURL) {
+				ocp.info('This action is only available on <a href="http://en.wikipedia.org/wiki/List_of_web_browsers#WebKit-based" target="_blank">Webkit browsers</a>. (Chrome, Safari, ...)');
+				return;
+			}
+			$('#ocp_fm_dir').trigger('click');
+		});
+
+		$('#ocp_fm_dir').change(function() {
+			try {
+				var files = $('#ocp_fm_dir').get(0).files;
+				ocp.file_manager.upload_files(files);
+			} finally {
+				$('#ocp_fm_dir').val('');
+			}
+		});
+		// UPLOAD DIR END
+
+		if (ocp.cfg.server_base_url && ocp.session && ocp.session.user_id) {
+			tree.ocp_tree('open_item', '/');
 		}
-	});
-});
+
+		$(window).keydown(function(e) {
+			console.log(e);
+			if ($(e.target).is('input') || ocp_dialog_is_open()) {
+				console.log('Do nothing');
+				return;
+			}
+			switch(e.which) {
+				case 113: // F2
+					console.log('F2');
+					ocp.file_manager.rename();
+					break;
+				case 65: // A
+					if (e.ctrlKey) {
+						e.preventDefault();
+						e.stopPropagation();
+						ocp.file_manager.select_all();
+					}
+					break;
+				case 46: // Del
+					console.log('Del');
+					ocp.file_manager.delete();
+					break;
+				default:
+			}
+		});
+	};
+
+})(ocp);
+

@@ -41,6 +41,7 @@ var g_request = {};
 				if (!ocp.action.require_authentication()) {
 					return;
 				}
+				ocp.file_manager.show_page();
 				ocp.action.display('file_manager');
 				break;
 			case 'register':
@@ -50,6 +51,7 @@ var g_request = {};
 				ocp.action.register();
 				break;
 			case 'market_place':
+				ocp.mp.show_page();
 				ocp.action.display('market_place_page');
 				break;
 			default:
@@ -75,10 +77,6 @@ var g_request = {};
 			$('#register_checkbox').prop('checked', false)
 				.parent().removeClass('checkboxOn').addClass('checkboxOff');
 
-			// update the file manager.
-			if (ocp.cfg.server_base_url) {
-				$('#ocp_fm_tree').ocp_tree('open_item', '/');
-			}
 			ocp.action.display('register_success_page');
 		} catch (e) {
 			window.location.hash = '#register';
