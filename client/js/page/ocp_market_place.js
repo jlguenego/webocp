@@ -14,13 +14,40 @@
 	ocp.mp.build_buy_offers_data = function(data_a, max) {
 		max = max || data_a.length;
 		var result = [];
+
+		var today = new Date();
+		var tomorrow = new Date();
+		tomorrow.setDate(today.getDate() + 1);
+		tomorrow.setHours(0, 0, 0, 0);
+		var midnight_t = tomorrow.getTime() / 1000;
+
 		for (var i = 0; i < max; i++) {
 			var data = data_a[i];
+			console.log('end_t=' + data.end_t);
+			console.log('midnight_t=' + midnight_t);
+			var interval = (data.end_t - midnight_t) / (86400 * 365);
+			console.log('interval=' + interval);
+			var volume = interval * (data.size / 1000) * data.rate; // Year * GB * € /
+			var size = data.size;
+			if (size > 1000) {
+				size = ocp.utils.format_nbr(size / 1000, 1) + ' TB';
+			} else {
+				size += ' GB';
+			}
+			var min_size = ocp.utils.format_nbr(data.min_size, 1);
+			if (min_size > 1000) {
+				min_size = ocp.utils.format_nbr(min_size / 1000, 1) + ' TB';
+			} else {
+				min_size += ' GB';
+			}
+
 			result.push({
-				amount: ocp.utils.format_size(data.amount) + ' (' + ocp.utils.format_size(data.min_amount) + ')',
-				price: ocp.utils.curr(data.price) + '€',
-				health: ocp.mp.get_health(data.health),
-				info: data.country,
+				size: size + ' (' + min_size + ')',
+				rate: ocp.utils.curr(data.rate) + '€',
+				volume: ocp.utils.curr(volume) + '€',
+				end: ocp.utils.format_date(data.end_t, '%Y-%m-%d'),
+				speed: data.speed,
+				location: data.location,
 				buy: '<a href="">BUY</a>'
 			});
 		}
@@ -30,14 +57,41 @@
 	ocp.mp.build_sell_offers_data = function(data_a, max) {
 		max = max || data_a.length;
 		var result = [];
+
+		var today = new Date();
+		var tomorrow = new Date();
+		tomorrow.setDate(today.getDate() + 1);
+		tomorrow.setHours(0, 0, 0, 0);
+		var midnight_t = tomorrow.getTime() / 1000;
+
 		for (var i = 0; i < max; i++) {
 			var data = data_a[i];
+			console.log('end_t=' + data.end_t);
+			console.log('midnight_t=' + midnight_t);
+			var interval = (data.end_t - midnight_t) / (86400 * 365);
+			console.log('interval=' + interval);
+			var volume = interval * (data.size / 1000) * data.rate; // Year * GB * € /
+			var size = data.size;
+			if (size > 1000) {
+				size = ocp.utils.format_nbr(size / 1000, 1) + ' TB';
+			} else {
+				size += ' GB';
+			}
+			var min_size = ocp.utils.format_nbr(data.min_size, 1);
+			if (min_size > 1000) {
+				min_size = ocp.utils.format_nbr(min_size / 1000, 1) + ' TB';
+			} else {
+				min_size += ' GB';
+			}
+
 			result.push({
-				amount: ocp.utils.format_size(data.amount) + ' (' + ocp.utils.format_size(data.min_amount) + ')',
-				price: ocp.utils.curr(data.price) + '€',
-				health: ocp.mp.get_health(data.health),
-				info: data.country,
-				buy: '<a href="">SELL</a>'
+				size: size + ' (' + min_size + ')',
+				rate: ocp.utils.curr(data.rate) + '€',
+				volume: ocp.utils.curr(volume) + '€',
+				end: ocp.utils.format_date(data.end_t, '%Y-%m-%d'),
+				speed: data.speed,
+				location: data.location,
+				sell: '<a href="">SELL</a>'
 			});
 		}
 		return result;
@@ -139,46 +193,79 @@
 		$('#ocp_mp_buy').ocp_header_content();
 		$('#ocp_mp_sell').ocp_header_content();
 
-		var column = {
-			amount: {
-				label: 'Amount (min.)',
-				width: 120
-			},
-			price: {
-				label: 'Price/GB',
-				width: 85
-			},
-			health: {
-				label: 'Health',
-				width: 70
-			},
-			info: {
-				label: 'addl. Info',
-				width: 65
-			},
-			buy: {
-				label: 'Buy',
-				width: 26
-			}
-		};
-
 		var buy_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_buy_offers'));
 		var buy_offers_data = ocp.mp.build_buy_offers_data(buy_offers, 7);
 
 		$("#ocp_mp_buy").ocp_grid({
 			id: 'ocp_mp_buy',
-			column: column,
+			column: {
+				size: {
+					label: 'Size (min.)',
+					width: 100
+				},
+				end: {
+					label: 'Expires on',
+					width: 60
+				},
+				rate: {
+					label: 'OCP rate',
+					width: 55
+				},
+				volume: {
+					label: 'Volume',
+					width: 45
+				},
+				speed: {
+					label: 'Speed',
+					width: 36
+				},
+				location: {
+					label: 'Location',
+					width: 60
+				},
+				buy: {
+					label: 'Buy',
+					width: 26
+				}
+			},
 			data: buy_offers_data
 		});
 
 		var sell_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_sell_offers'));
 		var sell_offers_data = ocp.mp.build_sell_offers_data(sell_offers, 7);
 
-		column.health.label = 'Min. health';
-
 		$("#ocp_mp_sell").ocp_grid({
 			id: 'ocp_mp_sell',
-			column: column,
+			column: {
+				size: {
+					label: 'Size (min.)',
+					width: 100
+				},
+				end: {
+					label: 'Expires on',
+					width: 60
+				},
+				rate: {
+					label: 'OCP rate',
+					width: 55
+				},
+				volume: {
+					label: 'Volume',
+					width: 45
+				},
+				speed: {
+					label: 'Speed',
+					width: 36
+				},
+				location: {
+					label: 'Location',
+					width: 60
+				},
+				sell: {
+					label: 'Sell',
+					width: 26
+				}
+			},
 			data: sell_offers_data
 		});
 

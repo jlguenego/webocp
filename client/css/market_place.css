@@ -13,7 +13,7 @@
 }
 
 #ocp_mp_body {
-	width: 960px;
+	width: 1060px;
 	padding: 1px;
 	margin: 0 auto 25px;
 	margin-bottom: 25px;
@@ -50,7 +50,7 @@
 }
 
 .ocp_mp_anounce_list {
-	width: 450px;
+	width: 500px;
 }
 
 .ocp_mp_anounce_list .widget_grid_container {
@@ -69,9 +69,18 @@
 	float: right;
 }
 
+#market_place_page .widget_grid_header_cell {
+	text-align: center;
+}
+
+[data-colname=ocp_mp_buy_volume], [data-colname=ocp_mp_sell_volume],
+[data-colname=ocp_mp_buy_rate], [data-colname=ocp_mp_sell_rate] {
+	text-align: right;
+}
+
 .ocp_mp_anounce_other {
 	height: 30px;
-	width: 450px;
+	width: 500px;
 	border: 1px solid #dedede;
 	border-top: none;
 	line-height: 29px;

@@ -15,24 +15,26 @@
 	$_REQUEST = array_merge($_GET, $_POST);
 	$output = array();
 	try {
+		$now_t = time();
 		$offers = array();
-		$price_avg = rand(51, 59);
+		$rate_avg = rand(51, 59);
 		$countries = array('France', 'USA', 'Italy', 'Germany', 'China', 'Spain');
 
 		for ($i = 0; $i < 20; $i++) {
-			$tb = (rand(-1, 1) > 0)? 1024 : 1;
-			$amount = rand(0, 500) * 1024 * 1024 * 1024 * $tb;
-			$min_amount = $amount / rand(1, 10);
-			$price = $price_avg + rand(-10, 10);
-			$health = rand(0, 10);
-			$country = $countries[rand(0, count($countries) - 1)];
+			$size = rand(100, 10000);
+			$min_size = $size / rand(1, 10);
+			$rate = $rate_avg + rand(-10, 10);
+			$end_t = $now_t + rand(1, 365) * 86400;
+			$speed = rand(0, 10);
+			$location = $countries[rand(0, count($countries) - 1)];
 
 			$offers[] = array(
-				'amount' => $amount,
-				'min_amount' => $min_amount,
-				'price' => $price,
-				'health' => $health,
-				'country' => $country,
+				'size' => $size,
+				'min_size' => $min_size,
+				'rate' => $rate,
+				'end_t' => $end_t,
+				'speed' => $speed,
+				'location' => $location,
 			);
 		}
 

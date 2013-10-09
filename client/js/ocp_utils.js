@@ -182,6 +182,12 @@
 		return amount / btc_rate;
 	}
 
+	ocp.utils.format_nbr = function(nbr, precision) {
+		var pow = Math.pow(10, precision);
+		nbr = Math.round(nbr * pow) / pow;
+		return nbr.toFixed(precision);
+	};
+
 	ocp.utils.format_size = function(bytes, precision) {
 		precision = precision || 2;
 		var units = [ 'B', 'KB', 'MB', 'GB', 'TB' ];
