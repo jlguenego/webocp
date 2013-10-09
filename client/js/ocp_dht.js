@@ -40,6 +40,7 @@
 			var list = this.address_list.slice(0);
 			list.push(address);
 			list.sort();
+			console.log(list);
 			var index = list.indexOf(address);
 			if (index == 0) {
 				index = this.address_list.length;

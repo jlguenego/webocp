@@ -1,6 +1,6 @@
 (function(ocp, undefined) {
-	var console = {};
-	console.log = function() {};
+	//var console = {};
+	//console.log = function() {};
 
 	ocp.scenario.OCP1 = function() {
 		this.register = function(args) {
@@ -9,10 +9,10 @@
 			var password = args.password;
 
 			var public_address = ocp.dht.get_address(email);
-			var public_content = ocp.crypto.serialize({
+			var public_content = {
 				email: email,
 				name: name
-			});
+			};
 			var private_address = ocp.dht.get_address(ocp.crypto.combine(email, password));
 			var private_content = {
 				root_dir: {},
@@ -48,11 +48,14 @@
 			try {
 				var email = args.email;
 				var password = args.password;
+				console.log('email=' + email);
+				console.log('password=' + password);
 
 				var public_address = ocp.dht.get_address(email);
-				var private_address = ocp.dht.get_address(email + password);
+				var private_address = ocp.dht.get_address(ocp.crypto.combine(email, password));
 				ocp.session = {};
-
+				console.log('public_address=' + public_address);
+				console.log('private_address=' + private_address);
 				var public_content = JSON.parse(ocp.utils.ab2str(ocp.block.retrieve_sync(public_address)));
 				var content = ocp.block.retrieve_sync(private_address);
 				var private_content = JSON.parse(ocp.utils.ab2str(this.decrypt(password, content)));
@@ -79,6 +82,7 @@
 					}
 				};
 			} catch (e) {
+				console.log(e.stack());
 				ocp.session = {};
 			}
 		};

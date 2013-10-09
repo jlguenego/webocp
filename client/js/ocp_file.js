@@ -51,17 +51,21 @@
 		onprogress = onprogress || function() {};
 		onerror = onerror || function() {};
 
-		var contact = ocp.dht.find(filename);
-		var download_server_uri = ocp.dht.get_endpoint_url(contact, 'retrieve_file');
 
 		var formData = new FormData();
+		var my_filename = null;
 		if (typeof filename == 'string') {
 			formData.append('filename', filename);
+			my_filename = filename;
 		} else if (typeof filename == 'object') {
 			for (var prop in filename) {
 				formData.append(prop, filename[prop]);
 			}
+			my_filename = filename.filename;
 		}
+
+		var contact = ocp.dht.find(my_filename);
+		var download_server_uri = ocp.dht.get_endpoint_url(contact, 'retrieve_file');
 
 		var xhr = new XMLHttpRequest();
 		xhr.upload.addEventListener('progress', onprogress, false);
@@ -93,17 +97,21 @@
 
 	ocp.file.retrieve_sync = function(filename) {
 		var content = null;
-		var contact = ocp.dht.find(filename);
-		var download_server_uri = ocp.dht.get_endpoint_url(contact, 'retrieve_file');
-
 		var formData = new FormData();
+		var my_filename = null;
 		if (typeof filename == 'string') {
 			formData.append('filename', filename);
+			my_filename = filename;
 		} else if (typeof filename == 'object') {
 			for (var prop in filename) {
 				formData.append(prop, filename[prop]);
 			}
+			my_filename = filename.filename;
 		}
+
+		var contact = ocp.dht.find(my_filename);
+		var download_server_uri = ocp.dht.get_endpoint_url(contact, 'retrieve_file');
+
 
 		var xhr = new XMLHttpRequest();
 		console.log(xhr);
@@ -127,17 +135,20 @@
 		onsuccess = onsuccess || function() {};
 		onprogress = onprogress || function() {};
 
-		var contact = ocp.dht.find(filename);
-		var download_server_uri = ocp.dht.get_endpoint_url(contact, 'remove_file');
-
 		var formData = new FormData();
+		var my_filename = null;
 		if (typeof filename == 'string') {
 			formData.append('filename', filename);
+			my_filename = filename;
 		} else if (typeof filename == 'object') {
 			for (var prop in filename) {
 				formData.append(prop, filename[prop]);
 			}
+			my_filename = filename.filename;
 		}
+
+		var contact = ocp.dht.find(my_filename);
+		var download_server_uri = ocp.dht.get_endpoint_url(contact, 'remove_file');
 
 		var xhr = new XMLHttpRequest();
 		console.log(xhr);
