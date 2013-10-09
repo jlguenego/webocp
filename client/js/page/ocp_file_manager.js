@@ -500,6 +500,7 @@ var remove_dialog = null;
 			data: [],
 			can_swap: true,
 			can_resize: true,
+			can_select: true,
 			prevent_dblclick: true,
 
 			row_dblclick: function(e) {
@@ -573,7 +574,8 @@ var remove_dialog = null;
 			},
 			data: [],
 			can_swap: true,
-			can_resize: true
+			can_resize: true,
+			can_select: true
 		});
 
 		// Sync path

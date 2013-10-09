@@ -22,6 +22,7 @@ $.widget( "ui.ocp_grid", {
 		state: {},
 		can_swap: false,
 		can_resize: false,
+		can_select: false,
 
 		// Callback
 		row_dblclick: function(e) { console.log('row_dblclick'); }
@@ -159,10 +160,12 @@ $.widget( "ui.ocp_grid", {
 		}
 
 		var self = this;
-		row.click(function(e) {
-			e.stopPropagation();
-			self.row_toggle_select($(this));
-		});
+		if (this.options.can_select) {
+			row.click(function(e) {
+				e.stopPropagation();
+				self.row_toggle_select($(this));
+			});
+		}
 
 		this.body.click(function(e) {
 			$(this).find('.ocp_gd_selected').removeClass('ocp_gd_selected');
