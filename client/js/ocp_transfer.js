@@ -395,8 +395,13 @@
 	};
 
 	ocp.transfer.send_block = function(args, onsuccess, onprogress) {
+
+		var public_key = '';
+		if (ocp.session && ocp.session.rsa) {
+			public_key = ocp.session.rsa.public_key;
+		}
 		var attributes = {
-			public_key: ocp.session.rsa.public_key
+			public_key: public_key
 		};
 		var ab = ocp.utils.str2ab(JSON.stringify(attributes, undefined, 2));
 		ocp.block.send(args.filename, args.content, ab, onsuccess, onprogress);

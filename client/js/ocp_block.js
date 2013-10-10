@@ -3,7 +3,7 @@
 
 	ocp.block.send = function(address, content, attributes, onsuccess, onprogress) {
 		var new_content = ocp.block.set_content(attributes, content);
-		console.log(ocp.utils.ab2str(new_content));
+		// DANGEROUS (make chrome freeze...) ! console.log(ocp.utils.ab2str(new_content));
 		ocp.file.send(address, new_content, onsuccess, onprogress);
 		console.log('send successful');
 	};

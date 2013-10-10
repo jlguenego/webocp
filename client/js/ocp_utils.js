@@ -266,12 +266,13 @@
 			console.log(arguments[i].byteLength);
 			size += arguments[i].byteLength;
 		}
-		var result = new Uint8Array(size);
+		var result = new ArrayBuffer(size);
+		var dv = new Uint8Array(result);
 		var offset = 0;
 		for (var i = 0; i < arguments.length; i++) {
-			result.set(new Uint8Array(arguments[i]), offset);
+			dv.set(new Uint8Array(arguments[i]), offset);
 			offset += arguments[i].byteLength;
 		}
-		return result.buffer;
+		return result;
 	};
 })(ocp);

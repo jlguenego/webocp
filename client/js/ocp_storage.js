@@ -21,7 +21,7 @@
 			}
 		}
 		ocp.cfg = {
-			server_base_url: 'http://localhost',
+			server_base_url: 'http://ocpforum.org',
 			sponsor_name: 'node0',
 			session: null,
 			scenario: '2',
