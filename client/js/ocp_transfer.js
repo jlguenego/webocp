@@ -36,7 +36,7 @@
 		var pool_nbr = ocp.cfg.pool.thread_nbr.upload_file || 5;
 		var pool = new ocp.worker_ui.pool.Pool(pool_nbr, url);
 		var cursor = 0;
-		var block_size = ocp.cfg.block_size || 1 << 19;
+		var block_size = ocp.cfg.block_size || 1 << 16;
 		console.log('block_size=' + block_size);
 		console.log('ocp.cfg.block_size=' + ocp.cfg.block_size);
 		var hat_worker = new Hat();

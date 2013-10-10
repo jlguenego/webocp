@@ -17,7 +17,7 @@
 		formData.append('content', blob);
 
 		var xhr = new XMLHttpRequest();
-		xhr.timeout = 10000;
+		xhr.timeout = 25000;
 
 		xhr.upload.addEventListener('progress', onprogress, false);
 		xhr.onreadystatechange = function() {

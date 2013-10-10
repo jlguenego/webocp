@@ -32,7 +32,7 @@
 					download_file: 6
 				}
 			},
-			block_size: 1 << 19
+			block_size: 1 << 16
 		};
 	}
 })(ocp);
