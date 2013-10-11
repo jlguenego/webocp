@@ -31,8 +31,7 @@
 		}
 		$output['result'] = $price;
 	} catch (Exception $e) {
-		$output['result'] = 100;
-		//$output['error'] = $e->getMessage();
+		$output['error'] = $e->getMessage();
 	}
 	debug_r('OUTPUT', $output);
 	$result = prettyPrint(json_encode($output));
