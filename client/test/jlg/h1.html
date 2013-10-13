@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<style>
+html, body {
+	background-color: #EEEEEE;
+}
+
+svg {
+	background-color: white;
+}
+
+.node {
+  fill: #aaa;
+  stroke: #666;
+  stroke-width: 1px;
+}
+
+.overlay {
+	fill: none;
+	pointer-events: all;
+}
+
+		</style>
+	</head>
+	<body>
+		<script>
+
+var width = 800;
+var height = 600;
+
+var svg = d3.select('body').append('svg')
+	.attr('width', width)
+	.attr('height', height);
+
+var zoom = d3.behavior.zoom()
+	//.scaleExtent([1, 8])
+	.on("zoom", onzoom);
+
+function onzoom() {
+  svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+
+svg = svg.append("g")
+	.call(zoom)
+	.append("g");
+
+svg.append("rect")
+    .attr("class", "overlay")
+    .attr("width", width)
+    .attr("height", height);
+
+svg.append('circle')
+	.attr('cx', width / 2)
+	.attr('cy', height / 2)
+	.attr('r', 20);
+
+
+
+
+
+		</script>
+	</body>
+</html>

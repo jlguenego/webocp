@@ -27,7 +27,7 @@
 			$currency_data = json_decode($file_contents, TRUE);
 			$price = $currency_data['EUR']['24h']; // get the 24h-average price
 		} else {
-			$price = 100;
+			$price = 200;
 		}
 		$output['result'] = $price;
 	} catch (Exception $e) {
