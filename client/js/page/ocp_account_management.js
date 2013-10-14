@@ -15,7 +15,7 @@
 		}
 		first_time = false;
 		console.log('execute ocp.am.show_page');
-
+		$('#ocp_am_body').ocp_text_value();
 		$('#account_management_page').ocp_fix_variable({
 			use_min_height: true
 		});

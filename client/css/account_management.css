@@ -7,6 +7,7 @@
 }
 
 #ocp_am_body {
+	white-space-collapse: discard;
 }
 
 #ocp_am_sidebar {
