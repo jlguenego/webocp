@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+
+		<link rel="stylesheet" href="js/ocp/theme/default/core.css" />
+		<style>
+html, body {
+	background-color: #EBEBEB;
+	font-family: 'Open sans', serif;
+	font-size: 14px;
+}
+
+svg {
+	background-color: transparent;
+}
+
+.gray_circle {
+  fill: #D5D5D5;
+  stroke: #AAAAAA;
+  stroke-width: 1px;
+}
+
+.white_circle {
+  fill: #FFFFFF;
+  stroke: #AAAAAA;
+  stroke-width: 1px;
+}
+
+.black_circle {
+  fill: #353433;
+}
+
+
+.white_percent {
+	text-anchor: middle;
+	font-size: 28px;
+	fill: white;
+}
+
+.used {
+	text-anchor: middle;
+	fill: #5DD3FF;
+	font-size: 14px;
+}
+
+.blue_arc {
+	fill: none;
+	stroke: #27AAE0;
+	stroke-width: 11px;
+	stroke-linecap: round;
+}
+
+
+		</style>
+	</head>
+	<body>
+		<input type="input" name="percent" />
+		<button>Update</button>
+		<script>
+
+function VisualProgress(quota) {
+	this.quota = quota;
+	this.percent = 0;
+
+	this.width = 800;
+	this.height = 600;
+
+	this.svg = d3.select('body').append('svg')
+		.attr('width', this.width)
+		.attr('height', this.height);
+
+	this.g = this.svg.append("g")
+		.attr('transform', 'translate(200,200)');
+
+	var arc = d3.svg.arc()
+		.innerRadius(80)
+		.outerRadius(90)
+		.startAngle(0)
+		.endAngle(2 * Math.PI);
+
+	this.g.append('path')
+		.attr('d', arc)
+		.classed('gray_circle', true);
+	this.g.append('circle')
+		.attr('r', 80)
+		.classed('white_circle', true);
+	this.g.append('circle')
+		.attr('r', 60)
+		.classed('black_circle', true);
+	this.percent_txt = this.g.append('text')
+		.attr('x', 0)
+		.attr('y', -5)
+		.classed('white_percent', true);
+	this.g.append('text')
+		.text('used')
+		.attr('x', 0)
+		.attr('y', 18)
+		.classed('used', true);
+
+	var angle = d3.scale.linear()
+		.domain([0, 100])
+		.range([0, 2 * Math.PI]);
+
+	var line = d3.svg.line.radial()
+		.interpolate("basis")
+		.tension(0)
+		.radius(70)
+		.angle(function(d, i) { return angle(i); });
+
+
+	this.update = function(used_mem) {
+		this.percent = Math.round((used_mem / this.quota) * 100);
+		this.percent_txt.text(this.percent + '%');
+
+		this.path = this.g.selectAll(".blue_arc").data([ d3.range(this.percent) ]);
+		this.path.enter().append('path')
+			.classed('blue_arc', true);
+
+		this.path.attr("d", line);
+	}
+
+	this.update(5);
+}
+
+$(document).ready(function() {
+	var quota = 50;
+	var vp = new VisualProgress(quota);
+	$('button').click(function() {
+		var used_mem = parseInt($('input').val());
+		vp.update(used_mem);
+	});
+});
+
+
+
+
+
+
+
+
+
+
+
+		</script>
+	</body>
+</html>
