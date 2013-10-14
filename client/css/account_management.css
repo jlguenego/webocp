@@ -1,0 +1,107 @@
+#account_management_page {
+	position: relative;
+	background-image: url(image/background_image.jpg);
+	background-repeat: no-repeat;
+	background-position: center 0px;
+	min-height: 3000px;
+	font-size: 13px;
+	padding: 0px;
+}
+
+#ocp_am_body {
+	position: relative;
+	width: 100%;
+}
+
+#ocp_am_sidebar {
+	vertical-align: top;
+	padding-left: 185px;
+}
+
+a.ocp_am_link {
+	display: block;
+	position: relative;
+	padding-right: 50px;
+}
+
+.ocp_am_link_button {
+	display: block;
+	position: relative;
+	width: 190px;
+	height: 43px;
+	margin-bottom: 6px;
+	padding: 0 10px 0 46px;
+
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+
+	font-size: 14px;
+	line-height: 40px;
+	color: #383A3D;
+	background-image: url(https://eu.static.mega.co.nz/images/mega/account_sprite.png);
+	background-repeat: no-repeat;
+}
+
+#ocp_am_detail > .ocp_am_link_button {
+	background-position: 9px -2px;
+}
+
+#ocp_am_transfer > .ocp_am_link_button {
+	background-position: 9px -1275px;
+}
+
+#ocp_am_vouchers > .ocp_am_link_button {
+	background-position: 9px -882px;
+}
+
+#ocp_am_session > .ocp_am_link_button {
+	background-position: 9px -42px;
+}
+
+.ocp_am_link_button:hover, .ocp_am_link.selected > .ocp_am_link_button {
+	top: -1px;
+	left: -1px;
+
+	color: #D8280B;
+	border: 1px solid #AAAAAA;
+	border-radius: 5px;
+	background-color: #FFFFFF;
+}
+
+#ocp_am_detail > .ocp_am_link_button:hover, #ocp_am_detail.selected > .ocp_am_link_button {
+	background-position: 9px -122px;
+}
+
+#ocp_am_transfer > .ocp_am_link_button:hover, #ocp_am_transfer.selected > .ocp_am_link_button {
+	background-position: 9px -1235px;
+}
+
+#ocp_am_vouchers > .ocp_am_link_button:hover, #ocp_am_vouchers.selected > .ocp_am_link_button {
+	background-position: 9px -962px;
+}
+
+#ocp_am_session > .ocp_am_link_button:hover, #ocp_am_session.selected > .ocp_am_link_button {
+	background-position: 9px -162px;
+}
+
+.ocp_am_link_button:hover:after, .ocp_am_link_button.selected:after{
+	content: " ";
+	margin-right: -1px;
+	background-position: -183px -281px;
+	background-repeat: no-repeat;
+	background-image: url(https://eu.static.mega.co.nz/images/mega/account_sprite.png);
+	position: absolute;
+	width: 9px;
+	height: 18px;
+	right: -20px;
+	margin-top: 12px;
+}
+
+#ocp_am_content {
+	vertical-align: top;
+	background-image: url(https://eu.static.mega.co.nz/images/mega/account_sprite.png);
+	background-repeat: repeat-y;
+	background-position: -213px top;
+}

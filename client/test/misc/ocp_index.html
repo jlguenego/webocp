@@ -82,6 +82,7 @@
 		<link rel="stylesheet" href="css/register.css" />
 		<link rel="stylesheet" href="css/register_success.css" />
 		<link rel="stylesheet" href="css/market_place.css" />
+		<link rel="stylesheet" href="css/account_management.css" />
 		<link rel="stylesheet" href="css/not_found.css" />
 
 		<link rel="stylesheet" href="css/ocp_graphic.css" />
@@ -93,6 +94,7 @@
 		<script src="js/page/ocp_register.js"></script>
 		<script src="js/page/ocp_file_manager.js"></script>
 		<script src="js/page/ocp_market_place.js"></script>
+		<script src="js/page/ocp_account_management.js"></script>
 		<!-- END PAGE -->
 
 		<!-- END OCP -->
@@ -107,11 +109,28 @@
 
 				<div id="header_menu" class="header_button">Menu</div>
 				<a id="market_place_button" href="test/misc/ocp_index.html#market_place" class="header_button">Market Place</a>
+				<a id="account_management_button" href="test/misc/ocp_index.html#my_account" class="ocp_state_logged header_button">My Account</a>
 				<a id="file_manager_button" href="test/misc/ocp_index.html#file_manager" class="ocp_state_logged header_button">File Manager</a>
 				<a id="register_page_button" href="test/misc/ocp_index.html#register" class="ocp_state_not_logged header_button">Register</a>
 				<a id="logout_button" href="test/misc/ocp_index.html#logout" class="ocp_state_logged header_button">Logout</a>
 				<a id="login_page_button" href="test/misc/ocp_index.html#login" class="ocp_state_not_logged header_button">Login</a>
 			</div>
+
+			<!-- MY ACCOUNT -->
+			<div id="account_management_page" class="page_content">
+				<div class="page_title">My account</div>
+				<div id="ocp_am_body">
+					<div id="ocp_ma_sidebar">
+						<a href="#" class="ma_link" id="ocp_am_detail">Account details</a>
+						<a href="#" class="ma_link" id="ocp_am_transfer">Transferettings</a>
+						<a href="#" class="ma_link" id="ocp_am_vouchers">Vouchers</a>
+						<a href="#" class="ma_link" id="ocp_am_session">Session history</a>
+					</div>
+					<div id="ocp_ma_content">TOTO</div>
+				</div>
+				<div class="ocp_footer"></div>
+			</div>
+			<!-- MY ACCOUNT END -->
 
 			<!-- MARKET PLACE -->
 			<div id="market_place_page" class="page_content">
@@ -399,13 +418,13 @@
 		<div id="header_menu_body">
 			<a href="test/misc/ocp_index.html#general_settings" class="header_menu_settings">Settings</a>
 		</div>
-		<div id="ocp_fm_new_folder_dialog" title="Create new folder">
+		<div id="ocp_fm_new_folder_dialog" title="Create new folder" style="display: none;">
 			New folder name <input type="text" id="ocp_fm_new_folder_name" />
 		</div>
-		<div id="ocp_fm_rename_dialog" title="Rename">
+		<div id="ocp_fm_rename_dialog" title="Rename" style="display: none;">
 			New name <input type="text" id="ocp_fm_new_name" />
 		</div>
-		<div id="ocp_fm_remove_dialog" title="Remove">
+		<div id="ocp_fm_remove_dialog" title="Remove" style="display: none;">
 			Are you sure you want to remove <span></span>?
 		</div>
 		<form style="display: none;" id="ocp_fm_file_form" enctype="multipart/form-data">

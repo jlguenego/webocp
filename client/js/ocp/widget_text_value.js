@@ -15,17 +15,26 @@ $.widget( "ui.ocp_text_value", {
 	options: {
 	},
 
-	header: null,
-	content: null,
+	text: null,
+	value: null,
 
 	_create: function() {
-		this.header = $(this.element.children().get(0)).css('display', 'inline-block');
-		this.content = $(this.element.children().get(1)).css('display', 'inline-block');
-		this.content.outerWidth(this.element.width() - this.header.outerWidth());
-
 		var self = this;
+		console.log($(this.element));
+		$(this.element).contents()
+			.filter(function() {
+				return this.nodeType == 3; //Node.TEXT_NODE
+			}).remove();
+
+		this.text = $(this.element.children().get(0)).css('display', 'inline-block');
+		this.value = $(this.element.children().get(1)).css('display', 'inline-block');
+
+		$(window).load(function() {
+			self.value.outerWidth(self.element.width() - self.text.outerWidth());
+		});
+
 		$(window).resize(function() {
-			self.content.outerWidth(self.element.width() - self.header.outerWidth());
+			self.value.outerWidth(self.element.width() - self.text.outerWidth());
 		});
 
 		return this;

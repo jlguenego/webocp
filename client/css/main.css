@@ -207,3 +207,12 @@ a, a:link, a:visited, a:hover, a:active {
 	color: #E5391F;
 	cursor: default;
 }
+
+.page_title {
+	height: 50px;
+	padding-left: 185px;
+	font-size: 18px;
+	line-height: 46px;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.7);
+}

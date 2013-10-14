@@ -54,6 +54,8 @@ var g_request = {};
 			case 'market_place':
 				ocp.mp.show_page();
 				ocp.action.display('market_place_page');
+			case 'account_management':
+				ocp.action.display('account_management_page');
 				break;
 			default:
 				ocp.action.display('not_found_page');

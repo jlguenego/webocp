@@ -17,6 +17,7 @@ $(document).ready(function() {
 
 	$('#header_menu').ocp_menu();
 	$('#file_manager_button').ocp_menu();
+	$('#account_management_button').ocp_menu();
 	$('#login_page_button').ocp_menu();
 	$('#cover_page_button').ocp_menu();
 	$('#logout_button').ocp_menu();

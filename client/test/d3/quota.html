@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script src="_ext/d3.v3.min.js"></script>
+
+		<script src="js/ocp/widget_progressbar.js"></script>
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_progressbar.css" />
+
+		<style>
+html, body {
+	margin: 0px;
+	padding: 0px;
+}
+
+#container {
+	height: 50px;
+	background-color: black;
+	line-height: 40px;
+	padding-left: 300px;
+}
+
+svg {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.triangle_ext {
+	stroke: white;
+	stroke-width: 2px;
+}
+
+.triangle_int {
+	stroke: white;
+	stroke-width: 2px;
+	fill: white;
+}
+
+.label {
+	display: inline-block;
+	color: white;
+	vertical-align: middle;
+	font-size: 10px;
+	font-weight: bold;
+	font-family: sans-serif;
+}
+
+#progress {
+	width: 200px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#quota {
+	cursor: pointer;
+}
+		</style>
+	</head>
+
+	<body>
+		<div id="container">
+			<a href="#coucou">
+				<div id="progress"></div>
+			</a>
+		</div>
+
+		<script>
+function attach_quota_widget(container, percent) {
+	var width = 50;
+	var height = 20;
+	//container.append('<div class="label">Quota:</div>');
+	var svg = $('<svg width="' + width + 'px" height="' + height + 'px" />').appendTo(container);
+	var path1 = $('<path />').appendTo(svg);
+	path1.addClass('triangle_ext').attr('d', 'M0 ' + height + ' H' + width + ' V0 Z');
+
+	var p = Math.sqrt(percent / 100) * 100;
+	var path2 = $('<path />').appendTo(svg);
+	path2.addClass('triangle_int').attr('d', 'M0 ' + height + ' H' + (width * p / 100) + ' V' + (height * (100 - p) / 100) + ' Z');
+
+	//container.append('<div class="label">10GB of 20TB</div>');
+
+	container.html(container.html());
+}
+$(document).ready(function() {
+	attach_quota_widget($('#container'), 10);
+//	$('#progress').ocp_progressbar();
+//	$('#quota').click(function() {
+//		alert('couicou');
+//	});
+});
+		</script>
+	</body>
+</html>
