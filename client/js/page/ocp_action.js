@@ -60,6 +60,7 @@ var g_request = {};
 				ocp.action.display('market_place_page');
 				break;
 			case 'account_management':
+				ocp.am.show_page();
 				ocp.action.display('account_management_page');
 				break;
 			default:
