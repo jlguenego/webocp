@@ -453,9 +453,9 @@ var remove_dialog = null;
 		});
 
 
-		$('#ocp_fm_sidebar').ocp_header_content();
-		$('#ocp_fm_content').ocp_header_content();
-		$('#ocp_fm_footer').ocp_header_content();
+		$('#ocp_fm_sidebar').ocp_fix_variable();
+		$('#ocp_fm_content').ocp_fix_variable();
+		$('#ocp_fm_footer').ocp_fix_variable();
 
 		// Put a tree on the left pane
 		var src = [

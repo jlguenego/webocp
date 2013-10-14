@@ -190,8 +190,8 @@
 		var minutes = today.getMinutes();
 		$('#ocp_mp_current_price .date').html(day + '/' + month + '/' + year + ' at ' + hours + ':' + minutes);
 
-		$('#ocp_mp_buy').ocp_header_content();
-		$('#ocp_mp_sell').ocp_header_content();
+		$('#ocp_mp_buy').ocp_fix_variable();
+		$('#ocp_mp_sell').ocp_fix_variable();
 
 		var buy_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_buy_offers'));
 		var buy_offers_data = ocp.mp.build_buy_offers_data(buy_offers, 7);

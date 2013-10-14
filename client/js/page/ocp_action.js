@@ -58,6 +58,7 @@ var g_request = {};
 			case 'market_place':
 				ocp.mp.show_page();
 				ocp.action.display('market_place_page');
+				break;
 			case 'account_management':
 				ocp.action.display('account_management_page');
 				break;
@@ -134,7 +135,22 @@ var g_request = {};
 	ocp.action.display = function(page_id) {
 		$('.page_content').css('display', 'none');
 		$('#' + page_id).css('display', 'block');
-		$('#page').ocp_header_content('set_content', $('#' + page_id));
+
+		if (page_id == 'file_manager' || page_id == 'cover_page') {
+			$('#page').ocp_fix_variable('option', 'use_min_height', false);
+		} else {
+			var min_height = $('#' + page_id).attr('data-original_height');
+			if (!min_height) {
+				$('#' + page_id).attr('data-original_height', $('#' + page_id).outerHeight());
+				min_height =  $('#' + page_id).attr('data-original_height');
+			}
+			$('#page').ocp_fix_variable('option', 'use_min_height', true);
+			$('#page').ocp_fix_variable('option', 'min_height', min_height);
+		}
+
+		console.log(page_id + '.outerHeight=' + $('#' + page_id).outerHeight());
+		$('#page').ocp_fix_variable('set_variable', $('#' + page_id));
+		console.log(page_id + '.outerHeight=' + $('#' + page_id).outerHeight());
 
 		if (ocp.action.user_is_logged()) {
 			$('.ocp_state_not_logged').hide();

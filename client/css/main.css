@@ -75,8 +75,6 @@ html, body {
 	background-repeat: repeat-x;
 	width: 100%;
 	text-align: center;
-	position: absolute;
-	bottom: 0;
 	overflow: hidden;
 }
 

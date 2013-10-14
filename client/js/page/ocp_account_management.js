@@ -3,14 +3,20 @@
 
 	ocp.am.sidebar = function() {
 		$('#ocp_am_sidebar a').each(function() {
-			$(this).html('<span class="ocp_am_link_button">' + $(this).html() + '</span>');
+			$(this).html('<div class="ocp_am_link_button">' + $(this).html() + '</div>');
 		});
 	};
 })(ocp)
 
 $(document).ready(function() {
-	$('#account_management_page').ocp_header_content();
-	$('#ocp_am_body').ocp_text_value();
-
+	//$('#ocp_am_body').ocp_text_value();
+	$('#account_management_page').ocp_fix_variable({
+		use_min_height: true
+	});
 	ocp.am.sidebar();
+	$('#ocp_am_main').ocp_fix_variable({
+		fix: $('#ocp_am_main .ocp_footer'),
+		variable: $('#ocp_am_body'),
+		use_min_height: true
+	});
 });

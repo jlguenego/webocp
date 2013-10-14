@@ -26,8 +26,12 @@ $.widget( "ui.ocp_text_value", {
 				return this.nodeType == 3; //Node.TEXT_NODE
 			}).remove();
 
-		this.text = $(this.element.children().get(0)).css('display', 'inline-block');
-		this.value = $(this.element.children().get(1)).css('display', 'inline-block');
+		var css = {
+			display: 'inline-block',
+			'vertical-align': 'top'
+		};
+		this.text = $(this.element.children().get(0)).css(css);
+		this.value = $(this.element.children().get(1)).css(css);
 
 		$(window).load(function() {
 			self.value.outerWidth(self.element.width() - self.text.outerWidth());

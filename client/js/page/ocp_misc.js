@@ -13,7 +13,9 @@
 })(ocp);
 
 $(document).ready(function() {
-	$('#page').ocp_header_content({ content: $('#cover_page') });
+	$('#page').ocp_fix_variable({
+		variable: $('#cover_page')
+	});
 
 	$('#header_menu').ocp_menu();
 	$('#file_manager_button').ocp_menu();

@@ -190,3 +190,8 @@ a.ocp_cv_title:visited, a.ocp_cv_title:hover, a.ocp_cv_title:active {
 	margin: 100px 0 0 -450px;
 	transition: margin 0.5s;
 }
+
+#cover_page .ocp_footer {
+	position: absolute;
+	bottom: 0;
+}
