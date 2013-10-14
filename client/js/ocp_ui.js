@@ -23,4 +23,12 @@
 		$('html, body').css('cursor', 'auto');
 		$('#ocp_ui_wait_overlay').remove();
 	};
+
+	ocp.ui.get_min_height = function(page, section) {
+		var result = 300;
+		if (section) {
+			result = section.attr('data-min_height') || page.attr('data-min_height') || result;
+		}
+		return result;
+	};
 })(ocp);

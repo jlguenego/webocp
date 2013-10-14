@@ -139,23 +139,30 @@ var g_request = {};
 		$('#' + page_id).css('display', 'block');
 
 		// Find section to display (if applicable)
-		if (page_id == 'account_management_page') {
-			$('.ocp_am_section').hide();
-			$('#ocp_am_' + g_request.section + '.ocp_am_section').show();
+		var section = null;
+		if (!g_request.section) {
+			if (page_id == 'account_management_page') {
+				g_request.section = 'details';
+			}
+		}
 
-			$('.ocp_am_link_button').parent().removeClass('selected');
-			$('#ocp_am_' + g_request.section + '_button').addClass('selected');
+		if (g_request.section) {
+			if (page_id == 'account_management_page') {
+				$('.ocp_am_section').hide();
+				$('#ocp_am_' + g_request.section + '.ocp_am_section').show();
+				$('.ocp_am_link_button').parent().removeClass('selected');
+				$('#ocp_am_' + g_request.section + '_button').addClass('selected');
+
+				section = $('#ocp_am_' + g_request.section + '.ocp_am_section');
+			}
 		}
 
 		if (page_id == 'file_manager' || page_id == 'cover_page') {
 			$('#page').ocp_fix_variable('option', 'use_min_height', false);
 		} else {
-			var min_height = $('#' + page_id).attr('data-original_height');
-			if (!min_height) {
-				$('#' + page_id).attr('data-original_height', $('#' + page_id).outerHeight());
-				min_height =  $('#' + page_id).attr('data-original_height');
-			}
 			$('#page').ocp_fix_variable('option', 'use_min_height', true);
+
+			var min_height = ocp.ui.get_min_height($('#' + page_id), section);
 			$('#page').ocp_fix_variable('option', 'min_height', min_height);
 		}
 

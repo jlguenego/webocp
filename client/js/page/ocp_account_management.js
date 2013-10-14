@@ -29,11 +29,6 @@
 		});
 
 		$('.ocp_am_section').hide();
-		$('#ocp_am_details.ocp_am_section').show();
-
-//		$('.ocp_am_link_button').click(function() {
-//			$('.ocp_am_link_button').parent().removeClass('selected');
-//			$(this).parent().addClass('selected');
-//		});
+		$('#ocp_am_details_button').addClass('selected');
 	};
 })(ocp);
