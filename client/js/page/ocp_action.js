@@ -134,8 +134,18 @@ var g_request = {};
 	};
 
 	ocp.action.display = function(page_id) {
+		// Find page to display
 		$('.page_content').css('display', 'none');
 		$('#' + page_id).css('display', 'block');
+
+		// Find section to display (if applicable)
+		if (page_id == 'account_management_page') {
+			$('.ocp_am_section').hide();
+			$('#ocp_am_' + g_request.section + '.ocp_am_section').show();
+
+			$('.ocp_am_link_button').parent().removeClass('selected');
+			$('#ocp_am_' + g_request.section + '_button').addClass('selected');
+		}
 
 		if (page_id == 'file_manager' || page_id == 'cover_page') {
 			$('#page').ocp_fix_variable('option', 'use_min_height', false);

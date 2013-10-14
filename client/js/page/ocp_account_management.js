@@ -10,6 +10,7 @@
 	var first_time = true;
 	ocp.am.show_page = function() {
 		$('#account_management_page').show();
+
 		if (!first_time) {
 			return;
 		}
@@ -26,5 +27,13 @@
 			variable: $('#ocp_am_body'),
 			use_min_height: true
 		});
+
+		$('.ocp_am_section').hide();
+		$('#ocp_am_details.ocp_am_section').show();
+
+//		$('.ocp_am_link_button').click(function() {
+//			$('.ocp_am_link_button').parent().removeClass('selected');
+//			$(this).parent().addClass('selected');
+//		});
 	};
 })(ocp);

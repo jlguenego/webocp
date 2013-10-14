@@ -44,19 +44,19 @@ a.ocp_am_link {
 	background-repeat: no-repeat;
 }
 
-#ocp_am_detail .ocp_am_link_button {
+#ocp_am_details_button .ocp_am_link_button {
 	background-position: 9px -2px;
 }
 
-#ocp_am_transfer .ocp_am_link_button {
+#ocp_am_transfer_button .ocp_am_link_button {
 	background-position: 9px -1275px;
 }
 
-#ocp_am_vouchers .ocp_am_link_button {
+#ocp_am_vouchers_button .ocp_am_link_button {
 	background-position: 9px -882px;
 }
 
-#ocp_am_session .ocp_am_link_button {
+#ocp_am_session_button .ocp_am_link_button {
 	background-position: 9px -42px;
 }
 
@@ -70,19 +70,19 @@ a.ocp_am_link {
 	background-color: #FFFFFF;
 }
 
-#ocp_am_detail .ocp_am_link_button:hover, #ocp_am_detail.selected .ocp_am_link_button {
+#ocp_am_details_button .ocp_am_link_button:hover, #ocp_am_details_button.selected .ocp_am_link_button {
 	background-position: 9px -122px;
 }
 
-#ocp_am_transfer .ocp_am_link_button:hover, #ocp_am_transfer.selected .ocp_am_link_button {
+#ocp_am_transfer_button .ocp_am_link_button:hover, #ocp_am_transfer_button.selected .ocp_am_link_button {
 	background-position: 9px -1235px;
 }
 
-#ocp_am_vouchers .ocp_am_link_button:hover, #ocp_am_vouchers.selected .ocp_am_link_button {
+#ocp_am_vouchers_button .ocp_am_link_button:hover, #ocp_am_vouchers_button.selected .ocp_am_link_button {
 	background-position: 9px -962px;
 }
 
-#ocp_am_session .ocp_am_link_button:hover, #ocp_am_session.selected .ocp_am_link_button {
+#ocp_am_session_button .ocp_am_link_button:hover, #ocp_am_session_button.selected .ocp_am_link_button {
 	background-position: 9px -162px;
 }
 
@@ -107,4 +107,5 @@ a.ocp_am_link {
 	min-height: 40px;
 	background-image: url(image/account_bg.png);
 	border-left: 1px solid #DDDDDD;
+	padding: 40px;
 }
