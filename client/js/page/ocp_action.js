@@ -4,13 +4,17 @@ var g_request = {};
 	ocp.action = {};
 
 	ocp.action.build_request_from_fi = function(href) {
-		var fi = get_uri_fi(href);
-		var array = fi.split('&');
 		g_request = {};
-		if (fi.indexOf('=') == -1) {
-			g_request.action = fi;
+		var fi = get_uri_fi(href);
+		var fi_a = fi.split('?');
+
+		g_request.action = fi_a[0];
+		if (fi_a.length == 1) {
 			return;
 		}
+
+		var array = fi_a[1].split('&');
+
 		for (var i = 0; i < array.length; i++) {
 			var pair = array[i].split('=');
 			g_request[pair[0]] = pair[1];
