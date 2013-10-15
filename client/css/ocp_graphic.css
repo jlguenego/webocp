@@ -53,3 +53,35 @@
     font-family: sans-serif;
     font-size: 11px;
 }
+
+.ocp_graphic .legend {
+	position: absolute;
+	display: inline-block;
+	width: 212px;
+	height: 68px;
+
+	font-size: 10px;
+
+	background-color: rgba(255, 255, 255, 0.7);
+}
+
+.ocp_graphic .legend tr {
+	height: 20px;
+}
+
+.ocp_graphic .legend td {
+	vertical-align: middle;
+}
+
+.ocp_graphic .legend .legend_color_box > div {
+	width: 13px;
+	height: 10px;
+	padding: 2px;
+
+	border: 1px solid #CCCCCC;
+}
+
+.ocp_graphic .legend .legend_color {
+	width: 100%;
+	height: 100%;
+}

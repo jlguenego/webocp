@@ -1,6 +1,115 @@
 (function(ocp, undefined) {
 	ocp.graphic = {};
 
+	ocp.graphic.Graph = function(svg_elem, margin) {
+		this.svg = d3.select(svg_elem);
+		this.margin = margin;
+		this.width = this.svg.attr('width') - this.margin.left - this.margin.right;
+		this.height = this.svg.attr('height') - this.margin.top - this.margin.bottom;
+
+		this.start_t = null;
+		this.end_t = null;
+
+		this.y_min = null;
+		this.y_max = null;
+		this.y_format = null;
+
+		this.x_access = null;
+		this.y_access = null;
+
+		this.x_scale = null;
+		this.y_scale = null;
+
+		this.dataset = null;
+		this.interpolate = 'linear';
+		this.color = 'blue';
+
+		this.scale_y = function(margin_top, margin_bottom) {
+			var y_a = this.dataset.map(this.y_access);
+			var amplitude = d3.max(y_a) - d3.min(y_a) + 1;
+			this.y_max = Math.max(d3.max(y_a) + margin_top * amplitude, this.y_max);
+			if (this.y_min) {
+				this.y_min = Math.min(d3.min(y_a) - margin_bottom * amplitude, this.y_min);
+			} else {
+				this.y_min = d3.min(y_a) - margin_bottom * amplitude;
+			}
+		}
+
+		this.draw_axis = function() {
+			// Draw white rectangle
+			this.svg.append('rect')
+				.attr('x', this.margin.left)
+				.attr('y', this.margin.top)
+				.attr('width', this.width)
+				.attr('height', this.height)
+				.classed('graph_area', true);
+
+			var time_format = null;
+
+			var interval = this.end_t - this.start_t;
+
+			if (interval > 365 * 86400) {
+				time_format = d3.time.format("%b %y");
+			} else if (interval > 90 * 86400) {
+				time_format = d3.time.format("%b");
+			} else if (interval > 48 * 3600) {
+				time_format = d3.time.format("%d.%m");
+			} else {
+				time_format = d3.time.format("%H:%M");
+			}
+
+			// Define scales and axis
+			this.x_scale = d3.time.scale()
+				.domain([ new Date(this.start_t * 1000), new Date(this.end_t * 1000) ])
+				.range([this.margin.left, this.margin.left + this.width ]);
+			var x_axis = d3.svg.axis()
+				.scale(this.x_scale)
+				.orient("bottom")
+				.tickSize(this.height)
+				.tickFormat(time_format);
+
+			if (this.tick_period) {
+				x_axis.ticks(this.tick_period, this.tick_period_value);
+			}
+
+			this.y_scale = d3.scale.linear()
+				.domain([ this.y_max, this.y_min ])
+				.range([ this.margin.top, this.margin.top + this.height ]);
+			var y_axis = d3.svg.axis()
+				.scale(this.y_scale)
+				.orient("left")
+				.tickSize(this.width)
+				.ticks(5)
+				.tickFormat(this.y_format);
+
+			// Draw axis
+			this.svg.append("g")
+				.classed('axis', true)
+				.attr("transform", 'translate(0, ' + (this.margin.top) + ')')
+				.call(x_axis);
+
+			this.svg.append("g")
+				.classed('axis', true)
+				.attr("transform", 'translate(' + (this.margin.left + this.width) + ', 0)')
+				.call(y_axis);
+		};
+
+		this.draw_line = function() {
+			var self = this;
+
+			var lineFunction = d3.svg.line()
+				.x(function(d) { return self.x_scale(new Date(self.x_access(d) * 1000)); })
+				.y(function(d) { return self.y_scale(self.y_access(d)); })
+				.interpolate(this.interpolate);
+
+			this.svg.append("path")
+				.attr("d", lineFunction(this.dataset))
+				.attr("stroke", this.color)
+				.attr("stroke-width", 2)
+				.attr("fill", "none");
+		};
+	};
+
 	// Draw a tooltip
 	function tooltip(g, msg, x, y, margin) {
 		margin = margin || {top: 0, right: 3, bottom: 0, left: 3};
@@ -296,5 +405,98 @@
 		curve(svg, scales, point_dataset, 'blue');
 		point_dataset = make_average(transaction_list, 12 * 3600);
 		curve(svg, scales, point_dataset, 'red');
+	};
+
+	ocp.graphic.draw_quota_view = function(svg_elem, dataset, margin) {
+		var svg = d3.select(svg_elem);
+
+		var y_a = dataset.map(function(d) { return d.quota; });
+		var y_max = d3.max(y_a) + 0.1 * (d3.max(y_a) - d3.min(y_a));
+		var y_min = d3.min(y_a) - 0.1 * (d3.max(y_a) - d3.min(y_a));
+
+		var consumption = (Math.random() * (y_max - y_min + 1)) + y_min;
+
+		var time_format = d3.time.format("%b %y");
+
+		var width = svg.attr('width') - margin.left - margin.right;
+		var height = svg.attr('height') - margin.top - margin.bottom;
+
+		var today = new Date();
+		today.setHours(0, 0, 0, 0);
+		var midnight_t = Math.floor(today.getTime() / 1000);
+		var end_t = midnight_t + 365 * 2 * 86400;
+
+		// Draw white rectangle
+		svg.append('rect')
+			.attr('x', margin.left)
+			.attr('y', margin.top)
+			.attr('width', width)
+			.attr('height', height)
+			.classed('graph_area', true);
+
+		// Define scales and axis
+		var x_scale = d3.time.scale()
+			.domain([ new Date(midnight_t * 1000), new Date(end_t * 1000) ])
+			.range([margin.left, margin.left + width ]);
+		var x_axis = d3.svg.axis()
+			.scale(x_scale)
+			.orient("bottom")
+			.tickSize(height)
+			.tickFormat(time_format);
+
+		//x_axis.ticks(d3.time.day, 365 * 2);
+
+		var y_scale = d3.scale.linear()
+			.domain([ y_max, y_min ])
+			.range([ margin.top, margin.top + height ]);
+		var quota_format = function(n) { return d3.format(".2f")(n) + ' TB'; };
+		var y_axis = d3.svg.axis()
+			.scale(y_scale)
+			.orient("left")
+			.tickSize(width)
+			.ticks(5)
+			.tickFormat(quota_format);
+
+		// Draw axis
+		svg.append("g")
+			.classed('axis', true)
+			.attr("transform", 'translate(0, ' + (margin.top) + ')')
+			.call(x_axis);
+
+		svg.append("g")
+			.classed('axis', true)
+			.attr("transform", 'translate(' + (margin.left + width) + ', 0)')
+			.call(y_axis);
+
+		var scales = {
+			x: x_scale,
+			y: y_scale
+		};
+
+		var lineFunction = d3.svg.line()
+			.x(function(d) { return scales.x(new Date(d.timestamp * 1000)); })
+			.y(function(d) { return scales.y(d.quota); })
+			.interpolate('step');
+
+		svg.append("path")
+			.attr("d", lineFunction(dataset))
+			.attr("stroke", 'blue')
+			.attr("stroke-width", 2)
+			.attr("fill", "none");
+
+		svg.append("path")
+			.attr("d", lineFunction([
+				{
+					timestamp: midnight_t,
+					quota: consumption
+				},
+				{
+					timestamp: end_t,
+					quota: consumption
+				}
+			]))
+			.attr("stroke", 'red')
+			.attr("stroke-width", 2)
+			.attr("fill", "none");
 	};
 })(ocp)
