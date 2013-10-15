@@ -1,0 +1,39 @@
+.widget_quota_container svg {
+	background-color: transparent;
+}
+
+.widget_quota_container .gray_circle {
+  fill: #D5D5D5;
+  stroke: #AAAAAA;
+  stroke-width: 1px;
+}
+
+.widget_quota_container .white_circle {
+  fill: #FFFFFF;
+  stroke: #AAAAAA;
+  stroke-width: 1px;
+}
+
+.widget_quota_container .black_circle {
+  fill: #353433;
+}
+
+
+.widget_quota_container .white_percent {
+	text-anchor: middle;
+	font-size: 28px;
+	fill: white;
+}
+
+.widget_quota_container .used {
+	text-anchor: middle;
+	fill: #5DD3FF;
+	font-size: 14px;
+}
+
+.widget_quota_container .blue_arc {
+	fill: none;
+	stroke: #27AAE0;
+	stroke-width: 11px;
+	stroke-linecap: round;
+}

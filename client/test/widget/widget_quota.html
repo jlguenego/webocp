@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp/core.js"></script>
+		<script src="js/ocp/widget_quota.js"></script>
+
+		<link rel="stylesheet" href="js/ocp/theme/default/core.css" />
+		<link rel="stylesheet" href="js/ocp/theme/default/widget_quota.css" />
+
+		<style>
+html, body {
+	background-color: #EBEBEB;
+	font-family: 'Open sans', serif;
+	font-size: 14px;
+}
+		</style>
+	</head>
+
+	<body>
+		<div id="quota"></div>
+		<input type="input" name="percent" />
+		<button>Update</button>
+
+		<script>
+$(document).ready(function() {
+	var quota = 50;
+	$('#quota').ocp_quota({quota: quota});
+
+	$('button').click(function() {
+		var used_mem = parseInt($('input').val());
+		$('#quota').ocp_quota('update', used_mem);
+	});
+});
+		</script>
+	</body>
+</html>
