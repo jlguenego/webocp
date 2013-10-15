@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../.." />
+		<meta charset="utf-8" />
+
+		<!-- JQUERY / JQUERY UI -->
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
+		<!-- END JQUERY / JQUERY UI -->
+
+		<script src="js/ocp/widget_fix_variable_v.js"></script>
+		<script src="js/ocp/widget_text_value.js"></script>
+		<style>
+
+html, body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+
+#page {
+	height: 100%;
+	background-color: #EEEEEE;
+}
+
+#ocp_am_page {
+	background-color: #DDDDDD;
+}
+
+#ocp_am_main {
+	background-color: #CCCCCC;
+	min-height: 300px;
+}
+
+#page_title {
+	background-color: #BBBBBB;
+}
+
+#ocp_am_body {
+	background-color: #AAAAAA;
+	overflow: hidden;
+}
+
+.ocp_footer {
+	height: 50px;
+	opacity: 0.5;
+}
+
+.ocp_am_link {
+	display: block;
+}
+
+#ocp_am_details {
+	background-color: yellow;
+	height: 100%;
+}
+
+#ocp_am_content {
+	background-color: green;
+	height: 100%;
+}
+
+#ocp_am_sidebar {
+	width: 200px;
+	background-color: red;
+}
+
+#ocp_am_quota {
+	height: 300px;
+}
+
+div {
+	border: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+
+		</style>
+	</head>
+
+	<body>
+		<!-- PAGE -->
+		<div id="page">
+			<div id="page_header">
+				header
+			</div>
+
+
+			<div id="ocp_am_page" >
+				<div id="ocp_am_main">
+					<div class="page_title">Title</div>
+					<div id="ocp_am_body">
+						<div id="ocp_am_sidebar">
+							<a href="#account_management?section=details" class="ocp_am_link" id="ocp_am_details_button">Account details</a>
+							<a href="#account_management?section=transfer" class="ocp_am_link" id="ocp_am_transfer_button">Transferettings</a>
+							<a href="#account_management?section=vouchers" class="ocp_am_link" id="ocp_am_vouchers_button">Vouchers</a>
+							<a href="#account_management?section=session" class="ocp_am_link" id="ocp_am_session_button">Session history</a>
+						</div>
+						<div id="ocp_am_content">
+							<div id="ocp_am_details" class="ocp_am_section" data-min_height="280">
+								<div id="ocp_am_quota">truc</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ocp_footer">Footer</div>
+			</div>
+		</div>
+		<script>
+$(document).ready(function() {
+	$('#page').ocp_fix_variable();
+	$('#ocp_am_page').ocp_fix_variable({
+		fix: $('.ocp_footer'),
+		variable: $('#ocp_am_main') });
+	$('#ocp_am_main').ocp_fix_variable();
+	$('#ocp_am_body').ocp_text_value();
+});
+		</script>
+	</body>
+</html>
