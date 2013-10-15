@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_storage.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_client.js"></script>
+		<script src="js/ocp_math.js"></script>
+
+		<script src="js/ocp_graphic.js"></script>
+		<link rel="stylesheet" href="css/ocp_graphic.css" />
+
+
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_worker_ui_pool.js"></script>
+
+		<style>
+
+body, html {
+	margin: 0;
+	padding: 0;
+	background-color: #F5F5F5;
+	font-family: sans-serif;
+}
+
+#page {
+	position: absolute;
+	top: 100px;
+	left: 200px;
+}
+		</style>
+	</head>
+	<body>
+		<div id="page" class="ocp_graphic">
+			<svg id="svg" width="760" height="300"></svg>
+		</div>
+		<script>
+var margin = { top: 20, right: 5, bottom: 20, left: 50 };
+
+function build_dataset(start_t, end_t) {
+	var days_nbr = Math.floor((end_t - start_t) / 86400);
+	var quota = Math.floor((Math.random() * 100) + 1);
+
+	var dataset = [];
+	for (var i = 0; i < days_nbr; i++) {
+		if (i % Math.round((Math.random() * 300) + 150) == 0) {
+			quota -= Math.random() * 5;
+		}
+		if (quota < 0) {
+			quota = 0;
+		}
+		dataset.push({
+			timestamp: start_t + i * 86400,
+			quota: quota
+		});
+	}
+
+	return dataset;
+}
+
+$(document).ready(function() {
+	var today = new Date();
+	today.setHours(0, 0, 0, 0);
+	var start_t = Math.floor(today.getTime() / 1000);
+	var end_t = start_t + 365 * 2 * 86400;
+
+	var dataset = build_dataset(start_t, end_t);
+
+	var avg = d3.mean(dataset, function(d) { return d.quota; })
+
+	var dataset2 = dataset.map(function(d) {
+		return {
+			timestamp: d.timestamp,
+			used_mem: avg
+		};
+	});
+
+	var graph = new ocp.graphic.Graph($('svg').get(0), margin);
+
+	graph.start_t = start_t;
+	graph.end_t = end_t;
+	graph.x_access = function(d) { return d.timestamp; };
+
+	graph.dataset = dataset;
+	graph.y_access = function(d) { return d.quota; };
+	graph.scale_y(0.1, 0.1);
+
+	graph.y_format = function(n) { return d3.format(".2f")(n) + ' TB'; };
+
+	graph.draw_axis();
+	graph.interpolate = 'step';
+	graph.add_legend('Quota');
+	graph.draw_line();
+
+
+	graph.dataset = dataset2;
+	graph.y_access = function(d) { return d.used_mem; };
+	graph.color = 'red';
+	graph.add_legend('Used storage');
+	graph.draw_line();
+
+	graph.draw_legend();
+});
+		</script>
+	</body>
+</html>

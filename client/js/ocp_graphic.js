@@ -24,6 +24,9 @@
 		this.interpolate = 'linear';
 		this.color = 'blue';
 
+		this.legend = [];
+		this.legend_css = null;
+
 		this.scale_y = function(margin_top, margin_bottom) {
 			var y_a = this.dataset.map(this.y_access);
 			var amplitude = d3.max(y_a) - d3.min(y_a) + 1;
@@ -107,6 +110,40 @@
 				.attr("stroke", this.color)
 				.attr("stroke-width", 2)
 				.attr("fill", "none");
+		};
+
+		this.add_legend = function(msg) {
+			this.legend.push({
+				color: this.color,
+				msg: msg
+			});
+		};
+
+		this.draw_legend = function() {
+			var svg = $(this.svg.node());
+			var div = $('<div/>').insertAfter(svg).addClass('legend');
+			var table = $('<table/>').appendTo(div);
+
+			for (var i = 0; i < this.legend.length; i++) {
+				var legend = this.legend[i];
+				var tr = $('<tr/>').appendTo(table);
+				var color = $('<td/>').appendTo(tr).addClass('legend_color_box');
+
+				$('<div/>').appendTo(color).addClass('legend_color')
+					.css({ 'background-color': legend.color, 'border-color': legend.color })
+					.wrap('<div/>');
+
+				var msg = $('<td/>').appendTo(tr).html(legend.msg);
+			}
+
+			if (!this.legend_css) {
+				this.legend_css = {
+					bottom: this.margin.bottom + 8,
+					right: div.outerWidth(true) + this.margin.right + 4
+				}
+			}
+
+			div.css(this.legend_css);
 		};
 	};
 

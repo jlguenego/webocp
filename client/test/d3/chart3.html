@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/seedrandom-min.js"></script>
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+
+		<script src="js/ocp.js"></script>
+		<script src="js/ocp_storage.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_client.js"></script>
+		<script src="js/ocp_math.js"></script>
+
+		<script src="js/ocp_graphic.js"></script>
+		<link rel="stylesheet" href="css/ocp_graphic.css" />
+
+
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_worker_ui_pool.js"></script>
+
+		<style>
+
+body, html {
+	margin: 0;
+	padding: 0;
+	background-color: #F5F5F5;
+	font-family: sans-serif;
+}
+
+#page {
+	position: absolute;
+	top: 100px;
+	left: 200px;
+}
+		</style>
+	</head>
+	<body>
+		<div id="page" class="ocp_graphic">
+			<svg id="svg" width="760" height="300"></svg>
+		</div>
+		<script>
+var margin = { top: 20, right: 5, bottom: 20, left: 50 };
+
+$(document).ready(function() {
+	var quota = Math.floor((Math.random() * 100) + 1);
+	var today = new Date();
+	today.setHours(0, 0, 0, 0);
+	var midnight_t = Math.floor(today.getTime() / 1000);
+
+	var dataset = [];
+	for (var i = 0; i < 365 * 2; i++) {
+		if (i % Math.round((Math.random() * 300) + 150) == 0) {
+			quota -= Math.random() * 5;
+		}
+		if (quota < 0) {
+			quota = 0;
+		}
+		dataset.push({
+			timestamp: midnight_t + i * 86400,
+			quota: quota
+		});
+	}
+
+	ocp.graphic.draw_quota_view($('svg').get(0), dataset, margin);
+});
+		</script>
+	</body>
+</html>

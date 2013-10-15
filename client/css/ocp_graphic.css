@@ -55,10 +55,11 @@
 }
 
 .ocp_graphic .legend {
-	position: absolute;
+	position: relative;
 	display: inline-block;
-	width: 212px;
-	height: 68px;
+	vertical-align: bottom;
+	white-space: nowrap;
+	padding-right: 20px;
 
 	font-size: 10px;
 
