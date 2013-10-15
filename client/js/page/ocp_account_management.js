@@ -16,19 +16,20 @@
 		}
 		first_time = false;
 		console.log('execute ocp.am.show_page');
-		$('#ocp_am_body').ocp_text_value();
+		//$('#ocp_am_body').ocp_text_value();
 		$('#account_management_page').ocp_fix_variable({
-			use_min_height: true
+			fix: $('#account_management_page .ocp_footer'),
+			variable: $('#ocp_am_main')
 		});
 		ocp.am.sidebar();
 
-		$('#ocp_am_main').ocp_fix_variable({
-			fix: $('#ocp_am_main .ocp_footer'),
-			variable: $('#ocp_am_body'),
-			use_min_height: true
-		});
+		$('#ocp_am_main').ocp_fix_variable();
 
 		$('.ocp_am_section').hide();
 		$('#ocp_am_details_button').addClass('selected');
+
+		// Section definition
+		$('#ocp_am_quota').ocp_quota({ quota: 50 });
+		$('#ocp_am_quota').ocp_quota('update', 10);
 	};
 })(ocp);

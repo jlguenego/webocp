@@ -157,15 +157,6 @@ var g_request = {};
 			}
 		}
 
-		if (page_id == 'file_manager' || page_id == 'cover_page') {
-			$('#page').ocp_fix_variable('option', 'use_min_height', false);
-		} else {
-			$('#page').ocp_fix_variable('option', 'use_min_height', true);
-
-			var min_height = ocp.ui.get_min_height($('#' + page_id), section);
-			$('#page').ocp_fix_variable('option', 'min_height', min_height);
-		}
-
 		console.log(page_id + '.outerHeight=' + $('#' + page_id).outerHeight());
 		$('#page').ocp_fix_variable('set_variable', $('#' + page_id));
 		console.log(page_id + '.outerHeight=' + $('#' + page_id).outerHeight());

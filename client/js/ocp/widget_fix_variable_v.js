@@ -13,9 +13,6 @@
 $.widget( "ui.ocp_fix_variable", {
 	version: "0.0.1",
 	options: {
-		use_min_height: false,
-		min_height: null,
-
 		fix: null,
 		variable: null
 	},
@@ -26,7 +23,6 @@ $.widget( "ui.ocp_fix_variable", {
 	_create: function() {
 		this.fix = this.options.fix || $(this.element.children().get(0));
 		this.variable = this.options.variable || $(this.element.children().get(1));
-		this.options.min_height = this.options.min_height || this.variable.outerHeight();
 		this.resize();
 
 		var self = this;
@@ -42,9 +38,6 @@ $.widget( "ui.ocp_fix_variable", {
 
 	resize: function() {
 		var expected_height = this.element.innerHeight() - this.fix.outerHeight();
-		if (this.options.use_min_height && this.options.min_height > expected_height) {
-			expected_height = this.options.min_height;
-		}
 		this.variable.outerHeight(expected_height);
 	},
 
