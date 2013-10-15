@@ -14,7 +14,8 @@ $.widget( "ui.ocp_quota", {
 	version: "0.0.1",
 	options: {
 		quota: 50,
-		used_mem: 0
+		used_mem: 0,
+		unit: 'TB'
 	},
 
 	percent: 0,
@@ -23,8 +24,39 @@ $.widget( "ui.ocp_quota", {
 	g: null,
 	line: null,
 
+	from_block: null,
+	to_block: null,
+	progressbar: null,
+
 	_create: function() {
 		this.element.addClass('widget_quota_container');
+
+		this.draw_ring();
+		this.draw_bar();
+
+		this.update(this.options.used_mem);
+
+		return this;
+	},
+	draw_bar: function() {
+		var right_block = $('<div/>').appendTo(this.element).addClass('right_block');
+
+		this.from_block = $('<div/>').appendTo(right_block).addClass('from_block')
+			.append('<span class="txt1">0</span>')
+			.append('<span class="txt2">GB</span>');
+
+		$('<div>of</div>').appendTo(right_block).addClass('of_block');
+
+		this.to_block = $('<div/>').appendTo(right_block).addClass('to_block')
+			.append('<span class="txt1">0</span>')
+			.append('<span class="txt2">GB</span>');
+
+		var progressbar = $('<div/>').appendTo(right_block).addClass('progressbar');
+		var progressbar_bg = $('<div/>').appendTo(progressbar).addClass('progressbar_bg');
+		this.progressbar = $('<div/>').appendTo(progressbar_bg).addClass('progress').width(0);
+	},
+
+	draw_ring: function() {
 		var width = 200;
 		var height = 200;
 
@@ -69,22 +101,32 @@ $.widget( "ui.ocp_quota", {
 			.tension(0)
 			.radius(70)
 			.angle(function(d, i) { return angle(i); });
-
-		this.update(this.options.used_mem);
-
-		return this;
 	},
 
 	update: function(used_mem) {
 		this.options.used_mem = used_mem;
 		this.percent = Math.round((this.options.used_mem / this.options.quota) * 100);
-		this.percent_txt.text(this.percent + '%');
 
+		this.percent_txt.text(this.percent + '%');
 		this.path = this.g.selectAll(".blue_arc").data([ d3.range(this.percent) ]);
 		this.path.enter().append('path')
 			.classed('blue_arc', true);
-
 		this.path.attr("d", this.line);
+
+		this.progressbar.css('width', this.percent + '%');
+		this.from_block
+			.find('.txt1')
+				.html(this.options.used_mem)
+				.parent()
+			.find('.txt2')
+				.html(this.options.unit);
+
+		this.to_block
+			.find('.txt1')
+				.html(this.options.quota)
+				.parent()
+			.find('.txt2')
+				.html(this.options.unit);
 	},
 
 	_destroy: function() {
