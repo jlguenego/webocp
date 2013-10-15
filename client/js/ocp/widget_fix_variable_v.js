@@ -37,7 +37,9 @@ $.widget( "ui.ocp_fix_variable", {
 	},
 
 	resize: function() {
-		var expected_height = this.element.innerHeight() - this.fix.outerHeight();
+		var expected_height = this.element.innerHeight() - this.fix.outerHeight(true);
+		var min_height = this.variable.css('min-height').replace(/[a-z]/g, '');
+		expected_height = Math.max(expected_height, min_height);
 		this.variable.outerHeight(expected_height);
 	},
 

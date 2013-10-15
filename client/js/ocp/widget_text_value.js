@@ -20,8 +20,8 @@ $.widget( "ui.ocp_text_value", {
 
 	_create: function() {
 		var self = this;
-		console.log($(this.element));
-		$(this.element).contents()
+		this.element.css('white-space' , 'nowrap');
+		this.element.contents()
 			.filter(function() {
 				return this.nodeType == 3; //Node.TEXT_NODE
 			}).remove();
