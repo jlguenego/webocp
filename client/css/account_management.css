@@ -6,9 +6,12 @@
 	padding: 0px;
 }
 
+#ocp_am_main {
+	min-height: 600px;
+}
+
 #ocp_am_body {
 	overflow: hidden;
-	min-height: 600px;
 }
 
 #ocp_am_sidebar {

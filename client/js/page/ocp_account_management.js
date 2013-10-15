@@ -33,26 +33,71 @@
 		$('#ocp_am_quota').ocp_quota('update', 10);
 
 		// Quota prevision
-		var quota = Math.floor((Math.random() * 100) + 1);
-		var today = new Date();
-		today.setHours(0, 0, 0, 0);
-		var midnight_t = Math.floor(today.getTime() / 1000);
+		function build_dataset(start_t, end_t) {
+			var days_nbr = Math.floor((end_t - start_t) / 86400);
+			var quota = Math.floor((Math.random() * 100) + 1);
 
-		var dataset = [];
-		for (var i = 0; i < 365 * 2; i++) {
-			if (i % Math.round((Math.random() * 300) + 150) == 0) {
-				quota -= Math.random() * 5;
+			var dataset = [];
+			for (var i = 0; i < days_nbr; i++) {
+				if (i % Math.round((Math.random() * 300) + 150) == 0) {
+					quota -= Math.random() * 5;
+				}
+				if (quota < 0) {
+					quota = 0;
+				}
+				dataset.push({
+					timestamp: start_t + i * 86400,
+					quota: quota
+				});
 			}
-			if (quota < 0) {
-				quota = 0;
-			}
-			dataset.push({
-				timestamp: midnight_t + i * 86400,
-				quota: quota
-			});
+
+			return dataset;
 		}
 
 		var margin = { top: 20, right: 5, bottom: 20, left: 50 };
-		ocp.graphic.draw_quota_view($('#ocp_am_quota_chart svg').get(0), dataset, margin);
+
+		var today = new Date();
+		today.setHours(0, 0, 0, 0);
+		var start_t = Math.floor(today.getTime() / 1000);
+		var end_t = start_t + 365 * 2 * 86400;
+
+		var dataset = build_dataset(start_t, end_t);
+
+		var avg = d3.mean(dataset, function(d) { return d.quota; })
+
+		var dataset2 = dataset.map(function(d) {
+			return {
+				timestamp: d.timestamp,
+				used_mem: avg
+			};
+		});
+
+		var graph = new ocp.graphic.Graph($('#ocp_am_quota_chart svg').get(0), margin);
+
+		graph.start_t = start_t;
+		graph.end_t = end_t;
+		graph.x_access = function(d) { return d.timestamp; };
+
+		graph.dataset = dataset;
+		graph.y_access = function(d) { return d.quota; };
+		graph.scale_y(0.1, 0.1);
+
+		graph.y_format = function(n) { return d3.format(".2f")(n) + ' TB'; };
+
+		graph.draw_axis();
+		graph.interpolate = 'step';
+		graph.add_legend('Quota');
+		graph.draw_line();
+
+
+		graph.dataset = dataset2;
+		graph.y_access = function(d) { return d.used_mem; };
+		graph.color = 'red';
+		graph.add_legend('Used storage');
+		graph.draw_line();
+
+		$(window).load(function() {
+			graph.draw_legend();
+		});
 	};
 })(ocp);
