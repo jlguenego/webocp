@@ -26,17 +26,11 @@ html, body {
   background-color: rgba(255, 255, 255, 0.7);
 }
 
-.stations svg {
-  width: 60px;
-  height: 20px;
-  padding-right: 100px;
-  font: 10px sans-serif;
-}
-
-.stations circle {
-  fill: brown;
-  stroke: black;
-  stroke-width: 1.5px;
+.node {
+	cursor: pointer;
+	fill: #EEEEEE;
+	stroke: #AAAAAA;
+	stroke-width: 3px;
 }
 
 		</style>
@@ -60,6 +54,10 @@ google.maps.event.addListener(map, 'zoom_changed', function() {
 	}
 });
 
+google.maps.event.addListener(map, 'mouseover', function() {
+	console.log('coucou');
+});
+
 console.log(map);
 
 $('button').click(function() {
@@ -73,7 +71,7 @@ d3.json("test/d3/stations3.json", function(data) {
 	// Add the container when the overlay is added to the map.
 	overlay.onAdd = function() {
 		console.log(this.getPanes());
-		var svg = d3.select(this.getPanes().overlayLayer).append("svg")
+		var svg = d3.select(this.getPanes().overlayMouseTarget).append("svg")
 			.attr('height', d3.select("#map").attr('height'))
 			.attr('width', d3.select("#map").attr('width'))
 			.classed('my_svg', true);
@@ -123,13 +121,22 @@ d3.json("test/d3/stations3.json", function(data) {
 			var new_g = g.enter().append("g");
 
 			new_g.attr("class", "marker");
-			new_g.append("circle")
-				.attr("r", 4.5)
+			var node = new_g.append("circle")
+				.attr("r", 10)
 				.attr("cx", padding)
-				.attr("cy", padding);
+				.attr("cy", padding)
+				.classed('node', true);
+
+			node.on('mouseover', function(e) {
+				console.log('coucou');
+			});
+
+			node.on('click', function(e) {
+				console.log('click');
+			});
 
 			new_g.append("text")
-				.attr("x", padding + 7)
+				.attr("x", padding + 15)
 				.attr("y", padding)
 				.attr("dy", ".31em")
 				.text(function(d) { return d.key; });
