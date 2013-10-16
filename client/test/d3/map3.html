@@ -32,6 +32,10 @@ html, body {
 	stroke-width: 3px;
 }
 
+.transparent_node {
+	fill: none;
+}
+
 		</style>
 	</head>
 
@@ -51,6 +55,10 @@ google.maps.event.addListener(map, 'zoom_changed', function() {
 	if (map.getZoom() < minZoomLevel) {
 		map.setZoom(minZoomLevel);
 	}
+});
+
+google.maps.event.addListener(map, 'click', function(e) {
+	console.log(e.latLng);
 });
 
 google.maps.event.addListener(map, 'mouseover', function() {
@@ -122,9 +130,14 @@ d3.json("test/d3/stations3.json", function(data) {
 			new_g.attr("class", "marker");
 			var node = new_g.append("circle")
 				.attr("r", 10)
-				.attr("cx", padding)
-				.attr("cy", padding)
+				.attr("cx", 0)
+				.attr("cy", 0)
 				.classed('node', true);
+			new_g.append("circle")
+				.attr("r", 15)
+				.attr("cx", 0)
+				.attr("cy", 0)
+				.classed('transparent_node', true);
 
 			node.on('mouseover', function(e) {
 				console.log('coucou');
@@ -135,8 +148,8 @@ d3.json("test/d3/stations3.json", function(data) {
 			});
 
 			new_g.append("text")
-				.attr("x", padding + 15)
-				.attr("y", padding)
+				.attr("x", 15)
+				.attr("y", 0)
 				.attr("dy", ".31em")
 				.text(function(d) { return d.key; });
 
@@ -158,8 +171,8 @@ d3.json("test/d3/stations3.json", function(data) {
 				console.log('transform');
 				d = new google.maps.LatLng(d.value[1], d.value[0]);
 				d = projection.fromLatLngToDivPixel(d);
-				var x = (d.x - padding);
-				var y = (d.y - padding);
+				var x = (d.x);
+				var y = (d.y);
 				return 'translate(' + x + ', ' + y + ')';
 			}
 		};
