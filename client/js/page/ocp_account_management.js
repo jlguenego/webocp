@@ -28,10 +28,6 @@
 		$('.ocp_am_section').hide();
 		$('#ocp_am_details_button').addClass('selected');
 
-		// Section definition
-		$('#ocp_am_quota').ocp_quota({ quota: 50 });
-		$('#ocp_am_quota').ocp_quota('update', 10);
-
 		// Quota prevision
 		function build_dataset(start_t, end_t) {
 			var days_nbr = Math.floor((end_t - start_t) / 86400);
@@ -47,7 +43,7 @@
 				}
 				dataset.push({
 					timestamp: start_t + i * 86400,
-					quota: quota
+					quota: Math.round(quota)
 				});
 			}
 
@@ -63,7 +59,7 @@
 
 		var dataset = build_dataset(start_t, end_t);
 
-		var avg = d3.mean(dataset, function(d) { return d.quota; })
+		var avg = Math.round(d3.mean(dataset, function(d) { return d.quota; }));
 
 		var dataset2 = dataset.map(function(d) {
 			return {
@@ -71,6 +67,10 @@
 				used_mem: avg
 			};
 		});
+
+		// Section definition
+		$('#ocp_am_quota').ocp_quota({ quota: dataset[0].quota });
+		$('#ocp_am_quota').ocp_quota('update', avg);
 
 		var graph = new ocp.graphic.Graph('#ocp_am_quota_chart', margin);
 
