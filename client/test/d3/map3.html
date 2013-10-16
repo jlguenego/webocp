@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+		<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?1.29.1"></script>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<style type="text/css">
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#map {
+  width: 400px;
+  height: 200px;
+}
+
+.my_svg {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.stations svg {
+  width: 60px;
+  height: 20px;
+  padding-right: 100px;
+  font: 10px sans-serif;
+}
+
+.stations circle {
+  fill: brown;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+		</style>
+	</head>
+
+	<body>
+		<div id="map"></div>
+		<button>Click me</button>
+		<script type="text/javascript">
+var minZoomLevel = 2;
+// Create the Google Map…
+var map = new google.maps.Map(d3.select("#map").node(), {
+	zoom: 8,
+	center: new google.maps.LatLng(37.2, -121),
+	mapTypeId: google.maps.MapTypeId.ROADMAP
+});
+
+google.maps.event.addListener(map, 'zoom_changed', function() {
+	if (map.getZoom() < minZoomLevel) {
+		map.setZoom(minZoomLevel);
+	}
+});
+
+console.log(map);
+
+$('button').click(function() {
+	console.log(map);
+});
+
+// Load the station data. When the data comes back, create an overlay.
+d3.json("test/d3/stations3.json", function(data) {
+	var overlay = new google.maps.OverlayView();
+
+	// Add the container when the overlay is added to the map.
+	overlay.onAdd = function() {
+		console.log(this.getPanes());
+		var svg = d3.select(this.getPanes().overlayLayer).append("svg")
+			.attr('height', d3.select("#map").attr('height'))
+			.attr('width', d3.select("#map").attr('width'))
+			.classed('my_svg', true);
+
+		var main_group = svg.append('g');
+
+		// Draw each marker as a separate SVG element.
+		// We could use a single SVG, but what size would it have?
+		overlay.draw = function() {
+			console.log('draw');
+			var projection = this.getProjection();
+			var padding = 10;
+
+			var dataset = d3.entries(data);
+			console.log(dataset);
+
+			var x_scale = function(d) {
+				d = new google.maps.LatLng(d.value[1], d.value[0]);
+				d = projection.fromLatLngToDivPixel(d);
+				return d.x;
+			};
+
+			var y_scale = function(d) {
+				d = new google.maps.LatLng(d.value[1], d.value[0]);
+				d = projection.fromLatLngToDivPixel(d);
+				return d.y;
+			};
+
+			var line = d3.svg.line()
+				.x(function(d) { return x_scale(d); })
+				.y(function(d) { return y_scale(d); })
+				.interpolate('linear');
+
+
+			var path = main_group.selectAll('path').data([ dataset ]);
+			path.enter().append("path")
+				.attr("stroke", 'red')
+				.attr("stroke-width", 1)
+				.attr("fill", "none");
+
+			path.attr("d", function(d) { return line(d); });
+
+			path.exit().remove();
+
+
+			var g = main_group.selectAll("g").data(dataset);
+			var new_g = g.enter().append("g");
+
+			new_g.attr("class", "marker");
+			new_g.append("circle")
+				.attr("r", 4.5)
+				.attr("cx", padding)
+				.attr("cy", padding);
+
+			new_g.append("text")
+				.attr("x", padding + 7)
+				.attr("y", padding)
+				.attr("dy", ".31em")
+				.text(function(d) { return d.key; });
+
+			g.attr('transform', transform);
+
+			g.exit().remove();
+
+			var rect = main_group.node().getBBox();
+			console.log(rect);
+
+			svg.attr('width', rect.width)
+				.attr('height', rect.height)
+				.style('top', rect.y)
+				.style('left', rect.x);
+
+			main_group.attr('transform', 'translate(' + -rect.x + ', ' + -rect.y + ')');
+
+			function transform(d) {
+				console.log('transform');
+				d = new google.maps.LatLng(d.value[1], d.value[0]);
+				d = projection.fromLatLngToDivPixel(d);
+				var x = (d.x - padding);
+				var y = (d.y - padding);
+				return 'translate(' + x + ', ' + y + ')';
+			}
+		};
+	};
+
+	// Bind our overlay to the map…
+	overlay.setMap(map);
+});
+
+    </script>
+  </body>
+</html>
