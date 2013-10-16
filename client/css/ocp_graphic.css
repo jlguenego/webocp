@@ -1,4 +1,9 @@
+.ocp_graphic {
+	position: relative;
+}
+
 .ocp_graphic svg {
+	display: block;
 	background-color: transparent;
     cursor: crosshair;
 }
@@ -56,7 +61,7 @@
 }
 
 .ocp_graphic .legend {
-	position: relative;
+	position: absolute;
 	display: inline-block;
 	vertical-align: bottom;
 	white-space: nowrap;

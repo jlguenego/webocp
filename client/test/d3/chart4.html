@@ -85,9 +85,9 @@ $(document).ready(function() {
 
 	graph.start_t = start_t;
 	graph.end_t = end_t;
-	graph.x_access = function(d) { return d.timestamp; };
 
 	graph.dataset = dataset;
+	graph.x_access = function(d) { return d.timestamp; };
 	graph.y_access = function(d) { return d.quota; };
 	graph.scale_y(0.1, 0.1);
 
