@@ -235,6 +235,10 @@
 				var msg = $('<td/>').appendTo(tr).html(legend.msg);
 			}
 
+			console.log(this.margin);
+			console.log(svg.width());
+			console.log(div.outerWidth(true));
+
 			if (!this.legend_css) {
 				this.legend_css = {
 					bottom: this.margin.bottom + 8,

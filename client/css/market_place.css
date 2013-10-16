@@ -93,15 +93,8 @@
 }
 
 #ocp_mp_graph {
-	position: relative;
-	width: 100%;
-	display: block;
-	overflow: hidden;
-}
-
-#ocp_mp_svg {
 	display: inline-block;
-	vertical-align: top;
+	overflow: hidden;
 }
 
 #ocp_mp_buttons {

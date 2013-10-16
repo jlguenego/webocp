@@ -72,7 +72,7 @@
 			};
 		});
 
-		var graph = new ocp.graphic.Graph($('#ocp_am_quota_chart svg').get(0), margin);
+		var graph = new ocp.graphic.Graph('#ocp_am_quota_chart', margin);
 
 		graph.start_t = start_t;
 		graph.end_t = end_t;

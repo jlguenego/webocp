@@ -1,5 +1,5 @@
 (function(ocp, undefined) {
-	var margin = { top: 20, right: 5, bottom: 20, left: 50 };
+	var margin = { top: 20, right: 10, bottom: 20, left: 50 };
 
 	ocp.mp = {};
 
@@ -103,9 +103,48 @@
 			start_t: now_t - 2 * 86400,
 			end_t: now_t
 		};
-		var svg_elem = $('#ocp_mp_svg').get(0);
 
-		ocp.graphic.draw_chart(svg_elem, transaction_obj, margin);
+		var start_t = transaction_obj.query.end_t - 86400;
+		var end_t = transaction_obj.query.end_t;
+
+		var transaction_list = transaction_obj.transaction_list;
+		var transaction_scatter_plot = ocp.graphic.filter_transaction(transaction_list, start_t, end_t);
+		var transaction_list_3h = ocp.graphic.make_average(transaction_list, 3 * 3600, start_t, end_t);
+		var transaction_list_12h = ocp.graphic.make_average(transaction_list, 12 * 3600, start_t, end_t);
+
+		var graph = new ocp.graphic.Graph('#ocp_mp_graph', margin);
+
+		graph.start_t = start_t;
+		graph.end_t = end_t;
+
+		graph.x_access = function(d) { return d.timestamp; };
+		graph.y_access = function(d) { return d.rate; };
+		graph.y_format = function(n) { return d3.format(".2f")(n) + ' €'; };
+
+		graph.dataset = transaction_list_3h;
+		graph.scale_y(0.1, 0.1);
+		graph.dataset = transaction_list_12h;
+		graph.scale_y(0.1, 0.1);
+		graph.dataset = transaction_scatter_plot;
+		graph.scale_y(0.1, 0.1);
+
+		graph.draw_axis();
+
+		graph.color = '#999999';
+		graph.add_legend('Transaction scatter plot');
+		graph.draw_scatter_plot();
+
+		graph.dataset = transaction_list_3h;
+		graph.color = 'red';
+		graph.add_legend('OCP Storage share (3 last hours avg.)');
+		graph.draw_line();
+
+		graph.dataset = transaction_list_12h;
+		graph.color = 'blue';
+		graph.add_legend('OCP Storage share (12 last hours avg.)');
+		graph.draw_line();
+
+		graph.draw_legend();
 	};
 
 	ocp.mp.print_1m = function() {
@@ -147,30 +186,24 @@
 			end_t: end_t
 		};
 		var result = ocp.client.command(data, ocp.dht.get_endpoint_url(null, 'get_rate'));
-		var svg_elem = $('#ocp_mp_svg').get(0);
-		result.transaction_list = ocp.graphic.group_transaction(result.transaction_list, group_size);
-		ocp.graphic.draw_graph(svg_elem, result, start_t, end_t, margin);
-	};
 
-	ocp.mp.manage_legend = function() {
-		var legend_on = $('#ocp_mp_48h').hasClass('active');
-		if (!legend_on) {
-			$('#ocp_mp_legend').hide();
-			return;
-		}
-		$('#ocp_mp_legend').show();
-		var svg_offset = $('svg').offset();
-		console.log('height=' + $('#ocp_mp_legend').outerHeight(true));
-		console.log('width=' + $('#ocp_mp_legend').outerWidth(true));
-		var offset = {
-			top: 0 + $('#ocp_mp_svg').attr('height') - $('#ocp_mp_legend').outerHeight(true) - margin.bottom - 1,
-			left: 0 + $('#ocp_mp_svg').attr('width') - $('#ocp_mp_legend').outerWidth(true) - margin.right - 1
-		};
-		$('#ocp_mp_legend').css(offset);
-	};
+		var graph = new ocp.graphic.Graph('#ocp_mp_graph', margin);
+		graph.dataset = ocp.graphic.group_transaction(result.transaction_list, group_size);
 
-	ocp.mp.svg_clean = function() {
-		$('#ocp_mp_svg').children().remove();
+		graph.start_t = start_t;
+		graph.end_t = end_t;
+
+		graph.x_access = function(d) { return d.timestamp; };
+		graph.y_access = function(d) { return d.rate; };
+		graph.y_format = function(n) { return d3.format(".2f")(n) + ' €'; };
+
+		graph.scale_y(0.1, 0.1);
+
+		graph.draw_axis();
+
+		graph.color = 'blue';
+		graph.draw_line();
+		graph.draw_scatter_plot();
 	};
 
 	ocp.mp.show_page = function() {
@@ -295,7 +328,6 @@
 			console.log('click');
 			$('#ocp_mp_buttons li.active').removeClass('active');
 			$(this).addClass('active');
-			ocp.mp.svg_clean();
 			switch($(this).attr('id')) {
 				case 'ocp_mp_48h':
 					ocp.mp.print_48h(transaction_obj);
@@ -310,10 +342,9 @@
 					ocp.mp.print_1y();
 					break;
 			}
-			ocp.mp.manage_legend();
 		});
 
-		$('#ocp_mp_legend').ready(function() {
+		$(window).load(function() {
 			$('#ocp_mp_48h').click();
 		});
 	};
