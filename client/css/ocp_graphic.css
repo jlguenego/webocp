@@ -24,7 +24,7 @@
 }
 
 .ocp_graphic .tooltip text {
-	font-family: sans-serif;
+	font-family: 'Open sans', serif;
     font-size: 11px;
     fill: #555555;
 	text-anchor: start;
@@ -50,8 +50,9 @@
 }
 
 .ocp_graphic .axis text {
-    font-family: sans-serif;
+	font-family: 'Open sans', serif;
     font-size: 11px;
+    fill: #383A3D;
 }
 
 .ocp_graphic .legend {
