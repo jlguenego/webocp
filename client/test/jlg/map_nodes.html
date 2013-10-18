@@ -63,6 +63,7 @@ function NodeMap() {
 	};
 
 	this.data = [];
+	this.links = [];
 	this.overlay = null;
 
 	this.generate_random_data = function() {
@@ -72,12 +73,32 @@ function NodeMap() {
 
 	this.add_node = function(geoc) {
 		var nbr = this.data.length;
-		this.data.push({
+		var node = {
 			lng: geoc.mb,
 			lat: geoc.lb,
 			label: 'node ' + nbr
-		});
+		};
+		this.data.push(node);
+		this.update_links();
 		this.repaint();
+	};
+
+	this.update_links = function() {
+		// strategy : choose N existing nodes and link them to the
+		// last one.
+		var existing_nodes = this.data.slice(0);
+		var last_node = existing_nodes.pop();
+		var remaining = 5;
+		while (existing_nodes.length > 0 && remaining > 0) {
+			var index = Math.round(Math.random() * (existing_nodes.length - 1));
+			var contact_node = existing_nodes.splice(index, 1)[0];
+			this.links.push({
+				target: last_node,
+				source: contact_node
+			});
+			remaining--;
+		}
+
 	};
 
 	this.repaint = function() {
@@ -121,15 +142,16 @@ function NodeMap() {
 
 			var main_group = svg.append('g');
 
-			// Draw each marker as a separate SVG element.
-			// We could use a single SVG, but what size would it have?
 			this.draw = function() {
 				var projection = this.getProjection();
 				var padding = 10;
 
 				console.log(self.data);
-				var dataset = self.data;
-				console.log(dataset);
+				var node_dataset = self.data;
+				console.log(node_dataset);
+				var link_dataset = self.links;
+				console.log('link_dataset');
+				console.log(link_dataset);
 
 				var x_scale = function(d) {
 					d = new google.maps.LatLng(d.lat, d.lng);
@@ -143,20 +165,18 @@ function NodeMap() {
 					return d.y;
 				};
 
-				var line = d3.svg.line()
-					.x(function(d) { return x_scale(d); })
-					.y(function(d) { return y_scale(d); })
-					.interpolate('linear');
-
-				var path = main_group.selectAll('path').data([ dataset ]);
-				path.enter().append("path")
+				var path = main_group.selectAll('line').data(link_dataset);
+				path.enter().append("line")
 					.classed('link', true);
 
-				path.attr("d", function(d) { return line(d); });
+				path.attr("x1", function(d) { return x_scale(d.source); })
+					.attr("y1", function(d) { return y_scale(d.source); })
+					.attr("x2", function(d) { return x_scale(d.target); })
+					.attr("y2", function(d) { return y_scale(d.target); });
 
 				path.exit().remove();
 
-				var g = main_group.selectAll("g").data(dataset);
+				var g = main_group.selectAll("g").data(node_dataset);
 				var new_g = g.enter().append("g");
 
 				var node = new_g.append("circle")
