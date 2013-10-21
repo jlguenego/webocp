@@ -6,35 +6,47 @@
 		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
 		<script src="_ext/jquery-1.10.2.min.js"></script>
 		<script src="js/ocp.js"></script>
+		<script src="js/ocp_utils.js"></script>
+		<script src="js/ocp_worker_ui.js"></script>
+		<script src="js/ocp_storage.js"></script>
+		<script src="js/ocp_worker_ui_pool.js"></script>
+		<script src="js/ocp_client.js"></script>
 		<script src="js/visual/visual.js"></script>
 		<script src="js/visual/Pie.js"></script>
 		<style>
-.used {
+#pie .used {
 	fill: #FF0000;
 }
-.free {
+#pie .free {
 	fill: #FFFF00;
+}
+
+#pie g {
+	pointer-events: all;
 }
 		</style>
 	</head>
 
 	<body>
-		<input type="text" value="http://localhost/webocp/server/node6" /> <button>Click</button>
+		<input type="text" value="http://localhost/webocp/server/node9" /> <button>Click</button>
 		<div id="pie"></div>
 		<script>
 var pie = null;
 $(document).ready(function() {
 	pie = new ocp.visual.Pie('#pie');
+	pie.use_title = true;
 });
 
 $('button').click(function() {
-	var used = $('input').val();
-	var left = 100 - used;
+	var json = ocp.client.command({}, $('input').val() + '/endpoint/get_mem_report.php');
+	console.log(json);
+	var used = json.used;
+	var left = json.total - used;
 	var data = [
-		{"label": "used", "value": used}
+		{"label": "used", "value": used, title: 'Used: ' + ocp.utils.format_size(used)}
 	];
-	if (used < 100) {
-		data.push({"label": "free", "value": left});
+	if (used < json.total) {
+		data.push({"label": "free", "value": left, title: 'Free: ' + ocp.utils.format_size(left)});
 	}
 
 	pie.set(data);

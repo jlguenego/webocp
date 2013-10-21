@@ -1,9 +1,10 @@
 (function(ocp, undefined) {
 	ocp.visual.Pie = function(selector) {
 		this.pie = d3.select(selector);
-		this.width = 300;
-		this.height = 300;
+		this.width = 200;
+		this.height = 200;
 		this.radius = 100;
+		this.use_title = false;
 
 		this.svg = this.pie.append('svg')
 			.attr("width", this.width)
@@ -27,6 +28,12 @@
 					.attr('class', 'slice');
 
 			g.append("path");
+
+			if (this.use_title) {
+				g.select("path")
+					.append('title')
+			}
+
 			g.append("text");
 
 			// UPDATE
@@ -36,6 +43,10 @@
 					return d.data.label;
 				})
 				.attr("d", arc);
+
+			arcs.select('title').text(function(d) {
+					return d.data.title;
+				});
 
 			var self = this;
 			arcs.select("text")
