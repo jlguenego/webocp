@@ -209,8 +209,8 @@
 	function get_geoloc() {
 		$json = json_decode(file_get_contents('http://freegeoip.net/json/' . $ip));
 		// Add impresision
-		$impresision_lat = rand(-1000, 1000) / 1000000;
-		$impresision_lng = rand(-1000, 1000) / 1000000;
+		$impresision_lat = rand(-1000, 1000) / 100000;
+		$impresision_lng = rand(-1000, 1000) / 100000;
 
 		$json->latitude += $impresision_lat;
 		$json->longitude += $impresision_lng;

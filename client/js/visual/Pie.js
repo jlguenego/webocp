@@ -1,4 +1,6 @@
 (function(ocp, undefined) {
+	ocp.visual = ocp.visual || {};
+
 	ocp.visual.Pie = function(selector) {
 		this.pie = d3.select(selector);
 		this.width = 200;
