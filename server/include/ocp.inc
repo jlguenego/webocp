@@ -101,5 +101,45 @@
 				$response = file_get_contents($contact->url . '/endpoint/add_contact.php', false, $context);
 			}
 	    }
+
+	    public function get_mem_report() {
+	    	$array = array(
+	    		'total' => $this->quota * 1024 * 1024 * 1024,
+	    		'used' => $this->get_used_mem(),
+	    		'free_space' => @disk_free_space(storage_get_root()),
+	    		'disk_space' => @disk_total_space(storage_get_root()),
+	    		'used_space' => @disk_total_space(storage_get_root()) - @disk_free_space(storage_get_root()),
+	    	);
+			return $array;
+	    }
+
+	    public function get_used_mem() {
+	    	$result = 0;
+			$result = $this->foldersize(storage_get_root());
+	    	return $result;
+	    }
+
+	    function foldersize($path) {
+		    $total_size = 0;
+		    $files = scandir($path);
+		    $cleanPath = rtrim($path, '/'). '/';
+
+		    foreach($files as $t) {
+		        if ($t<>"." && $t<>"..") {
+		            $currentFile = $cleanPath . $t;
+		            if (is_dir($currentFile)) {
+		                $size = foldersize($currentFile);
+		                $total_size += $size;
+		            }
+		            else {
+		                $size = filesize($currentFile);
+		                $relica = BLOCK_SIZE - ($size % BLOCK_SIZE);
+		                $total_size += $size + $relica;
+		            }
+		        }
+		    }
+
+		    return $total_size;
+		}
 	}
 ?>

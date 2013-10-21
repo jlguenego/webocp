@@ -2,9 +2,6 @@
 	define("SCRIPT_FILE", __FILE__);
 	require_once(dirname(dirname(dirname(SCRIPT_FILE))) . '/include/header.inc');
 
-	$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
-	storage_set_root(ROOT . '/test/' . $name);
-
 	$_REQUEST = array_merge($_GET, $_POST);
 
 	//sleep(10);

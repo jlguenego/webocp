@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script type="text/javascript" src="_ext/d3.v3.min.js"></script>
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="js/ocp.js"></script>
+		<script src="js/visual/visual.js"></script>
+		<script src="js/visual/Pie.js"></script>
+		<style>
+.used {
+	fill: #FF0000;
+}
+.free {
+	fill: #FFFF00;
+}
+		</style>
+	</head>
+
+	<body>
+		<input type="text" value="http://localhost/webocp/server/node6" /> <button>Click</button>
+		<div id="pie"></div>
+		<script>
+var pie = null;
+$(document).ready(function() {
+	pie = new ocp.visual.Pie('#pie');
+});
+
+$('button').click(function() {
+	var used = $('input').val();
+	var left = 100 - used;
+	var data = [
+		{"label": "used", "value": used}
+	];
+	if (used < 100) {
+		data.push({"label": "free", "value": left});
+	}
+
+	pie.set(data);
+});
+		</script>
+	</body>
+</html>

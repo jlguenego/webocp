@@ -5,14 +5,12 @@
 	$_REQUEST = array_merge($_GET, $_POST);
 	$output = array();
 	try {
-		$file = storage_retrieve_path($_REQUEST['filename']);
-		debug('path='.$file);
-		if (file_exists($file)) {
-			unlink($file);
-		}
+		$ocp = new OCP();
+		$ocp->load(OCP::get_name_from_url($_SERVER['REQUEST_URI']));
+		$output['result'] = $ocp->get_mem_report();
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
 	}
-	$result = json_encode($output);
+	$result = prettyPrint(json_encode($output));
 	echo $result;
 ?>
