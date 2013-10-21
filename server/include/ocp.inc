@@ -5,6 +5,7 @@
 		public $sponsor;
 		public $start_address = null;
 		public $contact_list = null;
+		public $quota = 0;
 
 		public static function get_name_from_url($url) {
 			$name = preg_replace('#.*webocp/server/(.+)/endpoint.*#', "$1", $url);
@@ -28,7 +29,7 @@
 		public function load($name) {
 			$this->name = $name;
 			$file = $this->get_file($this->name);
-			debug('file=' . $file);
+			debug('file2=' . $file);
 			if (!is_file($file)) {
 				throw new Exception('File not found: ' . $file);
 			}
@@ -42,7 +43,8 @@
 				"name" => $this->name,
 				"url" => $this->url,
 				"start_address" => $this->start_address,
-				"contact_list" => $this->contact_list
+				"quota" => $this->quota,
+				"contact_list" => $this->contact_list,
 			);
 			return prettyPrint(json_encode($conf));
 		}
@@ -51,7 +53,8 @@
 			return array(
 				"name" => $this->name,
 				"url" => $this->url,
-				"start_address" => $this->start_address
+				"start_address" => $this->start_address,
+				"quota" => $this->quota,
 			);
 		}
 

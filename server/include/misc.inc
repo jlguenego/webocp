@@ -59,9 +59,13 @@
 
 	function debug($msg) {
 		global $g_debug;
-		global $g_script_name;
+
 		if ($g_debug) {
-			file_put_contents(LOG_FILE_PATH, $g_script_name . ": " . $msg . PHP_EOL, FILE_APPEND);
+			$log_file = 'log.txt';
+			if (defined('SCRIPT_NAME')) {
+				$log_file = 'log_' . SCRIPT_NAME . '.txt';
+			}
+			file_put_contents(LOG_FILE_DIR . '/' . $log_file, SCRIPT_NAME . ": " . $msg . PHP_EOL, FILE_APPEND);
 		}
 	}
 

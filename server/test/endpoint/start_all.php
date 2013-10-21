@@ -1,18 +1,9 @@
 <?php
-	error_reporting(E_ERROR|E_WARNING|E_PARSE);
-	header('Access-Control-Allow-Origin: *');
-	header("Content-Type:text/plain; charset=UTF-8;");
-	define("BASE_DIR", dirname(dirname(dirname(__FILE__))));
-
-	require_once(BASE_DIR . '/include/misc.inc');
-	require_once(BASE_DIR . '/include/constant.inc');
-	require_once(BASE_DIR . '/include/format.inc');
-	require_once(BASE_DIR . '/include/storage.inc');
-	require_once(BASE_DIR . '/include/ocp.inc');
-
-	$g_debug = true;
+	define("SCRIPT_FILE", __FILE__);
+	require_once(dirname(dirname(dirname(SCRIPT_FILE))) . '/include/header.inc');
 
 	$_REQUEST = array_merge($_GET, $_POST);
+	debug('SCRIPT_NAME2=' . SCRIPT_NAME);
 	if (isset($_REQUEST['node_qty'])) {
 		$output = array();
 		try {
@@ -22,12 +13,14 @@
 			for ($i = 0; $i < $node_qty; $i++) {
 				$name = 'node' . $i;
 				$node_url = $url . '/' . $name;
+				$quota = 1;
 				if ($i == 0) {
 					$sponsor_url = $node_url;
 					file_get_contents(
 						$node_url . '/endpoint/start.php?' .
 						'name=' . $name .
-						'&url=' . $node_url
+						'&url=' . $node_url .
+						'&quota=' . $quota
 					);
 					continue;
 				}
@@ -36,7 +29,8 @@
 					$node_url . '/endpoint/start.php?' .
 					'name=' . $name .
 					'&url=' . $node_url .
-					'&sponsor=' . $sponsor_url
+					'&sponsor=' . $sponsor_url .
+					'&quota=' . $quota
 				);
 			}
 			$output['result'] = 'OK';

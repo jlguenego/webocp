@@ -1,19 +1,9 @@
 <?php
-	error_reporting(E_ERROR|E_WARNING|E_PARSE);
-	header('Access-Control-Allow-Origin: *');
-	header("Content-Type:text/plain; charset=UTF-8;");
-	define("BASE_DIR", dirname(dirname(dirname(__FILE__))));
-
-	require_once(BASE_DIR . '/include/misc.inc');
-	require_once(BASE_DIR . '/include/constant.inc');
-	require_once(BASE_DIR . '/include/format.inc');
-	require_once(BASE_DIR . '/include/storage.inc');
-	require_once(BASE_DIR . '/include/ocp.inc');
-
-	$g_debug = true;
+	define("SCRIPT_FILE", __FILE__);
+	require_once(dirname(dirname(dirname(SCRIPT_FILE))) . '/include/header.inc');
 
 	$_REQUEST = array_merge($_GET, $_POST);
-	if (isset($_REQUEST['name']) && isset($_REQUEST['url'])) {
+	if (isset($_REQUEST['name']) && isset($_REQUEST['url']) && isset($_REQUEST['quota'])) {
 		$output = array();
 		try {
 			$ocp = new OCP();
@@ -50,6 +40,7 @@
 			Name: <input type="text" name="name" value="<?php echo $name; ?>"/><br />
 			URL: <input type="text" name="url" value="<?php echo $url; ?>" size="100"/>(url where I can be reached.)<br />
 			Sponsor: <input type="text" name="sponsor" value="http://localhost/webocp/server/test" size="100"/><br />
+			Quota: <input type="number" name="quota" value="1" size="100"/> GB<br />
 			<input type="submit" value="Submit" />
 		</form>
 	</body>
