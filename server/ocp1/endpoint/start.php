@@ -6,8 +6,12 @@
 	if (isset($_REQUEST['name']) && isset($_REQUEST['url']) && isset($_REQUEST['quota'])) {
 		$output = array();
 		try {
+			$ip = get_external_ip();
+			$coord = get_geoloc();
+
 			$ocp = new OCP();
 			$ocp->hydrate($_REQUEST);
+			$ocp->set_coord($coord);
 			$ocp->generate_start_address();
 			if (isset($_REQUEST['sponsor']) && $_REQUEST['sponsor'] != '') {
 				$ocp->inform_sponsor();

@@ -6,6 +6,7 @@
 		public $start_address = null;
 		public $contact_list = null;
 		public $quota = 0;
+		public $location = array();
 
 		public static function get_name_from_url($url) {
 			$name = preg_replace('#.*webocp/server/(.+)/endpoint.*#', "$1", $url);
@@ -44,6 +45,7 @@
 				"url" => $this->url,
 				"start_address" => $this->start_address,
 				"quota" => $this->quota,
+				"location" => $this->location,
 				"contact_list" => $this->contact_list,
 			);
 			return prettyPrint(json_encode($conf));
@@ -55,6 +57,7 @@
 				"url" => $this->url,
 				"start_address" => $this->start_address,
 				"quota" => $this->quota,
+				"location" => $this->location,
 			);
 		}
 
@@ -140,6 +143,12 @@
 		    }
 
 		    return $total_size;
+		}
+
+		public function set_coord($coord) {
+			$obj = json_decode($coord);
+			debug_r('test', $obj->coordinate);
+			$this->location = $obj->coordinate;
 		}
 	}
 ?>
