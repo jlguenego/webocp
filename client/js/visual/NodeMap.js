@@ -9,6 +9,8 @@
 			lng: 2.639940083026886
 		};
 
+		this.onnodeclick = function() {};
+
 		this.data = [];
 		this.links = [];
 		this.overlay = null;
@@ -141,12 +143,6 @@
 				}
 			});
 
-			// Manage click google map event
-			google.maps.event.addListener(map, 'click', function(e) {
-				console.log(e.latLng);
-				self.add_node(e.latLng);
-			});
-
 			// Load the station data. When the data comes back, create an overlay.
 			this.overlay = new google.maps.OverlayView();
 
@@ -185,11 +181,12 @@
 						.attr("cy", 0)
 						.classed('transparent_node', true);
 
-					node.on('mouseover', show_links);
-					node.on('mouseout', hide_links);
+					//node.on('mouseover', show_links);
+					//node.on('mouseout', hide_links);
 
-					node.on('click', function(e) {
+					node.on('click', function(node) {
 						console.log('click');
+						self.onnodeclick(node);
 					});
 
 					new_g.append("text")

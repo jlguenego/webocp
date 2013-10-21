@@ -83,6 +83,9 @@ $(document).ready(function() {
 	$('input').val(ocp.cfg.server_base_url + '/webocp/server/node0');
 	var node_map = new ocp.visual.NodeMap();
 	node_map.draw('#map');
+	node_map.onnodeclick = function(node) {
+		console.log(node);
+	};
 
 	$('button').click(function() {
 		var url = $('input').val();
