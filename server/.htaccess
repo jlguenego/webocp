@@ -1,4 +1,7 @@
 # Activate URL rewriting
 RewriteEngine on
 
-RewriteRule ^node[\d]+(.*)  		ocp1/$1 [L]
+RewriteRule ^node[\d]+$				ocp1/endpoint/home.php [L]
+RewriteRule ^node[\d]+(.*)  		ocp1$1 [L]
+
+
