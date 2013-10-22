@@ -13,10 +13,12 @@
 $.widget( "ui.ocp_fix_variable_h", {
 	version: "0.0.1",
 	options: {
+		fix: null,
+		variable: null
 	},
 
-	text: null,
-	value: null,
+	fix: null,
+	variable: null,
 
 	_create: function() {
 		var self = this;
@@ -30,15 +32,18 @@ $.widget( "ui.ocp_fix_variable_h", {
 			display: 'inline-block',
 			'vertical-align': 'top'
 		};
-		this.text = $(this.element.children().get(0)).css(css);
-		this.value = $(this.element.children().get(1)).css(css);
+
+		this.fix = this.options.fix || $(this.element.children().get(0));
+		this.variable = this.options.variable || $(this.element.children().get(1));
+		this.fix.css(css);
+		this.variable.css(css);
 
 		$(window).load(function() {
-			self.value.outerWidth(self.element.width() - self.text.outerWidth());
+			self.variable.outerWidth(self.element.width() - self.fix.outerWidth());
 		});
 
 		$(window).resize(function() {
-			self.value.outerWidth(self.element.width() - self.text.outerWidth());
+			self.variable.outerWidth(self.element.width() - self.fix.outerWidth());
 		});
 
 		return this;

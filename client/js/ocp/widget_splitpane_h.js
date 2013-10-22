@@ -109,6 +109,20 @@ $.widget( "ui.ocp_splitpane_h", {
 		var left_w = this.leftpane.width();
 		var resizebar_w = this.resizebar.width();
 		this.rightpane.width(container_w - left_w - resizebar_w);
+	},
+
+	resize: function(obj) {
+		if (obj.left) {
+			this.leftpane.width(obj.left);
+			this._refresh();
+		} else if (obj.right) {
+			this.rightpane.width(obj.right);
+			var container_w = this.element.width();
+			var resizebar_w = this.resizebar.width();
+			this.leftpane.width(container_w - resizebar_w - obj.right);
+			this._refresh();
+		}
+		$(window).trigger('resize');
 	}
 });
 

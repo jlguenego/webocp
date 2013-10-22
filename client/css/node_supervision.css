@@ -26,83 +26,79 @@
 	fill: none;
 }
 
-#ocp_ns_node_prop {
-}
-
-#ocp_ns_node_prop table {
+#ocp_ns_sidebar table {
 	width: 90%;
 	margin: 0px auto 0px auto;
 	border-collapse: collapse;
 }
 
-#ocp_ns_node_prop table tr {
+#ocp_ns_sidebar table tr {
 	border-bottom: 1px solid #CECECE;
 }
 
-#ocp_ns_node_prop table th {
-	min-width: 120px;
-	width: 120px;
-	max-width: 120px;
+#ocp_ns_sidebar table th {
+	min-width: 90px;
+	width: 90px;
+	max-width: 90px;
 	text-align: right;
 	padding: 15px 10px 5px 5px;
-
-	box-sizing: border-box;
 
 	vertical-align: top;
 }
 
-#ocp_ns_node_prop table td {
+#ocp_ns_sidebar table td {
+	font-size: 11px;
 	text-align: left;
 	padding: 15px 10px 5px 5px;
 	vertical-align: top;
 }
 
-#ocp_ns_node_prop .capacity {
+#ocp_ns_sidebar .capacity {
 	margin: 0px;
 	padding: 0px;
 	list-style: none;
 	width: 200px;
 }
 
-#ocp_ns_node_prop .capacity tr {
+#ocp_ns_sidebar .capacity tr {
 	border: none;
 }
 
-#ocp_ns_node_prop .capacity .label {
+#ocp_ns_sidebar .capacity .label {
 	width: 50px;
 }
 
-#ocp_ns_node_prop .capacity td {
+#ocp_ns_sidebar .capacity td {
 	padding: 0px;
 	text-align: right;
 }
 
-#ocp_ns_node_prop .capacity .color, #ocp_ns_node_prop .capacity .color div {
+#ocp_ns_sidebar .capacity .color, #ocp_ns_sidebar .capacity .color div {
 	width: 20px;
 	height: 15px;
 	margin-bottom: 5px;
 }
 
-#ocp_ns_node_prop .total .color div {
+#ocp_ns_sidebar .total .color div {
 	background-color: transparent;
 }
 
-#ocp_ns_node_prop .used .color div {
+#ocp_ns_sidebar .used .color div {
 	background-color: #D11E00;
 }
 
-#ocp_ns_node_prop .free .color div {
+#ocp_ns_sidebar .free .color div {
 	background-color: #FFC926;
 }
 
-#ocp_ns_node_prop .amount {
+#ocp_ns_sidebar .amount {
 }
 
-#ocp_ns_node_prop .unit {
+#ocp_ns_sidebar .unit {
 	width: 30px;
 }
 
-#ocp_ns_node_prop .header {
+#ocp_ns_sidebar .header {
 	font-size: 14px;
 	background-color: #D11E00;
 	border: 0px;
@@ -117,7 +113,7 @@
 	height: 50px;
 }
 
-#ocp_ns_node_prop .content {
+#ocp_ns_sidebar .content {
 	overflow: auto;
 	background-color: #F2F2F3;
 }
@@ -143,7 +139,7 @@
 	pointer-events: all;
 }
 
-#ocp_ns_map_view .header {
+#ocp_ns_content .header {
 	height: 50px;
 	padding: 10px;
 	box-sizing: border-box;
@@ -152,7 +148,7 @@
 	background-color: #FFFFFF;
 }
 
-#ocp_ns_map_view .header ul {
+#ocp_ns_content .header ul {
 	display: inline-block;
 	float: left;
 	padding: 0px;
@@ -161,7 +157,7 @@
 	height: 100%;
 }
 
-#ocp_ns_map_view .header li {
+#ocp_ns_content .header li {
 	position: relative;
 	display: inline-block;
 	padding: 6px 8px 5px 30px;
@@ -173,7 +169,7 @@
 	cursor: pointer;
 }
 
-#ocp_ns_map_view .header li img {
+#ocp_ns_content .header li img {
 	position: absolute;
 	top: 3px;
 	left: 5px;
@@ -181,17 +177,43 @@
 	height: 23px;
 }
 
-#ocp_ns_map_view .header li:first-child {
+#ocp_ns_content .header li:first-child {
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
 }
 
-#ocp_ns_map_view .header li:last-child {
+#ocp_ns_content .header li:last-child {
 	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
 }
 
-#ocp_ns_toggle_prop {
-	width: 10px;
+#ocp_ns_toggle_bar {
 	height: 100%;
+	background-color: #FFFFFF;
+}
+
+#ocp_ns_node_prop_content {
+	height: 100%;
+}
+
+#ocp_ns_toggle_button {
+	width: 15px;
+	height: 15px;
+	cursor: pointer;
+
+	background-image: url(image/transfer-arrows_h.png);
+	background-size: 30px 30px;
+	background-position: 100% 0%;
+}
+
+#ocp_ns_toggle_button:hover {
+	background-position: 100% 100%;
+}
+
+#ocp_ns_toggle_button.ocp_ns_node_prop_minimized {
+	background-position: 0% 0%;
+}
+
+#ocp_ns_toggle_button.ocp_ns_node_prop_minimized:hover {
+	background-position: 0% 100%;
 }
