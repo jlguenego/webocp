@@ -188,8 +188,10 @@
 		return nbr.toFixed(precision);
 	};
 
-	ocp.utils.format_size = function(bytes, precision) {
-		precision = precision || 2;
+	ocp.utils.format_size = function(bytes, options) {
+		options = options || {};
+		options.precision = options.precision || 2;
+		options.output_format = options.output_format || 'string';
 		var units = [ 'B', 'KB', 'MB', 'GB', 'TB' ];
 
 	    bytes = Math.max(bytes, 0);
@@ -200,7 +202,10 @@
 
 	    pow = Math.min(pow, units.length - 1);
 	    bytes /= Math.pow(1000, pow);
-		bytes = Math.round(bytes * Math.pow(10, precision)) / Math.pow(10, precision);
+		bytes = Math.round(bytes * Math.pow(10, options.precision)) / Math.pow(10, options.precision);
+		if (options.output_format != 'string') {
+			return { amount: bytes, unit: units[pow] };
+		}
 	    return bytes + ' ' + units[pow];
 	};
 

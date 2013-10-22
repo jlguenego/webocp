@@ -70,30 +70,168 @@ html, body {
 }
 
 #node_prop {
-	min-width: 450px;
 }
 
-#node_prop .title {
-	height: 30px;
+#node_prop table {
+	width: 90%;
+	margin: 0px auto 0px auto;
+	border-collapse: collapse;
+}
+
+#node_prop table tr {
+	border-bottom: 1px solid #CECECE;
+}
+
+#node_prop table th {
+	min-width: 120px;
+	width: 120px;
+	max-width: 120px;
+	text-align: right;
+	padding: 15px 10px 5px 5px;
+
+	box-sizing: border-box;
+
+	vertical-align: top;
+}
+
+#node_prop table td {
+	text-align: left;
+	padding: 15px 10px 5px 5px;
+	vertical-align: top;
+}
+
+#node_prop .capacity {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	width: 200px;
+}
+
+#node_prop .capacity tr {
+	border: none;
+}
+
+#node_prop .capacity .label {
+	width: 50px;
+}
+
+#node_prop .capacity td {
+	padding: 0px;
+	text-align: right;
+}
+
+#node_prop .capacity .color, #node_prop .capacity .color div {
+	width: 20px;
+	height: 15px;
+	margin-bottom: 5px;
+}
+
+#node_prop .total .color div {
+	background-color: transparent;
+}
+
+#node_prop .used .color div {
+	background-color: #D11E00;
+}
+
+#node_prop .free .color div {
+	background-color: #FFC926;
+}
+
+#node_prop .amount {
+}
+
+#node_prop .unit {
+	width: 30px;
+}
+
+#node_prop .header {
+	font-size: 14px;
+	background-color: #D11E00;
+	border: 0px;
+	color: #FFFFFF;
+	background-image: url(css/image/cloud2.png);
+	background-size: 30px 30px;
+	background-position: 14px center;
+	padding: 15px 15px 16px 57px;
+	background-repeat: no-repeat;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	height: 50px;
 }
 
 #node_prop .content {
 	overflow: auto;
+	background-color: #F2F2F3;
 }
 
 #view_node {
 	height: 100%;
 }
 
-#pie .used {
-	fill: #FF0000;
+#pie .piece {
+	stroke: #F2F2F3;
+	stroke-width: 4px;
 }
+
+#pie .used {
+	fill: #D11E00;
+}
+
 #pie .free {
-	fill: #FFFF00;
+	fill: #FFC926;
 }
 
 #pie g {
 	pointer-events: all;
+}
+
+#map_view .header {
+	height: 50px;
+	padding: 10px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	border-bottom: 1px solid #E1E1E1;
+	background-color: #FFFFFF;
+}
+
+#map_view .header ul {
+	display: inline-block;
+	float: left;
+	padding: 0px;
+	margin: 0px;
+	margin-right: 20px;
+	height: 100%;
+}
+
+#map_view .header li {
+	position: relative;
+	display: inline-block;
+	padding: 6px 8px 5px 30px;
+	margin: 0px 1px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	height: 100%;
+	background-color: #DADEE1;
+	cursor: pointer;
+}
+
+#map_view .header li img {
+	position: absolute;
+	top: 3px;
+	left: 5px;
+	width: 33px;
+	height: 23px;
+}
+
+#map_view .header li:first-child {
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+#map_view .header li:last-child {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 		</style>
 	</head>
@@ -101,38 +239,61 @@ html, body {
 	<body>
 		<div id="view_node">
 			<div id="node_prop">
-				<div class="page_title">Node Properties</div>
+				<div class="header">Node Properties</div>
 				<div class="content">
-					<div class="properties">
-						<table>
-							<tr>
-								<td>Node name</td>
-								<td class="name"></td>
-							</tr>
-							<tr>
-								<td>Start address</td>
-								<td class="start_address"></td>
-							</tr>
-							<tr>
-								<td>Url</td>
-								<td class="url"></td>
-							</tr>
-							<tr>
-								<td>Quota</td>
-								<td class="quota"></td>
-							</tr>
-							<tr>
-								<td>Pie</td>
-								<td><div id="pie"></div></td>
-							</tr>
-						</table>
-					</div>
-					<div class="buttons">
-						<button id="refresh">Refresh</button>
-					</div>
+					<table>
+						<tr>
+							<th>Node name</th>
+							<td class="name"></td>
+						</tr>
+						<tr>
+							<th>Start address</th>
+							<td class="start_address"></td>
+						</tr>
+						<tr>
+							<th>Url</th>
+							<td class="url"></td>
+						</tr>
+						<tr>
+							<th>Capacity</th>
+							<td>
+								<table class="capacity">
+									<tr class="used">
+										<td class="color"><div></div></td>
+										<td class="label">Used:</td>
+										<td class="amount"></td>
+										<td class="unit"></td>
+									</tr>
+									<tr class="free">
+										<td class="color"><div></div></td>
+										<td class="label">Free:</td>
+										<td class="amount"></td>
+										<td class="unit"></td>
+									</tr>
+									<tr class="total">
+										<td class="color"><div></div></td>
+										<td class="label">Total:</td>
+										<td class="amount"></td>
+										<td class="unit"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<th></th>
+							<td>
+								<div id="pie"></div>
+							</td>
+						</tr>
+					</table>
 				</div>
 			</div>
 			<div id="map_view">
+				<div class="header">
+					<ul>
+						<li id="refresh"><img src="css/image/reload.png" />Refresh</li>
+					</ul>
+				</div>
 				<div id="map"></div>
 			</div>
 		</div>
@@ -146,21 +307,27 @@ $(document).ready(function() {
 	});
 
 	$('#node_prop').ocp_fix_variable();
-	$('#node_prop .content').ocp_fix_variable({fix: $('#node_prop .content .buttons'), variable: $('#node_prop .content table')});
+	$('#map_view').ocp_fix_variable();
 
 	var node_map = new ocp.visual.NodeMap();
 	node_map.draw('#map');
 
-	pie = new ocp.visual.Pie('#pie');
+	var pie = new ocp.visual.Pie('#pie');
 	pie.use_title = true;
 
 	node_map.onnodeclick = function(node) {
-		var node_prop = $('#node_prop');
-		node_prop.find('.name').html(node.name);
-		node_prop.find('.start_address').html(node.start_address);
-		node_prop.find('.url').html(node.url);
-		node_prop.find('.quota').html(ocp.utils.format_size(node.quota * 1000 * 1000 * 1000));
+		display_node_properties(node);
+		console.log(node);
+	};
 
+	display_node_properties({
+		url: 'http://localhost/webocp/server/node0',
+		name: 'node9',
+		start_address: '0785284586ef5810b80560319ef24968e897f7ce',
+		quota: 1,
+	});
+
+	function display_node_properties(node) {
 		var json = ocp.client.command({}, node.url + '/endpoint/get_mem_report.php');
 		console.log(json);
 		var used = json.used;
@@ -171,12 +338,26 @@ $(document).ready(function() {
 		if (used < json.total) {
 			data.push({"label": "free", "value": left, title: 'Free: ' + ocp.utils.format_size(left)});
 		}
-
 		pie.set(data);
 
-		console.log(node);
-	};
+		var node_prop = $('#node_prop');
+		node_prop.find('.name').html(node.name);
+		node_prop.find('.start_address').html(node.start_address);
+		node_prop.find('.url').html(node.url);
 
+		var options = { output_format: 'object' };
+		var used_o = ocp.utils.format_size(used, options);
+		node_prop.find('.used .amount').html(ocp.utils.format_nbr(used_o.amount, 2));
+		node_prop.find('.used .unit').html(used_o.unit);
+
+		var free_o = ocp.utils.format_size(left, options);
+		node_prop.find('.free .amount').html(ocp.utils.format_nbr(free_o.amount, 2));
+		node_prop.find('.free .unit').html(free_o.unit);
+
+		var total_o = ocp.utils.format_size(node.quota * 1000 * 1000 * 1000, options);
+		node_prop.find('.total .amount').html(ocp.utils.format_nbr(total_o.amount, 2));
+		node_prop.find('.total .unit').html(total_o.unit);
+	}
 	$('#refresh').click(function() {
 		var url = ocp.cfg.server_base_url + '/webocp/server/node0';
 
@@ -185,7 +366,7 @@ $(document).ready(function() {
 		console.log(contact_list);
 		node_map.data = d3.values(contact_list);
 		node_map.data = d3.values(contact_list).filter(function(d) {
-		return d.location instanceof Array;
+			return d.location instanceof Array;
 		});
 		node_map.repaint();
 	});
