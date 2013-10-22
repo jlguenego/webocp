@@ -19,8 +19,8 @@
 		ocp.am.sidebar();
 
 
-		$('#ocp_am_page').ocp_fix_variable({
-			fix: $('#ocp_am_page .ocp_footer'),
+		$('#account_management_page').ocp_fix_variable({
+			fix: $('#account_management_page .ocp_footer'),
 			variable: $('#ocp_am_main') });
 		$('#ocp_am_main').ocp_fix_variable();
 		$('#ocp_am_body').ocp_text_value();
