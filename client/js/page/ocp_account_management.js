@@ -23,7 +23,7 @@
 			fix: $('#account_management_page .ocp_footer'),
 			variable: $('#ocp_am_main') });
 		$('#ocp_am_main').ocp_fix_variable_v();
-		$('#ocp_am_body').ocp_text_value();
+		$('#ocp_am_body').ocp_fix_variable_h();
 
 		$('.ocp_am_section').hide();
 		$('#ocp_am_details_button').addClass('selected');

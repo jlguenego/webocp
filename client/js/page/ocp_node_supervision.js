@@ -89,7 +89,7 @@
 			node_map.repaint();
 		});
 
-		$('#ocp_ns_node_prop').ocp_text_value();
+		$('#ocp_ns_node_prop').ocp_fix_variable_h();
 
 		var node_prop_width = 150;
 		$('#ocp_ns_toggle_prop').click(function() {

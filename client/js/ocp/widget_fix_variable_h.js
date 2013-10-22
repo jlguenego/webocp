@@ -10,7 +10,7 @@
 
 (function( $, undefined ) {
 
-$.widget( "ui.ocp_text_value", {
+$.widget( "ui.ocp_fix_variable_h", {
 	version: "0.0.1",
 	options: {
 	},

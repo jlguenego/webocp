@@ -478,7 +478,7 @@ var remove_dialog = null;
 			}
 		});
 
-		$('#ocp_fm_breadcrumbs').ocp_text_value();
+		$('#ocp_fm_breadcrumbs').ocp_fix_variable_h();
 
 		// Put a grid on right pane
 		grid = $("#ocp_fm_grid").ocp_grid({
