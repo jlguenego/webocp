@@ -10,6 +10,8 @@
 
 (function( $, undefined ) {
 
+var console = { log: function() {} };
+
 $.widget( "ui.ocp_fix_variable", {
 	version: "0.0.1",
 	options: {
@@ -37,9 +39,13 @@ $.widget( "ui.ocp_fix_variable", {
 	},
 
 	resize: function() {
+		console.log('resizing ' + this.element.attr('id'));
+		console.log('parent_size:  ' + this.element.innerHeight());
+		console.log('fix_size:  ' + this.fix.outerHeight(true));
 		var expected_height = this.element.innerHeight() - this.fix.outerHeight(true);
 		var min_height = this.variable.css('min-height').replace(/[a-z]/g, '');
 		expected_height = Math.max(expected_height, min_height);
+		console.log('expected_height for ' + this.variable.attr('id') + '=' + expected_height);
 		this.variable.outerHeight(expected_height);
 	},
 
