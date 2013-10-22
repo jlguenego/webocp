@@ -107,7 +107,7 @@
 
 	    public function get_mem_report() {
 	    	$array = array(
-	    		'total' => $this->quota * 1024 * 1024 * 1024,
+	    		'total' => $this->quota * 1000 * 1000 * 1000,
 	    		'used' => $this->get_used_mem(),
 	    		'free_space' => @disk_free_space(storage_get_root()),
 	    		'disk_space' => @disk_total_space(storage_get_root()),
@@ -124,6 +124,9 @@
 
 	    function foldersize($path) {
 		    $total_size = 0;
+		    if (!file_exists($path)) {
+		    	return $total_size;
+		    }
 		    $files = scandir($path);
 		    $cleanPath = rtrim($path, '/'). '/';
 

@@ -23,6 +23,7 @@ $.widget( "ui.ocp_fix_variable", {
 	_create: function() {
 		this.fix = this.options.fix || $(this.element.children().get(0));
 		this.variable = this.options.variable || $(this.element.children().get(1));
+		console.log(this.variable);
 		this.resize();
 
 		var self = this;
