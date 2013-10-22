@@ -12,6 +12,11 @@
 		<link rel="stylesheet" href="_ext/jquery-ui-1.10.3/themes/base/minified/jquery-ui.min.css" />
 		<!-- END JQUERY / JQUERY UI -->
 
+		<!-- GOOGLE MAPS -->
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+		<!-- END GOOGLE MAPS -->
+
 		<script src="_ext/sha1.js"></script>
 		<script src="_ext/aes.js"></script>
 
@@ -42,6 +47,9 @@
 		<script src="js/scenario/original.js"></script>
 		<script src="js/scenario/ocp1.js"></script>
 		<script src="js/scenario/crypt_blob.js"></script>
+
+		<script src="js/visual/NodeMap.js"></script>
+		<script src="js/visual/Pie.js"></script>
 		<!-- END OBJECT -->
 
 		<script src="js/ocp/core.js"></script>
@@ -85,6 +93,7 @@
 		<link rel="stylesheet" href="css/register_success.css" />
 		<link rel="stylesheet" href="css/market_place.css" />
 		<link rel="stylesheet" href="css/account_management.css" />
+		<link rel="stylesheet" href="css/node_supervision.css" />
 		<link rel="stylesheet" href="css/not_found.css" />
 
 		<link rel="stylesheet" href="css/ocp_graphic.css" />
@@ -97,6 +106,7 @@
 		<script src="js/page/ocp_file_manager.js"></script>
 		<script src="js/page/ocp_market_place.js"></script>
 		<script src="js/page/ocp_account_management.js"></script>
+		<script src="js/page/ocp_node_supervision.js"></script>
 		<!-- END PAGE -->
 
 		<!-- END OCP -->
@@ -155,6 +165,72 @@
 				<div class="ocp_footer"></div>
 			</div>
 			<!-- MY ACCOUNT END -->
+
+			<!-- NODE SUPERVISION -->
+			<div id="node_supervision_page" class="page_content">
+				<div id="ocp_ns_node_prop">
+					<div id="ocp_ns_node_prop_content">
+						<div class="header">Node Properties</div>
+						<div class="content">
+							<table>
+								<tr>
+									<th>Node name</th>
+									<td class="name"></td>
+								</tr>
+								<tr>
+									<th>Start address</th>
+									<td class="start_address"></td>
+								</tr>
+								<tr>
+									<th>Url</th>
+									<td class="url"></td>
+								</tr>
+								<tr>
+									<th>Capacity</th>
+									<td>
+										<table class="capacity">
+											<tr class="used">
+												<td class="color"><div></div></td>
+												<td class="label">Used:</td>
+												<td class="amount"></td>
+												<td class="unit"></td>
+											</tr>
+											<tr class="free">
+												<td class="color"><div></div></td>
+												<td class="label">Free:</td>
+												<td class="amount"></td>
+												<td class="unit"></td>
+											</tr>
+											<tr class="total">
+												<td class="color"><div></div></td>
+												<td class="label">Total:</td>
+												<td class="amount"></td>
+												<td class="unit"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<th></th>
+									<td>
+										<div id="ocp_ns_pie"></div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div id="ocp_ns_toggle_prop"></div>
+				</div>
+				<div id="ocp_ns_map_view">
+					<div class="header">
+						<ul>
+							<li id="ocp_ns_refresh"><img src="css/image/reload.png" />Refresh</li>
+						</ul>
+					</div>
+					<div id="ocp_ns_map"></div>
+				</div>
+			</div>
+			<!-- NODE SUPERVISION END -->
 
 			<!-- MARKET PLACE -->
 			<div id="market_place_page" class="page_content">
@@ -407,6 +483,7 @@
 		<!-- FILE MANAGER OTHERS -->
 		<div id="header_menu_body">
 			<a href="#general_settings" class="header_menu_settings">Settings</a>
+			<a href="#node_supervision" class="header_menu_settings">Node Supervision</a>
 		</div>
 		<div id="ocp_fm_new_folder_dialog" title="Create new folder" style="display: none;">
 			New folder name <input type="text" id="ocp_fm_new_folder_name" />

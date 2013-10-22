@@ -19,10 +19,10 @@
 		ocp.am.sidebar();
 
 
-		$('#account_management_page').ocp_fix_variable({
+		$('#account_management_page').ocp_fix_variable_v({
 			fix: $('#account_management_page .ocp_footer'),
 			variable: $('#ocp_am_main') });
-		$('#ocp_am_main').ocp_fix_variable();
+		$('#ocp_am_main').ocp_fix_variable_v();
 		$('#ocp_am_body').ocp_text_value();
 
 		$('.ocp_am_section').hide();

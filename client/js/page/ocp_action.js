@@ -63,6 +63,10 @@ var g_request = {};
 				ocp.am.show_page();
 				ocp.action.display('account_management_page');
 				break;
+			case 'node_supervision':
+				ocp.mp.show_page();
+				ocp.action.display('node_supervision_page');
+				break;
 			default:
 				ocp.action.display('not_found_page');
 		}
@@ -158,7 +162,7 @@ var g_request = {};
 		}
 
 		console.log(page_id + '.outerHeight=' + $('#' + page_id).outerHeight());
-		$('#page').ocp_fix_variable('set_variable', $('#' + page_id));
+		$('#page').ocp_fix_variable_v('set_variable', $('#' + page_id));
 		console.log(page_id + '.outerHeight=' + $('#' + page_id).outerHeight());
 
 		if (ocp.action.user_is_logged()) {

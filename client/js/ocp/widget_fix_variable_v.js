@@ -12,7 +12,7 @@
 
 var console = { log: function() {} };
 
-$.widget( "ui.ocp_fix_variable", {
+$.widget( "ui.ocp_fix_variable_v", {
 	version: "0.0.1",
 	options: {
 		fix: null,

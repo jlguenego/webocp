@@ -1,0 +1,197 @@
+#node_supervision_page {
+	background-image: url(image/background_image.jpg);
+	background-repeat: no-repeat;
+	background-position: center 0px;
+	font-size: 13px;
+	padding: 0px;
+}
+
+#ocp_ns_map {
+  width: 100%;
+  height: 100%;
+}
+
+#node_supervision_page .ocp_node_map svg {
+	position: absolute;
+}
+
+#node_supervision_page .ocp_node_map .node {
+	cursor: pointer;
+	fill: #EEEEEE;
+	stroke: #AAAAAA;
+	stroke-width: 3px;
+}
+
+#node_supervision_page .ocp_node_map .transparent_node {
+	fill: none;
+}
+
+#ocp_ns_node_prop {
+}
+
+#ocp_ns_node_prop table {
+	width: 90%;
+	margin: 0px auto 0px auto;
+	border-collapse: collapse;
+}
+
+#ocp_ns_node_prop table tr {
+	border-bottom: 1px solid #CECECE;
+}
+
+#ocp_ns_node_prop table th {
+	min-width: 120px;
+	width: 120px;
+	max-width: 120px;
+	text-align: right;
+	padding: 15px 10px 5px 5px;
+
+	box-sizing: border-box;
+
+	vertical-align: top;
+}
+
+#ocp_ns_node_prop table td {
+	text-align: left;
+	padding: 15px 10px 5px 5px;
+	vertical-align: top;
+}
+
+#ocp_ns_node_prop .capacity {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	width: 200px;
+}
+
+#ocp_ns_node_prop .capacity tr {
+	border: none;
+}
+
+#ocp_ns_node_prop .capacity .label {
+	width: 50px;
+}
+
+#ocp_ns_node_prop .capacity td {
+	padding: 0px;
+	text-align: right;
+}
+
+#ocp_ns_node_prop .capacity .color, #ocp_ns_node_prop .capacity .color div {
+	width: 20px;
+	height: 15px;
+	margin-bottom: 5px;
+}
+
+#ocp_ns_node_prop .total .color div {
+	background-color: transparent;
+}
+
+#ocp_ns_node_prop .used .color div {
+	background-color: #D11E00;
+}
+
+#ocp_ns_node_prop .free .color div {
+	background-color: #FFC926;
+}
+
+#ocp_ns_node_prop .amount {
+}
+
+#ocp_ns_node_prop .unit {
+	width: 30px;
+}
+
+#ocp_ns_node_prop .header {
+	font-size: 14px;
+	background-color: #D11E00;
+	border: 0px;
+	color: #FFFFFF;
+	background-image: url(image/cloud2.png);
+	background-size: 30px 30px;
+	background-position: 14px center;
+	padding: 15px 15px 16px 57px;
+	background-repeat: no-repeat;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	height: 50px;
+}
+
+#ocp_ns_node_prop .content {
+	overflow: auto;
+	background-color: #F2F2F3;
+}
+
+#node_supervision_page {
+	height: 100%;
+}
+
+#ocp_ns_pie .piece {
+	stroke: #F2F2F3;
+	stroke-width: 4px;
+}
+
+#ocp_ns_pie .used {
+	fill: #D11E00;
+}
+
+#ocp_ns_pie .free {
+	fill: #FFC926;
+}
+
+#ocp_ns_pie g {
+	pointer-events: all;
+}
+
+#ocp_ns_map_view .header {
+	height: 50px;
+	padding: 10px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	border-bottom: 1px solid #E1E1E1;
+	background-color: #FFFFFF;
+}
+
+#ocp_ns_map_view .header ul {
+	display: inline-block;
+	float: left;
+	padding: 0px;
+	margin: 0px;
+	margin-right: 20px;
+	height: 100%;
+}
+
+#ocp_ns_map_view .header li {
+	position: relative;
+	display: inline-block;
+	padding: 6px 8px 5px 30px;
+	margin: 0px 1px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	height: 100%;
+	background-color: #DADEE1;
+	cursor: pointer;
+}
+
+#ocp_ns_map_view .header li img {
+	position: absolute;
+	top: 3px;
+	left: 5px;
+	width: 33px;
+	height: 23px;
+}
+
+#ocp_ns_map_view .header li:first-child {
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+#ocp_ns_map_view .header li:last-child {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+#ocp_ns_toggle_prop {
+	width: 10px;
+	height: 100%;
+}

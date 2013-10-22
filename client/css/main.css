@@ -58,11 +58,22 @@ html, body {
 .header_menu_settings {
 	background-image: url(image/menu_sprite3.png);
 	background-size: 32px 2102px;
+}
+
+.header_menu_settings[href="#general_settings"] {
 	background-position: 13px -1008px;
 }
 
-.header_menu_settings:hover {
+.header_menu_settings[href="#general_settings"]:hover {
 	background-position: 13px -918px;
+}
+
+.header_menu_settings[href="#node_supervision"] {
+	background-position: 13px -820px;
+}
+
+.header_menu_settings[href="#node_supervision"]:hover {
+	background-position: 13px -730px;
 }
 
 

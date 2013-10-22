@@ -13,7 +13,7 @@
 })(ocp);
 
 $(document).ready(function() {
-	$('#page').ocp_fix_variable({
+	$('#page').ocp_fix_variable_v({
 		variable: $('#cover_page')
 	});
 
