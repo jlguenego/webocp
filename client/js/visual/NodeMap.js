@@ -124,6 +124,15 @@
 			this.overlay.draw();
 		};
 
+		this.select_node = function(node) {
+			for (var i = 0; i < this.data.length; i++) {
+				this.data[i].selected = (this.data[i].name == node.name);
+				console.log(this.data[i]);
+			}
+
+			this.repaint();
+		};
+
 		this.draw = function(div_selector) {
 			d3.select(div_selector).classed('ocp_node_map', true);
 
@@ -181,8 +190,12 @@
 						.attr("cy", 0)
 						.classed('transparent_node', true);
 
-					//node.on('mouseover', show_links);
-					//node.on('mouseout', hide_links);
+					node.on('mouseover', function(n) {
+						d3.select(this).classed('hover', true);
+					});
+					node.on('mouseout', function(n) {
+						d3.select(this).classed('hover', false);
+					});
 
 					node.on('click', function(node) {
 						console.log('click');
@@ -196,6 +209,14 @@
 						.text(function(d) { return d.name; });
 
 					g.attr('transform', transform);
+					g.select('circle.node')
+						.attr('class', function(d) {
+							console.log(d);
+							if (d.selected) {
+								return 'node selected';
+							}
+							return 'node';
+						});
 
 					g.exit().remove();
 

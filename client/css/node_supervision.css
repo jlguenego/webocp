@@ -22,6 +22,14 @@
 	stroke-width: 3px;
 }
 
+#node_supervision_page .ocp_node_map .node.selected {
+	fill: #D11E00;
+}
+
+#node_supervision_page .ocp_node_map .node.hover {
+	fill: #FFC926;
+}
+
 #node_supervision_page .ocp_node_map .transparent_node {
 	fill: none;
 }

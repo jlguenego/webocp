@@ -26,6 +26,10 @@
 
 		node_map.onnodeclick = function(node) {
 			display_node_properties(node);
+			if ($('#ocp_ns_toggle_button').hasClass('ocp_ns_node_prop_minimized')) {
+				$('#ocp_ns_toggle_button').click();
+			}
+			this.select_node(node);
 			console.log(node);
 		};
 
