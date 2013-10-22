@@ -3,7 +3,7 @@
 
 
 
-	$(document).ready(function() {
+	ocp.ns.show_page = function() {
 		$("#node_supervision_page").ocp_splitpane_h({
 			source: [
 				{ width: 15, }
@@ -93,5 +93,5 @@
 			var size = { left: new_width };
 			$('#node_supervision_page').ocp_splitpane_h('resize', size);
 		});
-	});
+	};
 })(ocp);

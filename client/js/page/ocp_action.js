@@ -64,7 +64,7 @@ var g_request = {};
 				ocp.action.display('account_management_page');
 				break;
 			case 'node_supervision':
-				ocp.mp.show_page();
+				ocp.ns.show_page();
 				ocp.action.display('node_supervision_page');
 				break;
 			default:
