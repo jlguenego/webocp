@@ -35,6 +35,7 @@
 				throw new Exception('File not found: ' . $file);
 			}
 			$content = file_get_contents($file);
+			debug('json file content: ' . $content);
 			$object = json_decode($content);
 			$this->hydrate($object);
 		}

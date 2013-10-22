@@ -61,11 +61,21 @@
 		global $g_debug;
 
 		if ($g_debug) {
+			$e = new Exception("");
+			$trace_array = $e->getTrace();
+			$trace = $trace_array[0];
+			$function = "";
+			if (isset($trace_array[1])) {
+				$function = $trace_array[1]["function"];
+			}
+			$txt = "[DEBUG] ".SCRIPT_NAME . ' ' . basename($trace["file"]).":".$trace["line"]." ".$function.
+				"\n\t".$msg;
+
 			$log_file = 'log.txt';
 			if (defined('SCRIPT_NAME')) {
 				$log_file = 'log_' . SCRIPT_NAME . '.txt';
 			}
-			file_put_contents(LOG_FILE_DIR . '/' . $log_file, SCRIPT_NAME . ": " . $msg . PHP_EOL, FILE_APPEND);
+			file_put_contents(LOG_FILE_DIR . '/' . $log_file, $txt . PHP_EOL, FILE_APPEND);
 		}
 	}
 

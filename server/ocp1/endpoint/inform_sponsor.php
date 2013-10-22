@@ -13,6 +13,7 @@
 		$ocp->load(OCP::get_name_from_url($_SERVER['REQUEST_URI']));
 
 		$name = $new_contact->name;
+		debug_r('ocp', $ocp);
 		if ($ocp->contact_list == null) {
 			$ocp->contact_list = array();
 			$ocp->contact_list[$name] = $new_contact;

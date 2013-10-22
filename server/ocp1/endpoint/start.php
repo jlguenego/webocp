@@ -14,6 +14,8 @@
 			$ocp->set_coord($coord);
 			$ocp->generate_start_address();
 			if (isset($_REQUEST['sponsor']) && $_REQUEST['sponsor'] != '') {
+				debug('informing sponsor ' . $_REQUEST['sponsor']);
+				debug('I am ' . $ocp->name);
 				$ocp->inform_sponsor();
 			}
 
