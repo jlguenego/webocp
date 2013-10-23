@@ -77,6 +77,10 @@ html, body {
 }
 
 
+.page_content {
+	position: relative;
+}
+
 
 .ocp_footer {
 	height: 160px;
@@ -87,6 +91,11 @@ html, body {
 	width: 100%;
 	text-align: center;
 	overflow: hidden;
+}
+
+.ocp_footer.bottom {
+	position: absolute;
+	bottom: 0px;
 }
 
 .ocp_footer_bottom_block {
