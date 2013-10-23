@@ -123,7 +123,10 @@
 
 	    public function get_used_mem() {
 	    	$result = 0;
-			$result = $this->foldersize(storage_get_root());
+			//$result = $this->foldersize(storage_get_root());
+			$cmd_result = trim(exec('du -s -B 1 ' . storage_get_root()));
+			$cmd_a = preg_split("#\s+#", $cmd_result);
+			$result = $cmd_a[0];
 	    	return $result;
 	    }
 
