@@ -24,12 +24,13 @@
 		$root_dir = storage_get_root();
 		mkdir_p($root_dir);
 
-		$file = storage_generate_path($_REQUEST['filename']);
+		$file = storage_generate_path($_REQUEST['filename']) . FILE_EXTENTION;
 		debug('path='.$file);
 		mkdir_p(dirname($file));
 		$tmp_file = $_FILES['content']['tmp_name'];
 
 		rename($tmp_file, $file);
+		chmod($file, 0604);
 		$output['result'] = 'OK';
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
