@@ -70,7 +70,7 @@ var remove_dialog = null;
 			this.row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_str);
 
 			this.row.find('.widget_grid_cell[data-colname=file_transfer_speed]')
-				.html(ocp.utils.format_size(instantaneous_speed * 1000, 1) + '/s');
+				.html(ocp.utils.format_size(instantaneous_speed * 1000, {precision: 1}) + '/s');
 
 			this.row.find('.widget_grid_cell[data-colname=file_transfer_status]')
 				.ocp_progressbar('set_progress', Math.floor(this.performed));
@@ -385,7 +385,7 @@ var remove_dialog = null;
 		row.attr('data-md-timestamp', timestamp);
 		row.find('.widget_grid_cell[data-colname=file_transfer_elapsed_time]').html(elapsed_t + ' s');
 		row.find('.widget_grid_cell[data-colname=file_transfer_remaining_time]').html(remaining_t + ' s');
-		row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html(ocp.utils.format_size(speed * 1000, 1) + '/s');
+		row.find('.widget_grid_cell[data-colname=file_transfer_speed]').html(ocp.utils.format_size(speed * 1000, {precision: 1}) + '/s');
 		row.find('.widget_grid_cell[data-colname=file_transfer_status]').ocp_progressbar('set_progress', Math.floor(percent));
 
 		if (loaded >= total) {

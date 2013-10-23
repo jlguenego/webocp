@@ -47,7 +47,7 @@ $.widget( "ui.ocp_progressbar", {
 		}
 
 		this.progressbar_fill.width(progress + '%');
-		this.percentage.html(progress + '%');
+		this.percentage.html(Math.floor(progress) + '%');
 	}
 });
 

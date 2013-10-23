@@ -12,5 +12,6 @@
 		$output['error'] = $e->getMessage();
 	}
 	$result = prettyPrint(json_encode($output));
+	debug($result);
 	echo $result;
 ?>

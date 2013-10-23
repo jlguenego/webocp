@@ -17,8 +17,8 @@
 			foreach ($array as $key => $value) {
 			 	 $this->$key = $value;
 			}
-			debug_r('contact_list', $this->contact_list);
-			debug('typeof contact_list=' . gettype($this->contact_list));
+			//debug_r('contact_list', $this->contact_list);
+			//debug('typeof contact_list=' . gettype($this->contact_list));
 		}
 
 		public function generate_start_address() {
@@ -32,12 +32,12 @@
 		public function load($name) {
 			$this->name = $name;
 			$file = $this->get_file($this->name);
-			debug('file2=' . $file);
+			//debug('file2=' . $file);
 			if (!is_file($file)) {
 				throw new Exception('File not found: ' . $file);
 			}
 			$content = file_get_contents($file);
-			debug('json file content: ' . $content);
+			//debug('json file content: ' . $content);
 			$object = json_decode($content);
 			$this->hydrate($object);
 		}
@@ -67,7 +67,7 @@
 		public function store() {
 			mkdir_p(dirname($this->get_file($this->name)));
 			$content = $this->get_json();
-			debug('About to store JSON: ' . $content);
+			//debug('About to store JSON: ' . $content);
 			file_put_contents($this->get_file($this->name), $content);
 	    }
 
@@ -83,13 +83,13 @@
 			$context = stream_context_create($opts);
 
 			$response = file_get_contents($this->sponsor . '/endpoint/inform_sponsor.php', false, $context);
-			debug_r('Response', $response);
+			//debug_r('Response', $response);
 			$response = json_decode($response);
 			if (isset($response->error)) {
 				throw new Exception($response->error);
 			}
 			$this->contact_list = $response->result->contact_list;
-			debug_r('Contact_list', $this->contact_list);
+			//debug_r('Contact_list', $this->contact_list);
 	    }
 
 	    public function inform_all($new_contact) {
@@ -127,27 +127,36 @@
 	    	return $result;
 	    }
 
-	    function foldersize($path) {
-		    $total_size = 0;
-		    if (!file_exists($path)) {
-		    	return $total_size;
+	    public function foldersize($path) {
+	    	if (!file_exists($path)) {
+		    	return 0;
 		    }
-		    $files = scandir($path);
-		    $cleanPath = rtrim($path, '/'). '/';
 
-		    foreach($files as $t) {
-		        if ($t<>"." && $t<>"..") {
-		            $currentFile = $cleanPath . $t;
-		            if (is_dir($currentFile)) {
-		                $size = foldersize($currentFile);
-		                $total_size += $size;
-		            }
-		            else {
-		                $size = filesize($currentFile);
-		                $relica = BLOCK_SIZE - ($size % BLOCK_SIZE);
-		                $total_size += $size + $relica;
-		            }
+		    if (is_file($path)) {
+				$size = filesize($path);
+				$relica = BLOCK_SIZE - ($size % BLOCK_SIZE);
+				if ($relica == BLOCK_SIZE) {
+					$relica = 0;
+				}
+		    	return $size + $relica;
+		    }
+		    if (!is_dir($path)) {
+		    	throw new Exception($path . ' is not a dir.');
+		    }
+		    $total_size = 0;
+
+		    $files = scandir($path);
+		    $dir = rtrim($path, '/'). '/';
+
+		    foreach($files as $file) {
+		        if ($file == "." && $file == "..") {
+		        	continue;
 		        }
+
+	            $currentFile = $dir . $file;
+
+                $size = $this->foldersize($currentFile);
+                $total_size += $size;
 		    }
 
 		    return $total_size;
@@ -155,7 +164,7 @@
 
 		public function set_coord($coord) {
 			$obj = json_decode($coord);
-			debug_r('test', $obj->coordinate);
+			//debug_r('test', $obj->coordinate);
 			$this->location = $obj->coordinate;
 		}
 	}
