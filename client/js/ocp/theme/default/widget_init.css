@@ -12,7 +12,7 @@
 	width: 120px;
 	height: 129px;
 	position: absolute;
-	background: url('https://eu.static.mega.co.nz/images/background_cog.png');
+	background: url('image/background_cog.png');
 	bottom: 0;
 	left: 149px;
 }
@@ -21,7 +21,7 @@
 	width: 99px;
 	height: 104px;
 	position: absolute;
-	background: url('https://eu.static.mega.co.nz/images/animated_cogs.gif') no-repeat;
+	background: url('image/animated_cogs.gif') no-repeat;
 	top: 26px;
 	left: 160px;
 }
@@ -30,7 +30,7 @@
 	width: 193px;
 	height: 138px;
 	position: absolute;
-	background: url('https://eu.static.mega.co.nz/images/cloud.png');
+	background: url('image/cloud.png');
 }
 
 .loading-progressbar {
@@ -59,7 +59,7 @@
 	padding: 4px;
 	overflow: hidden;
 	margin: 0 30px 0 0;
-	background-image: url('https://eu.static.mega.co.nz/images/loader_bg.png');
+	background-image: url('image/loader_bg.png');
 }
 
 .slprogressbarfill {
