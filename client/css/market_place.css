@@ -184,6 +184,8 @@
 
 #ocp_mp_recap .recap_table .rate {
 	width: 20%;
+	text-align: right;
+	padding-right: 10px;
 }
 
 #ocp_mp_recap .recap_table .amount {

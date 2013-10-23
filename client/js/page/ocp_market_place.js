@@ -189,8 +189,8 @@
 				return b.timestamp - a.timestamp;
 			});
 			var last_transactions_data = last_transactions.slice(0, 20);
-			$('#ocp_mp_recap1').find('td').remove();
-			$('#ocp_mp_recap2').find('td').remove();
+			$('#ocp_mp_recap1').find('td').parent().remove();
+			$('#ocp_mp_recap2').find('td').parent().remove();
 			console.log(last_transactions_data);
 
 			for (var i = 0; i < last_transactions_data.length; i++) {
