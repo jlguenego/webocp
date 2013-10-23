@@ -56,8 +56,12 @@ var g_request = {};
 				ocp.action.register();
 				break;
 			case 'market_place':
-				ocp.mp.show_page();
+				if (!ocp.mp.market_place) {
+					ocp.mp.market_place = new ocp.mp.MarketPlace();
+				}
+				ocp.mp.market_place.before_display();
 				ocp.action.display('market_place_page');
+				ocp.mp.market_place.after_display();
 				break;
 			case 'account_management':
 				ocp.am.show_page();
