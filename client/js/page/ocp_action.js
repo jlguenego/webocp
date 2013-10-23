@@ -68,8 +68,12 @@ var g_request = {};
 				ocp.action.display('account_management_page');
 				break;
 			case 'node_supervision':
-				ocp.ns.show_page();
+				if (!ocp.ns.node_supervision) {
+					ocp.ns.node_supervision = new ocp.ns.NodeSupervision();
+				}
+				ocp.ns.node_supervision.before_display();
 				ocp.action.display('node_supervision_page');
+				ocp.ns.node_supervision.after_display();
 				break;
 			default:
 				ocp.action.display('not_found_page');
