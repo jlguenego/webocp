@@ -217,7 +217,7 @@
 		return $ip;
 	}
 
-	function get_geoloc() {
+	function get_geoloc($ip) {
 		$json = json_decode(file_get_contents('http://freegeoip.net/json/' . $ip));
 		// Add impresision
 		$impresision_lat = rand(-1000, 1000) / 100000;

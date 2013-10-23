@@ -7,7 +7,7 @@
 		$output = array();
 		try {
 			$ip = get_external_ip();
-			$coord = get_geoloc();
+			$coord = get_geoloc($ip);
 
 			$ocp = new OCP();
 			$ocp->hydrate($_REQUEST);

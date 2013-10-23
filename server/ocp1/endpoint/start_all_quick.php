@@ -9,9 +9,19 @@
 			$node_qty = intval($_REQUEST['node_qty']);
 			$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
 			$start_addresses = array();
+			$quota = array();
+			$locations = array();
+
+			$ip = get_external_ip();
+			$geoloc = json_decode(get_geoloc($ip));
 
 			for ($i = 0; $i < $node_qty; $i++) {
 				$start_addresses[] = sha1('node' . $i);
+				$quota[] = rand(1, 10);
+
+				$impresision_lat = rand(-1000, 1000) / 100000;
+				$impresision_lng = rand(-1000, 1000) / 100000;
+				$locations[] = array($geoloc->coordinate[0] - $impresision_lng, $geoloc->coordinate[1] - $impresision_lat);
 			}
 
 			for ($i = 0; $i < $node_qty; $i++) {
@@ -32,6 +42,8 @@
 								$_SERVER['REQUEST_URI']
 							),
 						'start_address' => $start_addresses[$j],
+						'quota' => $quota[$i],
+						'location' => $locations[$i],
 					);
 				}
 
@@ -42,8 +54,11 @@
 				$ocp->hydrate(array(
 					'name' => 'node' . $i,
 					'url' => 'http://' . $_SERVER['HTTP_HOST'] . preg_replace('#(.*/)' . $name . '/endpoint.*#', "$1node" . $i, $_SERVER['REQUEST_URI']),
-					'contact_list' => $contact_list,
 					'start_address' => $start_addresses[$i],
+					'start_address' => $start_addresses[$j],
+					'quota' => $quota[$i],
+					'location' => $locations[$i],
+					'contact_list' => $contact_list,
 				));
 
 				$ocp->store();
