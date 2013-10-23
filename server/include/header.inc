@@ -17,6 +17,8 @@
 
 	$g_debug = true;
 
+	debug('url=' . $_SERVER['REQUEST_URI']);
+
 	$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
 	storage_set_root(ROOT . '/ocp1/' . $name);
 

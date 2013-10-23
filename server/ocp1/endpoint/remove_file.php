@@ -5,7 +5,7 @@
 	$_REQUEST = array_merge($_GET, $_POST);
 	$output = array();
 	try {
-		$file = storage_retrieve_path($_REQUEST['filename']) . FILE_EXTENTION;
+		$file = storage_retrieve_path($_REQUEST['filename'] . FILE_EXTENTION);
 		debug('path='.$file);
 		if (file_exists($file)) {
 			unlink($file);

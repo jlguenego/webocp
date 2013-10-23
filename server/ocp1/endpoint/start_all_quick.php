@@ -42,8 +42,8 @@
 								$_SERVER['REQUEST_URI']
 							),
 						'start_address' => $start_addresses[$j],
-						'quota' => $quota[$i],
-						'location' => $locations[$i],
+						'quota' => $quota[$j],
+						'location' => $locations[$j],
 					);
 				}
 
@@ -55,7 +55,6 @@
 					'name' => 'node' . $i,
 					'url' => 'http://' . $_SERVER['HTTP_HOST'] . preg_replace('#(.*/)' . $name . '/endpoint.*#', "$1node" . $i, $_SERVER['REQUEST_URI']),
 					'start_address' => $start_addresses[$i],
-					'start_address' => $start_addresses[$j],
 					'quota' => $quota[$i],
 					'location' => $locations[$i],
 					'contact_list' => $contact_list,

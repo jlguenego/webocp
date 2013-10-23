@@ -6,7 +6,7 @@
 	debug_r('_REQUEST', $_REQUEST);
 	$output = array();
 	try {
-		$file = storage_retrieve_path($_REQUEST['filename']) . FILE_EXTENTION;
+		$file = storage_retrieve_path($_REQUEST['filename'] . FILE_EXTENTION);
 		debug('path='.$file);
 		if (!file_exists($file)) {
 			throw new Exception('This file does not exists.');
