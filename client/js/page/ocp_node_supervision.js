@@ -84,7 +84,7 @@
 			var node_prop = $('#ocp_ns_node_prop_content');
 			node_prop.find('.name').html(node.name);
 			node_prop.find('.start_address').html(node.start_address);
-			node_prop.find('.url').html('<a href="' + node.url + '" target="_blank">' + node.url + '</a>');
+			node_prop.find('.url').html('<a href="' + node.url + '/" target="_blank">' + node.url + '/</a>');
 
 			var options = { output_format: 'object' };
 			var used_o = ocp.utils.format_size(used, options);

@@ -9,7 +9,12 @@
 		public $location = array();
 
 		public static function get_name_from_url($url) {
-			$name = preg_replace('#.*webocp/server/(.+)/endpoint.*#', "$1", $url);
+			$name = preg_replace('#.*webocp/server/(.+)#', "$1", $url);
+			if (preg_match('#(.+)/endpoint.*#', $name)) {
+				$name = preg_replace('#(.+)/endpoint.*#', "$1", $name);
+			} else {
+				$name = preg_replace('#(.+)/.*#', "$1", $name);
+			}
 			return $name;
 		}
 
