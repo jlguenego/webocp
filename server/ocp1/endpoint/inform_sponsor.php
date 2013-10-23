@@ -8,7 +8,9 @@
 		if (!isset($_REQUEST['contact'])) {
 			throw new Exception('No contact given');
 		}
-		$new_contact = json_decode($_REQUEST['contact']);
+		$new_contact = json_decode(base64_decode($_REQUEST['contact']));
+		debug('new_contact=' . base64_decode($_REQUEST['contact']));
+		debug_r('new_contact', $new_contact);
 		$ocp = new OCP();
 		$ocp->load(OCP::get_name_from_url($_SERVER['REQUEST_URI']));
 

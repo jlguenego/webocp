@@ -17,6 +17,8 @@
 			foreach ($array as $key => $value) {
 			 	 $this->$key = $value;
 			}
+			debug_r('contact_list', $this->contact_list);
+			debug('typeof contact_list=' . gettype($this->contact_list));
 		}
 
 		public function generate_start_address() {
@@ -64,11 +66,13 @@
 
 		public function store() {
 			mkdir_p(dirname($this->get_file($this->name)));
-			file_put_contents($this->get_file($this->name), $this->get_json());
+			$content = $this->get_json();
+			debug('About to store JSON: ' . $content);
+			file_put_contents($this->get_file($this->name), $content);
 	    }
 
 	    public function inform_sponsor() {
-			$postdata = http_build_query(array('contact' => json_encode($this->to_contact())));
+			$postdata = http_build_query(array('contact' => base64_encode(json_encode($this->to_contact()))));
 
 			$opts = array(
 				'http' => array(

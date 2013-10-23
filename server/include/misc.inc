@@ -57,25 +57,27 @@
 		$g_debug = $switch;
 	}
 
-	function debug($msg) {
+	function debug($msg, $e = null) {
 		global $g_debug;
 
 		if ($g_debug) {
-			$e = new Exception("");
+			if ($e == null) {
+				$e = new Exception("");
+			}
 			$trace_array = $e->getTrace();
 			$trace = $trace_array[0];
 			$function = "";
 			if (isset($trace_array[1])) {
-				$function = $trace_array[1]["function"];
+				$function = ' ' . $trace_array[1]["function"];
 			}
-			$txt = "[DEBUG] ".SCRIPT_NAME . ' ' . basename($trace["file"]).":".$trace["line"]." ".$function.
-				"\n\t".$msg;
+			$txt = "[DEBUG] [". basename($trace["file"]).":".$trace["line"].$function.']'.
+				PHP_EOL . "\t".$msg;
 
 			$log_file = 'log.txt';
 			if (defined('SCRIPT_NAME')) {
 				$log_file = 'log_' . SCRIPT_NAME . '.txt';
 			}
-			file_put_contents(LOG_FILE_DIR . '/' . $log_file, $txt . PHP_EOL, FILE_APPEND);
+			file_put_contents(LOG_FILE_DIR . '/' . $log_file, $txt . PHP_EOL . PHP_EOL, FILE_APPEND);
 		}
 	}
 
@@ -84,12 +86,11 @@
 		if (!$g_debug) {
 			return;
 		}
-		debug($msg);
 		ob_start();
 		print_r($array);
 		$content = ob_get_contents();
 		ob_clean();
-		debug($content);
+		debug('debug_r ' . $msg . PHP_EOL . $content, new Exception(""));
 	}
 
 	function check_post_max() {
