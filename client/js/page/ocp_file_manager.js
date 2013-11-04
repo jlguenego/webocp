@@ -657,10 +657,11 @@ var remove_dialog = null;
 
 		// DOWNLOAD FILE
 		$('#ocp_fm_download_button').click(function() {
-			if (!$(this).hasClass('disabled')) {
-				var row = $('#ocp_fm_grid .ocp_gd_selected');
-				ocp.file_manager.download(row);
+			if ($(this).hasClass('disabled')) {
+				return;
 			}
+			var row = $('#ocp_fm_grid .ocp_gd_selected');
+			ocp.file_manager.download(row);
 		});
 		// DOWNLOAD FILE END
 

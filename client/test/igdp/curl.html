@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+	</head>
+
+	<body>
+		<script>
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', '239.255.255.250:1900', false);
+			//xhr.setRequestHeader('Host', '239.255.255.250:1900');
+			xhr.setRequestHeader('ST', 'urn:schemas-upnp-org:device:InternetGatewayDevice:1');
+			xhr.setRequestHeader('Man', '"ssdp:discover"');
+			xhr.setRequestHeader('MX', '3');
+			xhr.send();
+			console.log(xhr);
+		</script>
+	</body>
+</html>
