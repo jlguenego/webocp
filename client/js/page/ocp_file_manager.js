@@ -411,8 +411,47 @@ var remove_dialog = null;
 		} catch(e) {
 			ocp.error_manage(e);
 		}
-	}
+	};
 	// RENAME END
+
+	ocp.file_manager.manage_download_button = function() {
+		var rows = $('#ocp_fm_grid .ocp_gd_selected');
+		if (rows.length == 1 && rows.attr('data-md-type') == 'file') {
+			$('#ocp_fm_download_button').removeClass('disabled');
+		} else {
+			$('#ocp_fm_download_button').addClass('disabled');
+		}
+	};
+
+	ocp.file_manager.download = function(row) {
+		var path = ocp.file_manager.get_current_path();
+		var name = row.attr('data-md-name');
+		var type = row.attr('data-md-type');
+		var size = row.attr('data-md-size');
+
+		var scenario = ocp.scenario.get(ocp.cfg.scenario);
+		var onprogress;
+		if (!scenario.use_direct_download) {
+			var pr = new ocp.file_manager.ProgressRow({
+				name: name,
+				path: path,
+				size: size,
+				transfer_type: 'download'
+			});
+			onprogress = function(performed) {
+				pr.update(performed);
+			};
+		}
+
+		ocp.client.download_file(
+			ocp.normalize_path(path + '/' + name),
+			null,
+			onprogress,
+			function(error_msg) {
+				ocp.error_manage(new Error(error_msg));
+			}
+		);
+	};
 
 	ocp.session.file_manager_loaded = false;
 
@@ -514,30 +553,12 @@ var remove_dialog = null;
 				if (type == 'dir') {
 					tree.ocp_tree('open_item', ocp.normalize_path(path + '/' + name));
 				} else {
-					var scenario = ocp.scenario.get(ocp.cfg.scenario);
-					var onprogress;
-					if (!scenario.use_direct_download) {
-						var pr = new ocp.file_manager.ProgressRow({
-							name: name,
-							path: path,
-							size: size,
-							transfer_type: 'download'
-						});
-						onprogress = function(performed) {
-							pr.update(performed);
-						};
-					}
-
-					ocp.client.download_file(
-						ocp.normalize_path(path + '/' + name),
-						null,
-						onprogress,
-						function(error_msg) {
-							ocp.error_manage(new Error(error_msg));
-						}
-					);
+					ocp.file_manager.download(row);
 				}
-			}
+			},
+
+			onrowselect: ocp.file_manager.manage_download_button,
+			onrowdeselect: ocp.file_manager.manage_download_button
 		});
 
 		$("#ocp_fm_file_transfer").ocp_grid({
@@ -633,6 +654,15 @@ var remove_dialog = null;
 			}
 		});
 		// UPLOAD DIR END
+
+		// DOWNLOAD FILE
+		$('#ocp_fm_download_button').click(function() {
+			if (!$(this).hasClass('disabled')) {
+				var row = $('#ocp_fm_grid .ocp_gd_selected');
+				ocp.file_manager.download(row);
+			}
+		});
+		// DOWNLOAD FILE END
 
 
 

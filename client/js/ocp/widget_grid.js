@@ -25,7 +25,9 @@ $.widget( "ui.ocp_grid", {
 		can_select: false,
 
 		// Callback
-		row_dblclick: function(e) { console.log('row_dblclick'); }
+		row_dblclick: function(e) { console.log('row_dblclick'); },
+		onrowselect: function(row) {},
+		onrowdeselect: function(row) {}
 	},
 	counter: 0,
 	swap_column_start_colname: null,
@@ -200,10 +202,12 @@ $.widget( "ui.ocp_grid", {
 
 	row_select: function(row) {
 		row.addClass('ocp_gd_selected');
+		this.options.onrowselect(row);
 	},
 
 	row_deselect: function(row) {
 		row.removeClass('ocp_gd_selected');
+		this.options.onrowdeselect(row);
 	},
 
 	row_select_all: function() {

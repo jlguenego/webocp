@@ -180,3 +180,13 @@
 #file_manager .transfer_type_cell.download_cell {
 	background-image: url(image/down2.png);
 }
+
+#file_manager .ocp_fm_button.disabled {
+	cursor: default;
+	filter: grayscale(100%);
+	-moz-filter: grayscale(100%);
+	-webkit-filter: grayscale(100%);
+
+	opacity: 0.5;
+
+}
