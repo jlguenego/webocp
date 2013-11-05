@@ -20,6 +20,9 @@ class Upnp {
 	    $msg .= '' ."\r\n";
 
 	    // MULTICAST MESSAGE
+	    if (!function_exists('socket_create')) {
+	    	throw new Exception('php_sockets module non installed.');
+	    }
 	    $sock = socket_create( AF_INET, SOCK_DGRAM, 0 );
 	    $opt_ret =  socket_set_option($sock, SOL_SOCKET, SO_REUSEADDR, TRUE);
 	    $send_ret = socket_sendto( $sock, $msg, strlen( $msg ), 0, '239.255.255.250', 1900);
