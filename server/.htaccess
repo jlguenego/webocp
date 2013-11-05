@@ -1,6 +1,7 @@
 # Activate URL rewriting
 RewriteEngine on
 
+RewriteRule ^(test.*)				$1 [L]
 RewriteRule ^([^/]+)/$				$1/endpoint/home.php [L]
 RewriteRule ^[^/]+(.*)  		ocp1$1 [L]
 
