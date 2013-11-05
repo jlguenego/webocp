@@ -6,7 +6,7 @@
 	if (isset($_REQUEST['name']) && isset($_REQUEST['url']) && isset($_REQUEST['quota'])) {
 		$output = array();
 		try {
-			$ip = get_external_ip();
+			$ip = get_public_ip();
 			$coord = get_geoloc($ip);
 
 			$ocp = new OCP();

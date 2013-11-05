@@ -15,6 +15,11 @@
 	require_once(INCLUDE_DIR . '/storage.inc');
 	require_once(INCLUDE_DIR . '/ocp.inc');
 
+	require_once(INCLUDE_DIR . '/class/Upnp.class.php');
+	require_once(INCLUDE_DIR . '/class/Cache.class.php');
+
+	require_once(INCLUDE_DIR . '/network.inc');
+
 	$g_debug = true;
 
 	debug('url=' . $_SERVER['REQUEST_URI']);

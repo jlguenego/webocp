@@ -212,12 +212,13 @@
 	    return $result;
 	}
 
-	function get_external_ip() {
-		$ip = file_get_contents('http://api.externalip.net/ip');
-		return $ip;
-	}
-
 	function get_geoloc($ip) {
+		$cache = new Cache();
+		$result = $cache->get('geoloc');
+		if ($result) {
+			return $result;
+		}
+
 		$json = json_decode(file_get_contents('http://freegeoip.net/json/' . $ip));
 		// Add impresision
 		$impresision_lat = rand(-1000, 1000) / 100000;
@@ -229,6 +230,10 @@
 			'type' => 'Point',
 			'coordinate' => array($json->longitude, $json->latitude),
 		);
-		return json_encode($loc);
+
+		$result = json_encode($loc);
+
+		$cache->set('geoloc', $result, 86400);
+		return $result;
 	}
 ?>
