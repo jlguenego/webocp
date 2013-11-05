@@ -17,8 +17,6 @@
 	$service = $upnp->getService($service_type);
 
 	$action = 'GetExternalIPAddress';
-	$result_var = 'NewExternalIPAddress';
-	//$action = 'DeletePortMapping';
 	$args = array();
 
 	//echo "Sending request: $action\n";
