@@ -8,7 +8,7 @@ class Upnp {
 		$man = 'ssdp:discover';
 		$from = null;
 		$port = null;
-		$sockTimout = 2;
+		$sockTimout = 1;
 
 		// BUILD MESSAGE
 	    $msg  = 'M-SEARCH * HTTP/1.1' . "\r\n";
@@ -143,8 +143,8 @@ EOF;
 			'Connection: close',
 			'Content-Length: ' . strlen($body),
 		);
-		echo "\nHEADER:\n" . join($header, "\n"). "\n---------------------------\n";
-		echo "BODY:\n" . $body . "\n\n\n";
+		//echo "\nHEADER:\n" . join($header, "\n"). "\n---------------------------\n";
+		//echo "BODY:\n" . $body . "\n\n\n";
 
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, $header );
@@ -156,7 +156,7 @@ EOF;
 		$response = curl_exec( $ch );
 		curl_close( $ch );
 
-		return preg_replace('#><#', ">\n<", $response);
+		return $response;
 	}
 }
 ?>

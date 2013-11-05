@@ -7,7 +7,7 @@
 
 	$service_type = 'urn:schemas-upnp-org:service:WANPPPConnection:1';
 
-	echo "Discovering network...\n";
+	//echo "Discovering network...\n";
 	$upnp->discover();
 	if (!$upnp->hasService($service_type)) {
 		echo 'SSDP WANPPPConnection service not found.';
@@ -17,11 +17,14 @@
 	$service = $upnp->getService($service_type);
 
 	$action = 'GetExternalIPAddress';
+	$result_var = 'NewExternalIPAddress';
 	//$action = 'DeletePortMapping';
 	$args = array();
 
-	echo "Sending request: $action\n";
+	//echo "Sending request: $action\n";
 	$output = $service->sendRequest($action, $args);
 
-	echo $output;
+	$dom = new DOMDocument();
+	$dom->loadXML($output);
+	echo $dom->textContent;
 ?>
