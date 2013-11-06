@@ -1,5 +1,9 @@
 <?php
 	function is_private_ip($ip) {
+		if (is_private_ipv6($ip)) {
+			return true;
+		}
+
 		$pri_addrs = array(
 			'10.0.0.0|10.255.255.255',
 			'172.16.0.0|172.31.255.255',
@@ -23,9 +27,14 @@
 		return FALSE;
 	}
 
+	function is_ipv4($ip) {
+		return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+	}
+
 	function get_public_ip() {
 		$ip = $_SERVER['SERVER_ADDR'];
-		if(!is_private_ip($ip)) {
+
+		if (is_ipv4($ip) && !is_private_ip($ip)) {
 			debug('SERVER_ADDR');
 			return $ip;
 		}
@@ -91,5 +100,28 @@
 	function store_cached_ip($ip) {
 		$cache = new Cache();
 		$cache->set('public_ip', $ip, 86400);
+	}
+
+
+	function upnp_expose_server() {
+		$result = array(
+			'private_ip' => $_SERVER['SERVER_ADDR'],
+			'private_port' => $_SERVER['SERVER_PORT'],
+			'public_ip' => get_public_ip(),
+			'public_port' => $_SERVER['SERVER_PORT'],
+		);
+
+		return $result;
+	}
+
+	function inside_the_same_lan() {
+		$client_address = $_SERVER['REMOTE_ADDR'];
+		if (is_private_ip($client_address)) {
+			return true;
+		}
+
+		$server_public_address = get_public_ip();
+
+		return $client_address == $server_public_address;
 	}
 ?>

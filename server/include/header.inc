@@ -19,6 +19,7 @@
 	require_once(INCLUDE_DIR . '/class/Cache.class.php');
 
 	require_once(INCLUDE_DIR . '/network.inc');
+	require_once(INCLUDE_DIR . '/ipv6.inc');
 
 	$g_debug = true;
 
