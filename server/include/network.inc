@@ -108,12 +108,6 @@
 
 		$service_type = 'urn:schemas-upnp-org:service:WANPPPConnection:1';
 
-		$upnp->discover();
-		if (!$upnp->hasService($service_type)) {
-			throw new Exception('Can find service: ' . $service_type);
-			return;
-		}
-
 		$service = $upnp->getService($service_type);
 
 		$action = 'AddPortMapping';
@@ -124,7 +118,7 @@
 			'NewInternalPort' =>  $private['port'],
 			'NewInternalClient' => gethostbyname($private['host']),
 			'NewEnabled' => 'True',
-			'NewPortMappingDescription' => 'OCP mapping',
+			'NewPortMappingDescription' => OCP_PORT_MAPPING_DESCR,
 			'NewLeaseDuration' => '0',
 		);
 

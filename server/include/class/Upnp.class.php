@@ -54,12 +54,31 @@ class Upnp {
 	}
 
 	public function getService($service_type) {
+		$cache = new Cache();
+		$service_str = $cache->get($service_type);
+
+		if ($service_str != null) {
+			$service = unserialize(base64_decode($service_str));
+			return $service;
+		}
+
+		$this->discover();
+		$result = null;
+
 		foreach ($this->services as $service) {
 			if ($service->getType() == $service_type) {
-				return $service;
+				$result = $service;
+				break;
 			}
 		}
-		throw new Exception('Service not foud: ' . $service_type);
+
+		if ($result == null) {
+			throw new Exception('SSDP ' . $service_type . ' service not found.');
+		}
+		$str = base64_encode(serialize($result));
+		debug($str);
+		$cache->set($service_type, $str);
+		return $result;
 	}
 }
 

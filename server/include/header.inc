@@ -20,6 +20,7 @@
 
 	require_once(INCLUDE_DIR . '/network.inc');
 	require_once(INCLUDE_DIR . '/ipv6.inc');
+	require_once(INCLUDE_DIR . '/port_mapping.inc');
 
 	$g_debug = true;
 

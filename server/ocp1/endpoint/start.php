@@ -11,8 +11,8 @@
 				$_REQUEST['lan_url'] = '';
 			}
 
-			$public_url = parse_url($_REQUEST['url']);
-			$coord = get_geoloc(gethostbyname($public_url['host']));
+			$url = parse_url($_REQUEST['url']);
+			$coord = get_geoloc(gethostbyname($url['host']));
 
 			$ocp = new OCP();
 			$ocp->hydrate($_REQUEST);
@@ -25,9 +25,9 @@
 			}
 
 			$ocp->store();
-			if ($_REQUEST['private_url'] != '') {
-				$private_url = parse_url($_REQUEST['private_url']);
-				upnp_expose_server($public_url, $private_url);
+			if ($_REQUEST['lan_url'] != '') {
+				$lan_url = parse_url($_REQUEST['lan_url']);
+				upnp_expose_server($url, $lan_url);
 			}
 
 			$output['result'] = $ocp;
