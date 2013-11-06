@@ -4,23 +4,36 @@
 
 	$_REQUEST = array_merge($_GET, $_POST);
 	debug('SCRIPT_NAME2=' . SCRIPT_NAME);
-	if (isset($_REQUEST['node_qty'])) {
+	if (isset($_REQUEST['node_qty']) && isset($_REQUEST['public_port'])) {
 		$output = array();
 		try {
 			$node_qty = intval($_REQUEST['node_qty']);
 			$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
-			$url = 'http://' . $_SERVER['HTTP_HOST'] . preg_replace('#(.*)/' . $name . '/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
+
+			$path = preg_replace('#(.*)/' . $name . '/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
+			$public_ip = get_public_ip();
+
+
 			for ($i = 0; $i < $node_qty; $i++) {
 				$name = 'node' . $i;
-				$node_url = $url . '/' . $name;
 				$quota = 1;
+				$url = 'http://' . $public_ip . ':' . $_REQUEST['public_port'] . $path . '/' . $name;
+				$b_lan = is_private_ip(gethostbyname($_SERVER['SERVER_NAME']));
+				$lan_url = 'http://' . $_SERVER['HTTP_HOST'] . $path . '/' . $name;
+				$node_url = $url;
+				if ($b_lan) {
+					$node_url = $lan_url;
+				}
+
 				if ($i == 0) {
 					$sponsor_url = $node_url;
 					file_get_contents(
 						$node_url . '/endpoint/start.php?' .
 						'name=' . $name .
-						'&url=' . $node_url .
-						'&quota=' . $quota
+						'&url=' . $url .
+						'&quota=' . $quota .
+						'&b_lan=' . $b_lan .
+						'&lan_url=' . $lan_url
 					);
 					continue;
 				}
@@ -28,9 +41,11 @@
 				file_get_contents(
 					$node_url . '/endpoint/start.php?' .
 					'name=' . $name .
-					'&url=' . $node_url .
+					'&url=' . $url .
 					'&sponsor=' . $sponsor_url .
-					'&quota=' . $quota
+					'&quota=' . $quota .
+					'&b_lan=' . $b_lan .
+					'&lan_url=' . $lan_url
 				);
 			}
 			$output['result'] = 'OK';
@@ -53,6 +68,7 @@
 	<body>
 		<form method="GET" action="">
 			Node quantity: <input type="number" name="node_qty" value="10"/><br />
+			Public port: <input type="number" name="public_port" value="52123"/><br />
 			<input type="submit" value="Submit" />
 		</form>
 	</body>

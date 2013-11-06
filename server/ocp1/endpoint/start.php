@@ -3,12 +3,16 @@
 	require_once(dirname(dirname(dirname(SCRIPT_FILE))) . '/include/header.inc');
 
 	$_REQUEST = array_merge($_GET, $_POST);
+	debug_r('_REQUEST', $_REQUEST);
 
 	if (isset($_REQUEST['name']) && isset($_REQUEST['url']) && isset($_REQUEST['quota'])) {
 		$output = array();
 		try {
-			if (!isset($_REQUEST['b_lan'])) {
+			if (!isset($_REQUEST['b_lan']) || $_REQUEST['b_lan'] == 'false') {
+				$_REQUEST['b_lan'] = false;
 				$_REQUEST['lan_url'] = '';
+			} else {
+				$_REQUEST['b_lan'] = true;
 			}
 
 			$url = parse_url($_REQUEST['url']);

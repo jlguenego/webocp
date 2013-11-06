@@ -2,7 +2,7 @@
 	class OCP {
 		public $name;
 		public $url;
-		public $b_lan = false;
+		public $b_lan;
 		public $lan_url;
 		public $sponsor;
 		public $start_address = null;
@@ -23,9 +23,6 @@
 		public function hydrate($array) {
 			foreach ($array as $key => $value) {
 				$this->$key = $value;
-				if ($key == 'b_lan') {
-					 $this->$key = true;
-				}
 			}
 			//debug_r('contact_list', $this->contact_list);
 			//debug('typeof contact_list=' . gettype($this->contact_list));
@@ -120,12 +117,13 @@
 				if ($name == $new_contact->name) {
 					continue;
 				}
-				$url = $this->chooseContactUrl($contact);
+				$url = $this->get_contact_url($contact);
+				debug('contact_url=' . $url);
 				$response = file_get_contents($url . '/endpoint/add_contact.php', false, $context);
 			}
 	    }
 
-	    public function chooseContactUrl($contact) {
+	    public function get_contact_url($contact) {
 	    	if (!$contact->b_lan || $contact->lan_url == '') {
 	    		return $contact->url;
 	    	}
