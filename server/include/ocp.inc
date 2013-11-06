@@ -2,6 +2,8 @@
 	class OCP {
 		public $name;
 		public $url;
+		public $b_lan = false;
+		public $lan_url;
 		public $sponsor;
 		public $start_address = null;
 		public $contact_list = null;
@@ -20,7 +22,10 @@
 
 		public function hydrate($array) {
 			foreach ($array as $key => $value) {
-			 	 $this->$key = $value;
+				$this->$key = $value;
+				if ($key == 'b_lan') {
+					 $this->$key = true;
+				}
 			}
 			//debug_r('contact_list', $this->contact_list);
 			//debug('typeof contact_list=' . gettype($this->contact_list));
@@ -51,6 +56,8 @@
 			$conf = array(
 				"name" => $this->name,
 				"url" => $this->url,
+				"b_lan" => $this->b_lan,
+				"lan_url" => $this->lan_url,
 				"start_address" => $this->start_address,
 				"quota" => $this->quota,
 				"location" => $this->location,
@@ -63,6 +70,8 @@
 			return array(
 				"name" => $this->name,
 				"url" => $this->url,
+				"b_lan" => $this->b_lan,
+				"lan_url" => $this->lan_url,
 				"start_address" => $this->start_address,
 				"quota" => $this->quota,
 				"location" => $this->location,
@@ -111,8 +120,24 @@
 				if ($name == $new_contact->name) {
 					continue;
 				}
-				$response = file_get_contents($contact->url . '/endpoint/add_contact.php', false, $context);
+				$url = $this->chooseContactUrl($contact);
+				$response = file_get_contents($url . '/endpoint/add_contact.php', false, $context);
 			}
+	    }
+
+	    public function chooseContactUrl($contact) {
+	    	if (!$contact->b_lan || $contact->lan_url == '') {
+	    		return $contact->url;
+	    	}
+
+	    	$my_public_url = parse_url($this->url);
+	    	$contact_public_url = parse_url($contact->url);
+
+	    	if (gethostbyname($my_public_url['host']) != gethostbyname($contact_public_url['host'])) {
+	    		return $contact->url;
+	    	}
+
+	    	return $contact->lan_url;
 	    }
 
 	    public function get_mem_report() {

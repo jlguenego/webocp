@@ -7,7 +7,12 @@
 	if (isset($_REQUEST['name']) && isset($_REQUEST['url']) && isset($_REQUEST['quota'])) {
 		$output = array();
 		try {
-			$coord = get_geoloc($ip);
+			if (!isset($_REQUEST['b_lan'])) {
+				$_REQUEST['lan_url'] = '';
+			}
+
+			$public_url = parse_url($_REQUEST['url']);
+			$coord = get_geoloc(gethostbyname($public_url['host']));
 
 			$ocp = new OCP();
 			$ocp->hydrate($_REQUEST);
@@ -20,6 +25,10 @@
 			}
 
 			$ocp->store();
+			if ($_REQUEST['private_url'] != '') {
+				$private_url = parse_url($_REQUEST['private_url']);
+				upnp_expose_server($public_url, $private_url);
+			}
 
 			$output['result'] = $ocp;
 		} catch (Exception $e) {
@@ -38,11 +47,12 @@
 	$server_address_spec = null;
 	$b_inside_the_same_lan = inside_the_same_lan();
 	if ($b_inside_the_same_lan) {
-		try {
-			$server_address_spec = upnp_expose_server();
-		} catch (Exception $e) {
-
-		}
+		$server_address_spec = array(
+			'private_ip' => $_SERVER['SERVER_NAME'],
+			'private_port' => $_SERVER['SERVER_PORT'],
+			'public_ip' => get_public_ip(),
+			'public_port' => $_SERVER['SERVER_PORT'],
+		);
 	} else {
 		$server_address_spec = array(
 			'public_ip' => get_public_ip(),
@@ -51,10 +61,10 @@
 	}
 
 	$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
-	$public_url = 'http://' . $server_address_spec['public_ip'] . ':' . $server_address_spec['public_port']. preg_replace('#(.*' . $name . ')/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
-	$private_url = '';
+	$url = 'http://' . $server_address_spec['public_ip'] . ':' . $server_address_spec['public_port']. preg_replace('#(.*' . $name . ')/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
+	$lan_url = '';
 	if ($b_inside_the_same_lan) {
-		$private_url = 'http://' . $server_address_spec['private_ip'] . ':' . $server_address_spec['private_port']. preg_replace('#(.*' . $name . ')/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
+		$lan_url = 'http://' . $server_address_spec['private_ip'] . ':' . $server_address_spec['private_port']. preg_replace('#(.*' . $name . ')/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
 	}
 ?>
 
@@ -71,20 +81,24 @@
 					<td><input type="text" name="name" value="<?php echo $name; ?>"/></td>
 				</tr>
 				<tr>
-					<td>Public URL</td>
-					<td><input type="text" name="url" value="<?php echo $public_url; ?>" size="100"/>(url where I can be reached.)</td>
+					<td>URL</td>
+					<td><input type="text" name="url" value="<?php echo $url; ?>" size="100"/>(url where I can be reached.)</td>
 				</tr>
 				<tr>
-					<td>Private URL</td>
-					<td><input type="text" name="private_url" value="<?php echo $private_url; ?>" size="100"/></td>
+					<td>Can be contacted through LAN</td>
+					<td><input type="checkbox" name="b_lan" /></td>
+				</tr>
+				<tr>
+					<td>LAN URL</td>
+					<td><input type="text" name="lan_url" value="<?php echo $lan_url; ?>" size="100"/></td>
 				</tr>
 				<tr>
 					<td>Sponsor URL</td>
-					<td><input type="text" name="sponsor" value="http://localhost/webocp/server/test" size="100"/></td>
+					<td><input type="text" name="sponsor" value="http://www.ocpforum.org/webocp/server/node0" size="100"/></td>
 				</tr>
 				<tr>
 					<td>Quota</td>
-					<td><input type="number" name="quota" value="1" size="100"/></td>
+					<td><input type="number" name="quota" value="1" size="100"/> GB</td>
 				</tr>
 			</table>
 			<input type="submit" value="Submit" />

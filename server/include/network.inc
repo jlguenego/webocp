@@ -103,14 +103,36 @@
 	}
 
 
-	function upnp_expose_server() {
-		$result = array(
-			'private_ip' => $_SERVER['SERVER_ADDR'],
-			'private_port' => $_SERVER['SERVER_PORT'],
-			'public_ip' => get_public_ip(),
-			'public_port' => $_SERVER['SERVER_PORT'],
+	function upnp_expose_server($public, $private) {
+		$upnp = new Upnp();
+
+		$service_type = 'urn:schemas-upnp-org:service:WANPPPConnection:1';
+
+		$upnp->discover();
+		if (!$upnp->hasService($service_type)) {
+			throw new Exception('Can find service: ' . $service_type);
+			return;
+		}
+
+		$service = $upnp->getService($service_type);
+
+		$action = 'AddPortMapping';
+		$args = array(
+			'NewRemoteHost' => '',
+			'NewExternalPort' =>  $public['port'],
+			'NewProtocol' =>  'TCP',
+			'NewInternalPort' =>  $private['port'],
+			'NewInternalClient' => gethostbyname($private['host']),
+			'NewEnabled' => 'True',
+			'NewPortMappingDescription' => 'OCP mapping',
+			'NewLeaseDuration' => '0',
 		);
 
+		$output = $service->sendRequest($action, $args);
+
+		$dom = new DOMDocument();
+		$dom->loadXML($output);
+		echo $dom->textContent;
 		return $result;
 	}
 

@@ -12,12 +12,12 @@ class Upnp {
 
 		// BUILD MESSAGE
 	    $msg  = 'M-SEARCH * HTTP/1.1' . "\r\n";
-	    $msg .= 'HOST: 239.255.255.250:1900' ."\r\n";
+	    $msg .= 'HOST: 239.255.255.250:1900' . "\r\n";
 	    $msg .= 'MAN: "'. $man .'"' . "\r\n";
-	    $msg .= 'MX: '. $mx ."\r\n";
-	    $msg .= 'ST:' . $st ."\r\n";
-	   // $msg .= 'USER-AGENT: '. static::USER_AGENT ."\r\n";
-	    $msg .= '' ."\r\n";
+	    $msg .= 'MX: '. $mx . "\r\n";
+	    $msg .= 'ST:' . $st . "\r\n";
+		// $msg .= 'USER-AGENT: '. static::USER_AGENT . "\r\n";
+	    $msg .= '' . "\r\n";
 
 	    // MULTICAST MESSAGE
 	    if (!function_exists('socket_create')) {
@@ -95,8 +95,9 @@ class UpnpService {
 			if( stripos( $row, 'location:') === 0 ) {
 				$this->location = trim(str_ireplace( 'location:', '', $row ));
 
-				$this->ip = preg_replace('#^http://([\d]+\.[\d]+\.[\d]+\.[\d]+):.*$#', "$1", $this->location);
-				$this->port = preg_replace('#^http://.*:([\d]+).*$#', "$1", $this->location);
+				$url = parse_url($this->location);
+				$this->ip = gethostbyname($url['host']);
+				$this->port = $url['port'];
 			}
 
 			if( stripos( $row, 'server:') === 0 )

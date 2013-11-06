@@ -22,7 +22,7 @@
 			'NewExternalPort' =>  $_GET['external_port'],
 			'NewProtocol' =>  $_GET['protocol'],
 			'NewInternalPort' =>  $_GET['internal_port'],
-			'NewInternalClient' => $_GET['client'],
+			'NewInternalClient' => gethostbyname($_GET['client']),
 			'NewEnabled' => 'True',
 			'NewPortMappingDescription' =>  $_GET['descr'],
 			'NewLeaseDuration' => '0',
