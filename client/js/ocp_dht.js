@@ -130,6 +130,7 @@
 		endpoint = endpoint || 'index';
 		url_query = url_query || '';
 		var result = url + '/endpoint/' + endpoint + '.php' + url_query;
+		console.log('endpoint_url=' + result);
 		return result;
 	};
 
