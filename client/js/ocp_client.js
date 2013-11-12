@@ -1,7 +1,7 @@
 (function(ocp, undefined) {
-	ocp.filesystem = {};
+	ocp.client = {};
 
-	ocp.filesystem.command = function(data, url) {
+	ocp.client.command = function(data, url) {
 		if (!url) {
 			throw new Error('No URL given.');
 		}
@@ -43,7 +43,7 @@
 		return result;
 	};
 
-	ocp.filesystem.async_command = function(data, url, onsuccess, onerror) {
+	ocp.client.async_command = function(data, url, onsuccess, onerror) {
 		$.ajaxSetup({
 			cache: false,
 			scriptCharset: "utf-8"

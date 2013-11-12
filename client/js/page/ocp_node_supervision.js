@@ -28,7 +28,7 @@
 			var url = ocp.cfg.server_base_url + '/webocp/server/node0';
 
 			var url = ocp.dht.get_endpoint_url({url: url}, 'get_contact_list');
-			var contact_list = ocp.filesystem.command({}, url);
+			var contact_list = ocp.client.command({}, url);
 			console.log(contact_list);
 			self.node_map.data = d3.values(contact_list);
 			self.node_map.data = d3.values(contact_list).filter(function(d) {
@@ -69,7 +69,7 @@
 		};
 
 		this.display_node_properties = function(node) {
-			var json = ocp.filesystem.command({}, node.url + '/endpoint/get_mem_report.php');
+			var json = ocp.client.command({}, node.url + '/endpoint/get_mem_report.php');
 			console.log(json);
 			var used = json.used;
 			var left = json.total - used;

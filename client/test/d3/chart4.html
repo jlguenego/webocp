@@ -10,16 +10,11 @@
 		<script src="js/ocp.js"></script>
 		<script src="js/ocp_storage.js"></script>
 		<script src="js/ocp_utils.js"></script>
-		<script src="js/ocp_filesystem.js"></script>
 		<script src="js/ocp_client.js"></script>
 		<script src="js/ocp_math.js"></script>
 
 		<script src="js/ocp_graphic.js"></script>
 		<link rel="stylesheet" href="css/ocp_graphic.css" />
-
-
-		<script src="js/ocp_worker_ui.js"></script>
-		<script src="js/ocp_worker_ui_pool.js"></script>
 
 		<style>
 
@@ -66,47 +61,51 @@ function build_dataset(start_t, end_t) {
 }
 
 $(document).ready(function() {
-	var today = new Date();
-	today.setHours(0, 0, 0, 0);
-	var start_t = Math.floor(today.getTime() / 1000);
-	var end_t = start_t + 365 * 2 * 86400;
+	try {
+		var today = new Date();
+		today.setHours(0, 0, 0, 0);
+		var start_t = Math.floor(today.getTime() / 1000);
+		var end_t = start_t + 365 * 2 * 86400;
 
-	var dataset = build_dataset(start_t, end_t);
+		var dataset = build_dataset(start_t, end_t);
 
-	var avg = d3.mean(dataset, function(d) { return d.quota; })
+		var avg = d3.mean(dataset, function(d) { return d.quota; })
 
-	var dataset2 = dataset.map(function(d) {
-		return {
-			timestamp: d.timestamp,
-			used_mem: avg
-		};
-	});
+		var dataset2 = dataset.map(function(d) {
+			return {
+				timestamp: d.timestamp,
+				used_mem: avg
+			};
+		});
 
-	var graph = new ocp.graphic.Graph($('svg').get(0), margin);
+		var graph = new ocp.graphic.Graph('#page', margin);
 
-	graph.start_t = start_t;
-	graph.end_t = end_t;
+		graph.start_t = start_t;
+		graph.end_t = end_t;
 
-	graph.dataset = dataset;
-	graph.x_access = function(d) { return d.timestamp; };
-	graph.y_access = function(d) { return d.quota; };
-	graph.scale_y(0.1, 0.1);
+		graph.dataset = dataset;
+		graph.x_access = function(d) { return d.timestamp; };
+		graph.y_access = function(d) { return d.quota; };
+		graph.scale_y(0.1, 0.1);
 
-	graph.y_format = function(n) { return d3.format(".2f")(n) + ' TB'; };
+		graph.y_format = function(n) { return d3.format(".2f")(n) + ' TB'; };
 
-	graph.draw_axis();
-	graph.interpolate = 'step';
-	graph.add_legend('Quota');
-	graph.draw_line();
+		graph.draw_axis();
+		graph.interpolate = 'step';
+		graph.add_legend('Quota');
+		graph.draw_line();
 
 
-	graph.dataset = dataset2;
-	graph.y_access = function(d) { return d.used_mem; };
-	graph.color = 'red';
-	graph.add_legend('Used storage');
-	graph.draw_line();
+		graph.dataset = dataset2;
+		graph.y_access = function(d) { return d.used_mem; };
+		graph.color = 'red';
+		graph.add_legend('Used storage');
+		graph.draw_line();
 
-	graph.draw_legend();
+		graph.draw_legend();
+	} catch (e) {
+		console.log(e.stack);
+	}
 });
 		</script>
 	</body>

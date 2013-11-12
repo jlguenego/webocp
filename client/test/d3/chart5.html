@@ -10,16 +10,11 @@
 		<script src="js/ocp.js"></script>
 		<script src="js/ocp_storage.js"></script>
 		<script src="js/ocp_utils.js"></script>
-		<script src="js/ocp_filesystem.js"></script>
 		<script src="js/ocp_client.js"></script>
 		<script src="js/ocp_math.js"></script>
 
 		<script src="js/ocp_graphic.js"></script>
 		<link rel="stylesheet" href="css/ocp_graphic.css" />
-
-
-		<script src="js/ocp_worker_ui.js"></script>
-		<script src="js/ocp_worker_ui_pool.js"></script>
 
 		<style>
 
@@ -97,7 +92,7 @@ function print_48h() {
 		end_t: now_t
 	};
 
-	var transaction_obj = ocp.filesystem.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
+	var transaction_obj = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
 	var start_t = transaction_obj.query.end_t - 86400;
 	var end_t = transaction_obj.query.end_t;
 
@@ -180,7 +175,7 @@ function draw_graph(start_t, end_t, group_size) {
 		start_t: start_t,
 		end_t: end_t
 	};
-	var result = ocp.filesystem.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_rate.php');
+	var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_rate.php');
 
 	var graph = new ocp.graphic.Graph('#graph', margin);
 	graph.dataset = ocp.graphic.group_transaction(result.transaction_list, group_size);
