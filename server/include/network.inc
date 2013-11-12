@@ -93,7 +93,16 @@
 	}
 
 	function get_public_ip_from_web() {
-		$ip = file_get_contents('http://api.externalip.net/ip');
+		$context = stream_context_create(array(
+			'http' => array(
+				'timeout' => 2,
+			),
+		));
+
+		$ip = @file_get_contents('http://api.externalip.net/ip', false, $context);
+		if ($ip === false) {
+			return null;
+		}
 		return $ip;
 	}
 
@@ -103,7 +112,7 @@
 	}
 
 
-	function upnp_expose_server($public, $private) {
+	function network_add_nat_traversal($public, $private) {
 		$upnp = new Upnp();
 
 		$service_type = 'urn:schemas-upnp-org:service:WANPPPConnection:1';
@@ -123,11 +132,11 @@
 		);
 
 		$output = $service->sendRequest($action, $args);
+		//print_r($output);
 
-		$dom = new DOMDocument();
-		$dom->loadXML($output);
-		echo $dom->textContent;
-		return $result;
+		$dom = DOMDocument::loadXML($output);
+		$error = $dom->documentElement->getElementsByTagName('errorCode')->item(0)->nodeValue;
+		return $error == null;
 	}
 
 	function inside_the_same_lan() {

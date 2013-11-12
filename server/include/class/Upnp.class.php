@@ -123,13 +123,13 @@ class UpnpService {
 				$this->server = trim(str_ireplace( 'server:', '', $row ));
 
 			if( stripos( $row, 'st:') === 0 )
-				$this->st = trim(str_ireplace( 'st: ', '', $row ));
+				$this->st = trim(str_ireplace( 'st:', '', $row ));
 
 			if( stripos( $row, 'usn:') === 0 )
-				$this->usn = trim(str_ireplace( 'usn: ', '', $row ));
+				$this->usn = trim(str_ireplace( 'usn:', '', $row ));
 
 			if( stripos( $row, 'content-length:') === 0 )
-				$this->content_length = trim(str_ireplace( 'content-length: ', '', $row ));
+				$this->content_length = trim(str_ireplace( 'content-length:', '', $row ));
 		}
 	}
 

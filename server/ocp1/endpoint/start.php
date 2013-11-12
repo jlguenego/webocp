@@ -31,7 +31,7 @@
 			$ocp->store();
 			if ($_REQUEST['lan_url'] != '') {
 				$lan_url = parse_url($_REQUEST['lan_url']);
-				upnp_expose_server($url, $lan_url);
+				echo network_add_nat_traversal($url, $lan_url);
 			}
 
 			$output['result'] = $ocp;

@@ -44,6 +44,7 @@
 		<th>Description</th>
 		<th>Duration</th>
 		<th>Enabled</th>
+		<th>Delete</th>
 	</tr>
 
 EOF;
@@ -58,6 +59,15 @@ EOF;
 		<td>{$mapping['descr']}</td>
 		<td>{$mapping['duration']}</td>
 		<td>{$mapping['enabled']}</td>
+		<td>
+			<form method="GET" action="">
+				<input type="hidden" name="remote_host" value="{$mapping['remote_host']}" />
+				<input type="hidden" name="external_port" value="{$mapping['external_port']}" />
+				<input type="hidden" name="protocol" value="{$mapping['protocol']}" />
+				<input type="hidden" name="delete" value="1" />
+				<input type="submit" value="Delete" />
+			</form>
+		</td>
 	</tr>
 
 EOF;

@@ -12,13 +12,21 @@
 
 			$path = preg_replace('#(.*)/' . $name . '/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
 			$public_ip = get_public_ip();
+			$public_port = $_SERVER['SERVER_PORT'];
+			if (is_numeric ($_REQUEST['public_port']) && $_REQUEST['public_port'] < 65535) {
+				$public_port = $_REQUEST['public_port'];
+			}
 
+			debug('$_REQUEST["public_port"]=' . $_REQUEST['public_port']);
+			debug('$public_port=' . $public_port);
+			debug('$public_ip=' . $public_ip);
+
+			$b_lan = is_private_ip(gethostbyname($_SERVER['SERVER_NAME']));
 
 			for ($i = 0; $i < $node_qty; $i++) {
 				$name = 'node' . $i;
 				$quota = 1;
 				$url = 'http://' . $public_ip . ':' . $_REQUEST['public_port'] . $path . '/' . $name;
-				$b_lan = is_private_ip(gethostbyname($_SERVER['SERVER_NAME']));
 				$lan_url = 'http://' . $_SERVER['HTTP_HOST'] . $path . '/' . $name;
 				$node_url = $url;
 				if ($b_lan) {
@@ -67,8 +75,16 @@
 
 	<body>
 		<form method="GET" action="">
-			Node quantity: <input type="number" name="node_qty" value="10"/><br />
-			Public port: <input type="number" name="public_port" value="52123"/><br />
+			<table>
+				<tr>
+					<td>Node quantity</td>
+					<td><input type="number" name="node_qty" value="10"/></td>
+				</tr>
+				<tr>
+					<td>NAT traversal public port<br/>(leave empty if you don't want nat traversal)</td>
+					<td><input type="number" name="public_port" value="52123"/></td>
+				</tr>
+			</table>
 			<input type="submit" value="Submit" />
 		</form>
 	</body>
