@@ -1,5 +1,5 @@
 <?php
-define('CACHE_FILE', ROOT . '/cache.txt');
+define('CACHE_FILE', ROOT_CACHE . '/cache.txt');
 class Cache {
 	private $file = CACHE_FILE;
 	private $json;
@@ -9,6 +9,7 @@ class Cache {
 			$content = file_get_contents($this->file);
 			$this->json = json_decode($content);
 		} else {
+			mkdir_p(ROOT_CACHE);
 			$this->json = json_decode('{}');
 		}
 	}
@@ -23,6 +24,7 @@ class Cache {
 			'value' => $value,
 			'exp_t' => $exp_t,
 		);
+
 		file_put_contents($this->file, json_encode($this->json));
 	}
 

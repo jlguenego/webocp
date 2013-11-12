@@ -119,12 +119,18 @@
 
 		$service = $upnp->getService($service_type);
 
+		$private_port = 80;
+		if (is_numeric($private['port']) && $private['port'] < 65535) {
+			$private_port = $private['port'];
+		}
+		debug('$private_port=' . $private_port);
+
 		$action = 'AddPortMapping';
 		$args = array(
 			'NewRemoteHost' => '',
 			'NewExternalPort' =>  $public['port'],
 			'NewProtocol' =>  'TCP',
-			'NewInternalPort' =>  $private['port'],
+			'NewInternalPort' =>  $private_port,
 			'NewInternalClient' => gethostbyname($private['host']),
 			'NewEnabled' => 'True',
 			'NewPortMappingDescription' => OCP_PORT_MAPPING_DESCR,

@@ -13,8 +13,10 @@
 			$path = preg_replace('#(.*)/' . $name . '/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
 			$public_ip = get_public_ip();
 			$public_port = $_SERVER['SERVER_PORT'];
+			$b_use_nat = false;
 			if (is_numeric ($_REQUEST['public_port']) && $_REQUEST['public_port'] < 65535) {
 				$public_port = $_REQUEST['public_port'];
+				$b_use_nat = true;
 			}
 
 			debug('$_REQUEST["public_port"]=' . $_REQUEST['public_port']);
@@ -26,7 +28,7 @@
 			for ($i = 0; $i < $node_qty; $i++) {
 				$name = 'node' . $i;
 				$quota = 1;
-				$url = 'http://' . $public_ip . ':' . $_REQUEST['public_port'] . $path . '/' . $name;
+				$url = 'http://' . $public_ip . ':' . $public_port . $path . '/' . $name;
 				$lan_url = 'http://' . $_SERVER['HTTP_HOST'] . $path . '/' . $name;
 				$node_url = $url;
 				if ($b_lan) {
@@ -41,7 +43,8 @@
 						'&url=' . $url .
 						'&quota=' . $quota .
 						'&b_lan=' . $b_lan .
-						'&lan_url=' . $lan_url
+						'&lan_url=' . $lan_url .
+						'&b_nat=' . $b_use_nat
 					);
 					continue;
 				}

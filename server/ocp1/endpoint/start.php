@@ -29,9 +29,11 @@
 			}
 
 			$ocp->store();
-			if ($_REQUEST['lan_url'] != '') {
+			if (isset($_REQUEST['b_nat']) && $_REQUEST['b_nat'] && $_REQUEST['lan_url'] != '') {
 				$lan_url = parse_url($_REQUEST['lan_url']);
-				echo network_add_nat_traversal($url, $lan_url);
+				debug('$_REQUEST["lan_url"]=' . $_REQUEST['lan_url']);
+				debug('Use NAT: ' . $url['port'] . ' => ' . gethostbyname($lan_url['host']) . ':' . $lan_url['port']);
+				network_add_nat_traversal($url, $lan_url);
 			}
 
 			$output['result'] = $ocp;
@@ -95,6 +97,10 @@
 				<tr>
 					<td>LAN URL</td>
 					<td><input type="text" name="lan_url" value="<?php echo $lan_url; ?>" size="100"/></td>
+				</tr>
+				<tr>
+					<td>Use NAT traversal</td>
+					<td><input type="checkbox" name="b_nat" /></td>
 				</tr>
 				<tr>
 					<td>Sponsor URL</td>
