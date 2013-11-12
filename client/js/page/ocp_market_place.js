@@ -97,7 +97,7 @@
 		this.transaction_obj_48h = null;
 
 		this.print_48h = function() {
-			this.transaction_obj_48h = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_transactions'));
+			this.transaction_obj_48h = ocp.filesystem.command({}, ocp.dht.get_endpoint_url(null, 'get_transactions'));
 			var transaction_obj = this.transaction_obj_48h;
 
 			var now_t = (new Date()).getTime() / 1000;
@@ -154,7 +154,7 @@
 		};
 
 		this.refresh_current_rate = function() {
-			var obj = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_current_rate'));
+			var obj = ocp.filesystem.command({}, ocp.dht.get_endpoint_url(null, 'get_current_rate'));
 			var current_rate = obj.rate;
 			console.log(current_rate);
 			$('#ocp_mp_current_price .eur').html(ocp.utils.curr(current_rate) + '€');
@@ -170,12 +170,12 @@
 		};
 
 		this.refresh_latest_offers = function() {
-			var buy_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_buy_offers'));
+			var buy_offers = ocp.filesystem.command({}, ocp.dht.get_endpoint_url(null, 'get_buy_offers'));
 			var buy_offers_data = ocp.mp.build_buy_offers_data(buy_offers, 7);
 
 			this.buy_grid.ocp_grid('reload', { rows: buy_offers_data});
 
-			var sell_offers = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_sell_offers'));
+			var sell_offers = ocp.filesystem.command({}, ocp.dht.get_endpoint_url(null, 'get_sell_offers'));
 			var sell_offers_data = ocp.mp.build_sell_offers_data(sell_offers, 7);
 
 			this.sell_grid.ocp_grid('reload', { rows: sell_offers_data});
@@ -350,7 +350,7 @@
 			start_t: start_t,
 			end_t: end_t
 		};
-		var result = ocp.client.command(data, ocp.dht.get_endpoint_url(null, 'get_rate'));
+		var result = ocp.filesystem.command(data, ocp.dht.get_endpoint_url(null, 'get_rate'));
 
 		var graph = new ocp.graphic.Graph('#ocp_mp_graph', margin);
 		graph.dataset = ocp.graphic.group_transaction(result.transaction_list, group_size);

@@ -37,7 +37,7 @@ $(document).ready(function() {
 });
 
 $('button').click(function() {
-	var json = ocp.client.command({}, $('input').val() + '/endpoint/get_mem_report.php');
+	var json = ocp.filesystem.command({}, $('input').val() + '/endpoint/get_mem_report.php');
 	console.log(json);
 	var used = json.used;
 	var left = json.total - used;

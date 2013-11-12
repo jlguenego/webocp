@@ -1,15 +1,15 @@
 (function(ocp, undefined) {
-	ocp.client = {};
+	ocp.filesystem = {};
 
 	var pool = null;
 	$(document).ready(function() {
 		var url = ocp.worker_ui.getURL('js/worker/ocp_upload_dir.js');
 		var pool_nbr = ocp.cfg.pool.thread_nbr.upload_dir || 3;
 		pool = new ocp.worker_ui.pool.Pool(pool_nbr, url);
-		ocp.client.upload_dir_pool = pool;
+		ocp.filesystem.upload_dir_pool = pool;
 	});
 
-	ocp.client.command = function(data, url) {
+	ocp.filesystem.command = function(data, url) {
 		if (!url) {
 			throw new Error('No URL given.');
 		}
@@ -37,7 +37,7 @@
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-				console.log('ocp.client error');
+				console.log('ocp.filesystem error');
 				console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
 				throw new Error('It seems that the server is not responding...');
 			},
@@ -51,7 +51,7 @@
 		return result;
 	};
 
-	ocp.client.async_command = function(data, url, onsuccess, onerror) {
+	ocp.filesystem.async_command = function(data, url, onsuccess, onerror) {
 		$.ajaxSetup({
 			cache: false,
 			scriptCharset: "utf-8"
@@ -79,7 +79,7 @@
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-				console.log('ocp.client error');
+				console.log('ocp.filesystem error');
 				console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
 				console.log(jqXHR);
 				if (onerror) {
@@ -99,7 +99,7 @@
 		});
 	};
 
-	ocp.client.ls = function(path, onsuccess, onerror) {
+	ocp.filesystem.ls = function(path, onsuccess, onerror) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
 
 		var my_onsuccess = function(result) {
@@ -116,37 +116,37 @@
 		scenario.ls(path, my_onsuccess, onerror);
 	}
 
-	ocp.client.mkdir = function(path, name, onsuccess, onerror) {
+	ocp.filesystem.mkdir = function(path, name, onsuccess, onerror) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
 		var result = scenario.mkdir(path, name, onsuccess, onerror);
 	}
 
-	ocp.client.mv = function(old_path, new_path) {
+	ocp.filesystem.mv = function(old_path, new_path) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
 		var result = scenario.mv(old_path, new_path);
 	}
 
-	ocp.client.rm = function(path, onsuccess, onerror) {
+	ocp.filesystem.rm = function(path, onsuccess, onerror) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
 		var result = scenario.rm(path, onsuccess, onerror);
 	}
 
-	ocp.client.upload_files = function(path, file_descr_list, onsuccess, onprogress) {
+	ocp.filesystem.upload_files = function(path, file_descr_list, onsuccess, onprogress) {
 		console.log('upload_files');
 		console.log(file_descr_list);
 
 		for (var i = 0; i < file_descr_list.length; i++) {
-			ocp.client.add_upload_task(path, file_descr_list[i], onsuccess, onprogress);
+			ocp.filesystem.add_upload_task(path, file_descr_list[i], onsuccess, onprogress);
 		}
 		console.log(pool);
 	};
 
-	ocp.client.add_upload_task = function(path, file_descr, onsuccess, onprogress) {
+	ocp.filesystem.add_upload_task = function(path, file_descr, onsuccess, onprogress) {
 		var task_callback = function(event) {
 			console.log(event.data);
 			switch (event.data.action) {
 				case 'mkdir':
-					ocp.client.mkdir(
+					ocp.filesystem.mkdir(
 						event.data.path,
 						event.data.name,
 						function() {
@@ -156,7 +156,7 @@
 						});
 					break;
 				case 'upload_file':
-					ocp.client.upload_file(
+					ocp.filesystem.upload_file(
 						event.data.filename,
 						event.data.file,
 						function() {
@@ -208,15 +208,15 @@
 		pool.addTask(task);
 	};
 
-	ocp.client.upload_file = function(path, file, onsuccess, onprogress) {
+	ocp.filesystem.upload_file = function(path, file, onsuccess, onprogress) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
 		var result = scenario.upload_file(path, file, onsuccess, onprogress);
 		return result;
 	};
 
-	ocp.client.download_file = function(path, onsuccess, onprogress, onerror) {
+	ocp.filesystem.download_file = function(path, onsuccess, onprogress, onerror) {
 		var scenario = ocp.scenario.get(ocp.cfg.scenario);
 		scenario.download_file(path, onsuccess, onprogress, onerror);
-		console.log('ocp.client.download_file, path=' + path);
+		console.log('ocp.filesystem.download_file, path=' + path);
 	}
 })(ocp);

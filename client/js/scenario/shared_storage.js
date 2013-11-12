@@ -15,7 +15,7 @@
 				email: args.email,
 				password: args.password
 			};
-			ocp.client.command(my_args, this.endpoint);
+			ocp.filesystem.command(my_args, this.endpoint);
 
 			ocp.session = {};
 			ocp.session.user_id = args.email;
@@ -27,21 +27,21 @@
 				email: args.email,
 				password: args.password
 			};
-			ocp.client.command(my_args, this.endpoint);
+			ocp.filesystem.command(my_args, this.endpoint);
 
 			ocp.session = {};
 			ocp.session.user_id = args.email;
 		};
 
 		this.ls = function(path, onsuccess, onerror) {
-			ocp.client.async_command({
+			ocp.filesystem.async_command({
 				action: 'ls',
 				path: this.get_prefix_path() + path
 			}, this.endpoint, onsuccess, onerror);
 		};
 
 		this.mkdir = function(path, name, onsuccess, onerror) {
-			ocp.client.async_command({
+			ocp.filesystem.async_command({
 				action: 'mkdir',
 				path: this.get_prefix_path() + path,
 				name: name
@@ -49,14 +49,14 @@
 		};
 
 		this.rm = function(path, onsuccess, onerror) {
-			ocp.client.async_command({
+			ocp.filesystem.async_command({
 				action: 'rm',
 				path: this.get_prefix_path() + path
 			}, this.endpoint, onsuccess, onerror);
 		};
 
 		this.mv = function(old_path, new_path) {
-			ocp.client.command({
+			ocp.filesystem.command({
 				action: 'mv',
 				old_path: this.get_prefix_path() + old_path,
 				new_path: this.get_prefix_path() + new_path
@@ -109,7 +109,7 @@
 					}
 				},
 		        error: function(jqXHR, textStatus, errorThrown) {
-					console.log('ocp.client.ls error');
+					console.log('ocp.filesystem.ls error');
 					console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
 				},
 		        //Options to tell JQuery not to process data or worry about content-type
@@ -155,7 +155,7 @@
 					}
 				},
 		        error: function(jqXHR, textStatus, errorThrown) {
-					console.log('ocp.client.ls error');
+					console.log('ocp.filesystem.ls error');
 					console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
 				},
 		        //Options to tell JQuery not to process data or worry about content-type

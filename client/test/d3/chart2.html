@@ -166,7 +166,7 @@ function print_48h() {
 		start_t: now_t - 2 * 86400,
 		end_t: now_t
 	};
-	var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
+	var result = ocp.filesystem.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
 	var svg_elem = $('svg').get(0);
 
 	ocp.graphic.draw_chart(svg_elem, result, margin);
@@ -210,7 +210,7 @@ function draw_graph(start_t, end_t, group_size) {
 		start_t: start_t,
 		end_t: end_t
 	};
-	var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_rate.php');
+	var result = ocp.filesystem.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_rate.php');
 	var svg_elem = $('svg').get(0);
 	result.transaction_list = ocp.graphic.group_transaction(result.transaction_list, group_size);
 	ocp.graphic.draw_graph(svg_elem, result, start_t, end_t, margin);

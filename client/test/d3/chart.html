@@ -37,7 +37,7 @@ var data = {
 	start_t: now_t - 3 * 86400,
 	end_t: now_t
 };
-var result = ocp.client.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
+var result = ocp.filesystem.command(data, ocp.cfg.server_base_url + '/webocp/server/test/endpoint/get_transactions.php');
 var svg_elem = $('svg').get(0);
 ocp.graphic.draw_chart(svg_elem, result);
 		</script>

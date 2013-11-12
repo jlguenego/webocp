@@ -176,7 +176,7 @@
 	ocp.utils.eur2btc = function(amount) {
 		var now_t = new Date().getTime();
 		if (btc_rate == 0 || now_t - btc_rate_last_call > 3600 * 1000) {
-			btc_rate = ocp.client.command({}, ocp.dht.get_endpoint_url(null, 'get_current_btc_rate'));
+			btc_rate = ocp.filesystem.command({}, ocp.dht.get_endpoint_url(null, 'get_current_btc_rate'));
 			btc_rate_last_call = now_t;
 		}
 		return amount / btc_rate;

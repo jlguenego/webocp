@@ -27,7 +27,7 @@
 		this.ring = {};
 		this.address_list = [];
 		var url = ocp.dht.get_endpoint_url(null, 'get_contact_list');
-		var contact_list = ocp.client.command({}, url);
+		var contact_list = ocp.filesystem.command({}, url);
 
 		for (var name in contact_list) {
 			var contact = new ocp.dht.Contact(contact_list[name]);

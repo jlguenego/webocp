@@ -132,7 +132,7 @@ var remove_dialog = null;
 			});
 		}
 		try {
-			ocp.client.upload_files(
+			ocp.filesystem.upload_files(
 				path,
 				file_descr_list,
 				ocp.file_manager.refresh,
@@ -295,7 +295,7 @@ var remove_dialog = null;
 					type: 'file',
 					relative_path: ocp.normalize_path(relative_path + '/' + file.name)
 				};
-				ocp.client.add_upload_task(
+				ocp.filesystem.add_upload_task(
 					path,
 					file_descr,
 					ocp.file_manager.refresh,
@@ -313,7 +313,7 @@ var remove_dialog = null;
 				type: 'dir',
 				relative_path: ocp.normalize_path(relative_path + '/' + entry.name)
 			};
-			ocp.client.add_upload_task(
+			ocp.filesystem.add_upload_task(
 				path,
 				file_descr,
 				ocp.file_manager.refresh
@@ -443,7 +443,7 @@ var remove_dialog = null;
 			};
 		}
 
-		ocp.client.download_file(
+		ocp.filesystem.download_file(
 			ocp.normalize_path(path + '/' + name),
 			null,
 			onprogress,
@@ -509,7 +509,7 @@ var remove_dialog = null;
 		];
 		tree = $('#ocp_fm_tree').ocp_tree({
 			source: src,
-			ls: ocp.client.ls,
+			ls: ocp.filesystem.ls,
 			open_item_error: function(path) {
 				$('#ocp_misc_error_dialog').find('span').html('Cannot go to directory ' + path);
 				$('#ocp_fm_breadcrumbs input').val(path);
@@ -674,7 +674,7 @@ var remove_dialog = null;
 					ocp.ui.cursor_wait_start();
 					var path = grid.ocp_grid('option', 'state').path;
 					var folder_name = $('#ocp_fm_new_folder_dialog #ocp_fm_new_folder_name').val();
-					ocp.client.mkdir(path, folder_name, function() {
+					ocp.filesystem.mkdir(path, folder_name, function() {
 						ocp.ui.cursor_wait_end();
 						tree.ocp_tree('open_item', path);
 						new_folder_dialog.ocp_dialog('close');
@@ -713,7 +713,7 @@ var remove_dialog = null;
 					var new_name = $('#ocp_fm_rename_dialog #ocp_fm_new_name').val();
 
 					try {
-						ocp.client.mv(ocp.normalize_path(path + '/' + old_name), ocp.normalize_path(path + '/' + new_name));
+						ocp.filesystem.mv(ocp.normalize_path(path + '/' + old_name), ocp.normalize_path(path + '/' + new_name));
 					} catch (e) {
 						ocp.error_manage(e);
 						$('#ocp_fm_rename_dialog #ocp_fm_new_name').select();
@@ -759,7 +759,7 @@ var remove_dialog = null;
 							var p = ocp.normalize_path(path + '/' + name);
 							console.log('rm ' + p);
 
-							ocp.client.rm(p, finalize, finalize);
+							ocp.filesystem.rm(p, finalize, finalize);
 						} catch (e) {
 							ocp.error_manage(e);
 						}

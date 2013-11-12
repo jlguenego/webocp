@@ -361,7 +361,7 @@
 					}
 				},
 		        error: function(jqXHR, textStatus, errorThrown) {
-					console.log('ocp.client.ls error');
+					console.log('ocp.filesystem.ls error');
 					console.log('jqXHR=' + jqXHR + "\ntextStatus=" + textStatus + "\nerrorThrown=" + errorThrown);
 				},
 		        //Options to tell JQuery not to process data or worry about content-type
