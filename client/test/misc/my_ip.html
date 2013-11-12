@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+	</head>
+
+	<body>
+		<script>
+			var result = {};
+$.ajax({
+	type: "POST",
+	url: 'http://ip-api.com/json',
+	async: false,
+	data: {},
+	success: function(data) {
+		result = data;
+	}
+});
+console.log(result);
+		</script>
+	</body>
+</html>

@@ -117,14 +117,16 @@
 	};
 
 	ocp.dht.get_endpoint_url = function(contact, endpoint, url_query) {
+		console.log(contact);
 		var sponsor_name = ocp.cfg.sponsor_name || 'node0';
 		var url = ocp.cfg.server_base_url + '/webocp/server/' + sponsor_name;
+		console.log('url=' + url);
 		if (contact) {
 			url = contact.url;
 		}
 		endpoint = endpoint || 'index';
 		url_query = url_query || '';
-		var result = url + '/endpoint/' + endpoint + '.php' + url_query;;
+		var result = url + '/endpoint/' + endpoint + '.php' + url_query;
 		console.log(result);
 		return result;
 	};
