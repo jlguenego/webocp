@@ -219,10 +219,16 @@
 			return $result;
 		}
 
-		$json = json_decode(file_get_contents('http://freegeoip.net/json/' . $ip));
+		$json = json_decode(file_get_contents('http://freegeoip.net/json/' . $ip, false, $context));
 		// Add impresision
 		$impresision_lat = rand(-1000, 1000) / 100000;
 		$impresision_lng = rand(-1000, 1000) / 100000;
+
+		if ($json->latitude == null || $json->longitude == null) {
+			// Orléan
+			$json->latitude = 47.9029640;
+			$json->longitude = 1.9092510;
+		}
 
 		$json->latitude += $impresision_lat;
 		$json->longitude += $impresision_lng;
