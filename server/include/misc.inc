@@ -214,38 +214,45 @@
 
 	function get_geoloc($ip) {
 		$cache = new Cache();
-		$result = $cache->get('geoloc');
-		if ($result) {
-			return $result;
+		$encoded_geoloc = $cache->get('geoloc');
+		if (!$encoded_geoloc) {
+			$context = stream_context_create(array(
+				'http' => array(
+					'timeout' => 5,
+				),
+			));
+
+			$str = file_get_contents('http://freegeoip.net/json/' . $ip, false, $context);
+
+			if ($str === false) {
+				$loc = array(
+					'type' => 'Point',
+					'coordinate' => array(),
+				);
+				// Orléans
+				$loc->coordinate[0] = 1.9092510;
+				$loc->coordinate[1] = 47.9029640;
+			} else {
+				$json = json_decode($str);
+
+				$loc = array(
+					'type' => 'Point',
+					'coordinate' => array($json->longitude, $json->latitude),
+				);
+			}
+			$encoded_geoloc = json_encode($loc);
+			$cache->set('geoloc', $encoded_geoloc, 86400);
 		}
 
-		$context = stream_context_create(array(
-			'http' => array(
-				'timeout' => 5,
-			),
-		));
+		$json = json_decode($encoded_geoloc);
 
-		$json = json_decode(file_get_contents('http://freegeoip.net/json/' . $ip, false, $context));
-		// Add impresision
-		$impresision_lat = rand(-1000, 1000) / 100000;
-		$impresision_lng = rand(-1000, 1000) / 100000;
+		// Add imprecision
+		$imprecision_lat = rand(-1000, 1000) / 100000;
+		$imprecision_lng = rand(-1000, 1000) / 100000;
 
-		if ($json->latitude == null || $json->longitude == null) {
-			// Orléan
-			$json->latitude = 47.9029640;
-			$json->longitude = 1.9092510;
-		}
+		$json->coordinate[0] += $imprecision_lng;
+		$json->coordinate[1] += $imprecision_lat;
 
-		$json->latitude += $impresision_lat;
-		$json->longitude += $impresision_lng;
-		$loc = array(
-			'type' => 'Point',
-			'coordinate' => array($json->longitude, $json->latitude),
-		);
-
-		$result = json_encode($loc);
-
-		$cache->set('geoloc', $result, 86400);
-		return $result;
+		return json_encode($json);
 	}
 ?>

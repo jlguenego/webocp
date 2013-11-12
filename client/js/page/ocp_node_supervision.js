@@ -69,7 +69,8 @@
 		};
 
 		this.display_node_properties = function(node) {
-			var json = ocp.client.command({}, node.url + '/endpoint/get_mem_report.php');
+			console.log(node);
+			var json = ocp.client.command({}, ocp.dht.get_endpoint_url(node, 'get_mem_report'));
 			console.log(json);
 			var used = json.used;
 			var left = json.total - used;
@@ -84,7 +85,8 @@
 			var node_prop = $('#ocp_ns_node_prop_content');
 			node_prop.find('.name').html(node.name);
 			node_prop.find('.start_address').html(node.start_address);
-			node_prop.find('.url').html('<a href="' + node.url + '/" target="_blank">' + node.url + '/</a>');
+			var url = ocp.dht.get_contact_url(node);
+			node_prop.find('.url').html('<a href="' + url + '/" target="_blank">' + url + '/</a>');
 
 			var options = { output_format: 'object' };
 			var used_o = ocp.utils.format_size(used, options);

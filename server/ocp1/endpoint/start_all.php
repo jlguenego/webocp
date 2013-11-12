@@ -11,6 +11,10 @@
 			$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
 
 			$path = preg_replace('#(.*)/' . $name . '/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
+
+			$private_host = php_uname('n');
+			$private_port = $_SERVER['SERVER_PORT'];
+
 			$public_ip = get_public_ip();
 			$public_port = $_SERVER['SERVER_PORT'];
 			$b_use_nat = false;
@@ -29,7 +33,7 @@
 				$name = 'node' . $i;
 				$quota = 1;
 				$url = 'http://' . $public_ip . ':' . $public_port . $path . '/' . $name;
-				$lan_url = 'http://' . $_SERVER['HTTP_HOST'] . $path . '/' . $name;
+				$lan_url = 'http://' . $private_host . ':' . $private_port . $path . '/' . $name;
 				$node_url = $url;
 				if ($b_lan) {
 					$node_url = $lan_url;
@@ -85,7 +89,7 @@
 				</tr>
 				<tr>
 					<td>NAT traversal public port<br/>(leave empty if you don't want nat traversal)</td>
-					<td><input type="number" name="public_port" value="52123"/></td>
+					<td><input type="number" name="public_port" value="<?php echo rand(50000, 60000) ?>"/></td>
 				</tr>
 			</table>
 			<input type="submit" value="Submit" />
