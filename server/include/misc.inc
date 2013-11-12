@@ -219,6 +219,12 @@
 			return $result;
 		}
 
+		$context = stream_context_create(array(
+			'http' => array(
+				'timeout' => 5,
+			),
+		));
+
 		$json = json_decode(file_get_contents('http://freegeoip.net/json/' . $ip, false, $context));
 		// Add impresision
 		$impresision_lat = rand(-1000, 1000) / 100000;
