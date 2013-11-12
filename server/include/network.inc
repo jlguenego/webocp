@@ -138,7 +138,7 @@
 		);
 
 		$output = $service->sendRequest($action, $args);
-		//print_r($output);
+		debug_r('output', $output);
 
 		$dom = DOMDocument::loadXML($output);
 		$error = $dom->documentElement->getElementsByTagName('errorCode')->item(0)->nodeValue;

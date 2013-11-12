@@ -90,4 +90,18 @@
 			}
 		});
 	};
+
+	ocp.client.get_public_ip = function() {
+		var result = {};
+		$.ajax({
+			type: "POST",
+			url: 'http://ip-api.com/json',
+			async: false,
+			data: {},
+			success: function(data) {
+				result = data;
+			}
+		});
+		return result.query;
+	};
 })(ocp)

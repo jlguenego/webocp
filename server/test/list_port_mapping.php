@@ -17,6 +17,8 @@
 		);
 
 		$output = $service->sendRequest($action, $args);
+		header("Location: " . $_SERVER['SCRIPT_NAME']);
+		exit;
 	}
 
 	header("Content-Type:text/html; charset=UTF-8;");

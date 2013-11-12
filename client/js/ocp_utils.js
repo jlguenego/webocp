@@ -280,4 +280,15 @@
 		}
 		return result;
 	};
+
+	ocp.utils.URL = function(url) {
+		var tmp = url.replace(/^[\w]+:\/\/.+?(\/.*)/, "$1").split('?');
+		var domain = url.replace(/^[\w]+:\/\/(.+?)\/.*/, "$1").split(':');
+
+		this.protocol = url.replace(/^([\w]+):\/\/.*/, "$1");
+		this.host= domain[0];
+		this.port = domain[1] || '';
+		this.query = tmp[1] || '';
+		this.path= tmp[0];
+	};
 })(ocp);

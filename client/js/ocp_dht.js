@@ -16,6 +16,7 @@
 	ocp.dht.Contact = function(args) {
 		this.name = args.name;
 		this.url = args.url;
+		this.lan_url = args.lan_url;
 		this.start_address = args.start_address;
 
 		this.toString = function() {
@@ -28,6 +29,7 @@
 		this.address_list = [];
 		var url = ocp.dht.get_endpoint_url(null, 'get_contact_list');
 		var contact_list = ocp.client.command({}, url);
+		console.log(contact_list);
 
 		for (var name in contact_list) {
 			var contact = new ocp.dht.Contact(contact_list[name]);
@@ -120,14 +122,26 @@
 		console.log(contact);
 		var sponsor_name = ocp.cfg.sponsor_name || 'node0';
 		var url = ocp.cfg.server_base_url + '/webocp/server/' + sponsor_name;
-		console.log('url=' + url);
+
 		if (contact) {
-			url = contact.url;
+			url = ocp.dht.get_contact_url(contact);
 		}
+
 		endpoint = endpoint || 'index';
 		url_query = url_query || '';
 		var result = url + '/endpoint/' + endpoint + '.php' + url_query;
-		console.log(result);
 		return result;
 	};
+
+	ocp.dht.get_contact_url = function(contact) {
+		var url = contact.url;
+
+		var my_ip = ocp.client.get_public_ip();
+		var my_url = new ocp.utils.URL(url);
+
+		if (my_url.host == my_ip) {
+			url = contact.lan_url;
+		}
+		return url;
+	}
 })(ocp);
