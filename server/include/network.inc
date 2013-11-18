@@ -99,10 +99,17 @@
 			),
 		));
 
-		$ip = @file_get_contents('http://api.externalip.net/ip', false, $context);
-		if ($ip === false) {
+		$result = @file_get_contents('http://ocpforum.org/webocp/server/ocp1/endpoint/get_ip_address.php', false, $context);
+		if ($result === false) {
 			return null;
 		}
+		try {
+			$json = json_decode($result);
+			$ip = $json->result->remote_addr;
+		} catch (Exception $e) {
+			return null;
+		}
+
 		return $ip;
 	}
 

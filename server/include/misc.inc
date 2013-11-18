@@ -222,7 +222,9 @@
 				),
 			));
 
-			$str = file_get_contents('http://freegeoip.net/json/' . $ip, false, $context);
+			$str = @file_get_contents('http://freegeoip.net/json/' . $ip, false, $context);
+
+			debug('geoloc_result=' . $str);
 
 			if ($str === false) {
 				$loc = array(

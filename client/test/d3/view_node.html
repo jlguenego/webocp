@@ -322,7 +322,7 @@ $(document).ready(function() {
 	};
 
 	display_node_properties({
-		url: 'http://localhost/webocp/server/node0',
+		url: ocp.cfg.server_base_url + '/webocp/server/' + ocp.cfg.sponsor_name,
 		name: 'node9',
 		start_address: '0785284586ef5810b80560319ef24968e897f7ce',
 		quota: 1,
@@ -360,7 +360,7 @@ $(document).ready(function() {
 		node_prop.find('.total .unit').html(total_o.unit);
 	}
 	$('#refresh').click(function() {
-		var url = ocp.cfg.server_base_url + '/webocp/server/node0';
+		var url = ocp.cfg.server_base_url + '/webocp/server/' + ocp.cfg.sponsor_name;
 
 		var url = ocp.dht.get_endpoint_url({url: url}, 'get_contact_list');
 		var contact_list = ocp.client.command({}, url);

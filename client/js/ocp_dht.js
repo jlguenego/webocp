@@ -120,7 +120,7 @@
 
 	ocp.dht.get_endpoint_url = function(contact, endpoint, url_query) {
 		console.log(contact);
-		var sponsor_name = ocp.cfg.sponsor_name || 'node0';
+		var sponsor_name = ocp.cfg.sponsor_name;
 		var url = ocp.cfg.server_base_url + '/webocp/server/' + sponsor_name;
 
 		if (contact) {

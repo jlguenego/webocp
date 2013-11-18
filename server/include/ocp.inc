@@ -104,7 +104,7 @@
 	    }
 
 	    public function inform_all($new_contact) {
-			$postdata = http_build_query(array('contact' => json_encode($new_contact)));
+			$postdata = http_build_query(array('contact' => base64_encode(json_encode($new_contact))));
 
 			$opts = array(
 				'http' => array(
@@ -112,6 +112,8 @@
 					'content' => $postdata
 				)
 			);
+
+			debug_r('options', $opts);
 			$context = stream_context_create($opts);
 			foreach ($this->contact_list as $name => $contact) {
 				if ($name == $new_contact->name) {
@@ -119,7 +121,8 @@
 				}
 				$url = $this->get_contact_url($contact);
 				debug('contact_url=' . $url);
-				$response = file_get_contents($url . '/endpoint/add_contact.php', false, $context);
+				$response = @file_get_contents($url . '/endpoint/add_contact.php', false, $context);
+				debug('response=' . $response);
 			}
 	    }
 

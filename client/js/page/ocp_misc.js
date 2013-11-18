@@ -41,11 +41,16 @@ $(document).ready(function() {
 				var old_scenario = ocp.cfg.scenario;
 				var old_server_url = ocp.cfg.server_base_url;
 				ocp.cfg.server_base_url = strip_slash($('#ocp_st_server_base_url').val());
+				var old_sponsor_name = ocp.cfg.sponsor_name;
+				ocp.cfg.sponsor_name = $('#ocp_st_server_name').val();
 				ocp.cfg.scenario = $('#ocp_st_scenario').val();
 				ocp.storage.saveLocal();
 				general_settings_dialog.ocp_dialog('close');
 
-				if ((old_scenario != ocp.cfg.scenario) || (old_server_url != ocp.cfg.server_base_url)) {
+				if ((old_scenario != ocp.cfg.scenario)
+					|| (old_server_url != ocp.cfg.server_base_url)
+					|| (old_sponsor_name != ocp.cfg.sponsor_name)) {
+
 					console.log('logout');
 					ocp.action.logout();
 				}
@@ -59,6 +64,7 @@ $(document).ready(function() {
 	$('[href=#general_settings]').click(function(e) {
 		e.preventDefault();
 		general_settings_dialog.find('#ocp_st_server_base_url').val(ocp.cfg.server_base_url);
+		general_settings_dialog.find('#ocp_st_server_name').val(ocp.cfg.sponsor_name);
 		general_settings_dialog.find('#ocp_st_scenario').find('option[value=' + ocp.cfg.scenario + ']').attr('selected', '');
 		general_settings_dialog.ocp_dialog('open');
 	});

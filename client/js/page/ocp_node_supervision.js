@@ -25,7 +25,7 @@
 		$('#ocp_ns_content').ocp_fix_variable_v();
 
 		$('#ocp_ns_refresh').click(function() {
-			var url = ocp.cfg.server_base_url + '/webocp/server/node0';
+			var url = ocp.cfg.server_base_url + '/webocp/server/' + ocp.cfg.sponsor_name;
 
 			var url = ocp.dht.get_endpoint_url({url: url}, 'get_contact_list');
 			var contact_list = ocp.client.command({}, url);
