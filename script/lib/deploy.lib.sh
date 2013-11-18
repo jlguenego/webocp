@@ -112,6 +112,17 @@ EOF
 	rm -rf "${SCRIPT_FILE}";
 }
 
+ocp_deploy_code_local() {
+	TARGET="${1}/webocp"
+	mkdir -p "${TARGET}"
+	cp -r "${HTTP_DIR}/webocp/server" "${TARGET}"
+}
+
+get_external_ip() {
+	curl "http://ocpforum.org/webocp/server/ocp1/endpoint/get_ip_address.php" 2> /dev/null | \
+		perl -pe 's/{"result":{"remote_addr":"(.*)"}}/$1/g'
+}
+
 ocp_node_start() {
 	echo 'Start a node...'
 	curl -X POST "${@:-}"

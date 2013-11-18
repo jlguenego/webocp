@@ -1,20 +1,7 @@
 #!/usr/bin/sh
 set -eau
 
-echo "${@:-}"
-echo "${*}"
-echo $#
+ROOT_DIR="../.."
+. "${ROOT_DIR}/lib/deploy.lib.sh"
 
-set -- "toto atat" titi kiki
-
-echo "${@:-}"
-echo "${*}"
-echo $#
-
-i=1
-while ((i <= $#))
-do
-	CMD="echo ${i}=\${${i}}"
-	eval "${CMD}"
-	((i++))
-done
+get_external_ip
