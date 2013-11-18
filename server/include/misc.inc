@@ -57,6 +57,8 @@
 		$g_debug = $switch;
 	}
 
+	mkdir_p(LOG_FILE_DIR);
+
 	function debug($msg, $e = null) {
 		global $g_debug;
 
