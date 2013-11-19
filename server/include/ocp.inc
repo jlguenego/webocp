@@ -43,7 +43,7 @@
 			if (!is_file($file)) {
 				throw new Exception('File not found: ' . $file);
 			}
-			$content = file_get_contents($file);
+			$content = get_content($file);
 			//debug('json file content: ' . $content);
 			$object = json_decode($content);
 			$this->hydrate($object);
@@ -88,12 +88,12 @@
 			$opts = array(
 				'http' => array(
 					'method' => "POST",
-					'content' => $postdata
+					'content' => $postdata,
 				)
 			);
 			$context = stream_context_create($opts);
 
-			$response = file_get_contents($this->sponsor . '/endpoint/inform_sponsor.php', false, $context);
+			$response = get_content($this->sponsor . '/endpoint/inform_sponsor.php', $context);
 			//debug_r('Response', $response);
 			$response = json_decode($response);
 			if (isset($response->error)) {
@@ -121,7 +121,7 @@
 				}
 				$url = $this->get_contact_url($contact);
 				debug('contact_url=' . $url);
-				$response = @file_get_contents($url . '/endpoint/add_contact.php', false, $context);
+				$response = get_content($url . '/endpoint/add_contact.php', $context);
 				debug('response=' . $response);
 			}
 	    }

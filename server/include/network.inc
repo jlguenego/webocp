@@ -93,17 +93,8 @@
 	}
 
 	function get_public_ip_from_web() {
-		$context = stream_context_create(array(
-			'http' => array(
-				'timeout' => 2,
-			),
-		));
-
-		$result = @file_get_contents('http://ocpforum.org/webocp/server/ocp1/endpoint/get_ip_address.php', false, $context);
-		if ($result === false) {
-			return null;
-		}
 		try {
+			$result = get_content('http://ocpforum.org/webocp/server/ocp1/endpoint/get_ip_address.php');
 			$json = json_decode($result);
 			$ip = $json->result->remote_addr;
 		} catch (Exception $e) {

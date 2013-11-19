@@ -6,7 +6,7 @@ class Cache {
 
 	public function __construct() {
 		if (file_exists($this->file)) {
-			$content = file_get_contents($this->file);
+			$content = get_content($this->file);
 			$this->json = json_decode($content);
 		} else {
 			mkdir_p(ROOT_CACHE);

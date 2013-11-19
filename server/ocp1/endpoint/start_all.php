@@ -41,7 +41,7 @@
 
 				if ($i == 0) {
 					$sponsor_url = $node_url;
-					file_get_contents(
+					get_content(
 						$node_url . '/endpoint/start.php?' .
 						'name=' . $name .
 						'&url=' . $url .
@@ -53,7 +53,7 @@
 					continue;
 				}
 
-				file_get_contents(
+				get_content(
 					$node_url . '/endpoint/start.php?' .
 					'name=' . $name .
 					'&url=' . $url .

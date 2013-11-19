@@ -218,33 +218,38 @@
 		$cache = new Cache();
 		$encoded_geoloc = $cache->get('geoloc');
 		if (!$encoded_geoloc) {
-			$context = stream_context_create(array(
-				'http' => array(
-					'timeout' => 5,
-				),
-			));
+			$loc = array(
+				'type' => 'Point',
+				'coordinate' => array(),
+			);
+			try {
+				$str = get_content('http://freegeoip.net/json/' . $ip);
 
-			$str = @file_get_contents('http://freegeoip.net/json/' . $ip, false, $context);
+				debug('geoloc_result=' . $str);
 
-			debug('geoloc_result=' . $str);
+				if ($str === false) {
+					throw new Exception();
+				} else {
+					$json = json_decode($str);
 
-			if ($str === false) {
-				$loc = array(
-					'type' => 'Point',
-					'coordinate' => array(),
-				);
+					if ($json == NULL) {
+						throw new Exception();
+					}
+
+					if (!is_numeric($json->longitude) || !is_numeric($json->latitude)) {
+						throw new Exception();
+					}
+					$loc['coordinate'][0] = $json->longitude;
+					$loc['coordinate'][1] = $json->latitude;
+				}
+			} catch(Exception $e) {
 				// Orléans
-				$loc->coordinate[0] = 1.9092510;
-				$loc->coordinate[1] = 47.9029640;
-			} else {
-				$json = json_decode($str);
-
-				$loc = array(
-					'type' => 'Point',
-					'coordinate' => array($json->longitude, $json->latitude),
-				);
+				$loc['coordinate'][0] = 1.9092510;
+				$loc['coordinate'][1] = 47.9029640;
 			}
+			debug_r('loc', $loc);
 			$encoded_geoloc = json_encode($loc);
+			debug_r('encoded_geoloc', $encoded_geoloc);
 			$cache->set('geoloc', $encoded_geoloc, 86400);
 		}
 
@@ -258,5 +263,23 @@
 		$json->coordinate[1] += $imprecision_lat;
 
 		return json_encode($json);
+	}
+
+	function get_content($uri, $context = null) {
+		if ($context == null) {
+			$opts = array(
+				'http' => array(
+					'timeout' => 5,
+				)
+			);
+			$context = stream_context_create($opts);
+		}
+		$content = @file_get_contents($uri, false, $context);
+
+		if ($content === false) {
+			throw new Exception('Cannot open ' . $uri);
+		}
+
+		return $content;
 	}
 ?>

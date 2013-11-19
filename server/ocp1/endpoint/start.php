@@ -26,6 +26,7 @@
 				debug('informing sponsor ' . $_REQUEST['sponsor']);
 				debug('I am ' . $ocp->name);
 				$ocp->inform_sponsor();
+				debug('Sponsor informed.');
 			}
 
 			$ocp->store();

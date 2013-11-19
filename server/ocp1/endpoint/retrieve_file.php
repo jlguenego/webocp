@@ -11,7 +11,7 @@
 		if (!file_exists($file)) {
 			throw new Exception('This file does not exists.');
 		}
-		$output['result']['content'] = base64_encode(file_get_contents($file));
+		$output['result']['content'] = base64_encode(get_content($file));
 	} catch (Exception $e) {
 		$output['error'] = $e->getMessage();
 	}
