@@ -45,12 +45,12 @@
 			return $ip;
 		}
 
-		$ip = get_public_ip_with_upnp();
-		if ($ip != null) {
-			debug('get_public_ip_with_upnp');
-			store_cached_ip($ip);
-			return $ip;
-		}
+//		$ip = get_public_ip_with_upnp();
+//		if ($ip != null) {
+//			debug('get_public_ip_with_upnp');
+//			store_cached_ip($ip);
+//			return $ip;
+//		}
 
 		$ip = get_public_ip_from_web();
 		if ($ip != null) {

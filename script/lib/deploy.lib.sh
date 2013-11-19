@@ -16,8 +16,10 @@ ocp_deploy_code() {
 	PASSWORD=
 	FTP_DIR=
 	MY_PATH=/
+	FTP_INSTALL_DIR=.
 
-	while getopts u:p:d: name
+	OPTIND=1
+	while getopts u:p:d:i: name
 	do
 		case $name in
 			u)
@@ -28,6 +30,9 @@ ocp_deploy_code() {
 				;;
 			d)
 				FTP_DIR="${OPTARG}"
+				;;
+			i)
+				FTP_INSTALL_DIR="${OPTARG}"
 				;;
 			?)
 				printf "Usage: %s: [-a] [-b value] args\n"  $0
@@ -41,6 +46,8 @@ ocp_deploy_code() {
 
 	debug_var LOGIN
 	debug_var PASSWORD
+	debug_var FTP_DIR
+	debug_var FTP_INSTALL_DIR
 	debug_var FTP_HOST
 	debug_var HTTP_HOST
 
@@ -55,8 +62,8 @@ ocp_deploy_code() {
 		if (!\$zip->open('${B_ZIP_FILE}')) {
 			throw new Exception('Cannot open ${SCRIPT_FILE}');
 		}
-
-		\$zip->extractTo('./');
+		@mkdir('${FTP_INSTALL_DIR}', 0777, true);
+		\$zip->extractTo('${FTP_INSTALL_DIR}');
 		echo 'OK';
 	} catch(Exception \$e) {
 		echo \$e->getMessage();

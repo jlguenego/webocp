@@ -55,7 +55,17 @@ ocp_node_start \
 		-d 'quota=1' \
 		"http://yannis-hp/webocp_test/webocp/server/yannishp2/endpoint/start.php"
 
+ocp_deploy_code -u ocpforum -p QQJQnwdw -d "/www" -i "webocp_test" ftp.ocpforum.org http://ocpforum.org
 
-#ocp_deploy_code ftp://ocpforum:QQJQnwdw@ftp.ocpforum.org http://ocpforum.org/webocp_test
-#ocp_node_start -s http://event-biller.com/webocp/server/ebiller http://ocpforum.org/webocp_test/webocp/server/ocpforum1
-#ocp_node_start -s http://event-biller.com/webocp/server/ebiller http://ocpforum.org/webocp_test/webocp/server/ocpforum2
+ocp_node_start \
+		-d 'name=ocpforum1' \
+		-d 'url=http://ocpforum.org/webocp_test/webocp/server/ocpforum1' \
+		-d 'sponsor=http://event-biller.com/webocp/server/ebiller' \
+		-d 'quota=1' \
+		"http://ocpforum.org/webocp_test/webocp/server/ocpforum1/endpoint/start.php"
+ocp_node_start \
+		-d 'name=ocpforum2' \
+		-d 'url=http://ocpforum.org/webocp_test/webocp/server/ocpforum2' \
+		-d 'sponsor=http://event-biller.com/webocp/server/ebiller' \
+		-d 'quota=1' \
+		"http://ocpforum.org/webocp_test/webocp/server/ocpforum2/endpoint/start.php"
