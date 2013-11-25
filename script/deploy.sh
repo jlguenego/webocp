@@ -31,7 +31,7 @@ ocp_node_start \
 		-d 'quota=1' \
 		"http://event-biller.com/webocp/server/ebiller3/endpoint/start.php"
 
-ocp_deploy_code_local "$HTTP_DIR/webocp_test"
+ocp_deploy_code_local "${HTTP_DIR}/webocp_test"
 IP=$(get_external_ip)
 PORT=48123
 

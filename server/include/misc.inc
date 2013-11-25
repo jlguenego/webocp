@@ -223,7 +223,7 @@
 				'coordinate' => array(),
 			);
 			try {
-				$str = get_content('http://freegeoip.net/json/' . $ip);
+				$str = get_content('http://ocpforum.org/geolocal/geoloc.php?ip=' . $ip);
 
 				debug('geoloc_result=' . $str);
 
@@ -234,6 +234,9 @@
 
 					if ($json == NULL) {
 						throw new Exception();
+					}
+					if (isset($json->error)) {
+						throw new Exception($json->error);
 					}
 
 					if (!is_numeric($json->longitude) || !is_numeric($json->latitude)) {
