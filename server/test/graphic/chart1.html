@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<base href="../.." />
+		<script src="_ext/jquery-1.10.2.min.js"></script>
+		<script src="_ext/highcharts.js"></script>
+
+		<style>
+
+body, html {
+	margin: 0;
+	padding: 0;
+	background-color: #F5F5F5;
+	font-family: sans-serif;
+}
+
+#graph {
+	display: inline-block;
+	overflow: hidden;
+}
+
+#page {
+	width: 1000px;
+	height: 500px;
+	position: absolute;
+	top: 50px;
+	left: 200px;
+	border: 1px solid black;
+}
+		</style>
+	</head>
+	<body>
+		<div id="page">
+			<div id="container"></div>
+		</div>
+		<script>
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Fruit Consumption'
+        },
+        xAxis: {
+            categories: ['Apples', 'Bananas', 'Oranges']
+        },
+        yAxis: {
+            title: {
+                text: 'Fruit eaten'
+            }
+        },
+        series: [{
+            name: 'Jane',
+            data: [1, 0, 4]
+        }, {
+            name: 'John',
+            data: [5, 7, 3]
+        }]
+    });
+});
+		</script>
+	</body>
+</html>

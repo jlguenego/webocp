@@ -6,6 +6,7 @@
 
 	define("INCLUDE_DIR", dirname(__FILE__));
 	define("BASE_DIR", dirname(INCLUDE_DIR));
+	define("WEB_DIR", dirname(dirname(dirname($_SERVER['SCRIPT_NAME'])))); // Server dir
 	define('SCRIPT_NAME', basename(SCRIPT_FILE, '.php'));
 
 	require_once(INCLUDE_DIR . '/constant.inc');
