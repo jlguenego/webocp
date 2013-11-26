@@ -96,6 +96,8 @@
 	}
 
 	ocp.file.retrieve_sync = function(filename) {
+		console.log('filename:');
+		console.log(filename);
 		var content = null;
 		var formData = new FormData();
 		var my_filename = null;
@@ -117,6 +119,7 @@
 		console.log(xhr);
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState == 4 && xhr.status == 200) { // on success
+				console.log('retrieve_response=' + xhr.responseText);
 				var json_obj = JSON.parse(xhr.responseText);
 				if (json_obj.result) {
 					content = ocp.utils.b642ab(json_obj.result.content);

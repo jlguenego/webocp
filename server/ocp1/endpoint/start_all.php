@@ -10,7 +10,7 @@
 			$node_qty = intval($_REQUEST['node_qty']);
 			$name = OCP::get_name_from_url($_SERVER['REQUEST_URI']);
 
-			$path = preg_replace('#(.*)/' . $name . '/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
+			$path = preg_replace('#(.*)/node/' . $name . '/endpoint.*#', "$1", $_SERVER['REQUEST_URI']);
 
 			$private_host = php_uname('n');
 			$private_port = $_SERVER['SERVER_PORT'];
@@ -32,8 +32,8 @@
 			for ($i = 0; $i < $node_qty; $i++) {
 				$name = 'node' . $i;
 				$quota = 1;
-				$url = 'http://' . $public_ip . ':' . $public_port . $path . '/' . $name;
-				$lan_url = 'http://' . $private_host . ':' . $private_port . $path . '/' . $name;
+				$url = 'http://' . $public_ip . ':' . $public_port . $path . '/node/' . $name;
+				$lan_url = 'http://' . $private_host . ':' . $private_port . $path . '/node/' . $name;
 				$node_url = $url;
 				if ($b_lan) {
 					$node_url = $lan_url;
@@ -42,7 +42,7 @@
 				if ($i == 0) {
 					$sponsor_url = $node_url;
 					get_content(
-						$node_url . '/endpoint/start.php?' .
+						$node_url . '/endpoint/start?' .
 						'name=' . $name .
 						'&url=' . $url .
 						'&quota=' . $quota .
@@ -54,7 +54,7 @@
 				}
 
 				get_content(
-					$node_url . '/endpoint/start.php?' .
+					$node_url . '/endpoint/start?' .
 					'name=' . $name .
 					'&url=' . $url .
 					'&sponsor=' . $sponsor_url .

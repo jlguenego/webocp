@@ -11,12 +11,7 @@
 		public $location = array();
 
 		public static function get_name_from_url($url) {
-			$name = preg_replace('#.*webocp/server/(.+)#', "$1", $url);
-			if (preg_match('#(.+)/endpoint.*#', $name)) {
-				$name = preg_replace('#(.+)/endpoint.*#', "$1", $name);
-			} else {
-				$name = preg_replace('#(.+)/.*#', "$1", $name);
-			}
+			$name = preg_replace('#^.*webocp/server/node/([^/]+).*$#', "$1", $url);
 			return $name;
 		}
 
@@ -93,7 +88,7 @@
 			);
 			$context = stream_context_create($opts);
 
-			$response = get_content($this->sponsor . '/endpoint/inform_sponsor.php', $context);
+			$response = get_content($this->sponsor . '/endpoint/inform_sponsor', $context);
 			//debug_r('Response', $response);
 			$response = json_decode($response);
 			if (isset($response->error)) {
@@ -121,7 +116,7 @@
 				}
 				$url = $this->get_contact_url($contact);
 				debug('contact_url=' . $url);
-				$response = get_content($url . '/endpoint/add_contact.php', $context);
+				$response = get_content($url . '/endpoint/add_contact', $context);
 				debug('response=' . $response);
 			}
 	    }

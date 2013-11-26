@@ -118,10 +118,13 @@
 		return ocp.crypto.hash(ab);
 	};
 
+	ocp.dht.get_node_url = function() {
+		return ocp.cfg.server_base_url + '/webocp/server/node/' + ocp.cfg.sponsor_name;
+	};
+
 	ocp.dht.get_endpoint_url = function(contact, endpoint, url_query) {
 		console.log(contact);
-		var sponsor_name = ocp.cfg.sponsor_name;
-		var url = ocp.cfg.server_base_url + '/webocp/server/' + sponsor_name;
+		var url = ocp.dht.get_node_url();
 
 		if (contact) {
 			url = ocp.dht.get_contact_url(contact);
@@ -129,7 +132,7 @@
 
 		endpoint = endpoint || 'index';
 		url_query = url_query || '';
-		var result = url + '/endpoint/' + endpoint + '.php' + url_query;
+		var result = url + '/endpoint/' + endpoint + url_query;
 		console.log('endpoint_url=' + result);
 		return result;
 	};
@@ -139,6 +142,8 @@
 
 		var my_ip = ocp.client.get_public_ip();
 		var my_url = new ocp.utils.URL(url);
+		console.log("my_ip=" + my_ip);
+		console.log(my_url);
 
 		if (my_url.host == my_ip) {
 			url = contact.lan_url;

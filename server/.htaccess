@@ -1,8 +1,8 @@
 # Activate URL rewriting
 RewriteEngine on
 
-RewriteRule ^(test.*)				$1 [L]
-RewriteRule ^([^/]+)/$				$1/endpoint/home.php [L]
-RewriteRule ^[^/]+(.*)  		ocp1$1 [L]
+RewriteRule ^node/[^/]+/?$							ocp1/endpoint/index.php [L]
+RewriteRule ^node/[^/]+/endpoint/?$					ocp1/endpoint/index.php [L]
+RewriteRule ^node/[^/]+/endpoint/([^\?/]+)(.*) 		ocp1/endpoint/$1.php$2 [L]
 
 

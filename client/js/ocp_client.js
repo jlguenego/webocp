@@ -95,13 +95,14 @@
 		var result = {};
 		$.ajax({
 			type: "POST",
-			url: 'http://ip-api.com/json',
+			url: 'http://ocpforum.org/webocp/server/ocp1/endpoint/get_ip_address.php',
 			async: false,
 			data: {},
 			success: function(data) {
-				result = data;
+				console.log(data);
+				result = JSON.parse(data).result;
 			}
 		});
-		return result.query;
+		return result.remote_addr;
 	};
 })(ocp)

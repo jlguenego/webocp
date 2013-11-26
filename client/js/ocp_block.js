@@ -50,6 +50,8 @@
 	};
 
 	ocp.block.get_content = function(block_content) {
+		console.log('block_content:');
+		console.log(block_content);
 		var content_dv = new Uint8Array(block_content);
 
 		var length_ab = new ArrayBuffer(4);

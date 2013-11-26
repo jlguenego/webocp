@@ -7,9 +7,9 @@
 			$ocp = new OCP();
 			$ocp->load(OCP::get_name_from_url($_SERVER['REQUEST_URI']));
 			$deal = array(
-
+				'OK',
 			);
-			$output['result'] = 'OK';
+			$output['result'] = $deal;
 		} catch (Exception $e) {
 			$output['error'] = $e->getMessage();
 		}

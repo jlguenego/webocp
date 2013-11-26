@@ -25,9 +25,9 @@
 		$('#ocp_ns_content').ocp_fix_variable_v();
 
 		$('#ocp_ns_refresh').click(function() {
-			var url = ocp.cfg.server_base_url + '/webocp/server/' + ocp.cfg.sponsor_name;
+			var url = ocp.dht.get_node_url();
 
-			var url = ocp.dht.get_endpoint_url({url: url}, 'get_contact_list');
+			url = ocp.dht.get_endpoint_url({url: url}, 'get_contact_list');
 			var contact_list = ocp.client.command({}, url);
 			console.log(contact_list);
 			self.node_map.data = d3.values(contact_list);
@@ -86,7 +86,7 @@
 			node_prop.find('.name').html(node.name);
 			node_prop.find('.start_address').html(node.start_address);
 			var url = ocp.dht.get_contact_url(node);
-			node_prop.find('.url').html('<a href="' + url + '/" target="_blank">' + url + '/</a>');
+			node_prop.find('.url').html('<a href="' + url + '" target="_blank">' + url + '</a>');
 
 			var options = { output_format: 'object' };
 			var used_o = ocp.utils.format_size(used, options);
