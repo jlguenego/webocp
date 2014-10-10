@@ -72,7 +72,8 @@
 			if (isset($trace_array[1])) {
 				$function = ' ' . $trace_array[1]["function"];
 			}
-			$txt = "[DEBUG] [". basename($trace["file"]).":".$trace["line"].$function.']'.
+			$txt = "[DEBUG] [". basename($trace["file"]).":".$trace["line"].$function.'] [' .
+				date('Y-m-d H:i:s', time()) . ']'.
 				PHP_EOL . "\t".$msg;
 
 			$log_file = 'log.txt';

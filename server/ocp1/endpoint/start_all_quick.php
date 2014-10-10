@@ -12,7 +12,7 @@
 			$quota = array();
 			$locations = array();
 
-			$ip = get_external_ip();
+			$ip = get_public_ip();
 			$geoloc = json_decode(get_geoloc($ip));
 
 			for ($i = 0; $i < $node_qty; $i++) {

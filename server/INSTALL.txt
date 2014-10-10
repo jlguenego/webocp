@@ -1,0 +1,8 @@
+1) Remove the 'webocp_cache' and 'webocp_data' directories.
+2) Connect to http://localhost/webocp/server/node/node0/endpoint/start_all_quick
+3) Go to http://localhost/webocp/client
+4) Check the configuration on 'Menu->Settings'
+	Sponsor server url: http://localhost
+	Sponsor name: node0
+	Choose your scenario: OCP1
+5) Register and use
