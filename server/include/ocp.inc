@@ -151,52 +151,52 @@
 			return $array;
 	    }
 
-	    public function get_used_mem() {
-	    	$result = 0;
-			//$result = $this->foldersize(storage_get_root());	------|
-			$cmd = 'du -s -B 1 ' . storage_get_root();             // |
-			debug('cmd=' . $cmd);                                  // |
-			$cmd_result = trim(exec($cmd));                        // |
-			$cmd_a = preg_split("#\s+#", $cmd_result);             // |
-			$result = $cmd_a[0];                                   // |
-			debug('result=' . $result);                            // |
-	    	return $result;                                        // |
-	    }                                                          // |
-                                                                   // |
-//	    public function foldersize($path) {        <------------------|
-//	    	if (!file_exists($path)) {
-//		    	return 0;
-//		    }
-//
-//		    if (is_file($path)) {
-//				$size = filesize($path);
-//				$relica = BLOCK_SIZE - ($size % BLOCK_SIZE);
-//				if ($relica == BLOCK_SIZE) {
-//					$relica = 0;
-//				}
-//		    	return $size + $relica;
-//		    }
-//		    if (!is_dir($path)) {
-//		    	throw new Exception($path . ' is not a dir.');
-//		    }
-//		    $total_size = 0;
-//
-//		    $files = scandir($path);
-//		    $dir = rtrim($path, '/'). '/';
-//
-//		    foreach($files as $file) {
-//		        if ($file == "." && $file == "..") {
-//		        	continue;
-//		        }
-//
-//	            $currentFile = $dir . $file;
-//
-//                $size = $this->foldersize($currentFile);
-//                $total_size += $size;
-//		    }
-//
-//		    return $total_size;
-//		}
+		public function get_used_mem() {
+			$result = 0;
+//			$result = $this->foldersize(storage_get_root());	//-------|
+			$cmd = 'du -s -B 1 ' . storage_get_root();				//   |
+			debug('cmd=' . $cmd);									//   |
+			$cmd_result = trim(exec($cmd));							//   |
+			$cmd_a = preg_split("#\s+#", $cmd_result);				//   |
+			$result = $cmd_a[0];									//   |
+			debug('result=' . $result);								//   |
+			return $result;											//   |
+		}															//   |
+																	//   |
+		public function foldersize($path) {			//<------------------|
+			if (!file_exists($path)) {
+				return 0;
+			}
+
+			if (is_file($path)) {
+				$size = filesize($path);
+				$relica = BLOCK_SIZE - ($size % BLOCK_SIZE);
+				if ($relica == BLOCK_SIZE) {
+					$relica = 0;
+				}
+				return $size + $relica;
+			}
+			if (!is_dir($path)) {
+				throw new Exception($path . ' is not a dir.');
+			}
+			$total_size = 0;
+
+			$files = scandir($path);
+			$dir = rtrim($path, '/'). '/';
+
+			foreach($files as $file) {
+				if ($file == "." && $file == "..") {
+					continue;
+				}
+
+				$currentFile = $dir . $file;
+
+				$size = $this->foldersize($currentFile);
+				$total_size += $size;
+			}
+
+			return $total_size;
+		}
 
 		public function set_coord($coord) {
 			$obj = json_decode($coord);
